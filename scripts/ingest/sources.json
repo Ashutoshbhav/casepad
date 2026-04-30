@@ -1,0 +1,22 @@
+{
+  "sources": [
+    { "school": "IIM-A",       "url": "https://iima.consultingclub.in/" },
+    { "school": "IIM-B",       "url": "https://iimbcsc.com/" },
+    { "school": "IIM-C",       "url": "https://www.iimcal.ac.in/students/clubs/consulting-club" },
+    { "school": "IIM-L",       "url": "https://www.iimlconsult.com/" },
+    { "school": "IIM-K",       "url": "https://iimk.ac.in/students/clubs" },
+    { "school": "IIM-I",       "url": "https://www.iimidr.ac.in/student-life/student-clubs/" },
+    { "school": "ISB",         "url": "https://www.isb.edu/en/student-life/student-clubs.html" },
+    { "school": "FMS",         "url": "https://www.fms.edu/student-life/clubs" },
+    { "school": "MDI",         "url": "https://www.mdi.ac.in/student-life/student-clubs" },
+    { "school": "XLRI",        "url": "https://www.xlri.ac.in/student-life/student-committees" },
+    { "school": "SPJIMR",      "url": "https://www.spjimr.org/programmes/student-life/student-committees/" },
+    { "school": "NMIMS",       "url": "https://www.nmims.edu/student-life-clubs.html" },
+    { "school": "Wharton",     "url": "https://wcg.upenn.edu/" },
+    { "school": "Kellogg",     "url": "https://www.kellogg.northwestern.edu/programs/full-time-mba/student-experience/clubs.aspx" },
+    { "school": "Booth",       "url": "https://www.chicagobooth.edu/programs/full-time/students/student-experience/clubs" },
+    { "school": "INSEAD",      "url": "https://www.insead.edu/student-life/student-clubs" },
+    { "school": "LBS",         "url": "https://www.london.edu/community/student-clubs" }
+  ],
+  "extra_pdf_urls": []
+}
