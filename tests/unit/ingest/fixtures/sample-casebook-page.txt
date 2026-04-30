@@ -1,0 +1,14 @@
+Case 1: Cement plant entry — India
+Industry: Infrastructure   Type: Market Entry   Difficulty: Medium
+
+Problem: A global cement major is considering entry into India...
+
+Interviewer notes:
+- Market size ~380 MT/year
+- Top 5 players hold ~50% share
+
+Ideal structure: Market attractiveness, Client fit, Entry mode, Risks.
+
+Case 2: Profitability decline at QSR chain
+Industry: FMCG   Type: Profitability   Difficulty: Easy
+...
