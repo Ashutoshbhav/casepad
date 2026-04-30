@@ -1,0 +1,14 @@
+{
+  "title": "Cement plant entry — India",
+  "problem_statement": "A global cement major is considering entry into India.",
+  "interviewer_notes": [
+    {
+      "trigger_keywords": ["market size", "demand"],
+      "reveal_text": "India consumes ~380 MT/year, growing at ~6%."
+    },
+    {
+      "trigger_keywords": ["competition", "players"],
+      "reveal_text": "Top 5 players hold ~50% share."
+    }
+  ]
+}
