@@ -9,7 +9,11 @@ import path from 'path';
 import { readdir } from 'fs/promises';
 import { pathToFileURL } from 'url';
 
-const groqThrottle = new Throttle(25, 60_000); // 25 req/min, under 30 RPM cap
+// 35 req/min keeps us under NVIDIA NIM's 40 RPM cap. Each request can take
+// 30-60s wall-clock on V4-class models, so without parallelism throughput
+// would be ~1/min. We process chunks in parallel up to CONCURRENCY in flight.
+const llmThrottle = new Throttle(35, 60_000);
+const CONCURRENCY = Number(process.env.INGEST_CONCURRENCY) || 12;
 
 const RAW_DIR = path.resolve(process.cwd(), 'casebooks/raw');
 
@@ -139,46 +143,61 @@ async function main() {
     }
     await log('info', 'parse', `${path.basename(localPath)} → ${chunks.length} chunks`);
 
+    // Process chunks in parallel — workers pull from a shared queue, each
+    // calls llmThrottle.acquire() to stay under the global RPM budget.
     let inserted = 0;
-    for (const chunk of chunks) {
-      if (chunk.length < 200) continue;
-      await groqThrottle.acquire();
-      let row;
-      try {
-        row = await extractCase(chunk);
-      } catch (err) {
-        await log('error', 'extract', `chunk failed after retries: ${(err as Error).message.slice(0, 200)}`);
-        totalFailed++;
-        continue;
+    const queue = chunks.filter((c) => c.length >= 200);
+    let next = 0;
+    const localFailed = { n: 0 };
+    const localSkipped = { n: 0 };
+
+    const worker = async () => {
+      while (true) {
+        const i = next++;
+        if (i >= queue.length) return;
+        const chunk = queue[i];
+        await llmThrottle.acquire();
+        let row;
+        try {
+          row = await extractCase(chunk);
+        } catch (err) {
+          await log('error', 'extract', `chunk failed after retries: ${(err as Error).message.slice(0, 200)}`);
+          localFailed.n++;
+          continue;
+        }
+        if (!row || !row.title || !row.problem_statement) {
+          localSkipped.n++;
+          continue;
+        }
+        if (dryRun) {
+          await log('info', 'extract', `[dry] would insert: ${row.title}`);
+          continue;
+        }
+        const result = await insertCase({
+          title: row.title,
+          industry: row.industry || 'other',
+          case_type: row.case_type || 'other',
+          difficulty: row.difficulty || 'medium',
+          source: row.source ?? school,
+          casebook_id: casebookId,
+          problem_statement: row.problem_statement,
+          interviewer_notes: row.interviewer_notes ?? [],
+          ideal_structure: row.ideal_structure ?? {},
+          tags: row.tags ?? [],
+          provenance: { school, casebook_title: casebookTitle, source_url: pdfUrl },
+        });
+        if (result.inserted) {
+          inserted++;
+        } else {
+          localSkipped.n++;
+        }
       }
-      if (!row || !row.title || !row.problem_statement) {
-        totalSkipped++;
-        continue;
-      }
-      if (dryRun) {
-        await log('info', 'extract', `[dry] would insert: ${row.title}`);
-        continue;
-      }
-      const result = await insertCase({
-        title: row.title,
-        industry: row.industry || 'other',
-        case_type: row.case_type || 'other',
-        difficulty: row.difficulty || 'medium',
-        source: row.source ?? school,
-        casebook_id: casebookId,
-        problem_statement: row.problem_statement,
-        interviewer_notes: row.interviewer_notes ?? [],
-        ideal_structure: row.ideal_structure ?? {},
-        tags: row.tags ?? [],
-        provenance: { school, casebook_title: casebookTitle, source_url: pdfUrl },
-      });
-      if (result.inserted) {
-        inserted++;
-        totalInserted++;
-      } else {
-        totalSkipped++;
-      }
-    }
+    };
+
+    await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
+    totalInserted += inserted;
+    totalFailed += localFailed.n;
+    totalSkipped += localSkipped.n;
 
     if (casebookId && inserted > 0) await bumpCasebookCount(casebookId, inserted);
     await log('info', 'extract', `${path.basename(localPath)} → ${inserted} inserted`);

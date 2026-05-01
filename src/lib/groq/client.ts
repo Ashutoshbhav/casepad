@@ -10,11 +10,23 @@ let _client: Groq | null = null;
 
 function getGroq(): Groq {
   if (_client) return _client;
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
-    throw new Error('GROQ_API_KEY is not set in env. Set it in .env.local or your shell.');
+  // LLM_BASE_URL lets us point the OpenAI-compatible Groq SDK at any other
+  // OpenAI-compatible server (NVIDIA NIM, Ollama, Cerebras, etc.) so ingest
+  // can run for free with no daily caps. Picks the right API key based on
+  // which provider is configured.
+  const baseURL = process.env.LLM_BASE_URL;
+  let apiKey: string;
+  if (baseURL?.includes('nvidia.com')) {
+    apiKey = process.env.NVIDIA_API_KEY || '';
+  } else if (baseURL?.includes('localhost') || baseURL?.includes('127.0.0.1')) {
+    apiKey = 'ollama-local';
+  } else {
+    apiKey = process.env.GROQ_API_KEY || '';
   }
-  _client = new Groq({ apiKey });
+  if (!apiKey && !baseURL?.includes('localhost')) {
+    throw new Error('No API key for the configured LLM provider. Set GROQ_API_KEY, NVIDIA_API_KEY, or LLM_BASE_URL=http://localhost:11434/v1 for Ollama.');
+  }
+  _client = new Groq({ apiKey, baseURL });
   return _client;
 }
 
@@ -25,9 +37,11 @@ export const groq: Groq = new Proxy({} as Groq, {
   },
 });
 
-// DEVIATION: The plan specified `llama-3.1-70b-versatile`, but groq-sdk@1.1.2
-// (see node_modules/groq-sdk/resources/chat/completions.d.ts) only lists
-// `llama-3.3-70b-versatile` for the 70B-class versatile model. The 3.1-70b
-// variant has been retired by Groq. Using the SDK-supported successor.
-export const MODEL_LARGE = 'llama-3.3-70b-versatile';
-export const MODEL_SMALL = 'llama-3.1-8b-instant';
+// When LLM_BASE_URL points to a local OpenAI-compatible server (e.g. Ollama),
+// we swap the hosted Groq model names for whatever's loaded locally. The
+// LLM_LOCAL_MODEL env var lets ops choose without code changes.
+const isLocal = !!process.env.LLM_BASE_URL;
+const localModel = process.env.LLM_LOCAL_MODEL || 'llama3.1:8b';
+
+export const MODEL_LARGE = isLocal ? localModel : 'llama-3.3-70b-versatile';
+export const MODEL_SMALL = isLocal ? localModel : 'llama-3.1-8b-instant';

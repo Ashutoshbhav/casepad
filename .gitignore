@@ -48,3 +48,5 @@ casebooks/raw/
 logs/
 playwright-report/
 test-results/
+
+.vercel

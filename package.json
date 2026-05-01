@@ -16,6 +16,8 @@
     "ingest:run:dry": "tsx --env-file=.env.local scripts/ingest/index.ts --dry-run",
     "ingest:run:disk": "tsx --env-file=.env.local scripts/ingest/index.ts --from-disk",
     "ingest:run:disk:dry": "tsx --env-file=.env.local scripts/ingest/index.ts --from-disk --dry-run",
+    "ingest:second-pass": "tsx --env-file=.env.local scripts/ingest/run-second-pass.ts",
+    "ingest:ocr": "python scripts/ingest/ocr-scanned.py",
     "verify:urls": "tsx scripts/ingest/verify-urls.ts",
     "audit:pdfs": "tsx scripts/ingest/audit-pdfs.ts"
   },
