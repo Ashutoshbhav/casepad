@@ -6,7 +6,24 @@ import Groq from 'groq-sdk';
 // only ever imported from server contexts (API routes + scripts), never from
 // client components — verified before relaxing the guard.
 
-export const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
+let _client: Groq | null = null;
+
+function getGroq(): Groq {
+  if (_client) return _client;
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    throw new Error('GROQ_API_KEY is not set in env. Set it in .env.local or your shell.');
+  }
+  _client = new Groq({ apiKey });
+  return _client;
+}
+
+// Proxy keeps `groq.chat.completions.create(...)` syntax working at every call site.
+export const groq: Groq = new Proxy({} as Groq, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getGroq(), prop, receiver);
+  },
+});
 
 // DEVIATION: The plan specified `llama-3.1-70b-versatile`, but groq-sdk@1.1.2
 // (see node_modules/groq-sdk/resources/chat/completions.d.ts) only lists
