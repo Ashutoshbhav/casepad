@@ -24,7 +24,11 @@ export default async function CasesPage({
     <main className="min-h-screen p-8 max-w-6xl mx-auto">
       <header className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Cases</h1>
-        <a href="/dashboard" className="text-sm text-zinc-400 hover:text-zinc-200">Dashboard →</a>
+        <nav className="flex items-center gap-4 text-sm">
+          <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
+          <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
+          <a href="/dashboard" className="text-zinc-400 hover:text-zinc-200">Dashboard →</a>
+        </nav>
       </header>
       <CaseFilters />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

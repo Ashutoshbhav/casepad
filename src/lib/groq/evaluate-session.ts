@@ -1,6 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { groq, MODEL_LARGE } from './client';
 import { buildEvaluatorMessages } from './evaluator';
+import { buildTrackEvaluatorMessages } from './track-evaluator';
+import type { Track } from '../tracks';
 
 export interface EvaluateResult {
   ok: boolean;
@@ -37,15 +39,28 @@ export async function evaluateSession(
   const startMs = new Date(session.started_at).getTime();
   const elapsedSec = Math.round((Date.now() - startMs) / 1000);
 
-  const messages = buildEvaluatorMessages(
-    session.transcript as any,
-    (caseRow?.ideal_structure ?? {}) as any,
-    (cheatSheet ?? {
-      framework: null, hypothesis: null, key_numbers: [],
-      decisions: [], next_steps: [], manual_notes: null, locked_fields: [],
-    }) as any,
-    elapsedSec
-  );
+  // Track-aware scoring: prefer session.track, fall back to user's preferred_track.
+  // If neither is set, use the legacy generic evaluator for backward compat.
+  const track: Track | null = (session.track as Track) || null;
+  const cs = (cheatSheet ?? {
+    framework: null, hypothesis: null, key_numbers: [],
+    decisions: [], next_steps: [], manual_notes: null, locked_fields: [],
+  }) as any;
+
+  const messages = track
+    ? buildTrackEvaluatorMessages(
+        track,
+        session.transcript as any,
+        (caseRow?.ideal_structure ?? {}) as any,
+        cs,
+        elapsedSec,
+      )
+    : buildEvaluatorMessages(
+        session.transcript as any,
+        (caseRow?.ideal_structure ?? {}) as any,
+        cs,
+        elapsedSec,
+      );
 
   const completion = await groq.chat.completions.create({
     model: MODEL_LARGE,

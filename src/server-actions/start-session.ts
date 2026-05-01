@@ -7,9 +7,12 @@ export async function startSession(caseId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/signin');
 
+  // Tag the session with the user's preferred track so the track-aware
+  // evaluator scores it on the right rubric.
+  const track = user.user_metadata?.preferred_track || 'consulting';
   const { data, error } = await supabase
     .from('sessions')
-    .insert({ user_id: user.id, case_id: caseId, transcript: [] })
+    .insert({ user_id: user.id, case_id: caseId, transcript: [], track })
     .select('id')
     .single();
   if (error || !data) throw new Error(error?.message || 'failed to start session');

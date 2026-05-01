@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ChatPanel } from '@/components/chat-panel';
 import { CheatSheetPanel } from '@/components/cheat-sheet-panel';
+import { PreCaseCrammerPanel } from '@/components/pre-case-crammer-panel';
 import { startSession } from '@/server-actions/start-session';
 import { endSession } from '@/server-actions/end-session';
 
@@ -25,7 +26,7 @@ export default async function SolvePage({
   const { data: session } = await supabase
     .from('sessions').select('*').eq('id', sessionId).single();
   const { data: caseRow } = await supabase
-    .from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single();
+    .from('cases').select('title, difficulty, problem_statement, pre_case_crammer').eq('id', caseId).single();
   const { data: cs } = await supabase
     .from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle();
 
@@ -40,15 +41,18 @@ export default async function SolvePage({
   };
 
   return (
-    <main className="h-screen flex flex-col bg-zinc-950">
+    <main className="h-screen flex flex-col bg-zinc-950 relative">
       <header className="border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
         <div>
           <div className="text-xs text-zinc-500 uppercase">{caseRow.difficulty}</div>
           <h1 className="text-sm font-semibold">{caseRow.title}</h1>
         </div>
-        <form action={endSession.bind(null, sessionId)}>
-          <button className="text-xs px-3 py-1.5 bg-rose-900/40 text-rose-300 rounded">End session</button>
-        </form>
+        <div className="flex items-center gap-3">
+          <PreCaseCrammerPanel caseId={caseId} initial={(caseRow.pre_case_crammer as any) || null} />
+          <form action={endSession.bind(null, sessionId)}>
+            <button className="text-xs px-3 py-1.5 bg-rose-900/40 text-rose-300 rounded">End session</button>
+          </form>
+        </div>
       </header>
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-x divide-zinc-800 overflow-hidden">
         <ChatPanel sessionId={sessionId} initial={initialMessages as any} />
