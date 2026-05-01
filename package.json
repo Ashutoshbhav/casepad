@@ -13,7 +13,9 @@
     "ingest:discover": "tsx scripts/ingest/discover.ts",
     "ingest:download": "tsx scripts/ingest/download.ts",
     "ingest:run": "tsx scripts/ingest/index.ts",
-    "ingest:run:dry": "tsx scripts/ingest/index.ts --dry-run"
+    "ingest:run:dry": "tsx scripts/ingest/index.ts --dry-run",
+    "ingest:run:disk": "tsx scripts/ingest/index.ts --from-disk",
+    "ingest:run:disk:dry": "tsx scripts/ingest/index.ts --from-disk --dry-run"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
