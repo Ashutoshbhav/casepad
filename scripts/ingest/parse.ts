@@ -1,4 +1,4 @@
-import pdfParse from 'pdf-parse';
+import { PDFParse } from 'pdf-parse';
 import { readFile } from 'fs/promises';
 
 const MIN_CHARS_PER_PAGE = 200;
@@ -28,13 +28,14 @@ export async function parsePdfFile(localPath: string): Promise<{
   ocrUsed: boolean;
 }> {
   const buf = await readFile(localPath);
-  const result = await pdfParse(buf);
-  if (!needsOcr(result.text, result.numpages)) {
-    return { text: result.text, numPages: result.numpages, ocrUsed: false };
+  const parser = new PDFParse({ data: buf });
+  const result = await parser.getText();
+  if (!needsOcr(result.text, result.total)) {
+    return { text: result.text, numPages: result.total, ocrUsed: false };
   }
 
   // OCR fallback (slow). For v1 we mark scanned PDFs as deferred — return what
   // we have and a flag. Rendering PDF pages to images requires pdfjs-dist + canvas
   // which is a bigger lift; deferred to a follow-up task.
-  return { text: result.text, numPages: result.numpages, ocrUsed: true };
+  return { text: result.text, numPages: result.total, ocrUsed: true };
 }
