@@ -3,6 +3,31 @@
 import { useState } from 'react';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { CONSULTING_FRAMEWORKS, CONSULTING_MATH, CONSULTING_INDUSTRY_PRIMERS, BEHAVIORAL_30 } from '@/lib/tracks-deep';
+import { IB_FRAMEWORKS, IB_MATH, IB_INDUSTRY_PRIMERS } from '@/lib/tracks-deep-ib';
+import { PM_FRAMEWORKS, PM_MATH, PM_INDUSTRY_PRIMERS, PM_APP_KPIS } from '@/lib/tracks-deep-pm';
+import { MKT_FRAMEWORKS, MKT_MATH, MKT_INDUSTRY_PRIMERS } from '@/lib/tracks-deep-mkt';
+
+function frameworksFor(track: Track) {
+  if (track === 'consulting') return CONSULTING_FRAMEWORKS;
+  if (track === 'ib_pe_vc') return IB_FRAMEWORKS;
+  if (track === 'pm') return PM_FRAMEWORKS;
+  if (track === 'marketing') return MKT_FRAMEWORKS;
+  return [];
+}
+function mathFor(track: Track) {
+  if (track === 'consulting') return CONSULTING_MATH;
+  if (track === 'ib_pe_vc') return IB_MATH;
+  if (track === 'pm') return PM_MATH;
+  if (track === 'marketing') return MKT_MATH;
+  return [];
+}
+function primersFor(track: Track) {
+  if (track === 'consulting') return CONSULTING_INDUSTRY_PRIMERS;
+  if (track === 'ib_pe_vc') return IB_INDUSTRY_PRIMERS;
+  if (track === 'pm') return PM_INDUSTRY_PRIMERS;
+  if (track === 'marketing') return MKT_INDUSTRY_PRIMERS;
+  return [];
+}
 
 const TABS = ['Weakness focus', 'Frameworks', 'Math drills', 'Industry primers', 'Recovery', 'Spike Phrases', '30 behavioral Qs', 'Ask anything'] as const;
 type Tab = typeof TABS[number];
@@ -67,7 +92,7 @@ export function CheatsheetTabs({
 
       {tab === 'Frameworks' && (
         <section className="space-y-3">
-          {(track === 'consulting' ? CONSULTING_FRAMEWORKS : def.frameworks.map(f => ({ name: f.name, when_to_use: f.when_to_use, when_NOT_to_use: '', structure: f.structure, example: '' }))).map((f: any) => (
+          {(frameworksFor(track).length ? frameworksFor(track) : def.frameworks.map(f => ({ name: f.name, when_to_use: f.when_to_use, when_NOT_to_use: '', structure: f.structure, example: '' }))).map((f: any) => (
             <div key={f.name} className="rounded border border-zinc-800 p-4">
               <div className="flex items-baseline justify-between mb-1">
                 <h3 className="font-medium text-emerald-300">{f.name}</h3>
@@ -87,7 +112,7 @@ export function CheatsheetTabs({
       {tab === 'Math drills' && (
         <section className="space-y-3">
           {[1,2,3,4].map((level) => {
-            const drills = (track === 'consulting' ? CONSULTING_MATH : def.math.map(m => ({ level: 1 as const, name: m.name, formula: m.formula, shortcut: m.mnemonic || '', example: '', threshold_to_advance: '' }))).filter((d: any) => d.level === level);
+            const drills = (mathFor(track).length ? mathFor(track) : def.math.map(m => ({ level: 1 as const, name: m.name, formula: m.formula, shortcut: m.mnemonic || '', example: '', threshold_to_advance: '' }))).filter((d: any) => d.level === level);
             if (drills.length === 0) return null;
             const colors = { 1: 'emerald', 2: 'sky', 3: 'amber', 4: 'rose' } as Record<number, string>;
             return (
@@ -114,7 +139,7 @@ export function CheatsheetTabs({
 
       {tab === 'Industry primers' && (
         <section className="space-y-3">
-          {track === 'consulting' ? CONSULTING_INDUSTRY_PRIMERS.map((p) => (
+          {primersFor(track).length > 0 ? primersFor(track).map((p: any) => (
             <div key={p.sector} className="rounded border border-zinc-800 p-4">
               <h3 className="font-medium text-emerald-300 mb-2">{p.sector}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-zinc-300">
@@ -127,7 +152,22 @@ export function CheatsheetTabs({
               <div className="text-xs text-violet-300 mt-1 italic">→ ask interviewer: &quot;{p.diagnostic_q_for_interviewer}&quot;</div>
             </div>
           )) : (
-            <div className="text-sm text-zinc-500">Industry primers coming soon for this track. For now, switch to Consulting track to see all 12 primers.</div>
+            <div className="text-sm text-zinc-500">Industry primers not yet curated for this track.</div>
+          )}
+          {track === 'pm' && PM_APP_KPIS.length > 0 && (
+            <div className="rounded border border-zinc-800 p-4 mt-4">
+              <h3 className="font-medium text-emerald-300 mb-2">App-specific KPIs (memorize these)</h3>
+              <ul className="text-xs space-y-2">
+                {PM_APP_KPIS.map((a) => (
+                  <li key={a.app}>
+                    <span className="font-medium text-zinc-100">{a.app}</span>
+                    <span className="text-zinc-500"> · {a.sector}</span>
+                    <div className="text-zinc-400 mt-0.5">key: {a.key_metrics.join(', ')}</div>
+                    <div className="text-zinc-400">NSM: <span className="text-emerald-300">{a.north_star}</span> · counter: <span className="text-rose-300">{a.counter}</span></div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </section>
       )}
