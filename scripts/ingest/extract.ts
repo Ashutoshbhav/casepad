@@ -32,16 +32,33 @@ Rules:
 
 export async function extractCase(caseText: string, useLarge = false): Promise<any | null> {
   const messages = buildExtractionMessages(caseText);
-  const completion = await groq.chat.completions.create({
-    model: useLarge ? MODEL_LARGE : MODEL_SMALL,
-    messages: messages as any,
-    response_format: { type: 'json_object' },
-    temperature: 0.1,
-    max_tokens: 1500,
-  });
-  try {
-    return JSON.parse(completion.choices[0].message.content || '{}');
-  } catch {
-    return null;
+
+  // Groq enforces both RPM and TPM. The orchestrator's Throttle covers RPM;
+  // TPM bursts (free tier llama-3.1-8b is 6000 TPM) still trip 429s. Retry
+  // up to 3 times honoring the retry-after hint when present.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const completion = await groq.chat.completions.create({
+        model: useLarge ? MODEL_LARGE : MODEL_SMALL,
+        messages: messages as any,
+        response_format: { type: 'json_object' },
+        temperature: 0.1,
+        max_tokens: 1500,
+      });
+      try {
+        return JSON.parse(completion.choices[0].message.content || '{}');
+      } catch {
+        return null;
+      }
+    } catch (err: any) {
+      if (err?.status === 429 && attempt < 2) {
+        const retryAfterSec = Number(err?.headers?.['retry-after']) || 5;
+        const waitMs = (retryAfterSec + 1) * 1000;
+        await new Promise((r) => setTimeout(r, waitMs));
+        continue;
+      }
+      throw err;
+    }
   }
+  return null;
 }

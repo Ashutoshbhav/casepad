@@ -143,7 +143,14 @@ async function main() {
     for (const chunk of chunks) {
       if (chunk.length < 200) continue;
       await groqThrottle.acquire();
-      const row = await extractCase(chunk);
+      let row;
+      try {
+        row = await extractCase(chunk);
+      } catch (err) {
+        await log('error', 'extract', `chunk failed after retries: ${(err as Error).message.slice(0, 200)}`);
+        totalFailed++;
+        continue;
+      }
       if (!row || !row.title || !row.problem_statement) {
         totalSkipped++;
         continue;
