@@ -5,7 +5,9 @@ text (per docs/research/pdf-audit.json `ocrNeeded: true`). Renders each page
 to an image at 200 DPI and runs Tesseract on it. Output goes to
 casebooks/ocr/<original-name>.txt for the second-pass extractor to pick up.
 """
-import os, sys, json, pathlib
+import os, sys, json, pathlib, io as _io
+# Force UTF-8 stdout — Windows cp1252 chokes on arrows / unicode in progress logs
+sys.stdout = _io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 import fitz  # PyMuPDF
 from PIL import Image
 import pytesseract
