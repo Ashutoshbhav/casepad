@@ -1,4 +1,4 @@
-import { createSupabaseAdminClient } from '../../src/lib/supabase/admin';
+import { createSupabaseAdminClient } from '../../src/lib/supabase/admin-core';
 
 type CaseInsert = {
   title: string;

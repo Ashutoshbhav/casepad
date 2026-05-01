@@ -11,17 +11,6 @@
     "estCases": 1
   },
   {
-    "file": "manual__10.-Darden-Case-Book-2018-2019.pdf",
-    "sizeKB": 1948,
-    "ok": true,
-    "numPages": 178,
-    "textLength": 165604,
-    "charsPerPage": 930,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
     "file": "manual__11.-Fuqua-Case-book-2017.pdf",
     "sizeKB": 9442,
     "ok": true,
@@ -88,17 +77,6 @@
     "estCases": 1
   },
   {
-    "file": "manual__289334312-yale-casebook-2013-full-6.pdf",
-    "sizeKB": 2520,
-    "ok": true,
-    "numPages": 120,
-    "textLength": 111431,
-    "charsPerPage": 929,
-    "ocrNeeded": false,
-    "chunkCount": 112,
-    "estCases": 112
-  },
-  {
     "file": "manual__3.-Columbia-case-book-2006.pdf",
     "sizeKB": 422,
     "ok": true,
@@ -132,17 +110,6 @@
     "estCases": 27
   },
   {
-    "file": "manual__5.-wharton-case-book-2009.pdf",
-    "sizeKB": 2483,
-    "ok": true,
-    "numPages": 131,
-    "textLength": 150446,
-    "charsPerPage": 1148,
-    "ocrNeeded": false,
-    "chunkCount": 77,
-    "estCases": 77
-  },
-  {
     "file": "manual__5e24a86e33881_S.P.I.T._National_Case_Study_Competition_2020.pdf",
     "sizeKB": 4209,
     "ok": true,
@@ -154,45 +121,12 @@
     "estCases": 1
   },
   {
-    "file": "manual__6.-Wharton-Casebook-2017.pdf",
-    "sizeKB": 2903,
-    "ok": true,
-    "numPages": 201,
-    "textLength": 164655,
-    "charsPerPage": 819,
-    "ocrNeeded": false,
-    "chunkCount": 176,
-    "estCases": 176
-  },
-  {
-    "file": "manual__8.-MIT-Sloan-Case-Book-2015.pdf",
-    "sizeKB": 1319,
-    "ok": true,
-    "numPages": 46,
-    "textLength": 58776,
-    "charsPerPage": 1278,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
     "file": "manual__870c3a-4cb-6f0e-1ab-dabf5d73bb6_MasterTheCase-Case-Interview-Casebooks-Darden-2021.pdf",
     "sizeKB": 2272,
     "ok": true,
     "numPages": 186,
     "textLength": 159866,
     "charsPerPage": 859,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
-    "file": "manual__9.-Stern-MCA-Casebook-2019.pdf",
-    "sizeKB": 2620,
-    "ok": true,
-    "numPages": 199,
-    "textLength": 186292,
-    "charsPerPage": 936,
     "ocrNeeded": false,
     "chunkCount": 1,
     "estCases": 1
@@ -231,28 +165,6 @@
     "estCases": 1
   },
   {
-    "file": "manual__Applicants-guide-to-acing-Interviews.pdf.coredownload.inline.pdf",
-    "sizeKB": 599,
-    "ok": true,
-    "numPages": 2,
-    "textLength": 6815,
-    "charsPerPage": 3408,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
-    "file": "manual__AT_20Kearney_20Consulting_20Casebook.pdf",
-    "sizeKB": 1208,
-    "ok": true,
-    "numPages": 35,
-    "textLength": 54107,
-    "charsPerPage": 1546,
-    "ocrNeeded": false,
-    "chunkCount": 6,
-    "estCases": 6
-  },
-  {
     "file": "manual__AT_Kearney_Casebook.pdf",
     "sizeKB": 1208,
     "ok": true,
@@ -287,17 +199,6 @@
   },
   {
     "file": "manual__BRANDSTORM-2025-OFFICIAL-RULES.pdf",
-    "sizeKB": 171,
-    "ok": true,
-    "numPages": 10,
-    "textLength": 28958,
-    "charsPerPage": 2896,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
-    "file": "manual__BRANDSTORM_2025_OFFICIAL_RULES.pdf",
     "sizeKB": 171,
     "ok": true,
     "numPages": 10,
@@ -495,17 +396,6 @@
     "estCases": 14
   },
   {
-    "file": "manual__Copy_20of_20Harvard_Business_School_2012.pdf",
-    "sizeKB": 3000,
-    "ok": true,
-    "numPages": 114,
-    "textLength": 194171,
-    "charsPerPage": 1703,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
     "file": "manual__Copy_20of_20IIMA_20Prep_20Book_202023-2024.pdf",
     "sizeKB": 7730,
     "ok": true,
@@ -523,17 +413,6 @@
     "numPages": 105,
     "textLength": 140298,
     "charsPerPage": 1336,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
-    "file": "manual__Copy_20of_20INSEAD_2011.pdf",
-    "sizeKB": 1214,
-    "ok": true,
-    "numPages": 108,
-    "textLength": 223055,
-    "charsPerPage": 2065,
     "ocrNeeded": false,
     "chunkCount": 1,
     "estCases": 1
@@ -561,17 +440,6 @@
     "estCases": 1
   },
   {
-    "file": "manual__Copy_20of_20Kellogg_2012.pdf",
-    "sizeKB": 3147,
-    "ok": true,
-    "numPages": 236,
-    "textLength": 289353,
-    "charsPerPage": 1226,
-    "ocrNeeded": false,
-    "chunkCount": 29,
-    "estCases": 29
-  },
-  {
     "file": "manual__Copy_20of_20London_Business_School_2013.pdf",
     "sizeKB": 1955,
     "ok": true,
@@ -581,17 +449,6 @@
     "ocrNeeded": false,
     "chunkCount": 1,
     "estCases": 1
-  },
-  {
-    "file": "manual__Copy_20of_20Queens_2019.pdf",
-    "sizeKB": 1883,
-    "ok": true,
-    "numPages": 137,
-    "textLength": 125946,
-    "charsPerPage": 919,
-    "ocrNeeded": false,
-    "chunkCount": 68,
-    "estCases": 68
   },
   {
     "file": "manual__Copy_20of_20Sloan_2015.pdf",
@@ -627,17 +484,6 @@
     "estCases": 1
   },
   {
-    "file": "manual__Copy_20of_20Wharton_2017.pdf",
-    "sizeKB": 2903,
-    "ok": true,
-    "numPages": 201,
-    "textLength": 164655,
-    "charsPerPage": 819,
-    "ocrNeeded": false,
-    "chunkCount": 176,
-    "estCases": 176
-  },
-  {
     "file": "manual__Copy_20of_20Yale_2013.pdf",
     "sizeKB": 2520,
     "ok": true,
@@ -669,17 +515,6 @@
     "ocrNeeded": false,
     "chunkCount": 20,
     "estCases": 20
-  },
-  {
-    "file": "manual__Darden_20Case_20Book_202018-2019.pdf",
-    "sizeKB": 1948,
-    "ok": true,
-    "numPages": 178,
-    "textLength": 165604,
-    "charsPerPage": 930,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
   },
   {
     "file": "manual__Day_201.0.pdf",
@@ -831,17 +666,6 @@
     "numPages": 185,
     "textLength": 304033,
     "charsPerPage": 1643,
-    "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
-  },
-  {
-    "file": "manual__IIM_20A_20consult_20report_20_23most_20important.pdf",
-    "sizeKB": 9738,
-    "ok": true,
-    "numPages": 272,
-    "textLength": 833846,
-    "charsPerPage": 3066,
     "ocrNeeded": false,
     "chunkCount": 1,
     "estCases": 1
