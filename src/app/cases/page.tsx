@@ -7,7 +7,13 @@ export default async function CasesPage({
 }: { searchParams: Promise<{ industry?: string; type?: string; difficulty?: string; q?: string }> }) {
   const sp = await searchParams;
   const supabase = await createSupabaseServerClient();
-  let query = supabase.from('cases').select('*').order('created_at', { ascending: false }).limit(120);
+  // Only select fields CaseCard actually displays — full JSONB columns
+  // (interviewer_notes, ideal_structure) bloat the payload to MB at 120 rows.
+  let query = supabase
+    .from('cases')
+    .select('id,title,industry,case_type,difficulty,source')
+    .order('created_at', { ascending: false })
+    .limit(60);
   if (sp.industry) query = query.eq('industry', sp.industry);
   if (sp.type) query = query.eq('case_type', sp.type);
   if (sp.difficulty) query = query.eq('difficulty', sp.difficulty);
