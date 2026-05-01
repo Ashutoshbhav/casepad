@@ -1,7 +1,10 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ScoreBar } from '@/components/score-bar';
 import { IdealStructureTree } from '@/components/ideal-structure-tree';
+import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
+import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
 
 export default async function DebriefPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params;
@@ -10,7 +13,25 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
     .from('sessions').select('*').eq('id', sessionId).single();
   if (!session) redirect('/cases');
   const { data: caseRow } = await supabase
-    .from('cases').select('title, ideal_structure').eq('id', session.case_id).single();
+    .from('cases')
+    .select('id, title, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
+    .eq('id', session.case_id)
+    .single();
+
+  // Lazy-generate the ideal walkthrough on first debrief view, then cache.
+  let walkthrough = caseRow?.ideal_walkthrough as any;
+  if (caseRow && !walkthrough) {
+    walkthrough = await generateIdealWalkthrough(
+      caseRow.title,
+      caseRow.problem_statement || '',
+      caseRow.ideal_structure || {},
+      (caseRow.interviewer_notes as any[]) || []
+    );
+    if (walkthrough) {
+      const admin = createSupabaseAdminClient();
+      await admin.from('cases').update({ ideal_walkthrough: walkthrough }).eq('id', caseRow.id);
+    }
+  }
 
   const b = (session.score_breakdown ?? {}) as any;
 
@@ -42,10 +63,18 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         </div>
       </section>
 
-      <section className="rounded border border-zinc-800 p-5">
+      <section className="rounded border border-zinc-800 p-5 mb-8">
         <h3 className="text-sm font-semibold text-zinc-300 mb-3">Ideal structure</h3>
         <IdealStructureTree s={(caseRow?.ideal_structure ?? {}) as any} />
       </section>
+
+      {walkthrough && (
+        <section className="rounded border border-zinc-800 p-5">
+          <h2 className="text-lg font-semibold text-zinc-100 mb-1">How a top candidate would solve this</h2>
+          <p className="text-xs text-zinc-500 mb-5">Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.</p>
+          <IdealWalkthroughView w={walkthrough} />
+        </section>
+      )}
     </main>
   );
 }
