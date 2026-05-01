@@ -19,7 +19,14 @@ async function verifyOne(url: string): Promise<VerifyResult> {
     }
     const ct = res.headers.get('content-type');
     const cl = res.headers.get('content-length');
-    const isPdf = ct?.toLowerCase().includes('pdf') ?? false;
+    const ctLower = ct?.toLowerCase() ?? '';
+    const isPdfCt = ctLower.includes('pdf');
+    // GitHub serves raw blobs as application/octet-stream — treat as PDF when
+    // the URL ends in .pdf. Same logic for known direct-PDF hosts that don't
+    // bother setting application/pdf.
+    const urlEndsPdf = /\.pdf(\?|$)/i.test(url);
+    const isOctetButPdfUrl = ctLower.includes('octet-stream') && urlEndsPdf;
+    const isPdf = isPdfCt || isOctetButPdfUrl;
     return {
       url,
       ok: res.ok && isPdf,

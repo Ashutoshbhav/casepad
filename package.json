@@ -16,7 +16,8 @@
     "ingest:run:dry": "tsx scripts/ingest/index.ts --dry-run",
     "ingest:run:disk": "tsx scripts/ingest/index.ts --from-disk",
     "ingest:run:disk:dry": "tsx scripts/ingest/index.ts --from-disk --dry-run",
-    "verify:urls": "tsx scripts/ingest/verify-urls.ts"
+    "verify:urls": "tsx scripts/ingest/verify-urls.ts",
+    "audit:pdfs": "tsx scripts/ingest/audit-pdfs.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
