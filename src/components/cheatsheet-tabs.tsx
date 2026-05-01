@@ -75,6 +75,7 @@ export function CheatsheetTabs({
               <ul className="text-sm text-zinc-300 mt-2 space-y-0.5">
                 {f.structure.map((s, i) => <li key={i}>· {s}</li>)}
               </ul>
+              <CohortNotes scope="framework" scope_id={`${track}:${f.name}`} />
             </div>
           ))}
         </section>
@@ -166,6 +167,55 @@ function AskTheCheatSheet({ track, weakestDims }: { track: Track; weakestDims: s
         <div className="mt-4 rounded border border-zinc-800 p-4 text-sm text-zinc-200 whitespace-pre-wrap">{a}</div>
       )}
     </section>
+  );
+}
+
+function CohortNotes({ scope, scope_id }: { scope: string; scope_id: string }) {
+  const [notes, setNotes] = useState<{ id: string; body: string; upvotes: number }[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState('');
+
+  const load = async () => {
+    if (loaded) return;
+    const r = await fetch(`/api/cohort-notes?scope=${encodeURIComponent(scope)}&scope_id=${encodeURIComponent(scope_id)}`);
+    const data = await r.json();
+    setNotes(data.notes || []);
+    setLoaded(true);
+  };
+
+  const submit = async () => {
+    if (!draft.trim()) return;
+    const r = await fetch('/api/cohort-notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scope, scope_id, body: draft }),
+    });
+    const data = await r.json();
+    if (data.note) {
+      setNotes((n) => [{ id: data.note.id, body: data.note.body, upvotes: 0 }, ...n]);
+      setDraft('');
+    }
+  };
+
+  return (
+    <div className="mt-3 pt-3 border-t border-zinc-900">
+      <button onClick={() => { setOpen(!open); load(); }} className="text-xs text-zinc-500 hover:text-zinc-300">
+        {open ? '▾' : '▸'} Cohort spike notes ({loaded ? notes.length : '…'})
+      </button>
+      {open && (
+        <div className="mt-2 space-y-2">
+          {notes.map((n) => (
+            <div key={n.id} className="text-xs text-zinc-300 bg-zinc-900 rounded p-2">{n.body}</div>
+          ))}
+          {notes.length === 0 && loaded && <div className="text-xs text-zinc-600 italic">No notes yet — be the first.</div>}
+          <div className="flex gap-1">
+            <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Add a spike note (max 1000 chars)" className="flex-1 text-xs rounded bg-zinc-900 border border-zinc-800 px-2 py-1" />
+            <button onClick={submit} className="text-xs px-2 py-1 bg-zinc-800 rounded hover:bg-zinc-700">Add</button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
