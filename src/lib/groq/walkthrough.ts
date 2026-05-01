@@ -80,7 +80,14 @@ Rules:
 - step_by_step has 5-8 steps showing what a strong candidate says at each stage (clarify → decompose → hypothesize → test → recommend).
 - ANTI-SLOP RULE: every L2 evidence point and every step's reasoning MUST reference EITHER (a) a specific number/fact from the case data (problem/structure/reveals) OR (b) a specific finding from the WEB RESEARCH below. Generic MBB-cliche statements ("evaluate market attractiveness") without grounding are FORBIDDEN.
 - If the web research contradicts the case's premises, prefer the case data — but USE the web research to add real industry numbers, competitor names, and recent context.
-- Output must read like it was written by someone who actually researched this company, not someone reciting frameworks.`;
+- Output must read like it was written by someone who actually researched this company, not someone reciting frameworks.
+
+EDGE CASES:
+- If problem statement is too vague (<60 chars or no concrete ask), make the issue tree GENERIC for the implied case type but flag in step 1: "first I'd clarify [specific clarifying question]".
+- If the case is a market-sizing / estimation, replace the recommendation step with a numerical answer + range.
+- If interviewer notes have a clear "spike" data point (a surprising number), CALL IT OUT in L2 evidence as the key insight.
+- For behavioral / fit cases (no business problem), produce a STAR-style breakdown instead of issue tree.
+- Never use the words "MECE", "low-hanging fruit", "synergy" without surrounding specificity — these are red-flag cliches when ungrounded.`;
 
   const user = `CASE TITLE: ${title}
 

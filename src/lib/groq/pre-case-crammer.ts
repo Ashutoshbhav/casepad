@@ -64,13 +64,14 @@ Output JSON only:
 }
 
 Rules:
-- industry_primer: drawn from the WEB RESEARCH below. Specific numbers/companies, not generic.
-- likely_frameworks: 2-3 from the candidate's track frameworks (listed below). Pick based on the case's actual content. why_this_one must reference the case.
-- math_shortcuts: 3-5 from the track math list. Pick what THIS case will need.
-- watch_outs: 2-3 specific things to remember. INCLUDE one that maps to the user's weakest dimensions: ${weakestDimensions.join(', ') || 'none yet'}.
+- industry_primer: drawn from the WEB RESEARCH below. Specific numbers/companies, not generic. If web research is empty/missing, use sector-typical ranges and explicitly say "(typical range — verify in case)" for any number.
+- likely_frameworks: 2-3 from the candidate's track frameworks (listed below). Pick based on the case's actual content. why_this_one must reference the case in 1 sentence — NOT a generic framework summary.
+- math_shortcuts: 3-5 from the track math list. Pick what THIS case will need; prioritize what the candidate's weak dimensions ${weakestDimensions.join(', ') || '(no history)'} suggests they'd struggle with.
+- watch_outs: 2-3 specific things to remember. INCLUDE one that maps to the user's weakest dimensions. Avoid generic "remember to be MECE" — these are useless.
 - recovery_script: pick one of the track's recovery scripts most relevant to this case.
-- spike_phrase: one of the track's killer phrases that'd be impressive in this case.
-- DO NOT invent industry numbers. Use only what's in the web research.
+- spike_phrase: one of the track's killer phrases that'd be impressive in this case — must be quoteable verbatim.
+- DO NOT invent industry numbers. If unsure, omit or say "verify in case data".
+- Output must be readable in 30 seconds. Cut anything that's not action-oriented.
 
 TRACK FRAMEWORKS AVAILABLE:
 ${trackFrameworks}

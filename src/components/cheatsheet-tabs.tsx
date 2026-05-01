@@ -6,12 +6,14 @@ import { CONSULTING_FRAMEWORKS, CONSULTING_MATH, CONSULTING_INDUSTRY_PRIMERS, BE
 import { IB_FRAMEWORKS, IB_MATH, IB_INDUSTRY_PRIMERS } from '@/lib/tracks-deep-ib';
 import { PM_FRAMEWORKS, PM_MATH, PM_INDUSTRY_PRIMERS, PM_APP_KPIS } from '@/lib/tracks-deep-pm';
 import { MKT_FRAMEWORKS, MKT_MATH, MKT_INDUSTRY_PRIMERS } from '@/lib/tracks-deep-mkt';
+import { STRATEGY_FRAMEWORKS, STRATEGY_MATH, STRATEGY_PRIMERS } from '@/lib/tracks-deep-strategy';
 
 function frameworksFor(track: Track) {
   if (track === 'consulting') return CONSULTING_FRAMEWORKS;
   if (track === 'ib_pe_vc') return IB_FRAMEWORKS;
   if (track === 'pm') return PM_FRAMEWORKS;
   if (track === 'marketing') return MKT_FRAMEWORKS;
+  if (track === 'strategy_bizops') return STRATEGY_FRAMEWORKS;
   return [];
 }
 function mathFor(track: Track) {
@@ -19,6 +21,7 @@ function mathFor(track: Track) {
   if (track === 'ib_pe_vc') return IB_MATH;
   if (track === 'pm') return PM_MATH;
   if (track === 'marketing') return MKT_MATH;
+  if (track === 'strategy_bizops') return STRATEGY_MATH;
   return [];
 }
 function primersFor(track: Track) {
@@ -26,6 +29,7 @@ function primersFor(track: Track) {
   if (track === 'ib_pe_vc') return IB_INDUSTRY_PRIMERS;
   if (track === 'pm') return PM_INDUSTRY_PRIMERS;
   if (track === 'marketing') return MKT_INDUSTRY_PRIMERS;
+  if (track === 'strategy_bizops') return STRATEGY_PRIMERS;
   return [];
 }
 
