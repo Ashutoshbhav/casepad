@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { TRACKS, type Track } from '@/lib/tracks';
+import { CONSULTING_FRAMEWORKS, CONSULTING_MATH, CONSULTING_INDUSTRY_PRIMERS, BEHAVIORAL_30 } from '@/lib/tracks-deep';
 
-const TABS = ['Frameworks', 'Math', 'Recovery', 'Spike Phrases', 'Weakness focus', 'Ask anything', 'Behavioral STAR'] as const;
+const TABS = ['Weakness focus', 'Frameworks', 'Math drills', 'Industry primers', 'Recovery', 'Spike Phrases', '30 behavioral Qs', 'Ask anything'] as const;
 type Tab = typeof TABS[number];
 
 export function CheatsheetTabs({
@@ -66,33 +67,68 @@ export function CheatsheetTabs({
 
       {tab === 'Frameworks' && (
         <section className="space-y-3">
-          {def.frameworks.map((f) => (
+          {(track === 'consulting' ? CONSULTING_FRAMEWORKS : def.frameworks.map(f => ({ name: f.name, when_to_use: f.when_to_use, when_NOT_to_use: '', structure: f.structure, example: '' }))).map((f: any) => (
             <div key={f.name} className="rounded border border-zinc-800 p-4">
               <div className="flex items-baseline justify-between mb-1">
                 <h3 className="font-medium text-emerald-300">{f.name}</h3>
-                <span className="text-xs text-zinc-500">when: {f.when_to_use}</span>
               </div>
+              <div className="text-xs text-zinc-500 mt-1"><span className="text-emerald-400">when:</span> {f.when_to_use}</div>
+              {f.when_NOT_to_use && <div className="text-xs text-zinc-500"><span className="text-rose-400">NOT when:</span> {f.when_NOT_to_use}</div>}
               <ul className="text-sm text-zinc-300 mt-2 space-y-0.5">
-                {f.structure.map((s, i) => <li key={i}>· {s}</li>)}
+                {f.structure.map((s: string, i: number) => <li key={i}>· {s}</li>)}
               </ul>
+              {f.example && <div className="text-xs text-zinc-400 mt-2 italic">e.g. {f.example}</div>}
               <CohortNotes scope="framework" scope_id={`${track}:${f.name}`} />
             </div>
           ))}
         </section>
       )}
 
-      {tab === 'Math' && (
-        <section className="space-y-2">
-          {def.math.map((m) => (
-            <div key={m.name} className="rounded border border-zinc-800 p-3">
-              <div className="flex items-baseline justify-between">
-                <span className="text-amber-300 font-medium text-sm">{m.name}</span>
-                <code className="text-xs text-zinc-300 font-mono">{m.formula}</code>
+      {tab === 'Math drills' && (
+        <section className="space-y-3">
+          {[1,2,3,4].map((level) => {
+            const drills = (track === 'consulting' ? CONSULTING_MATH : def.math.map(m => ({ level: 1 as const, name: m.name, formula: m.formula, shortcut: m.mnemonic || '', example: '', threshold_to_advance: '' }))).filter((d: any) => d.level === level);
+            if (drills.length === 0) return null;
+            const colors = { 1: 'emerald', 2: 'sky', 3: 'amber', 4: 'rose' } as Record<number, string>;
+            return (
+              <div key={level} className="rounded border border-zinc-800 p-4">
+                <h3 className={`text-sm font-semibold text-${colors[level]}-300 mb-2`}>Level {level} {level === 1 ? '(beginner)' : level === 2 ? '(core)' : level === 3 ? '(advanced)' : '(expert)'}</h3>
+                <ul className="space-y-2">
+                  {drills.map((d: any) => (
+                    <li key={d.name} className="text-sm">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-amber-300 font-medium">{d.name}</span>
+                        <code className="text-xs text-zinc-300 font-mono">{d.formula}</code>
+                      </div>
+                      {d.shortcut && <div className="text-xs text-zinc-500 mt-0.5">↳ shortcut: {d.shortcut}</div>}
+                      {d.example && <div className="text-xs text-zinc-400 italic">e.g. {d.example}</div>}
+                      {d.threshold_to_advance && <div className="text-xs text-emerald-400 mt-0.5">→ unlock next: {d.threshold_to_advance}</div>}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              {m.mnemonic && <div className="text-xs text-zinc-500 mt-1">↳ {m.mnemonic}</div>}
+            );
+          })}
+        </section>
+      )}
+
+      {tab === 'Industry primers' && (
+        <section className="space-y-3">
+          {track === 'consulting' ? CONSULTING_INDUSTRY_PRIMERS.map((p) => (
+            <div key={p.sector} className="rounded border border-zinc-800 p-4">
+              <h3 className="font-medium text-emerald-300 mb-2">{p.sector}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-zinc-300">
+                <div><span className="text-zinc-500">Margins:</span> {p.typical_margin_range}</div>
+                <div><span className="text-zinc-500">Cycle / KPI:</span> {p.cycle_or_kpi}</div>
+                <div><span className="text-zinc-500">Cost drivers:</span> {p.cost_drivers.join(', ')}</div>
+                <div><span className="text-zinc-500">Revenue drivers:</span> {p.revenue_drivers.join(', ')}</div>
+              </div>
+              <div className="text-xs text-zinc-400 mt-2"><span className="text-rose-300">Disruption:</span> {p.recent_disruption}</div>
+              <div className="text-xs text-violet-300 mt-1 italic">→ ask interviewer: &quot;{p.diagnostic_q_for_interviewer}&quot;</div>
             </div>
-          ))}
-          {def.math.length === 0 && <div className="text-sm text-zinc-500">No math drills for this track.</div>}
+          )) : (
+            <div className="text-sm text-zinc-500">Industry primers coming soon for this track. For now, switch to Consulting track to see all 12 primers.</div>
+          )}
         </section>
       )}
 
@@ -120,7 +156,7 @@ export function CheatsheetTabs({
 
       {tab === 'Ask anything' && <AskTheCheatSheet track={track} weakestDims={weakestDims} />}
 
-      {tab === 'Behavioral STAR' && <BehavioralSection />}
+      {tab === '30 behavioral Qs' && <BehavioralThirty />}
     </div>
   );
 }
@@ -219,35 +255,38 @@ function CohortNotes({ scope, scope_id }: { scope: string; scope_id: string }) {
   );
 }
 
-function BehavioralSection() {
-  const def = TRACKS.behavioral;
+function BehavioralThirty() {
+  const [filter, setFilter] = useState<string>('all');
+  const dims = ['all', ...Array.from(new Set(BEHAVIORAL_30.map((q) => q.dimension)))];
+  const filtered = filter === 'all' ? BEHAVIORAL_30 : BEHAVIORAL_30.filter((q) => q.dimension === filter);
+
   return (
     <section className="space-y-4">
-      <p className="text-sm text-zinc-400">Behavioral / fit applies to every track. Cover these dimensions with concrete STAR stories.</p>
-      <div className="rounded border border-zinc-800 p-4">
-        <h3 className="font-medium text-zinc-100 mb-2">McKinsey PEI 2025 dimensions</h3>
-        <ul className="text-sm space-y-1 text-zinc-300">
-          <li>• <span className="text-emerald-300">Connection</span> — story showing you built a genuine relationship with stakeholder under tension</li>
-          <li>• <span className="text-emerald-300">Drive</span> — story of pushing past a real obstacle (not a humblebrag)</li>
-          <li>• <span className="text-emerald-300">Leadership</span> — story of influencing without authority</li>
-          <li>• <span className="text-emerald-300">Growth</span> — story of learning from a setback (be honest)</li>
-        </ul>
+      <p className="text-sm text-zinc-400">The 30 most-asked behavioral questions across MBA tracks. Each has a STAR scaffold + spike move + common mistake.</p>
+      <div className="flex flex-wrap gap-1 mb-2">
+        {dims.map((d) => (
+          <button
+            key={d}
+            onClick={() => setFilter(d)}
+            className={`text-xs px-2 py-1 rounded ${filter === d ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200'}`}
+          >
+            {d}
+          </button>
+        ))}
       </div>
-      <div className="rounded border border-zinc-800 p-4">
-        <h3 className="font-medium text-zinc-100 mb-2">STAR template</h3>
-        <ol className="text-sm space-y-1 text-zinc-300">
-          <li>1. <strong>Situation</strong>: when/where, 1 sentence</li>
-          <li>2. <strong>Task</strong>: the specific goal you owned</li>
-          <li>3. <strong>Action</strong>: what YOU (not the team) did, with reasoning</li>
-          <li>4. <strong>Result</strong>: outcome with concrete numbers + what you learned</li>
-        </ol>
-      </div>
-      <div className="rounded border border-zinc-800 p-4">
-        <h3 className="font-medium text-zinc-100 mb-2">Killer phrases</h3>
-        <ul className="text-xs space-y-1 italic text-violet-200">
-          {def.killer_phrases.map((p, i) => <li key={i}>&quot;{p}&quot;</li>)}
-        </ul>
-      </div>
+      <ul className="space-y-3">
+        {filtered.map((q, i) => (
+          <li key={i} className="rounded border border-zinc-800 p-4">
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="font-medium text-zinc-100 text-sm">{q.prompt}</span>
+              <span className="text-xs px-2 py-0.5 rounded bg-zinc-800 text-emerald-300 capitalize">{q.dimension}</span>
+            </div>
+            <div className="text-xs text-zinc-400 mb-2"><span className="text-emerald-400">STAR:</span> {q.star_scaffold}</div>
+            <div className="text-xs text-violet-300 mb-1"><span className="text-violet-400">Spike:</span> {q.spike_move}</div>
+            <div className="text-xs text-rose-300"><span className="text-rose-400">Common mistake:</span> {q.common_mistake}</div>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
