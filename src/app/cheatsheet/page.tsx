@@ -52,7 +52,10 @@ export default async function CheatsheetPage() {
           <h1 className="text-2xl font-semibold">Cheat sheet</h1>
           <p className="text-xs text-zinc-500">{def.label} · {sessions?.length || 0} cases solved</p>
         </div>
-        <a href="/cases" className="text-sm text-zinc-400 hover:text-zinc-200">← back to cases</a>
+        <nav className="flex items-center gap-4 text-sm">
+          <a href="/company-pack" className="text-emerald-300 hover:text-emerald-200">📋 Company pack</a>
+          <a href="/cases" className="text-zinc-400 hover:text-zinc-200">← cases</a>
+        </nav>
       </header>
 
       <CheatsheetTabs track={track} weakestDims={dimRatios.slice(0, 3).map((r) => r.dim)} weakestStats={dimRatios.slice(0, 5)} />

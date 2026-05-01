@@ -3,6 +3,8 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ChatPanel } from '@/components/chat-panel';
 import { CheatSheetPanel } from '@/components/cheat-sheet-panel';
 import { PreCaseCrammerPanel } from '@/components/pre-case-crammer-panel';
+import { InSolveHintPanel } from '@/components/in-solve-hint-panel';
+import type { Track } from '@/lib/tracks';
 import { startSession } from '@/server-actions/start-session';
 import { endSession } from '@/server-actions/end-session';
 
@@ -62,6 +64,7 @@ export default async function SolvePage({
         <summary className="text-xs text-zinc-500 cursor-pointer">Show problem statement</summary>
         <p className="text-sm text-zinc-400 mt-2">{caseRow.problem_statement}</p>
       </details>
+      <InSolveHintPanel track={(user.user_metadata?.preferred_track as Track) || 'consulting'} />
     </main>
   );
 }
