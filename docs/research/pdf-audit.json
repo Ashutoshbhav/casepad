@@ -128,8 +128,8 @@
     "textLength": 247764,
     "charsPerPage": 851,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 27,
+    "estCases": 27
   },
   {
     "file": "manual__5.-wharton-case-book-2009.pdf",
@@ -161,8 +161,8 @@
     "textLength": 164655,
     "charsPerPage": 819,
     "ocrNeeded": false,
-    "chunkCount": 27,
-    "estCases": 27
+    "chunkCount": 176,
+    "estCases": 176
   },
   {
     "file": "manual__8.-MIT-Sloan-Case-Book-2015.pdf",
@@ -348,8 +348,8 @@
     "textLength": 331385,
     "charsPerPage": 2111,
     "ocrNeeded": false,
-    "chunkCount": 2,
-    "estCases": 2
+    "chunkCount": 4,
+    "estCases": 4
   },
   {
     "file": "manual__Case_20Interview_20Cracked.pdf",
@@ -359,8 +359,8 @@
     "textLength": 275754,
     "charsPerPage": 1326,
     "ocrNeeded": false,
-    "chunkCount": 34,
-    "estCases": 34
+    "chunkCount": 36,
+    "estCases": 36
   },
   {
     "file": "manual__Case_20Study_PeerPricing-20211001_0.pdf",
@@ -546,8 +546,8 @@
     "textLength": 555583,
     "charsPerPage": 1715,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 3,
+    "estCases": 3
   },
   {
     "file": "manual__Copy_20of_20Johnson_2003.pdf",
@@ -634,8 +634,8 @@
     "textLength": 164655,
     "charsPerPage": 819,
     "ocrNeeded": false,
-    "chunkCount": 27,
-    "estCases": 27
+    "chunkCount": 176,
+    "estCases": 176
   },
   {
     "file": "manual__Copy_20of_20Yale_2013.pdf",
@@ -689,8 +689,8 @@
     "textLength": 247991,
     "charsPerPage": 1210,
     "ocrNeeded": false,
-    "chunkCount": 14,
-    "estCases": 14
+    "chunkCount": 15,
+    "estCases": 15
   },
   {
     "file": "manual__doc_300012940_esade_mba_consulting_club_casebook_2011_2381752.pdf",
@@ -898,8 +898,8 @@
     "textLength": 68970,
     "charsPerPage": 873,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 4,
+    "estCases": 4
   },
   {
     "file": "manual__insead_2011.pdf",
@@ -920,8 +920,8 @@
     "textLength": 591082,
     "charsPerPage": 1624,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 4,
+    "estCases": 4
   },
   {
     "file": "manual__Kellogg-2012.pdf",
@@ -997,8 +997,8 @@
     "textLength": 285756,
     "charsPerPage": 1652,
     "ocrNeeded": false,
-    "chunkCount": 34,
-    "estCases": 34
+    "chunkCount": 36,
+    "estCases": 36
   },
   {
     "file": "manual__lbs_2013.pdf",
@@ -1030,8 +1030,8 @@
     "textLength": 90327,
     "charsPerPage": 684,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 113,
+    "estCases": 113
   },
   {
     "file": "manual__mcgill_2013.pdf",
@@ -1129,8 +1129,8 @@
     "textLength": 1127425,
     "charsPerPage": 1031,
     "ocrNeeded": false,
-    "chunkCount": 159,
-    "estCases": 159
+    "chunkCount": 186,
+    "estCases": 186
   },
   {
     "file": "manual__Queens_2019.pdf",
@@ -1195,8 +1195,8 @@
     "textLength": 30275,
     "charsPerPage": 1682,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 8,
+    "estCases": 8
   },
   {
     "file": "manual__simonkucher_case_interview_prep_2015.pdf",
@@ -1316,8 +1316,8 @@
     "textLength": 164655,
     "charsPerPage": 819,
     "ocrNeeded": false,
-    "chunkCount": 27,
-    "estCases": 27
+    "chunkCount": 176,
+    "estCases": 176
   },
   {
     "file": "manual__wharton.pdf",
@@ -1371,8 +1371,8 @@
     "textLength": 590551,
     "charsPerPage": 1857,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 3,
+    "estCases": 3
   },
   {
     "file": "manual__XLRI_20CRUX_Casebook_2024_Final_v1.0.pdf",
@@ -1382,7 +1382,7 @@
     "textLength": 847584,
     "charsPerPage": 2225,
     "ocrNeeded": false,
-    "chunkCount": 1,
-    "estCases": 1
+    "chunkCount": 3,
+    "estCases": 3
   }
 ]

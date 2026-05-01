@@ -1,6 +1,6 @@
 import { discoverAll } from './discover';
 import { downloadOne } from './download';
-import { parsePdfFile, splitIntoCaseChunks } from './parse';
+import { parsePdfFile, splitIntoCaseChunks, isLikelyWholeDocument } from './parse';
 import { extractCase } from './extract';
 import { upsertCasebook, insertCase, bumpCasebookCount } from './insert';
 import { Throttle } from './throttle';
@@ -128,6 +128,15 @@ async function main() {
     }
 
     const chunks = splitIntoCaseChunks(parsed.text);
+    if (chunks.length === 1 && isLikelyWholeDocument(chunks[0])) {
+      await log(
+        'warn',
+        'parse',
+        `${path.basename(localPath)} → 1 chunk (${chunks[0].length} chars) — case headers not detected, skipping to avoid garbage extraction`
+      );
+      totalSkipped++;
+      continue;
+    }
     await log('info', 'parse', `${path.basename(localPath)} → ${chunks.length} chunks`);
 
     let inserted = 0;
