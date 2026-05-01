@@ -64,6 +64,22 @@ export function IdealWalkthroughView({ w }: { w: IdealWalkthrough }) {
           ))}
         </ol>
       </section>
+
+      {w.sources && w.sources.length > 0 && (
+        <section>
+          <h3 className="text-sm font-semibold text-zinc-300 mb-2">Sources</h3>
+          <p className="text-xs text-zinc-500 mb-2">Web research used to ground this walkthrough — facts above are anchored in case data + these sources.</p>
+          <ol className="space-y-1 text-xs">
+            {w.sources.map((s, i) => (
+              <li key={i}>
+                <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:text-sky-300 underline-offset-2 hover:underline">
+                  [{i + 1}] {s.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
     </div>
   );
 }

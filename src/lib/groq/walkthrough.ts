@@ -1,4 +1,5 @@
 import { groq, MODEL_LARGE } from './client';
+import { researchCase } from '../research/tavily';
 
 export interface IdealWalkthrough {
   issue_tree: {
@@ -22,6 +23,7 @@ export interface IdealWalkthrough {
     reasoning: string;
     expected_questions?: string[];
   }[];
+  sources?: { title: string; url: string }[];
 }
 
 export async function generateIdealWalkthrough(
@@ -30,6 +32,19 @@ export async function generateIdealWalkthrough(
   idealStructure: any,
   interviewerNotes: any[]
 ): Promise<IdealWalkthrough | null> {
+  // Run web research first so the LLM has real-world facts to ground in,
+  // not just whatever the casebook PDF gave us. Falls through gracefully if
+  // Tavily key missing or search fails.
+  let research = '';
+  let sources: { title: string; url: string }[] = [];
+  try {
+    const r = await researchCase(title, problemStatement);
+    research = r.research;
+    sources = r.sources;
+  } catch (err) {
+    console.warn('research skipped:', (err as Error).message);
+  }
+
   const system = `You are a senior consulting interview coach. Given a case, produce
 the IDEAL step-by-step solve that a top-percentile MBB candidate would deliver.
 
@@ -63,8 +78,9 @@ Rules:
   - L3: 2-4 risks or counter-arguments
   - L4: 2-4 implementation/next-step considerations
 - step_by_step has 5-8 steps showing what a strong candidate says at each stage (clarify → decompose → hypothesize → test → recommend).
-- DO NOT INVENT data not in the problem statement. If specific numbers aren't given, leave evidence general.
-- Use the case's actual context (title, problem, ideal structure, reveal data) to ground every output.`;
+- ANTI-SLOP RULE: every L2 evidence point and every step's reasoning MUST reference EITHER (a) a specific number/fact from the case data (problem/structure/reveals) OR (b) a specific finding from the WEB RESEARCH below. Generic MBB-cliche statements ("evaluate market attractiveness") without grounding are FORBIDDEN.
+- If the web research contradicts the case's premises, prefer the case data — but USE the web research to add real industry numbers, competitor names, and recent context.
+- Output must read like it was written by someone who actually researched this company, not someone reciting frameworks.`;
 
   const user = `CASE TITLE: ${title}
 
@@ -77,7 +93,10 @@ ${JSON.stringify(idealStructure, null, 2)}
 INTERVIEWER REVEAL DATA (what gets uncovered when asked):
 ${JSON.stringify((interviewerNotes || []).slice(0, 8), null, 2)}
 
-Generate the ideal walkthrough JSON.`;
+WEB RESEARCH (real-world context to ground your walkthrough in):
+${research || '(no research available — ground in case data only)'}
+
+Generate the ideal walkthrough JSON. Remember: every evidence/reasoning point MUST cite either case data or web research — no MBB-cliche generics.`;
 
   try {
     const completion = await groq.chat.completions.create({
@@ -91,7 +110,10 @@ Generate the ideal walkthrough JSON.`;
       max_tokens: 2500,
     });
     const content = completion.choices[0].message.content || '{}';
-    return JSON.parse(content) as IdealWalkthrough;
+    const parsed = JSON.parse(content) as IdealWalkthrough;
+    // Attach the web sources we used so the UI can cite them.
+    if (sources.length > 0) parsed.sources = sources;
+    return parsed;
   } catch (err) {
     console.error('walkthrough generation failed:', (err as Error).message);
     return null;
