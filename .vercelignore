@@ -1,0 +1,14 @@
+# Ash's local-only artifacts that the .gitignore covers but vercel CLI doesn't.
+# The 444 MB casebooks corpus is for ingest only — runtime never reads from disk.
+casebooks/
+logs/
+docs/research/
+.next/
+.git/
+node_modules/
+playwright-report/
+test-results/
+coverage/
+.env.local
+.env.local.example
+*.log

@@ -36,6 +36,11 @@ export async function proxy(req: NextRequest) {
   return res;
 }
 
+// Explicitly exclude /auth/signin and /auth/no-access. They are static pages
+// (no auth check needed) and Vercel's adapter was failing the build with
+// "Unable to find lambda for route: /auth/signin" because proxy-touched
+// routes need lambdas, but these pages prerender to plain HTML.
+// /auth/callback stays in — it's a route handler / lambda already.
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|auth/signin|auth/no-access).*)'],
 };

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function SignInPage() {
-  const supabase = createSupabaseBrowserClient();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -13,6 +12,9 @@ export default function SignInPage() {
     if (!email.trim()) return;
     setStatus('sending');
     setError(null);
+    // Create the client lazily inside the handler so SSG/prerender doesn't
+    // touch NEXT_PUBLIC_SUPABASE_* before they're inlined.
+    const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
       options: {
