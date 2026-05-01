@@ -56,6 +56,7 @@ export default async function CheatsheetPage() {
           <a href="/company-pack" className="text-emerald-300 hover:text-emerald-200">📋 Company pack</a>
           <a href="/drill" className="text-rose-300 hover:text-rose-200">🎯 Recovery drill</a>
           <a href="/math-drill" className="text-amber-300 hover:text-amber-200">🧮 Math drill</a>
+          <a href="/behavioral-drill" className="text-violet-300 hover:text-violet-200">🎤 Behavioral drill</a>
           <a href="/cases" className="text-zinc-400 hover:text-zinc-200">← cases</a>
         </nav>
       </header>
