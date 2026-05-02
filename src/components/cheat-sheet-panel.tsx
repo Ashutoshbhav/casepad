@@ -22,23 +22,28 @@ export function CheatSheetPanel({ sessionId, initial }: { sessionId: string; ini
   const Field = ({ name, label }: { name: 'framework' | 'hypothesis' | 'manual_notes'; label: string }) => {
     const locked = state.locked_fields.includes(name);
     const [val, setVal] = useState((state[name] as string) || '');
+    const tooltip = locked
+      ? '🔒 Locked — auto-fill stops touching this. Click to unlock and let the AI update it again.'
+      : 'Click to lock — pin your version so the AI auto-fill stops overwriting this.';
     return (
       <div className="rounded border border-zinc-800 p-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs uppercase text-zinc-500">{label}</span>
           <button
             onClick={() => updateCheatSheetField(sessionId, name, val, !locked)}
-            className={`text-xs ${locked ? 'text-amber-400' : 'text-zinc-500'}`}
+            title={tooltip}
+            aria-label={tooltip}
+            className={`text-xs ${locked ? 'text-amber-400' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
-            {locked ? '🔒 locked' : 'lock'}
+            {locked ? '🔒 locked' : '🔓 lock'}
           </button>
         </div>
         <textarea
           value={val}
           onChange={(e) => setVal(e.target.value)}
           onBlur={() => updateCheatSheetField(sessionId, name, val, locked)}
-          rows={2}
-          className="w-full bg-zinc-950 border border-zinc-800 rounded px-2 py-1 text-sm resize-none"
+          rows={3}
+          className="w-full bg-zinc-950 border border-zinc-800 rounded px-2 py-1 text-sm resize-none min-h-[60px] sm:min-h-[40px]"
         />
       </div>
     );

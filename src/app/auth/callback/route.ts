@@ -47,5 +47,19 @@ export async function GET(req: NextRequest) {
     await supabase.auth.signOut();
     return NextResponse.redirect(new URL('/auth/no-access', req.url));
   }
+
+  // First-time users haven't picked a track yet. Send them through
+  // /onboarding/track first so they don't land on /cases as default
+  // consulting and miss that they can switch to PM/IB/marketing.
+  // Only do this when the user is naturally landing post-auth (returnTo
+  // is the default /cases). If they had a return_to (re-auth flow), honor it.
+  if (returnTo === '/cases') {
+    const { data: { user } } = await supabase.auth.getUser();
+    const hasTrack = !!user?.user_metadata?.preferred_track;
+    if (!hasTrack) {
+      return NextResponse.redirect(new URL('/onboarding/track', req.url));
+    }
+  }
+
   return NextResponse.redirect(new URL(returnTo, req.url));
 }

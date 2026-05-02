@@ -6,26 +6,51 @@ import { CaseCard } from '@/components/case-card';
 import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
 import { TRACKS, type Track } from '@/lib/tracks';
-import { TUTORIAL_FIRST_CASE_ID } from '@/lib/starter-cases';
+import { TUTORIAL_FIRST_CASE_ID, STARTER_CASE_IDS } from '@/lib/starter-cases';
 
 export const dynamic = 'force-dynamic';
 
+// Cases with `problem_statement` shorter than this are treated as partial /
+// noisy extractions and hidden from the default grid. Users can re-enable
+// them by appending `?all=1` to the URL.
+const MIN_PROBLEM_STATEMENT_LEN = 80;
+
+// Threshold under which a non-consulting track is considered "still
+// backfilling" and we surface a banner + consulting fallback.
+const SPARSE_TRACK_THRESHOLD = 50;
+
+// Shape of the rows we actually fetch. Includes problem_statement so we can
+// filter junk client-side (Supabase JS has no easy length() filter).
+type CaseListRow = {
+  id: string;
+  title: string;
+  industry: string;
+  case_type: string;
+  difficulty: string;
+  source: string | null;
+  problem_statement: string | null;
+};
+
 export default async function CasesPage({
   searchParams,
-}: { searchParams: Promise<{ industry?: string; type?: string; difficulty?: string; q?: string; track?: string }> }) {
+}: { searchParams: Promise<{ industry?: string; type?: string; difficulty?: string; q?: string; track?: string; all?: string }> }) {
   const sp = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/signin');
   const userTrack: Track = (user?.user_metadata?.preferred_track as Track) || 'consulting';
   const activeTrack: Track = (sp.track as Track) || userTrack;
+  const showAll = sp.all === '1';
+  const hasFilters = Boolean(sp.industry || sp.type || sp.difficulty || sp.q);
 
   // Only select fields CaseCard actually displays — full JSONB columns
   // (interviewer_notes, ideal_structure) bloat the payload to MB at 120 rows.
+  // We fetch problem_statement so we can length-filter client-side; payload
+  // bloat is minor at 60 rows.
   const { data: cases } = await withRetry(() => {
     let query = supabase
       .from('cases')
-      .select('id,title,industry,case_type,difficulty,source')
+      .select('id,title,industry,case_type,difficulty,source,problem_statement')
       .contains('tracks', [activeTrack])
       .order('created_at', { ascending: false })
       .limit(60);
@@ -35,6 +60,76 @@ export default async function CasesPage({
     if (sp.q) query = query.ilike('title', `%${sp.q}%`);
     return query;
   });
+
+  const allRows = (cases ?? []) as CaseListRow[];
+  // Partition: full-length rows vs. short/null prompts.
+  const isFullLength = (r: CaseListRow) =>
+    r.problem_statement != null && r.problem_statement.length >= MIN_PROBLEM_STATEMENT_LEN;
+  const fullLength = allRows.filter(isFullLength);
+  const shortCount = allRows.length - fullLength.length;
+  const visibleRows = showAll ? allRows : fullLength;
+
+  // Featured starters: only show on default landing (no filters, no
+  // non-default track). Avoids cluttering filtered/searched views.
+  const showFeatured = !hasFilters && activeTrack === 'consulting';
+  const { data: starterRows } = showFeatured
+    ? await withRetry(() =>
+        supabase
+          .from('cases')
+          .select('id,title,industry,case_type,difficulty,source,problem_statement')
+          .in('id', STARTER_CASE_IDS)
+      )
+    : { data: null };
+  // Preserve the curated order from STARTER_CASE_IDS instead of DB order.
+  const starterById = new Map<string, CaseListRow>(
+    (starterRows ?? []).map((r) => [r.id, r as CaseListRow])
+  );
+  const orderedStarters: CaseListRow[] = showFeatured
+    ? STARTER_CASE_IDS.map((id) => starterById.get(id)).filter(
+        (r): r is CaseListRow => Boolean(r)
+      )
+    : [];
+
+  // Hide starter IDs from the main grid when we render them in Featured to
+  // avoid duplication.
+  const starterIdSet = new Set(orderedStarters.map((r) => r.id));
+  const mainRows = showFeatured
+    ? visibleRows.filter((r) => !starterIdSet.has(r.id))
+    : visibleRows;
+
+  // Sparse-track fallback: load consulting cases as a secondary grid when a
+  // non-consulting track has thin coverage.
+  const isNonConsulting = activeTrack !== 'consulting';
+  const isSparse = isNonConsulting && fullLength.length < SPARSE_TRACK_THRESHOLD;
+  const { data: fallbackRows } = isSparse
+    ? await withRetry(() => {
+        let q = supabase
+          .from('cases')
+          .select('id,title,industry,case_type,difficulty,source,problem_statement')
+          .contains('tracks', ['consulting'])
+          .order('created_at', { ascending: false })
+          .limit(30);
+        if (sp.industry) q = q.eq('industry', sp.industry);
+        if (sp.type) q = q.eq('case_type', sp.type);
+        if (sp.difficulty) q = q.eq('difficulty', sp.difficulty);
+        if (sp.q) q = q.ilike('title', `%${sp.q}%`);
+        return q;
+      })
+    : { data: null };
+  const fallbackFiltered = ((fallbackRows ?? []) as CaseListRow[]).filter(isFullLength);
+
+  const toggleHref = (() => {
+    const next = new URLSearchParams();
+    if (sp.industry) next.set('industry', sp.industry);
+    if (sp.type) next.set('type', sp.type);
+    if (sp.difficulty) next.set('difficulty', sp.difficulty);
+    if (sp.q) next.set('q', sp.q);
+    if (sp.track) next.set('track', sp.track);
+    if (!showAll) next.set('all', '1');
+    const qs = next.toString();
+    return qs ? `/cases?${qs}` : '/cases';
+  })();
+
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
       <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -45,6 +140,7 @@ export default async function CasesPage({
         <nav data-tour="cases-nav" className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
           <Link href={`/solve/${TUTORIAL_FIRST_CASE_ID}?tutorial=1`} data-tour="cases-tutorial-btn" className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</Link>
           <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
+          <a href="/how-it-works" className="text-zinc-400 hover:text-zinc-200">How it works</a>
           <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
           <a href="/dashboard" className="text-zinc-400 hover:text-zinc-200">Dashboard →</a>
         </nav>
@@ -63,14 +159,81 @@ export default async function CasesPage({
       <div data-tour="cases-filters">
         <CaseFilters />
       </div>
+
+      {isSparse && (
+        <div className="mb-5 rounded-lg border border-amber-900/50 bg-amber-950/30 p-4 text-sm text-amber-200">
+          <div className="font-medium mb-1">🔄 Track-tagging is still backfilling</div>
+          <p className="text-amber-200/80 leading-relaxed">
+            We&apos;re showing the {fullLength.length} {TRACKS[activeTrack].short} case{fullLength.length === 1 ? '' : 's'} tagged so far,
+            plus the broader consulting library below. Check back in a few hours for the full filtered set.
+          </p>
+        </div>
+      )}
+
+      {showFeatured && orderedStarters.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-sm font-medium text-zinc-200">
+              <span className="text-amber-300">⭐ Featured starters</span>
+              <span className="text-zinc-500 font-normal"> — guaranteed quality, full premium content</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {orderedStarters.map((c) => (
+              <div key={c.id}>
+                <CaseCard c={c as any} featured />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {showFeatured && orderedStarters.length > 0 && mainRows.length > 0 && (
+        <h2 className="text-sm font-medium text-zinc-400 mb-3">More cases</h2>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {(cases ?? []).map((c, i) => (
-          <div key={c.id} data-tour={i === 0 ? 'cases-card' : undefined}>
+        {mainRows.map((c, i) => (
+          <div key={c.id} data-tour={i === 0 && !showFeatured ? 'cases-card' : undefined}>
             <CaseCard c={c as any} />
           </div>
         ))}
       </div>
-      {(cases ?? []).length === 0 && (
+
+      {!showAll && shortCount > 0 && (
+        <div className="mt-6 text-xs text-zinc-500">
+          {shortCount} case{shortCount === 1 ? '' : 's'} hidden because the prompt is incomplete.{' '}
+          <a href={toggleHref} className="text-zinc-300 underline hover:text-zinc-100">
+            Show all 1,165 cases (including short prompts)
+          </a>
+        </div>
+      )}
+      {showAll && (
+        <div className="mt-6 text-xs text-zinc-500">
+          Showing all cases including short / partial prompts.{' '}
+          <a href={toggleHref} className="text-zinc-300 underline hover:text-zinc-100">
+            Hide short prompts
+          </a>
+        </div>
+      )}
+
+      {isSparse && fallbackFiltered.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-sm font-medium text-zinc-300 mb-1">Cases from other tracks</h2>
+          <p className="text-xs text-zinc-500 mb-3">
+            Drawn from the consulting library while {TRACKS[activeTrack].short} backfill catches up.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {fallbackFiltered.map((c) => (
+              <div key={c.id}>
+                <CaseCard c={c as any} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {mainRows.length === 0 && orderedStarters.length === 0 && fallbackFiltered.length === 0 && (
         <div className="text-zinc-500 text-sm mt-12">No cases match these filters.</div>
       )}
       <CasesTour />

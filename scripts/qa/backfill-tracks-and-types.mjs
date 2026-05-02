@@ -9,6 +9,8 @@
 // Resumable: skips rows that already have non-default values.
 
 import { createClient } from '@supabase/supabase-js';
+import { appendFileSync, mkdirSync, existsSync } from 'node:fs';
+import { dirname } from 'node:path';
 
 const SUPA_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPA_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -100,6 +102,40 @@ async function groqJSON(messages) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// ---------- Heartbeat / stall detection ----------
+const HEARTBEAT_PATH = 'logs/backfill-heartbeat.log';
+const STALL_TIMEOUT_MS = 5 * 60 * 1000; // 5 min with no successful row update => exit
+let lastSuccessTs = Date.now();
+
+function ensureHeartbeatDir() {
+  const dir = dirname(HEARTBEAT_PATH);
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+}
+ensureHeartbeatDir();
+
+function writeHeartbeat(pass, done, total) {
+  try {
+    appendFileSync(HEARTBEAT_PATH, `${new Date().toISOString()} ${pass} ${done}/${total}\n`);
+  } catch (e) {
+    console.warn(`  [hb] write failed: ${e.message}`);
+  }
+}
+
+function markSuccess() {
+  lastSuccessTs = Date.now();
+}
+
+function checkStall(pass) {
+  const idleMs = Date.now() - lastSuccessTs;
+  if (idleMs > STALL_TIMEOUT_MS) {
+    const idleSec = Math.round(idleMs / 1000);
+    const line = `${new Date().toISOString()} STALL ${pass} idle=${idleSec}s`;
+    try { appendFileSync(HEARTBEAT_PATH, line + '\n'); } catch {}
+    console.error(`STALLED — no progress for 5 min (idle ${idleSec}s on pass=${pass})`);
+    process.exit(2);
+  }
+}
+
 // ---------- Classifiers ----------
 function buildTypePrompt(title, problem) {
   const sys = `You classify a business case into ONE case_type. Allowed values:
@@ -156,19 +192,30 @@ async function runPool(items, worker, label) {
   const queue = items.slice();
   const startedAt = Date.now();
 
+  // Reset the stall clock at the start of each pass — pre-pass DB scans may
+  // take >5 min and shouldn't trip the watchdog before any worker runs.
+  lastSuccessTs = Date.now();
+
   async function next() {
     while (queue.length) {
       const item = queue.shift();
       try {
-        await worker(item);
+        const result = await worker(item);
+        // Worker returns truthy on a successful DB update; falsy means
+        // skipped/no-op. Only successful writes bump the watchdog.
+        if (result) markSuccess();
       } catch (e) {
         errors++;
         console.error(`  [err] ${item.id?.slice(0,8)} "${(item.title||'').slice(0,40)}" — ${e.message?.slice(0,200)}`);
       } finally {
         done++;
+        // After every batch of 50, log progress, write heartbeat, and check
+        // for stall. If 5 min passed with no successful row update, bail.
         if (done % 50 === 0 || done === total) {
           const secs = ((Date.now() - startedAt) / 1000).toFixed(0);
           console.log(`  [${label}] ${done}/${total} (${(done/total*100).toFixed(0)}%) — ${secs}s elapsed, ${errors} errors`);
+          writeHeartbeat(label, done, total);
+          checkStall(label);
         }
       }
     }
@@ -237,10 +284,11 @@ async function main() {
 
     await runPool(rows, async (c) => {
       const newType = await classifyType(c);
-      if (newType === 'other') return; // genuinely unclassifiable
-      if (DRY_RUN) return;
+      if (newType === 'other') return false; // genuinely unclassifiable — no-op
+      if (DRY_RUN) return true; // count as progress so watchdog stays quiet
       const { error: uerr } = await supa.from('cases').update({ case_type: newType }).eq('id', c.id);
       if (uerr) throw new Error(uerr.message);
+      return true;
     }, 'types');
   }
 
@@ -261,9 +309,10 @@ async function main() {
       // Skip writing if result is still exactly ['consulting'] — avoids no-op churn but
       // also makes the row look "unprocessed" to a future re-run. To make it truly
       // resumable in that edge case, we still write so future invocations skip it.
-      if (DRY_RUN) return;
+      if (DRY_RUN) return true;
       const { error: uerr } = await supa.from('cases').update({ tracks: newTracks }).eq('id', c.id);
       if (uerr) throw new Error(uerr.message);
+      return true;
     }, 'tracks');
   }
 

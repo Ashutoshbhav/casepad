@@ -82,7 +82,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     <main className="min-h-screen p-4 sm:p-8 max-w-5xl mx-auto">
       <header className="flex items-center justify-between mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-semibold">Dashboard</h1>
-        <Link href="/cases" className="text-xs sm:text-sm text-zinc-400 hover:text-zinc-200">All cases →</Link>
+        <div className="flex items-center gap-3 text-xs sm:text-sm">
+          <Link href="/how-it-works" className="text-zinc-400 hover:text-zinc-200">How it works</Link>
+          <Link href="/cases" className="text-zinc-400 hover:text-zinc-200">All cases →</Link>
+        </div>
       </header>
 
       <nav className="flex flex-wrap gap-1.5 mb-5 text-xs">

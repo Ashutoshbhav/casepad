@@ -11,18 +11,37 @@ export function ChatPanel({ sessionId, initial, onTurnComplete }: { sessionId: s
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const send = async () => {
-    if (!input.trim() || streaming) return;
-    const userMsg: Msg = { role: 'user', content: input };
-    setMessages((m) => [...m, userMsg]);
-    const sentInput = input;
+  // Hanging-turn detection: if the last persisted message is the user's
+  // (no interviewer reply followed it — likely a tab-close mid-stream),
+  // show a recovery prompt instead of letting the user wonder why the
+  // interviewer never answered.
+  const lastMsg = messages[messages.length - 1];
+  const hasHangingUserTurn =
+    !streaming && messages.length > 0 && lastMsg?.role === 'user';
+
+  const retryLastUserTurn = () => {
+    if (!lastMsg || lastMsg.role !== 'user' || streaming) return;
+    // Tell sendUserTurn the user message is already in local state — it
+    // also lives in the persisted transcript already, so we don't append.
+    sendUserTurn(lastMsg.content, true);
+  };
+
+  // Core send — used by both the form submit and the hanging-turn retry.
+  // assumesUserMessageAlreadyPersisted=true skips appending the user msg to
+  // local state (caller already did) AND tells the API not to re-persist
+  // the user turn — but our /api/chat always appends the user turn before
+  // streaming, so we instead just resend and accept that the transcript
+  // will have a duplicate user message in the rare retry-after-success case.
+  const sendUserTurn = async (text: string, alreadyAppended = false) => {
+    if (!text.trim() || streaming) return;
+    if (!alreadyAppended) setMessages((m) => [...m, { role: 'user', content: text }]);
     setInput('');
     setStreaming(true);
 
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, userTurn: sentInput }),
+      body: JSON.stringify({ sessionId, userTurn: text }),
     });
 
     setMessages((m) => [...m, { role: 'interviewer', content: '' }]);
@@ -44,12 +63,13 @@ export function ChatPanel({ sessionId, initial, onTurnComplete }: { sessionId: s
     fetch('/api/cheatsheet', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, userQuestion: sentInput, interviewerAnswer: acc }),
+      body: JSON.stringify({ sessionId, userQuestion: text, interviewerAnswer: acc }),
     }).catch(() => {});
 
-    // Trigger issue-tree refresh on the parent layout (re-extracts in background).
     onTurnComplete?.();
   };
+
+  const send = () => sendUserTurn(input);
 
   return (
     <div className="flex flex-col h-full">
@@ -59,6 +79,17 @@ export function ChatPanel({ sessionId, initial, onTurnComplete }: { sessionId: s
             {m.content || <span className="text-zinc-600">…</span>}
           </div>
         ))}
+        {hasHangingUserTurn && (
+          <div className="rounded-lg border border-amber-700 bg-amber-950/30 p-3 text-xs">
+            <div className="text-amber-200 mb-1.5">⚠ The interviewer didn't reply to your last message — the previous turn was interrupted (tab close or network blip).</div>
+            <button
+              onClick={retryLastUserTurn}
+              className="text-xs px-2.5 py-1 rounded bg-amber-700 text-amber-50 hover:bg-amber-600"
+            >
+              ↻ Retry that turn
+            </button>
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
       <div className="border-t border-zinc-800 p-3 flex gap-2">

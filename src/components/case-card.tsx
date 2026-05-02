@@ -2,9 +2,20 @@ import Link from 'next/link';
 import type { CaseRow } from '@/lib/types/domain';
 import { IndustryPrimerButton } from './industry-primer-button';
 
-export function CaseCard({ c }: { c: CaseRow }) {
+export function CaseCard({ c, featured = false }: { c: CaseRow; featured?: boolean }) {
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-900 hover:border-zinc-600 transition relative">
+    <div
+      className={`rounded-lg border bg-zinc-900 transition relative ${
+        featured
+          ? 'border-amber-700/50 hover:border-amber-500 shadow-[0_0_0_1px_rgba(217,119,6,0.15)]'
+          : 'border-zinc-800 hover:border-zinc-600'
+      }`}
+    >
+      {featured && (
+        <div className="absolute -top-2 left-3 px-2 py-0.5 rounded-full bg-amber-600 text-amber-50 text-[10px] font-medium uppercase tracking-wide">
+          ⭐ Starter
+        </div>
+      )}
       <Link href={`/solve/${c.id}`} className="block p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs uppercase text-zinc-500">{c.case_type.replace('_', ' ')}</span>

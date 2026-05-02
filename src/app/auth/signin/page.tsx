@@ -4,10 +4,11 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'rate_limited'>('idle');
   const [error, setError] = useState<string | null>(null);
   const [returnTo, setReturnTo] = useState<string>('/cases');
   const [expiredHint, setExpiredHint] = useState(false);
+  const [cooldownLeft, setCooldownLeft] = useState(0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -17,9 +18,17 @@ export default function SignInPage() {
     if (sp.get('error') === 'expired' || sp.has('return_to')) setExpiredHint(true);
   }, []);
 
+  // Cooldown timer: ticks down once per second while >0.
+  useEffect(() => {
+    if (cooldownLeft <= 0) return;
+    const t = setTimeout(() => setCooldownLeft((s) => Math.max(0, s - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [cooldownLeft]);
+
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
+    if (cooldownLeft > 0) return;
     setStatus('sending');
     setError(null);
     const supabase = createSupabaseBrowserClient();
@@ -32,8 +41,22 @@ export default function SignInPage() {
       },
     });
     if (error) {
-      setStatus('error');
-      setError(error.message);
+      // Detect Supabase rate-limit response. The SDK surfaces 429 via either
+      // `status` (HTTP) or a message like "rate limit exceeded" / "too many".
+      const msg = (error.message || '').toLowerCase();
+      // AuthApiError carries `.status` as the HTTP status; treat any 429 or
+      // rate-limit-shaped message as a soft cooldown trigger.
+      const errStatus = (error as { status?: number }).status;
+      const isRateLimited = errStatus === 429 || /rate.?limit|too many|too.?frequent/i.test(msg);
+      if (isRateLimited) {
+        setStatus('rate_limited');
+        setError(null);
+        // Disable submit for 30s so the user can't keep mashing the button.
+        setCooldownLeft(30);
+      } else {
+        setStatus('error');
+        setError(error.message);
+      }
     } else {
       setStatus('sent');
     }
@@ -68,11 +91,20 @@ export default function SignInPage() {
             />
             <button
               type="submit"
-              disabled={status === 'sending' || !email.trim()}
+              disabled={status === 'sending' || !email.trim() || cooldownLeft > 0}
               className="w-full rounded-md bg-white text-zinc-900 py-2 font-medium hover:bg-zinc-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
+              {status === 'sending'
+                ? 'Sending…'
+                : cooldownLeft > 0
+                ? `Wait ${cooldownLeft}s…`
+                : 'Email me a sign-in link'}
             </button>
+            {status === 'rate_limited' && (
+              <div className="rounded-md border border-amber-700 bg-amber-950/40 p-3 text-xs text-amber-200 text-left">
+                ⏱ Too many requests — wait 60 seconds before trying again.
+              </div>
+            )}
             {status === 'error' && (
               <div className="text-xs text-rose-400 text-left">{error}</div>
             )}
