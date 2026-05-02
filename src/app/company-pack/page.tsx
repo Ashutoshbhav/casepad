@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { FIRM_PACK_NAMES, getFirmPack } from '@/lib/firm-packs';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,6 +47,21 @@ export default function CompanyPackPage() {
       </header>
       <p className="text-sm text-zinc-400 mb-6">Generate a 24-hour-before crammer for your specific interview. We pull recent interview reports + tailor to your track.</p>
 
+      <div className="mb-4">
+        <p className="text-xs text-zinc-500 mb-2">Quick-pick a firm we have a pre-authored pack for:</p>
+        <div className="flex flex-wrap gap-1">
+          {FIRM_PACK_NAMES.map((n) => (
+            <button
+              key={n}
+              onClick={() => { setFirm(n); }}
+              className={`text-xs px-2 py-1 rounded ${firm === n ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200'}`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
         <input value={firm} onChange={(e) => setFirm(e.target.value)} placeholder="Firm (e.g. Bain)" className="rounded bg-zinc-900 border border-zinc-800 px-3 py-2 text-sm" />
         <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location (e.g. Bangalore)" className="rounded bg-zinc-900 border border-zinc-800 px-3 py-2 text-sm" />
@@ -54,6 +70,10 @@ export default function CompanyPackPage() {
       <button onClick={generate} disabled={loading || !firm.trim()} className="rounded bg-white text-zinc-900 px-4 py-2 text-sm font-medium disabled:opacity-50">
         {loading ? 'Researching…' : 'Generate pack'}
       </button>
+
+      {firm && getFirmPack(firm) && !pack && (
+        <FirmPackBaked firm={firm} />
+      )}
 
       {pack && (
         <div className="mt-8 space-y-5">
@@ -109,5 +129,45 @@ function ListBlock({ items, italic, bullet }: { items: string[]; italic?: boolea
     <ul className={`text-sm space-y-1 ${italic ? 'italic text-violet-200' : 'text-zinc-300'}`}>
       {items.map((it, i) => <li key={i}>{bullet || '·'} {it}</li>)}
     </ul>
+  );
+}
+
+function FirmPackBaked({ firm }: { firm: string }) {
+  const p = getFirmPack(firm);
+  if (!p) return null;
+  return (
+    <div className="mt-8 space-y-5">
+      <div className="rounded border border-emerald-800 bg-emerald-950/20 p-4">
+        <div className="text-xs uppercase text-emerald-300 mb-2">Pre-authored pack — {firm}</div>
+        <p className="text-sm text-zinc-200">{p.overview}</p>
+      </div>
+      <Section title="Interview process">
+        <ListBlock items={p.process} />
+      </Section>
+      <Section title="Case archetypes the firm runs">
+        <ul className="space-y-2">
+          {p.case_archetypes.map((a, i) => (
+            <li key={i} className="rounded border border-zinc-800 p-3 text-sm">
+              <div className="text-emerald-300 font-medium">{a.name}</div>
+              <div className="text-zinc-400 text-xs mt-1">e.g. {a.example}</div>
+            </li>
+          ))}
+        </ul>
+      </Section>
+      <Section title="Behavioral dimensions they grade">
+        <ListBlock items={p.behavioral_dimensions} />
+      </Section>
+      <Section title="Spike phrases that land at this firm">
+        <ListBlock items={p.spike_phrases} italic />
+      </Section>
+      <Section title="Things to avoid (red flags)">
+        <ul className="text-sm space-y-1 text-rose-300">
+          {p.avoid.map((a, i) => <li key={i}>· {a}</li>)}
+        </ul>
+      </Section>
+      <Section title="Most-asked behavioral questions">
+        <ListBlock items={p.behavioral_questions} bullet="?" />
+      </Section>
+    </div>
   );
 }

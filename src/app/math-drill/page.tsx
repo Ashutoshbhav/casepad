@@ -1,22 +1,19 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { CONSULTING_MATH } from '@/lib/tracks-deep';
-import { IB_MATH } from '@/lib/tracks-deep-ib';
-import { PM_MATH } from '@/lib/tracks-deep-pm';
-import { MKT_MATH } from '@/lib/tracks-deep-mkt';
-import { STRATEGY_MATH } from '@/lib/tracks-deep-strategy';
 import { TRACKS, TRACK_LIST, type Track } from '@/lib/tracks';
+import { MATH_DRILL_POOL } from '@/lib/math-drill-pool';
+import type { Q as PoolQ } from '@/lib/math-drill-questions-types';
 
 export const dynamic = 'force-dynamic';
 
-// Interactive math-drill engine. Picks a question per level, asks user to
-// solve in head, reveals formula + answer, tracks accuracy + speed.
-// Beats a static reference for actual skill-building.
+// Interactive math-drill engine — uses the 100-Q pool from math-drill-pool.ts
+// (sequenced L1-L4 across consulting / IB / PM / Marketing / all).
 
-type Q = { question: string; answer: number; tolerance: number; topic: string; level: 1|2|3|4 };
+type Q = { question: string; answer: number; tolerance: number; topic: string; level: 1|2|3|4; explanation?: string; common_trap?: string };
 
-const QUESTIONS: Q[] = [
+// Legacy small pool kept as fallback if MATH_DRILL_POOL fails to import
+const LEGACY_QUESTIONS: Q[] = [
   // Level 1 — beginner
   { level: 1, topic: 'Percentage', question: '12% of 350 = ?', answer: 42, tolerance: 1 },
   { level: 1, topic: 'Percentage', question: '7% of 800 = ?', answer: 56, tolerance: 1 },
@@ -53,10 +50,17 @@ export default function MathDrillPage() {
   const [result, setResult] = useState<'correct'|'wrong'|null>(null);
   const [history, setHistory] = useState<{ q: Q; user: number | null; correct: boolean }[]>([]);
 
-  const pool = useMemo(() => QUESTIONS.filter(q => q.level === level), [level]);
+  const pool = useMemo(() => {
+    // Use the 100-Q pool, filter by level + track. 'all' track passes through.
+    const filtered = MATH_DRILL_POOL.filter((q) =>
+      q.level === level && (q.track === track || q.track === 'all')
+    );
+    // Fallback to legacy pool if filtered is empty (shouldn't happen with 100-Q pool but safe)
+    return filtered.length > 0 ? filtered : LEGACY_QUESTIONS.filter(q => q.level === level);
+  }, [level, track]);
 
   const next = () => {
-    const q = pool[Math.floor(Math.random() * pool.length)];
+    const q = pool[Math.floor(Math.random() * pool.length)] as Q;
     setCurrent(q);
     setAnswer('');
     setResult(null);
@@ -122,15 +126,24 @@ export default function MathDrillPage() {
           )}
           {result === 'correct' && (
             <div>
-              <div className="text-emerald-300 font-medium mb-3">✓ Correct</div>
+              <div className="text-emerald-300 font-medium mb-2">✓ Correct</div>
+              {current.explanation && (
+                <div className="text-xs text-zinc-400 mb-3 italic">↳ {current.explanation}</div>
+              )}
               <button onClick={next} className="rounded bg-white text-zinc-900 px-3 py-1.5 text-sm">Next →</button>
             </div>
           )}
           {result === 'wrong' && (
             <div>
               <div className="text-rose-300 font-medium mb-2">✗ Answer was {current.answer}</div>
-              <div className="text-xs text-zinc-400 mb-3">Within tolerance ±{current.tolerance}</div>
-              <button onClick={next} className="rounded bg-white text-zinc-900 px-3 py-1.5 text-sm">Next →</button>
+              <div className="text-xs text-zinc-400 mb-1">Within tolerance ±{current.tolerance}</div>
+              {current.explanation && (
+                <div className="text-xs text-emerald-300 mt-2"><span className="text-zinc-500">shortcut: </span>{current.explanation}</div>
+              )}
+              {current.common_trap && (
+                <div className="text-xs text-amber-300 mt-1"><span className="text-zinc-500">common trap: </span>{current.common_trap}</div>
+              )}
+              <button onClick={next} className="rounded bg-white text-zinc-900 px-3 py-1.5 text-sm mt-3">Next →</button>
             </div>
           )}
         </div>
