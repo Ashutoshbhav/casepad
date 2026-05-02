@@ -8,8 +8,13 @@ import type { Track } from '@/lib/tracks';
 // Pulls user's preferred_track + their weakest dimensions across last 10
 // sessions to personalize the watch-outs.
 export async function POST(req: NextRequest) {
-  const { caseId } = await req.json();
-  if (!caseId) return NextResponse.json({ error: 'caseId required' }, { status: 400 });
+  let body: any;
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 }); }
+  const caseId = body?.caseId;
+  if (!caseId || typeof caseId !== 'string') {
+    return NextResponse.json({ error: 'caseId (string) required' }, { status: 400 });
+  }
 
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();

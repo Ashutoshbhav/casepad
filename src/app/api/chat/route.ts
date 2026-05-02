@@ -11,7 +11,17 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
-  const { sessionId, userTurn } = await req.json() as { sessionId: string; userTurn: string };
+  let body: any;
+  try { body = await req.json(); }
+  catch { return new Response(JSON.stringify({ error: 'invalid JSON body' }), { status: 400, headers: { 'Content-Type': 'application/json' } }); }
+  const sessionId = body?.sessionId;
+  const userTurn = body?.userTurn;
+  if (!sessionId || typeof sessionId !== 'string') {
+    return new Response(JSON.stringify({ error: 'sessionId (string) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  }
+  if (!userTurn || typeof userTurn !== 'string' || userTurn.trim().length === 0) {
+    return new Response(JSON.stringify({ error: 'userTurn (non-empty string) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  }
   const supabase = await createSupabaseServerClient();
 
   const { data: session, error: sErr } = await supabase
