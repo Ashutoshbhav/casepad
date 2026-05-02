@@ -13,68 +13,89 @@ import { createClient } from '@supabase/supabase-js';
 const SUPA_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPA_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const GROQ_KEY = process.env.GROQ_API_KEY;
+const NVIDIA_KEY = process.env.NVIDIA_API_KEY;
 const DRY_RUN = process.argv.includes('--dry-run');
 const ONLY = process.argv.includes('--only-types') ? 'types' :
              process.argv.includes('--only-tracks') ? 'tracks' : 'both';
+const FORCE_NVIDIA = process.argv.includes('--provider=nvidia');
 
 if (!SUPA_URL || !SUPA_KEY) { console.error('Missing Supabase env'); process.exit(1); }
-if (!GROQ_KEY) { console.error('Missing GROQ_API_KEY'); process.exit(1); }
+if (!GROQ_KEY && !NVIDIA_KEY) { console.error('Missing GROQ_API_KEY and NVIDIA_API_KEY (need at least one)'); process.exit(1); }
 
 const supa = createClient(SUPA_URL, SUPA_KEY);
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL = 'llama-3.3-70b-versatile';
-const CONCURRENCY = 5;
+const PROVIDERS = [
+  ...(FORCE_NVIDIA ? [] : (GROQ_KEY ? [{ name: 'groq', url: 'https://api.groq.com/openai/v1/chat/completions', key: GROQ_KEY, model: 'llama-3.3-70b-versatile' }] : [])),
+  ...(NVIDIA_KEY ? [{ name: 'nvidia', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: NVIDIA_KEY, model: 'meta/llama-3.3-70b-instruct' }] : []),
+];
+console.log(`LLM providers (in order): ${PROVIDERS.map(p => p.name).join(' → ')}`);
+const CONCURRENCY = Number(process.env.BACKFILL_CONCURRENCY || 2);
 
 const ALLOWED_TYPES = ['profitability','market_entry','operations','pricing','mna','estimation','gtm','other'];
 const ALLOWED_TRACKS = ['consulting','ib_pe_vc','pm','marketing','strategy_bizops','behavioral'];
 
-// ---------- Groq fetch helper ----------
-async function groqJSON(messages, attempt = 0) {
-  try {
-    const r = await fetch(GROQ_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${GROQ_KEY}`,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages,
-        response_format: { type: 'json_object' },
-        temperature: 0.1,
-        max_tokens: 200,
-        stream: false,
-      }),
-    });
-
-    if (r.status === 429) {
-      if (attempt >= 6) throw new Error('429 after 6 retries');
-      const retryAfter = Number(r.headers.get('retry-after')) || 0;
-      const backoff = retryAfter > 0
-        ? (retryAfter + 1) * 1000
-        : Math.min(60_000, 4_000 * Math.pow(2, attempt)) + Math.floor(Math.random() * 2000);
-      await sleep(backoff);
-      return groqJSON(messages, attempt + 1);
-    }
-    if (!r.ok) {
-      const body = await r.text();
-      if (attempt < 3) {
-        await sleep(2000 + Math.random() * 1000);
-        return groqJSON(messages, attempt + 1);
-      }
-      throw new Error(`HTTP ${r.status}: ${body.slice(0, 300)}`);
-    }
-    const data = await r.json();
-    const content = data?.choices?.[0]?.message?.content || '{}';
-    try { return JSON.parse(content); } catch { return null; }
-  } catch (err) {
-    if (attempt < 3) {
-      await sleep(2000 + Math.random() * 1000);
-      return groqJSON(messages, attempt + 1);
-    }
+// ---------- LLM router (Groq → NVIDIA fallback) ----------
+async function callProvider(provider, messages) {
+  const r = await fetch(provider.url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${provider.key}`,
+    },
+    body: JSON.stringify({
+      model: provider.model,
+      messages,
+      response_format: { type: 'json_object' },
+      temperature: 0.1,
+      max_tokens: 200,
+      stream: false,
+    }),
+  });
+  if (r.status === 429 || (r.status >= 500 && r.status < 600)) {
+    const body = await r.text();
+    const err = new Error(`${provider.name} HTTP ${r.status}: ${body.slice(0, 200)}`);
+    err.shouldFailover = true;
     throw err;
   }
+  if (!r.ok) {
+    const body = await r.text();
+    throw new Error(`${provider.name} HTTP ${r.status}: ${body.slice(0, 200)}`);
+  }
+  const data = await r.json();
+  const content = data?.choices?.[0]?.message?.content || '{}';
+  try { return JSON.parse(content); } catch { return null; }
+}
+
+async function groqJSON(messages) {
+  let lastErr;
+  for (const p of PROVIDERS) {
+    // Per-provider retry: up to 4 attempts with exponential backoff on 429.
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        return await callProvider(p, messages);
+      } catch (err) {
+        lastErr = err;
+        if (err.shouldFailover && /HTTP 429/.test(err.message)) {
+          // Rate-limited — back off then retry same provider.
+          const backoff = Math.min(60_000, 3_000 * Math.pow(2, attempt)) + Math.floor(Math.random() * 2000);
+          await sleep(backoff);
+          continue;
+        }
+        if (err.shouldFailover) {
+          // 5xx — failover immediately.
+          break;
+        }
+        // Network/parse error — retry same provider once.
+        if (attempt < 1) {
+          await sleep(1500 + Math.random() * 1000);
+          continue;
+        }
+        break;
+      }
+    }
+    // Out of retries on this provider — try next.
+  }
+  throw lastErr || new Error('all providers failed');
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -158,14 +179,19 @@ async function runPool(items, worker, label) {
 }
 
 // ---------- Verification ----------
-async function snapshot(label) {
-  const { data: byType, error: e1 } = await supa.rpc('debug_case_type_counts').select('*').then(
-    (r) => r.error ? { data: null, error: r.error } : { data: r.data, error: null }
-  ).catch(() => ({ data: null, error: 'no rpc' }));
+async function fetchAllCases(columns) {
+  let all = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await supa.from('cases').select(columns).range(from, from + 999);
+    if (error) throw error;
+    all.push(...(data || []));
+    if (!data || data.length < 1000) break;
+  }
+  return all;
+}
 
-  // Manual fallback — fetch case_type + tracks for all rows
-  const { data: rows, error } = await supa.from('cases').select('case_type,tracks');
-  if (error) { console.error('verify error', error.message); return; }
+async function snapshot(label) {
+  const rows = await fetchAllCases('case_type,tracks');
 
   const typeCounts = {};
   const trackCounts = {};
@@ -196,11 +222,17 @@ async function main() {
   // ---- Pass 1: case_type='other' ----
   if (ONLY === 'both' || ONLY === 'types') {
     console.log(`\n== Pass 1: re-classify case_type='other' ==`);
-    const { data: rows, error } = await supa
-      .from('cases')
-      .select('id,title,problem_statement,case_type')
-      .eq('case_type', 'other');
-    if (error) { console.error(error); process.exit(1); }
+    let rows = [];
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await supa
+        .from('cases')
+        .select('id,title,problem_statement,case_type')
+        .eq('case_type', 'other')
+        .range(from, from + 999);
+      if (error) { console.error(error); process.exit(1); }
+      rows.push(...(data || []));
+      if (!data || data.length < 1000) break;
+    }
     console.log(`Found ${rows.length} rows with case_type='other'`);
 
     await runPool(rows, async (c) => {
@@ -215,10 +247,7 @@ async function main() {
   // ---- Pass 2: tracks for all cases still defaulted to ['consulting'] ----
   if (ONLY === 'both' || ONLY === 'tracks') {
     console.log(`\n== Pass 2: assign tracks[] for rows still at default ['consulting'] ==`);
-    const { data: rows, error } = await supa
-      .from('cases')
-      .select('id,title,problem_statement,tracks');
-    if (error) { console.error(error); process.exit(1); }
+    const rows = await fetchAllCases('id,title,problem_statement,tracks');
 
     // Resumable: skip rows whose tracks is anything other than literal ['consulting'].
     const todo = rows.filter((r) => {

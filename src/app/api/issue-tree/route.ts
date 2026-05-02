@@ -5,8 +5,10 @@ import { extractIssueTree, type IssueTree } from '@/lib/groq/issue-tree';
 // POST /api/issue-tree
 //
 // Body:
-//   { sessionId: string, mode: 'extract'|'save', tree?: IssueTree }
+//   { sessionId: string, mode: 'get'|'extract'|'save', tree?: IssueTree }
 //
+// 'get': returns the existing saved tree on the session row (no LLM call,
+//   fast — used on panel mount so the user sees their tree instantly).
 // 'extract' (default): re-runs LLM extraction from the session's transcript
 //   and saves the result on sessions.issue_tree.
 // 'save': accepts an explicit tree from the client (after user manually
@@ -35,6 +37,10 @@ export async function POST(req: NextRequest) {
     .maybeSingle();
 
   if (!session) return NextResponse.json({ error: 'session not found' }, { status: 404 });
+
+  if (mode === 'get') {
+    return NextResponse.json({ tree: session.issue_tree ?? null });
+  }
 
   if (mode === 'save') {
     if (!tree || typeof tree !== 'object') {

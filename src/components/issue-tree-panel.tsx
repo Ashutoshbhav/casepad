@@ -13,20 +13,27 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState('');
 
-  // Fetch existing tree on mount
+  // On mount: fetch the SAVED tree instantly (no LLM call).
+  // After mount: every chat turn bumps refreshTrigger, which kicks off a
+  // background re-extract to pick up new nodes from latest turns.
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
+      const isInitial = refreshTrigger === 0;
+      // Initial: 'get' (fast, returns cached tree). Subsequent: 'extract' (LLM, slow).
+      if (!isInitial) setLoading(true);
       try {
         const r = await fetch('/api/issue-tree', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId, mode: 'extract' }),
+          body: JSON.stringify({ sessionId, mode: isInitial ? 'get' : 'extract' }),
         });
         if (!r.ok) return;
         const j = await r.json();
         if (!cancelled) setTree(j.tree);
-      } catch {}
+      } catch {} finally {
+        if (!cancelled) setLoading(false);
+      }
     };
     load();
     return () => { cancelled = true; };
@@ -107,7 +114,9 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
   if (!tree) {
     return (
       <div className="flex flex-col h-full p-4 text-xs text-zinc-500">
-        Tree will appear as you talk. Empty so far.
+        {loading
+          ? <span>🌳 Inferring tree from your latest turn… <span className="inline-block animate-pulse">●●●</span></span>
+          : 'Empty. The tree fills as you state your structure in chat.'}
       </div>
     );
   }
@@ -174,7 +183,10 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
   return (
     <div className="flex flex-col h-full overflow-y-auto p-3 text-zinc-200">
       <header className="flex items-center justify-between mb-3">
-        <div className="text-xs uppercase text-emerald-300">Issue tree</div>
+        <div className="text-xs uppercase text-emerald-300 flex items-center gap-1.5">
+          Issue tree
+          {loading && <span className="text-[9px] text-zinc-500 animate-pulse normal-case">updating…</span>}
+        </div>
         <button
           onClick={rebuild}
           disabled={loading}
