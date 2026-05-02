@@ -16,11 +16,19 @@ export async function POST(req: NextRequest) {
   catch { return new Response(JSON.stringify({ error: 'invalid JSON body' }), { status: 400, headers: { 'Content-Type': 'application/json' } }); }
   const sessionId = body?.sessionId;
   const userTurn = body?.userTurn;
-  if (!sessionId || typeof sessionId !== 'string') {
-    return new Response(JSON.stringify({ error: 'sessionId (string) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  if (!sessionId || typeof sessionId !== 'string' || sessionId.length > 100) {
+    return new Response(JSON.stringify({ error: 'sessionId (string, ≤100 chars) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
   if (!userTurn || typeof userTurn !== 'string' || userTurn.trim().length === 0) {
     return new Response(JSON.stringify({ error: 'userTurn (non-empty string) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  }
+  if (userTurn.length > 10000) {
+    return new Response(JSON.stringify({ error: 'userTurn too large (>10000 chars)' }), { status: 413, headers: { 'Content-Type': 'application/json' } });
+  }
+  // Strip control chars (keep \n, \r, \t) to defang weird unicode
+  const safeUserTurn = userTurn.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+  if (safeUserTurn.trim().length === 0) {
+    return new Response(JSON.stringify({ error: 'userTurn (non-empty after sanitization) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
   const supabase = await createSupabaseServerClient();
 
@@ -41,7 +49,7 @@ export async function POST(req: NextRequest) {
   const transcriptIn = (session.transcript as { role: string; content: string; timestamp: string }[]) ?? [];
   const withUser = [
     ...transcriptIn,
-    { role: 'user', content: userTurn, timestamp: new Date().toISOString() },
+    { role: 'user', content: safeUserTurn, timestamp: new Date().toISOString() },
   ];
   const disclosed = withUser
     .filter((t) => t.role === 'interviewer')

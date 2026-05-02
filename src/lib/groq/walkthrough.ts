@@ -1,5 +1,6 @@
 import { completeChat } from '../llm-router';
 import { researchCase } from '../research/tavily';
+import { staticWalkthroughFallback } from './static-fallbacks';
 
 export interface IdealWalkthrough {
   issue_tree: {
@@ -120,7 +121,9 @@ Generate the ideal walkthrough JSON. Remember: every evidence/reasoning point MU
     if (sources.length > 0) parsed.sources = sources;
     return parsed;
   } catch (err) {
-    console.error('walkthrough generation failed:', (err as Error).message);
-    return null;
+    console.warn('[walkthrough] all providers failed, returning static fallback:', (err as Error).message);
+    const fb = staticWalkthroughFallback() as unknown as IdealWalkthrough;
+    if (sources.length > 0) fb.sources = sources;
+    return fb;
   }
 }

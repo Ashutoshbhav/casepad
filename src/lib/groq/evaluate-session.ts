@@ -1,7 +1,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { completeChat } from '../llm-router';
+import { withRetry } from '../supabase/with-retry';
 import { buildEvaluatorMessages } from './evaluator';
 import { buildTrackEvaluatorMessages } from './track-evaluator';
+import { staticEvaluatorBreakdown } from './static-fallbacks';
 import type { Track } from '../tracks';
 
 export interface EvaluateResult {
@@ -17,24 +19,18 @@ export async function evaluateSession(
   supabase: SupabaseClient,
   sessionId: string
 ): Promise<EvaluateResult> {
-  const { data: session } = await supabase
-    .from('sessions')
-    .select('*')
-    .eq('id', sessionId)
-    .single();
+  const { data: session } = await withRetry(() =>
+    supabase.from('sessions').select('*').eq('id', sessionId).single()
+  );
   if (!session) return { ok: false, status: 404, body: { error: 'session not found' } };
 
-  const { data: caseRow } = await supabase
-    .from('cases')
-    .select('ideal_structure')
-    .eq('id', session.case_id)
-    .single();
+  const { data: caseRow } = await withRetry(() =>
+    supabase.from('cases').select('ideal_structure').eq('id', session.case_id).single()
+  );
 
-  const { data: cheatSheet } = await supabase
-    .from('cheat_sheets')
-    .select('*')
-    .eq('session_id', sessionId)
-    .maybeSingle();
+  const { data: cheatSheet } = await withRetry(() =>
+    supabase.from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle()
+  );
 
   const startMs = new Date(session.started_at).getTime();
   const elapsedSec = Math.round((Date.now() - startMs) / 1000);
@@ -62,23 +58,27 @@ export async function evaluateSession(
         elapsedSec,
       );
 
-  let raw: string;
+  let breakdown: any;
+  let usedFallback = false;
   try {
-    raw = await completeChat({
+    const raw = await completeChat({
       messages: messages as any,
       json: true,
       temperature: 0.2,
       max_tokens: 800,
     });
+    try {
+      breakdown = JSON.parse(raw || '{}');
+    } catch {
+      console.warn('[evaluate] LLM output unparseable, using static fallback');
+      breakdown = staticEvaluatorBreakdown(track);
+      usedFallback = true;
+    }
   } catch (err) {
-    return { ok: false, status: 502, body: { error: 'evaluator providers all failed: ' + (err as Error).message } };
-  }
-
-  let breakdown: any;
-  try {
-    breakdown = JSON.parse(raw || '{}');
-  } catch {
-    return { ok: false, status: 502, body: { error: 'invalid evaluator output' } };
+    // All providers failed — degrade gracefully so /debrief still renders.
+    console.warn('[evaluate] all LLM providers failed, using static fallback:', (err as Error).message);
+    breakdown = staticEvaluatorBreakdown(track);
+    usedFallback = true;
   }
 
   await supabase

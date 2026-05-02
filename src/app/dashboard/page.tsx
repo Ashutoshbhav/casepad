@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 
@@ -42,12 +43,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     .eq('status', 'in_progress')
     .lt('started_at', cutoff);
 
-  const { data: allSessions } = await supabase
-    .from('sessions')
-    .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
-    .eq('user_id', user.id)
-    .order('started_at', { ascending: false })
-    .limit(200);
+  const { data: allSessions } = await withRetry(() =>
+    supabase
+      .from('sessions')
+      .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
+      .eq('user_id', user.id)
+      .order('started_at', { ascending: false })
+      .limit(200)
+  );
 
   const sessions = trackFilter ? (allSessions ?? []).filter((s: any) => s.track === trackFilter) : (allSessions ?? []).slice(0, 50);
   const completed = sessions.filter((s) => s.status === 'completed');

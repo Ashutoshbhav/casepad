@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { CaseCard } from '@/components/case-card';
 import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
@@ -21,18 +22,19 @@ export default async function CasesPage({
 
   // Only select fields CaseCard actually displays — full JSONB columns
   // (interviewer_notes, ideal_structure) bloat the payload to MB at 120 rows.
-  let query = supabase
-    .from('cases')
-    .select('id,title,industry,case_type,difficulty,source')
-    .contains('tracks', [activeTrack])
-    .order('created_at', { ascending: false })
-    .limit(60);
-  if (sp.industry) query = query.eq('industry', sp.industry);
-  if (sp.type) query = query.eq('case_type', sp.type);
-  if (sp.difficulty) query = query.eq('difficulty', sp.difficulty);
-  if (sp.q) query = query.ilike('title', `%${sp.q}%`);
-
-  const { data: cases } = await query;
+  const { data: cases } = await withRetry(() => {
+    let query = supabase
+      .from('cases')
+      .select('id,title,industry,case_type,difficulty,source')
+      .contains('tracks', [activeTrack])
+      .order('created_at', { ascending: false })
+      .limit(60);
+    if (sp.industry) query = query.eq('industry', sp.industry);
+    if (sp.type) query = query.eq('case_type', sp.type);
+    if (sp.difficulty) query = query.eq('difficulty', sp.difficulty);
+    if (sp.q) query = query.ilike('title', `%${sp.q}%`);
+    return query;
+  });
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
       <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">

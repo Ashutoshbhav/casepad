@@ -6,6 +6,7 @@
 // into the LLM so it can extend rather than restart, keeping continuity.
 
 import { completeChat } from '../llm-router';
+import { staticIssueTreeFallback } from './static-fallbacks';
 
 export interface TreeNode {
   id: string;
@@ -110,13 +111,18 @@ Return the updated issue_tree JSON.`;
       max_tokens: 1400,
     });
   } catch (err) {
-    console.error('extractIssueTree LLM failed:', (err as Error).message);
-    return prior;
+    console.warn('[issue-tree] all providers failed:', (err as Error).message);
+    // If we had a prior tree, preserve it (better than fallback). Otherwise
+    // surface the static fallback so the panel renders something instead of
+    // crashing or showing "Empty".
+    return prior.nodes.length > 0 ? prior : staticIssueTreeFallback();
   }
 
   let parsed: any;
   try { parsed = JSON.parse(raw); }
-  catch { return prior; }
+  catch {
+    return prior.nodes.length > 0 ? prior : staticIssueTreeFallback();
+  }
 
   // Defensive normalization
   const nodes: TreeNode[] = Array.isArray(parsed.nodes) ? parsed.nodes

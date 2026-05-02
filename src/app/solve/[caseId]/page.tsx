@@ -1,11 +1,13 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { SolveLayout } from '@/components/solve-layout';
 import { InSolveHintPanel } from '@/components/in-solve-hint-panel';
 import { SolveTour } from '@/components/solve-tour';
 import type { Track } from '@/lib/tracks';
 import { startSession } from '@/server-actions/start-session';
 import { endSession } from '@/server-actions/end-session';
+import { resetSession } from '@/server-actions/reset-session';
 
 export default async function SolvePage({
   params, searchParams,
@@ -25,12 +27,15 @@ export default async function SolvePage({
   }
 
   const sessionId = sessionParam!;
-  const { data: session } = await supabase
-    .from('sessions').select('*').eq('id', sessionId).single();
-  const { data: caseRow } = await supabase
-    .from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single();
-  const { data: cs } = await supabase
-    .from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle();
+  const { data: session } = await withRetry(() =>
+    supabase.from('sessions').select('*').eq('id', sessionId).single()
+  );
+  const { data: caseRow } = await withRetry(() =>
+    supabase.from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single()
+  );
+  const { data: cs } = await withRetry(() =>
+    supabase.from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle()
+  );
 
   if (!session || !caseRow) redirect('/cases');
 
@@ -61,6 +66,13 @@ export default async function SolvePage({
       <details className="border-t border-zinc-800 px-4 py-2">
         <summary className="text-xs text-zinc-500 cursor-pointer">Show problem statement</summary>
         <p className="text-sm text-zinc-400 mt-2">{caseRow.problem_statement}</p>
+      </details>
+      <details className="border-t border-zinc-900 px-4 py-1">
+        <summary className="text-[11px] text-zinc-600 cursor-pointer">Session stuck or broken? Reset.</summary>
+        <form action={resetSession.bind(null, sessionId)} className="mt-2 mb-1">
+          <p className="text-[11px] text-zinc-500 mb-1.5">Clears the chat, tree, and cheat sheet for this session and starts you fresh on the same case. Your other sessions are unaffected.</p>
+          <button type="submit" className="text-[11px] px-2 py-0.5 rounded bg-rose-950/50 text-rose-400 border border-rose-900/50 hover:bg-rose-900/30">↺ reset this session</button>
+        </form>
       </details>
       <span data-tour="solve-hint">
         <InSolveHintPanel track={(user.user_metadata?.preferred_track as Track) || 'consulting'} />

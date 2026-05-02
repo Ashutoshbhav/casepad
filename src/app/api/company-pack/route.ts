@@ -8,8 +8,25 @@ import { TRACKS, type Track } from '@/lib/tracks';
 // reports for the firm, identifies recent case archetypes, surfaces user's
 // weak areas to drill, and generates a 24-hour-before crammer.
 export async function POST(req: NextRequest) {
-  const { firm, location, round } = await req.json();
-  if (!firm) return NextResponse.json({ error: 'firm required' }, { status: 400 });
+  let body: any;
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 }); }
+
+  const firm = body?.firm;
+  const location = body?.location;
+  const round = body?.round;
+  if (!firm || typeof firm !== 'string' || firm.trim().length === 0) {
+    return NextResponse.json({ error: 'firm (non-empty string) required' }, { status: 400 });
+  }
+  if (firm.length > 200) {
+    return NextResponse.json({ error: 'firm too large (>200 chars)' }, { status: 413 });
+  }
+  if (location !== undefined && location !== null && (typeof location !== 'string' || location.length > 200)) {
+    return NextResponse.json({ error: 'location must be a string ≤200 chars' }, { status: 400 });
+  }
+  if (round !== undefined && round !== null && (typeof round !== 'string' || round.length > 200)) {
+    return NextResponse.json({ error: 'round must be a string ≤200 chars' }, { status: 400 });
+  }
 
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -77,7 +94,7 @@ Generate the pack JSON.`;
 
   let pack;
   try { pack = JSON.parse(raw || '{}'); }
-  catch { return NextResponse.json({ error: 'pack generation failed' }, { status: 500 }); }
+  catch { return NextResponse.json({ error: 'pack generation failed' }, { status: 502 }); }
 
   return NextResponse.json({ pack });
 }

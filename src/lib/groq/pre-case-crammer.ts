@@ -4,6 +4,7 @@
 
 import { completeChat } from '../llm-router';
 import { researchCase } from '../research/tavily';
+import { staticCrammerFallback } from './static-fallbacks';
 import type { Track } from '../tracks';
 import { TRACKS } from '../tracks';
 
@@ -124,6 +125,11 @@ Generate the pre-case crammer JSON.`;
       break;
     }
   }
-  // Throw so the API route can surface the error
-  throw lastErr ?? new Error('crammer failed after retries');
+  // All retries failed. Return a static-template fallback so the user always
+  // sees something useful instead of an "unavailable" error. The fallback is
+  // track-aware (frameworks + math + recovery script come from in-code data).
+  console.warn('[crammer] all providers failed, returning static fallback:', lastErr?.message);
+  const fb = staticCrammerFallback(track) as PreCaseCrammer;
+  fb.sources = sources;
+  return fb;
 }

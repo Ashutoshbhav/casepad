@@ -35,12 +35,20 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   }
 
   const b = (session.score_breakdown ?? {}) as any;
+  const usedFallback = b?.fallback_used === true;
+  const walkthroughFallback = (walkthrough as any)?.fallback_used === true;
 
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">
       <a href="/cases" className="text-sm text-zinc-500 hover:text-zinc-300">← back to cases</a>
       <h1 className="text-2xl font-semibold mt-2 mb-1">{caseRow?.title ?? '—'}</h1>
       <div className="text-sm text-zinc-500 mb-6">Total score: <span className="text-zinc-100 text-lg">{session.score ?? 0}</span> / 100</div>
+
+      {(usedFallback || walkthroughFallback) && (
+        <div className="mb-6 rounded border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">
+          ⚠ {usedFallback && walkthroughFallback ? 'Scoring AND walkthrough services were temporarily down' : usedFallback ? 'The scoring service was temporarily down' : 'The walkthrough service was temporarily down'} when you ended this session — what you see below is a generic placeholder. Re-run the case to get the real score. Your transcript + tree are saved.
+        </div>
+      )}
 
       <section className="grid md:grid-cols-2 gap-6 mb-8">
         <div className="space-y-3">

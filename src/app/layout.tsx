@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ConnectionBanner } from '@/components/connection-banner';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://casepad.vercel.app';
 
@@ -26,7 +27,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ConnectionBanner />
+        {children}
+      </body>
     </html>
   );
 }

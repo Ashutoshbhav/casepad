@@ -8,11 +8,27 @@ import type { CheatSheetState } from '@/lib/types/domain';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
-  const { sessionId, userQuestion, interviewerAnswer } = (await req.json()) as {
-    sessionId: string;
-    userQuestion: string;
-    interviewerAnswer: string;
-  };
+  let body: any;
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 }); }
+
+  const sessionId = body?.sessionId;
+  const userQuestion = body?.userQuestion;
+  const interviewerAnswer = body?.interviewerAnswer;
+
+  if (!sessionId || typeof sessionId !== 'string' || sessionId.length > 100) {
+    return NextResponse.json({ error: 'sessionId (string, ≤100 chars) required' }, { status: 400 });
+  }
+  if (typeof userQuestion !== 'string') {
+    return NextResponse.json({ error: 'userQuestion (string) required' }, { status: 400 });
+  }
+  if (typeof interviewerAnswer !== 'string') {
+    return NextResponse.json({ error: 'interviewerAnswer (string) required' }, { status: 400 });
+  }
+  if (userQuestion.length > 10000 || interviewerAnswer.length > 10000) {
+    return NextResponse.json({ error: 'userQuestion or interviewerAnswer too large (>10000 chars)' }, { status: 413 });
+  }
+
   const supabase = await createSupabaseServerClient();
 
   const { data: existing } = await supabase

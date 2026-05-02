@@ -6,10 +6,31 @@ import { tavilySearch } from '@/lib/research/tavily';
 // Q&A endpoint — answers questions using the track's frameworks/math/recovery
 // content + light web research, grounded in user's weak-area history.
 export async function POST(req: NextRequest) {
-  const { q, track: trackKey, weakestDims } = await req.json();
-  if (!q) return NextResponse.json({ error: 'q required' }, { status: 400 });
+  let body: any;
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 }); }
 
-  const track: Track = trackKey || 'consulting';
+  const q = body?.q;
+  const trackKey = body?.track;
+  const weakestDims = body?.weakestDims;
+
+  if (!q || typeof q !== 'string' || q.trim().length === 0) {
+    return NextResponse.json({ error: 'q (non-empty string) required' }, { status: 400 });
+  }
+  if (q.length > 2000) {
+    return NextResponse.json({ error: 'q too large (>2000 chars)' }, { status: 413 });
+  }
+  if (trackKey !== undefined && (typeof trackKey !== 'string' || !(trackKey in TRACKS))) {
+    return NextResponse.json({ error: 'track must be a valid track key' }, { status: 400 });
+  }
+  if (weakestDims !== undefined && weakestDims !== null && !Array.isArray(weakestDims)) {
+    return NextResponse.json({ error: 'weakestDims must be an array of strings' }, { status: 400 });
+  }
+  const safeWeakestDims: string[] = Array.isArray(weakestDims)
+    ? weakestDims.filter((d: unknown) => typeof d === 'string').slice(0, 20).map((d: string) => d.slice(0, 100))
+    : [];
+
+  const track: Track = (trackKey as Track) || 'consulting';
   const def = TRACKS[track];
 
   // Light research — single Tavily query to enrich answer
@@ -24,7 +45,7 @@ Answer the question using:
 - The track's frameworks: ${def.frameworks.map((f) => f.name).join(', ')}
 - The track's math: ${def.math.map((m) => m.name).join(', ')}
 - Recovery scripts: available
-- The candidate's weak areas: ${(weakestDims || []).join(', ') || '(no history)'}
+- The candidate's weak areas: ${safeWeakestDims.join(', ') || '(no history)'}
 
 Rules:
 - Concrete and specific. Cite framework name when invoked.

@@ -10,12 +10,21 @@ export async function POST(req: NextRequest) {
   }
   const q = body?.q;
   const response = body?.response;
-  if (!q || typeof q !== 'object' || !q.prompt || !q.dimension) {
-    return NextResponse.json({ error: 'q must be an object with prompt + dimension' }, { status: 400 });
+  if (!q || typeof q !== 'object' || Array.isArray(q) || typeof q.prompt !== 'string' || typeof q.dimension !== 'string') {
+    return NextResponse.json({ error: 'q must be an object with prompt (string) + dimension (string)' }, { status: 400 });
+  }
+  if (q.prompt.length > 2000 || q.dimension.length > 200) {
+    return NextResponse.json({ error: 'q.prompt or q.dimension too large' }, { status: 413 });
   }
   if (!response || typeof response !== 'string' || response.length < 50) {
     return NextResponse.json({ error: 'response (string, ≥50 chars) required' }, { status: 400 });
   }
+  if (response.length > 5000) {
+    return NextResponse.json({ error: 'response too large (>5000 chars)' }, { status: 413 });
+  }
+  // Coerce optional metadata strings used in the prompt template
+  const commonMistake = typeof q.common_mistake === 'string' ? q.common_mistake.slice(0, 1000) : '';
+  const spikeMove = typeof q.spike_move === 'string' ? q.spike_move.slice(0, 1000) : '';
 
   const system = `You are a behavioral interview coach. Score the candidate's STAR-format
 response against this rubric:
@@ -48,8 +57,8 @@ Rules:
 - Cite phrases from the response, don't be generic.
 - A 90+ requires concrete numbers, named people/situations, AND a moment of self-awareness.
 - Below 60 = significant gap (no STAR structure, or pure generality, or a humblebrag instead of real story).
-- "Common mistake" for this question: ${q.common_mistake}. Specifically check whether they fell into it.
-- "Spike move" for this question: ${q.spike_move}. Did they execute it?`;
+- "Common mistake" for this question: ${commonMistake}. Specifically check whether they fell into it.
+- "Spike move" for this question: ${spikeMove}. Did they execute it?`;
 
   const user = `BEHAVIORAL QUESTION: ${q.prompt}
 DIMENSION: ${q.dimension}
@@ -76,7 +85,7 @@ Score it.`;
 
   let feedback;
   try { feedback = JSON.parse(raw || '{}'); }
-  catch { return NextResponse.json({ error: 'feedback parse failed' }, { status: 500 }); }
+  catch { return NextResponse.json({ error: 'feedback parse failed' }, { status: 502 }); }
 
   return NextResponse.json({ feedback });
 }

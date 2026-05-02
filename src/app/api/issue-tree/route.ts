@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { extractIssueTree, type IssueTree } from '@/lib/groq/issue-tree';
 
 // POST /api/issue-tree
@@ -20,8 +21,14 @@ export async function POST(req: NextRequest) {
   catch { return NextResponse.json({ error: 'invalid JSON' }, { status: 400 }); }
 
   const { sessionId, mode, tree } = body || {};
-  if (!sessionId || typeof sessionId !== 'string') {
-    return NextResponse.json({ error: 'sessionId required' }, { status: 400 });
+  if (!sessionId || typeof sessionId !== 'string' || sessionId.length > 100) {
+    return NextResponse.json({ error: 'sessionId (string, ≤100 chars) required' }, { status: 400 });
+  }
+  if (mode !== undefined && typeof mode !== 'string') {
+    return NextResponse.json({ error: 'mode must be a string' }, { status: 400 });
+  }
+  if (mode && !['get', 'extract', 'save'].includes(mode)) {
+    return NextResponse.json({ error: "mode must be 'get'|'extract'|'save'" }, { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
@@ -29,12 +36,14 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'not authenticated' }, { status: 401 });
 
   // Confirm the session belongs to the user
-  const { data: session } = await supabase
-    .from('sessions')
-    .select('id, user_id, transcript, issue_tree, case_id')
-    .eq('id', sessionId)
-    .eq('user_id', user.id)
-    .maybeSingle();
+  const { data: session } = await withRetry(() =>
+    supabase
+      .from('sessions')
+      .select('id, user_id, transcript, issue_tree, case_id')
+      .eq('id', sessionId)
+      .eq('user_id', user.id)
+      .maybeSingle()
+  );
 
   if (!session) return NextResponse.json({ error: 'session not found' }, { status: 404 });
 
@@ -43,8 +52,15 @@ export async function POST(req: NextRequest) {
   }
 
   if (mode === 'save') {
-    if (!tree || typeof tree !== 'object') {
-      return NextResponse.json({ error: 'tree required for save mode' }, { status: 400 });
+    if (!tree || typeof tree !== 'object' || Array.isArray(tree)) {
+      return NextResponse.json({ error: 'tree (object) required for save mode' }, { status: 400 });
+    }
+    // Cap tree size at 100KB serialized to prevent abuse
+    let serialized: string;
+    try { serialized = JSON.stringify(tree); }
+    catch { return NextResponse.json({ error: 'tree could not be serialized' }, { status: 400 }); }
+    if (serialized.length > 100_000) {
+      return NextResponse.json({ error: 'tree too large (>100KB)' }, { status: 413 });
     }
     const { error } = await supabase
       .from('sessions')
@@ -64,12 +80,17 @@ export async function POST(req: NextRequest) {
 
   const transcript = (session.transcript as any[]) ?? [];
   const priorTree = (session.issue_tree as IssueTree | null) ?? null;
-  const updated = await extractIssueTree(
-    caseRow.title,
-    caseRow.problem_statement || '',
-    transcript,
-    priorTree,
-  );
+  let updated: IssueTree;
+  try {
+    updated = await extractIssueTree(
+      caseRow.title,
+      caseRow.problem_statement || '',
+      transcript,
+      priorTree,
+    );
+  } catch {
+    return NextResponse.json({ error: 'issue tree extraction failed' }, { status: 502 });
+  }
 
   const { error } = await supabase
     .from('sessions')

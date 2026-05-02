@@ -1,11 +1,16 @@
 // Multi-provider LLM router with rotation on 429.
 // Tries providers in order; on 429 / 5xx falls through. For chat streaming,
-// returns SSE-compatible parsed deltas.
+// returns SSE-compatible parsed deltas. Each call also retries the SAME
+// provider once on transient network errors before failing over.
 //
 // Order tuned for chat (latency + token-budget):
 //   1. Groq (fast, but 6K TPM cap on free) — first 1-2 users in a minute
 //   2. NVIDIA NIM (slower, looser tokens) — fallback at scale
+//   3. Cerebras (free tier, fast Llama 3.3-70b) — final fallback
+//   4. OpenRouter (proxies to many models) — emergency fallback
 //
+// Configure via env: GROQ_API_KEY, NVIDIA_API_KEY, CEREBRAS_API_KEY,
+// OPENROUTER_API_KEY. Any subset works; route picks whatever's present.
 // Each provider speaks OpenAI-compatible /v1/chat/completions.
 
 type Msg = { role: 'system' | 'user' | 'assistant'; content: string };
@@ -36,6 +41,24 @@ function providers(): Provider[] {
       url: 'https://integrate.api.nvidia.com/v1/chat/completions',
       key: process.env.NVIDIA_API_KEY,
       model: 'meta/llama-3.3-70b-instruct',
+      supports_json_streaming: true,
+    });
+  }
+  if (process.env.CEREBRAS_API_KEY) {
+    list.push({
+      name: 'cerebras',
+      url: 'https://api.cerebras.ai/v1/chat/completions',
+      key: process.env.CEREBRAS_API_KEY,
+      model: 'llama-3.3-70b',
+      supports_json_streaming: true,
+    });
+  }
+  if (process.env.OPENROUTER_API_KEY) {
+    list.push({
+      name: 'openrouter',
+      url: 'https://openrouter.ai/api/v1/chat/completions',
+      key: process.env.OPENROUTER_API_KEY,
+      model: 'meta-llama/llama-3.3-70b-instruct:free',
       supports_json_streaming: true,
     });
   }

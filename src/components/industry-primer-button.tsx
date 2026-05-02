@@ -81,6 +81,11 @@ export function IndustryPrimerButton({ caseId }: { caseId: string }) {
 
             {crammer && !loading && (
               <div className="space-y-4 text-zinc-200">
+                {(crammer as any).fallback_used && (
+                  <div className="rounded border border-amber-800 bg-amber-950/30 p-2 text-[11px] text-amber-200">
+                    ⚠ Industry research service is offline — showing a generic primer based on your track. Try again in a minute for the full Tavily-grounded version.
+                  </div>
+                )}
                 <section>
                   <div className="text-xs uppercase text-zinc-500 mb-1">Industry — {crammer.industry_primer.sector}</div>
                   <div className="text-xs space-y-0.5">

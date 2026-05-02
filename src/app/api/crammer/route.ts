@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
   try { body = await req.json(); }
   catch { return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 }); }
   const caseId = body?.caseId;
-  if (!caseId || typeof caseId !== 'string') {
-    return NextResponse.json({ error: 'caseId (string) required' }, { status: 400 });
+  if (!caseId || typeof caseId !== 'string' || caseId.length > 100) {
+    return NextResponse.json({ error: 'caseId (string, ≤100 chars) required' }, { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
