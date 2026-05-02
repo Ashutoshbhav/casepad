@@ -1,19 +1,22 @@
 import Link from 'next/link';
 import type { CaseRow } from '@/lib/types/domain';
+import { IndustryPrimerButton } from './industry-primer-button';
 
 export function CaseCard({ c }: { c: CaseRow }) {
   return (
-    <Link
-      href={`/solve/${c.id}`}
-      className="block rounded-lg border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-600 transition"
-    >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs uppercase text-zinc-500">{c.case_type.replace('_', ' ')}</span>
-        <span className={`text-xs px-2 py-0.5 rounded ${diffStyle(c.difficulty)}`}>{c.difficulty}</span>
+    <div className="rounded-lg border border-zinc-800 bg-zinc-900 hover:border-zinc-600 transition relative">
+      <Link href={`/solve/${c.id}`} className="block p-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs uppercase text-zinc-500">{c.case_type.replace('_', ' ')}</span>
+          <span className={`text-xs px-2 py-0.5 rounded ${diffStyle(c.difficulty)}`}>{c.difficulty}</span>
+        </div>
+        <h3 className="font-medium text-zinc-100 mb-1 line-clamp-2 pr-12">{c.title}</h3>
+        <div className="text-xs text-zinc-500">{c.source ?? 'unknown'} · {c.industry}</div>
+      </Link>
+      <div className="absolute right-3 bottom-3">
+        <IndustryPrimerButton caseId={c.id} />
       </div>
-      <h3 className="font-medium text-zinc-100 mb-1 line-clamp-2">{c.title}</h3>
-      <div className="text-xs text-zinc-500">{c.source ?? 'unknown'} · {c.industry}</div>
-    </Link>
+    </div>
   );
 }
 

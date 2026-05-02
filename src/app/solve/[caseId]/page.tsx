@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SolveLayout } from '@/components/solve-layout';
-import { PreCaseCrammerPanel } from '@/components/pre-case-crammer-panel';
 import { InSolveHintPanel } from '@/components/in-solve-hint-panel';
 import { SolveTour } from '@/components/solve-tour';
 import type { Track } from '@/lib/tracks';
@@ -29,7 +28,7 @@ export default async function SolvePage({
   const { data: session } = await supabase
     .from('sessions').select('*').eq('id', sessionId).single();
   const { data: caseRow } = await supabase
-    .from('cases').select('title, difficulty, problem_statement, pre_case_crammer').eq('id', caseId).single();
+    .from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single();
   const { data: cs } = await supabase
     .from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle();
 
@@ -50,14 +49,9 @@ export default async function SolvePage({
           <div className="text-xs text-zinc-500 uppercase">{caseRow.difficulty}</div>
           <h1 className="text-sm font-semibold">{caseRow.title}</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <span data-tour="solve-crammer">
-            <PreCaseCrammerPanel caseId={caseId} initial={(caseRow.pre_case_crammer as any) || null} />
-          </span>
-          <form action={endSession.bind(null, sessionId)} data-tour="solve-end">
-            <button className="text-xs px-3 py-1.5 bg-rose-900/40 text-rose-300 rounded">End session</button>
-          </form>
-        </div>
+        <form action={endSession.bind(null, sessionId)} data-tour="solve-end">
+          <button className="text-xs px-3 py-1.5 bg-rose-900/40 text-rose-300 rounded">End session</button>
+        </form>
       </header>
       <SolveLayout
         sessionId={sessionId}

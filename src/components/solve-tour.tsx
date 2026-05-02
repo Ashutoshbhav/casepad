@@ -6,12 +6,7 @@ const STEPS: TourStep[] = [
   {
     target: 'solve-header',
     title: 'Read the prompt',
-    body: 'The case title and difficulty are here. Scroll to the bottom of the page and click "Show problem statement" to read the full prompt before you start talking.',
-  },
-  {
-    target: 'solve-crammer',
-    title: 'Pre-case crammer (30 sec)',
-    body: 'Click this for a quick industry primer specific to this case — likely frameworks, math shortcuts, watch-outs, and a recovery script. Use it BEFORE you start; one of your free moves.',
+    body: 'The case title and difficulty are here. Scroll to the bottom of the page and click "Show problem statement" to read the full prompt before you start talking. This page is in-room: no crammer, no industry cheat — like a real interview.',
   },
   {
     target: 'solve-chat',
