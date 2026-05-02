@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { ScoreCurve } from '@/components/score-curve';
+
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
@@ -36,10 +39,17 @@ export default async function DashboardPage() {
         <Link href="/cases" className="text-sm text-zinc-400 hover:text-zinc-200">All cases →</Link>
       </header>
 
-      <section className="grid grid-cols-3 gap-4 mb-8">
+      <section className="grid grid-cols-3 gap-4 mb-6">
         <Stat label="Sessions" value={String((sessions ?? []).length)} />
         <Stat label="Completed" value={String(completed.length)} />
         <Stat label="Avg score" value={`${avg}`} />
+      </section>
+
+      <section className="mb-8">
+        <ScoreCurve points={completed.slice().reverse().map((s: any) => ({
+          date: s.started_at,
+          score: s.score ?? 0,
+        }))} />
       </section>
 
       <section className="mb-8">

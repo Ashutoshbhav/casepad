@@ -5,6 +5,7 @@ import { ScoreBar } from '@/components/score-bar';
 import { IdealStructureTree } from '@/components/ideal-structure-tree';
 import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
 import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
+import { SessionFeedbackForm } from '@/components/session-feedback-form';
 
 export default async function DebriefPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params;
@@ -69,12 +70,14 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       </section>
 
       {walkthrough && (
-        <section className="rounded border border-zinc-800 p-5">
+        <section className="rounded border border-zinc-800 p-5 mb-8">
           <h2 className="text-lg font-semibold text-zinc-100 mb-1">How a top candidate would solve this</h2>
           <p className="text-xs text-zinc-500 mb-5">Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.</p>
           <IdealWalkthroughView w={walkthrough} />
         </section>
       )}
+
+      <SessionFeedbackForm sessionId={sessionId} />
     </main>
   );
 }
