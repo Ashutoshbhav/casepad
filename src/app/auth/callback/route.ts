@@ -11,6 +11,12 @@ export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get('code');
   const tokenHash = req.nextUrl.searchParams.get('token_hash');
   const type = req.nextUrl.searchParams.get('type') as EmailOtpType | null;
+  const returnToRaw = req.nextUrl.searchParams.get('return_to');
+  // Validate: must be a relative path; reject open redirects.
+  const returnTo =
+    returnToRaw && returnToRaw.startsWith('/') && !returnToRaw.startsWith('//')
+      ? returnToRaw
+      : '/cases';
 
   if (!code && !tokenHash) {
     return NextResponse.redirect(new URL('/auth/signin', req.url));
@@ -41,5 +47,5 @@ export async function GET(req: NextRequest) {
     await supabase.auth.signOut();
     return NextResponse.redirect(new URL('/auth/no-access', req.url));
   }
-  return NextResponse.redirect(new URL('/cases', req.url));
+  return NextResponse.redirect(new URL(returnTo, req.url));
 }

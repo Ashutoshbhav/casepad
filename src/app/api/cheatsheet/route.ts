@@ -31,6 +31,15 @@ export async function POST(req: NextRequest) {
 
   const supabase = await createSupabaseServerClient();
 
+  // Fetch the session's recent transcript so the extractor sees
+  // multi-turn framework/hypothesis statements, not just the latest pair.
+  const { data: sessionRow } = await supabase
+    .from('sessions')
+    .select('transcript')
+    .eq('id', sessionId)
+    .maybeSingle();
+  const recentTranscript = (sessionRow?.transcript as any[]) ?? [];
+
   const { data: existing } = await supabase
     .from('cheat_sheets')
     .select('*')
@@ -57,7 +66,7 @@ export async function POST(req: NextRequest) {
         locked_fields: [],
       };
 
-  const messages = buildCheatSheetExtractionMessages(userQuestion, interviewerAnswer, current);
+  const messages = buildCheatSheetExtractionMessages(userQuestion, interviewerAnswer, current, recentTranscript);
   let raw: string;
   try {
     raw = await completeChat({

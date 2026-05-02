@@ -99,7 +99,11 @@ ${diffContent}
 
 Apply the PM gate. Return JSON.`;
 
+// Windows libuv async-handle race regularly crashes the hook here when fetch
+// + JSON.parse throws. Defensive: wrap the WHOLE call + parse + exit so any
+// throw bypasses the LLM verdict and exits 0 cleanly.
 let body, json;
+let llmFailed = false;
 try {
   const r = await fetch(provider.url, {
     method: 'POST',
@@ -116,12 +120,18 @@ try {
     }),
   });
   body = await r.text();
-  json = JSON.parse(JSON.parse(body).choices[0].message.content);
+  const outer = JSON.parse(body);
+  const content = outer?.choices?.[0]?.message?.content;
+  if (!content) throw new Error('no content in response');
+  json = JSON.parse(content);
 } catch (err) {
+  llmFailed = true;
   console.error('[pm-gate] LLM call failed:', err.message);
   console.error('[pm-gate] Allowing commit. Re-run manually if you want to gate.');
-  // Windows libuv async-handle race: defer exit one tick so fetch handles close cleanly.
-  await new Promise((res) => setTimeout(res, 50));
+}
+
+if (llmFailed) {
+  // Defensive sync exit — bypass any pending libuv handles.
   process.exit(0);
 }
 

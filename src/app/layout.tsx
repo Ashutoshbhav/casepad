@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ConnectionBanner } from '@/components/connection-banner';
+import { AuthWatchdog } from '@/components/auth-watchdog';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://casepad.vercel.app';
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <ConnectionBanner />
+        <AuthWatchdog />
         {children}
       </body>
     </html>
