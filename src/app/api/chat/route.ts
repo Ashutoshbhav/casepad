@@ -1,6 +1,10 @@
 // src/app/api/chat/route.ts
+// Multi-provider chat with streaming. Tries Groq first (fast); falls through
+// to NVIDIA NIM on 429 / 5xx so 10+ concurrent users don't all hit Groq's
+// 6K TPM cap.
+
 import { NextRequest } from 'next/server';
-import { groq, MODEL_LARGE } from '@/lib/groq/client';
+import { streamChat } from '@/lib/llm-router';
 import { buildInterviewerMessages } from '@/lib/groq/interviewer';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
@@ -35,24 +39,22 @@ export async function POST(req: NextRequest) {
 
   const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any);
 
-  const stream = await groq.chat.completions.create({
-    model: MODEL_LARGE,
-    messages: messages as any,
-    stream: true,
-    max_tokens: 300,
-    temperature: 0.4,
-  });
-
   const encoder = new TextEncoder();
   const readable = new ReadableStream({
     async start(controller) {
       let full = '';
-      for await (const chunk of stream) {
-        const delta = chunk.choices?.[0]?.delta?.content || '';
-        if (delta) {
+      try {
+        for await (const delta of streamChat({
+          messages: messages as any,
+          max_tokens: 300,
+          temperature: 0.4,
+        })) {
           full += delta;
           controller.enqueue(encoder.encode(delta));
         }
+      } catch (err) {
+        const msg = `\n\n[Service is busy — please retry in a few seconds. ${(err as Error).message.slice(0, 80)}]`;
+        controller.enqueue(encoder.encode(msg));
       }
       const finalTranscript = [
         ...withUser,
