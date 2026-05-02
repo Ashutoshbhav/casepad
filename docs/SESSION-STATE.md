@@ -1,6 +1,6 @@
 # CasePad — Session State Snapshot
 
-**Saved:** 2026-05-02 (post-fortress-build)
+**Saved:** 2026-05-02 (post-rigorous-test, P0s patched)
 **Trigger word:** `PAD` — say it in any new session to surface this state
 **Project root:** `C:\Users\Ashutosh Bhavale\Documents\casepad`
 **Latest commit:** run `git log --oneline | head -5` to see most recent
@@ -67,10 +67,24 @@ Full sweep done. Padding scales `p-4 → sm:p-8` everywhere. SolveLayout has tab
 
 ## Outstanding (pre-cohort-share)
 
-1. **Ash hard-refreshes prod and verifies Crammer button** — earlier saw "unavailable" due to old cached JS; new error UI shows actual error + Retry button.
-2. **Cohort allowlist + first user test** — Ash adds 1-3 cohort emails via `/admin/allowlist` and screen-shares with one friend to spot anything broken end-to-end on a phone.
-3. **Backfill `case_type` for the 194 null rows** — they show up in `/cases` but don't roll up properly in dashboard weak-spots / track filters. Pure LLM classify pass.
-4. **Pre-generate crammers + ideal walkthroughs for top-N cases** to avoid first-click latency. Trade-off is Tavily quota (1000/mo free) — selective pre-gen of ~50 high-traffic cases, lazy-load the rest.
+1. **Cohort allowlist + first user test** — Ash adds 1-3 cohort emails via `/admin/allowlist` and screen-shares with one friend to spot anything broken end-to-end on a phone.
+2. **Tracks backfill (~85% remaining)** — running in background via `BACKFILL_CONCURRENCY=2 node scripts/qa/backfill-tracks-and-types.mjs --only-tracks --provider=nvidia`. NVIDIA NIM free tier is rate-limited so this is slow (~30 cases/5 min). Currently 182/1165 cases have multi-track tagging. Acceptable for cohort v1 since most users start on consulting track.
+3. **Pre-generate primer/walkthrough for top-50 cases** (currently 10) — lazy-gen works in ~18s but would be smoother if the popular cases were warm.
+
+## Recently shipped (today's session, in addition to fortress-build)
+
+- Crammer feature removed from in-room `/solve` (interview authenticity). Same generator now lives as a 📚 primer button on each `/cases` card.
+- Fixed P0: `/api/chat`, `/api/crammer`, `/api/behavioral-feedback` empty-body 500s (now 400 with validation).
+- Fixed P0: end-session crashed when Groq TPD exhausted. Swapped 7 direct Groq SDK calls for the multi-provider `completeChat()` router (Groq → NVIDIA NIM auto-fallback). All affected: evaluate-session, cheatsheet, behavioral-feedback, pre-case-crammer, walkthrough, company-pack, ask-cheatsheet.
+- Foundation cleanup: deleted 29 cases (10 industry-stub fakes + 19 in-casebook duplicates). Total now **1,165 cases**. Added unique partial index on (casebook_id, lower(title)).
+- Bundle 3 complete: 10 starter cases now have pre_case_crammer + ideal_walkthrough populated (used NVIDIA NIM since Groq TPD was exhausted).
+- Issue tree UX: instant-load on mount via new `'get'` API mode (returns saved tree, no LLM). Re-extract triggers only on chat turns, with `updating…` indicator.
+- Auth gate hardened: 6 routes (/cases, /dashboard, /drill, /math-drill, /behavioral-drill, /onboarding/track) now server-side `redirect()` for anon users. OG/Twitter meta + robots.txt added.
+- Pause/resume: dashboard auto-expires `in_progress > 24h` and shows resume pills.
+
+## Verified end-to-end via Playwright on prod
+
+Auth ✓ → /cases tour ✓ → solve InvestCo (chat → tree → cheat sheet) ✓ → end session ✓ → debrief with score 70/100 + ideal walkthrough + L0-L4 + 9 sources ✓ → dashboard with NSM curve + resume pills ✓ → primer modal lazy-gen on non-starter case ✓ → mobile 375px 3-tab toggle ✓ → math drill ✓ → behavioral drill scoring 92/100 via NVIDIA fallback ✓.
 
 ---
 
