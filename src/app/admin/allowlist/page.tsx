@@ -14,9 +14,10 @@ export default async function AllowlistPage() {
   const { data: rows } = await admin.from('email_allowlist').select('*').order('added_at', { ascending: false });
 
   return (
-    <main className="min-h-screen p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Cohort allowlist</h1>
-      <form action={addEmailToAllowlist} className="flex gap-2 mb-6">
+    <main className="min-h-screen p-4 sm:p-8 max-w-2xl mx-auto">
+      <h1 className="text-xl sm:text-2xl font-semibold mb-1">Cohort allowlist</h1>
+      <p className="text-xs text-zinc-500 mb-4">Only emails on this list can sign in. Add a cohort member, send them the URL.</p>
+      <form action={addEmailToAllowlist} className="flex flex-col sm:flex-row gap-2 mb-6">
         <input name="email" type="email" required placeholder="someone@school.edu" className="flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-sm" />
         <button className="px-4 py-2 bg-white text-zinc-900 rounded text-sm font-medium">Add</button>
       </form>
