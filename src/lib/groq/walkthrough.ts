@@ -1,4 +1,4 @@
-import { groq, MODEL_LARGE } from './client';
+import { completeChat } from '../llm-router';
 import { researchCase } from '../research/tavily';
 
 export interface IdealWalkthrough {
@@ -106,18 +106,16 @@ ${research || '(no research available — ground in case data only)'}
 Generate the ideal walkthrough JSON. Remember: every evidence/reasoning point MUST cite either case data or web research — no MBB-cliche generics.`;
 
   try {
-    const completion = await groq.chat.completions.create({
-      model: MODEL_LARGE,
+    const raw = await completeChat({
       messages: [
         { role: 'system', content: system },
         { role: 'user', content: user },
       ],
-      response_format: { type: 'json_object' },
+      json: true,
       temperature: 0.2,
       max_tokens: 2500,
     });
-    const content = completion.choices[0].message.content || '{}';
-    const parsed = JSON.parse(content) as IdealWalkthrough;
+    const parsed = JSON.parse(raw || '{}') as IdealWalkthrough;
     // Attach the web sources we used so the UI can cite them.
     if (sources.length > 0) parsed.sources = sources;
     return parsed;

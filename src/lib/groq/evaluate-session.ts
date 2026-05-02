@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { groq, MODEL_LARGE } from './client';
+import { completeChat } from '../llm-router';
 import { buildEvaluatorMessages } from './evaluator';
 import { buildTrackEvaluatorMessages } from './track-evaluator';
 import type { Track } from '../tracks';
@@ -62,17 +62,21 @@ export async function evaluateSession(
         elapsedSec,
       );
 
-  const completion = await groq.chat.completions.create({
-    model: MODEL_LARGE,
-    messages: messages as any,
-    response_format: { type: 'json_object' },
-    temperature: 0.2,
-    max_tokens: 800,
-  });
+  let raw: string;
+  try {
+    raw = await completeChat({
+      messages: messages as any,
+      json: true,
+      temperature: 0.2,
+      max_tokens: 800,
+    });
+  } catch (err) {
+    return { ok: false, status: 502, body: { error: 'evaluator providers all failed: ' + (err as Error).message } };
+  }
 
   let breakdown: any;
   try {
-    breakdown = JSON.parse(completion.choices[0].message.content || '{}');
+    breakdown = JSON.parse(raw || '{}');
   } catch {
     return { ok: false, status: 502, body: { error: 'invalid evaluator output' } };
   }

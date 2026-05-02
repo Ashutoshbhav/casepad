@@ -1,6 +1,6 @@
 // src/app/api/cheatsheet/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { groq, MODEL_SMALL } from '@/lib/groq/client';
+import { completeChat } from '@/lib/llm-router';
 import { buildCheatSheetExtractionMessages } from '@/lib/groq/cheatsheet';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { CheatSheetState } from '@/lib/types/domain';
@@ -42,17 +42,21 @@ export async function POST(req: NextRequest) {
       };
 
   const messages = buildCheatSheetExtractionMessages(userQuestion, interviewerAnswer, current);
-  const completion = await groq.chat.completions.create({
-    model: MODEL_SMALL,
-    messages: messages as any,
-    response_format: { type: 'json_object' },
-    temperature: 0.1,
-    max_tokens: 600,
-  });
+  let raw: string;
+  try {
+    raw = await completeChat({
+      messages: messages as any,
+      json: true,
+      temperature: 0.1,
+      max_tokens: 600,
+    });
+  } catch {
+    return NextResponse.json({ error: 'all providers failed' }, { status: 502 });
+  }
 
   let parsed: Partial<CheatSheetState> = {};
   try {
-    parsed = JSON.parse(completion.choices[0].message.content || '{}');
+    parsed = JSON.parse(raw || '{}');
   } catch {
     return NextResponse.json({ error: 'invalid json from model' }, { status: 502 });
   }

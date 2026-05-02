@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { groq, MODEL_LARGE } from '@/lib/groq/client';
+import { completeChat } from '@/lib/llm-router';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { tavilySearch } from '@/lib/research/tavily';
 
@@ -35,16 +35,19 @@ Rules:
   const user = `QUESTION: ${q}
 ${research ? `\nWEB RESEARCH SNIPPET:\n${research}` : ''}\n\nAnswer.`;
 
-  const completion = await groq.chat.completions.create({
-    model: MODEL_LARGE,
-    messages: [
-      { role: 'system', content: system },
-      { role: 'user', content: user },
-    ],
-    temperature: 0.3,
-    max_tokens: 600,
-  });
+  let answer: string;
+  try {
+    answer = await completeChat({
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: user },
+      ],
+      temperature: 0.3,
+      max_tokens: 600,
+    });
+  } catch {
+    return NextResponse.json({ error: 'all providers failed' }, { status: 502 });
+  }
 
-  const answer = completion.choices[0].message.content || 'No answer.';
-  return NextResponse.json({ answer });
+  return NextResponse.json({ answer: answer || 'No answer.' });
 }

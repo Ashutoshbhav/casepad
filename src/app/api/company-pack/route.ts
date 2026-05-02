@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { groq, MODEL_LARGE } from '@/lib/groq/client';
+import { completeChat } from '@/lib/llm-router';
 import { tavilySearch } from '@/lib/research/tavily';
 import { TRACKS, type Track } from '@/lib/tracks';
 
@@ -60,19 +60,23 @@ ${research || '(no research available)'}
 
 Generate the pack JSON.`;
 
-  const completion = await groq.chat.completions.create({
-    model: MODEL_LARGE,
-    messages: [
-      { role: 'system', content: system },
-      { role: 'user', content: user_msg },
-    ],
-    response_format: { type: 'json_object' },
-    temperature: 0.2,
-    max_tokens: 1500,
-  });
+  let raw: string;
+  try {
+    raw = await completeChat({
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: user_msg },
+      ],
+      json: true,
+      temperature: 0.2,
+      max_tokens: 1500,
+    });
+  } catch {
+    return NextResponse.json({ error: 'all providers failed' }, { status: 502 });
+  }
 
   let pack;
-  try { pack = JSON.parse(completion.choices[0].message.content || '{}'); }
+  try { pack = JSON.parse(raw || '{}'); }
   catch { return NextResponse.json({ error: 'pack generation failed' }, { status: 500 }); }
 
   return NextResponse.json({ pack });

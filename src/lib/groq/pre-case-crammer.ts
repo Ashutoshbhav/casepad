@@ -2,7 +2,7 @@
 // THIS case + the user's weakest scoring dimensions + web-researched
 // industry primer. Cached on the cases table after first generation.
 
-import { groq, MODEL_LARGE } from './client';
+import { completeChat } from '../llm-router';
 import { researchCase } from '../research/tavily';
 import type { Track } from '../tracks';
 import { TRACKS } from '../tracks';
@@ -97,32 +97,26 @@ ${research || '(no research available)'}
 
 Generate the pre-case crammer JSON.`;
 
-  // Retry with backoff on 429 / network errors. Crammer is user-facing so
-  // we want to be more patient than ingest extractors.
+  // Retry with backoff on network errors. Provider rotation (Groq → NVIDIA NIM)
+  // is handled inside completeChat, so 429s no longer need our retry loop.
   let lastErr: any = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const completion = await groq.chat.completions.create({
-        model: MODEL_LARGE,
+      const raw = await completeChat({
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: user },
         ],
-        response_format: { type: 'json_object' },
+        json: true,
         temperature: 0.2,
         max_tokens: 1800,
       });
-      const content = completion.choices[0].message.content || '{}';
-      const parsed = JSON.parse(content) as PreCaseCrammer;
+      const parsed = JSON.parse(raw || '{}') as PreCaseCrammer;
       parsed.sources = sources;
       return parsed;
     } catch (err: any) {
       lastErr = err;
       console.error(`crammer attempt ${attempt + 1} failed:`, err?.status || err?.message);
-      if (err?.status === 429 && attempt < 2) {
-        await new Promise((r) => setTimeout(r, 5000 * (attempt + 1)));
-        continue;
-      }
       if (attempt < 2 && (err?.code === 'ECONNRESET' || err?.code === 'ETIMEDOUT')) {
         await new Promise((r) => setTimeout(r, 2000));
         continue;
