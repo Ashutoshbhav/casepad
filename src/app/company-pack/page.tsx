@@ -40,7 +40,7 @@ export default function CompanyPackPage() {
   };
 
   return (
-    <main className="min-h-screen p-6 max-w-4xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-6 max-w-4xl mx-auto">
       <header className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Company-specific pre-interview pack</h1>
         <a href="/cheatsheet" className="text-sm text-zinc-400 hover:text-zinc-200">← cheat sheet</a>

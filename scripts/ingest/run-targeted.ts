@@ -16,6 +16,21 @@ import { readdir, readFile, stat } from 'fs/promises';
 import { pathToFileURL } from 'url';
 import { completeChat } from '../../src/lib/llm-router';
 
+// If casebooks/ocr/<name>.txt exists with substantial content, prefer it over
+// PDF parsing (used for scanned PDFs where direct extraction yields nothing).
+async function readBookText(localPath: string): Promise<string> {
+  const fname = path.basename(localPath);
+  const ocrPath = path.resolve('casebooks/ocr', fname.replace(/\.pdf$/, '.txt'));
+  try {
+    const s = await stat(ocrPath);
+    if (s.size > 1000) {
+      return await readFile(ocrPath, 'utf-8');
+    }
+  } catch {}
+  const parsed = await parsePdfFile(localPath);
+  return parsed.text;
+}
+
 const llmThrottle = new Throttle(20, 60_000);
 const CONCURRENCY = Number(process.env.INGEST_CONCURRENCY) || 3;
 const RAW_DIR = path.resolve(process.cwd(), 'casebooks/raw');
@@ -102,10 +117,9 @@ async function main() {
     const fname = path.basename(t.localPath);
     let textBlob: string;
     try {
-      const parsed = await parsePdfFile(t.localPath);
-      textBlob = parsed.text;
+      textBlob = await readBookText(t.localPath);
     } catch (e) {
-      await log('error', 'targeted', `parse fail ${fname}: ${(e as Error).message.slice(0, 200)}`);
+      await log('error', 'targeted', `read fail ${fname}: ${(e as Error).message.slice(0, 200)}`);
       continue;
     }
     if (textBlob.length < 1000) {

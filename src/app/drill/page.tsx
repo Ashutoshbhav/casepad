@@ -45,7 +45,7 @@ export default function DrillPage() {
   };
 
   return (
-    <main className="min-h-screen p-6 max-w-3xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-6 max-w-3xl mx-auto">
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Recovery drill</h1>

@@ -46,17 +46,17 @@ export default async function CheatsheetPage() {
   })).sort((a, b) => a.ratio - b.ratio);
 
   return (
-    <main className="min-h-screen p-6 max-w-6xl mx-auto">
-      <header className="mb-6 flex items-center justify-between">
+    <main className="min-h-screen p-4 sm:p-6 max-w-6xl mx-auto">
+      <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Cheat sheet</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">Cheat sheet</h1>
           <p className="text-xs text-zinc-500">{def.label} · {sessions?.length || 0} cases solved</p>
         </div>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
           <a href="/company-pack" className="text-emerald-300 hover:text-emerald-200">📋 Company pack</a>
-          <a href="/drill" className="text-rose-300 hover:text-rose-200">🎯 Recovery drill</a>
-          <a href="/math-drill" className="text-amber-300 hover:text-amber-200">🧮 Math drill</a>
-          <a href="/behavioral-drill" className="text-violet-300 hover:text-violet-200">🎤 Behavioral drill</a>
+          <a href="/drill" className="text-rose-300 hover:text-rose-200">🎯 Recovery</a>
+          <a href="/math-drill" className="text-amber-300 hover:text-amber-200">🧮 Math</a>
+          <a href="/behavioral-drill" className="text-violet-300 hover:text-violet-200">🎤 Behavioral</a>
           <a href="/cases" className="text-zinc-400 hover:text-zinc-200">← cases</a>
         </nav>
       </header>

@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { ChatPanel } from '@/components/chat-panel';
-import { CheatSheetPanel } from '@/components/cheat-sheet-panel';
+import { SolveLayout } from '@/components/solve-layout';
 import { PreCaseCrammerPanel } from '@/components/pre-case-crammer-panel';
 import { InSolveHintPanel } from '@/components/in-solve-hint-panel';
 import type { Track } from '@/lib/tracks';
@@ -56,10 +55,11 @@ export default async function SolvePage({
           </form>
         </div>
       </header>
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-x divide-zinc-800 overflow-hidden">
-        <ChatPanel sessionId={sessionId} initial={initialMessages as any} />
-        <CheatSheetPanel sessionId={sessionId} initial={initialCs as any} />
-      </div>
+      <SolveLayout
+        sessionId={sessionId}
+        initialMessages={initialMessages as any}
+        initialCs={initialCs as any}
+      />
       <details className="border-t border-zinc-800 px-4 py-2">
         <summary className="text-xs text-zinc-500 cursor-pointer">Show problem statement</summary>
         <p className="text-sm text-zinc-400 mt-2">{caseRow.problem_statement}</p>

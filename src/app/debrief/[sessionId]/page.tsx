@@ -37,7 +37,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   const b = (session.score_breakdown ?? {}) as any;
 
   return (
-    <main className="min-h-screen p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">
       <a href="/cases" className="text-sm text-zinc-500 hover:text-zinc-300">← back to cases</a>
       <h1 className="text-2xl font-semibold mt-2 mb-1">{caseRow?.title ?? '—'}</h1>
       <div className="text-sm text-zinc-500 mb-6">Total score: <span className="text-zinc-100 text-lg">{session.score ?? 0}</span> / 100</div>

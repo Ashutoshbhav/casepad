@@ -20,7 +20,7 @@ export default function TrackOnboarding() {
   };
 
   return (
-    <main className="min-h-screen p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-semibold mb-2">Pick your track</h1>
       <p className="text-zinc-400 text-sm mb-6">
         Choose the job track you&apos;re prepping for. We&apos;ll tailor cases, scoring rubric, frameworks, and the cheat sheet to it. You can switch anytime.

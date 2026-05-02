@@ -4,6 +4,23 @@ import { ScoreCurve } from '@/components/score-curve';
 
 export const dynamic = 'force-dynamic';
 
+function computeStreak(dates: Date[]): number {
+  if (dates.length === 0) return 0;
+  const sorted = [...new Set(dates.map((d) => d.toISOString().slice(0, 10)))]
+    .sort((a, b) => b.localeCompare(a));
+  let streak = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  for (let i = 0; i < sorted.length; i++) {
+    const d = new Date(sorted[i]);
+    const expected = new Date(today);
+    expected.setDate(today.getDate() - i);
+    if (d.toISOString().slice(0, 10) === expected.toISOString().slice(0, 10)) streak++;
+    else break;
+  }
+  return streak;
+}
+
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -11,15 +28,16 @@ export default async function DashboardPage() {
 
   const { data: sessions } = await supabase
     .from('sessions')
-    .select('id, started_at, score, case_id, status, cases(title, case_type)')
+    .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
     .eq('user_id', user.id)
     .order('started_at', { ascending: false })
-    .limit(20);
+    .limit(50);
 
   const completed = (sessions ?? []).filter((s) => s.status === 'completed');
   const avg = completed.length
     ? Math.round(completed.reduce((a, s) => a + (s.score ?? 0), 0) / completed.length)
     : 0;
+  const streak = computeStreak(completed.map((s) => new Date(s.started_at)));
 
   const byType: Record<string, { sum: number; n: number }> = {};
   for (const s of completed) {
@@ -33,16 +51,17 @@ export default async function DashboardPage() {
     .filter((w) => w.avg < 65 && w.n >= 2);
 
   return (
-    <main className="min-h-screen p-8 max-w-5xl mx-auto">
-      <header className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <Link href="/cases" className="text-sm text-zinc-400 hover:text-zinc-200">All cases →</Link>
+    <main className="min-h-screen p-4 sm:p-8 max-w-5xl mx-auto">
+      <header className="flex items-center justify-between mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-semibold">Dashboard</h1>
+        <Link href="/cases" className="text-xs sm:text-sm text-zinc-400 hover:text-zinc-200">All cases →</Link>
       </header>
 
-      <section className="grid grid-cols-3 gap-4 mb-6">
+      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <Stat label="Sessions" value={String((sessions ?? []).length)} />
         <Stat label="Completed" value={String(completed.length)} />
         <Stat label="Avg score" value={`${avg}`} />
+        <Stat label="Streak (days)" value={`${streak}${streak >= 3 ? ' 🔥' : ''}`} />
       </section>
 
       <section className="mb-8">

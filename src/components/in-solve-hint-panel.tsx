@@ -24,7 +24,7 @@ export function InSolveHintPanel({ track }: { track: Track }) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-30 w-80 max-h-[70vh] overflow-y-auto rounded-lg border border-emerald-700 bg-zinc-950 shadow-2xl">
+    <div className="fixed bottom-4 right-4 left-4 sm:left-auto z-30 sm:w-80 max-h-[70vh] overflow-y-auto rounded-lg border border-emerald-700 bg-zinc-950 shadow-2xl">
       <header className="flex items-center justify-between px-3 py-2 border-b border-zinc-800">
         <span className="text-xs uppercase text-emerald-300">⚡ Hint</span>
         <button onClick={() => setOpen(false)} className="text-xs text-zinc-500 hover:text-zinc-300">×</button>

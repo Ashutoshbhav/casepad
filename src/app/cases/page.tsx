@@ -27,13 +27,13 @@ export default async function CasesPage({
 
   const { data: cases } = await query;
   return (
-    <main className="min-h-screen p-8 max-w-6xl mx-auto">
-      <header className="mb-6 flex items-center justify-between">
+    <main className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
+      <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-semibold">Cases</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">Cases</h1>
           <p className="text-xs text-zinc-500 mt-1">Track: {TRACKS[activeTrack].label}</p>
         </div>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
           <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
           <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
           <a href="/dashboard" className="text-zinc-400 hover:text-zinc-200">Dashboard →</a>
