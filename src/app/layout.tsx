@@ -1,9 +1,26 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://casepad.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'CasePad',
-  description: 'Cohort case interview practice',
+  metadataBase: new URL(siteUrl),
+  title: { default: 'CasePad', template: '%s · CasePad' },
+  description: 'Cohort case interview practice — solve, drill, debrief. 1,100+ real cases across consulting, IB, PM, marketing, and strategy tracks.',
+  openGraph: {
+    title: 'CasePad',
+    description: 'Cohort case interview practice — solve, drill, debrief.',
+    url: siteUrl,
+    siteName: 'CasePad',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CasePad',
+    description: 'Cohort case interview practice — solve, drill, debrief.',
+  },
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

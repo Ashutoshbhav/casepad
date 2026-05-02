@@ -2,9 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { groq, MODEL_LARGE } from '@/lib/groq/client';
 
 export async function POST(req: NextRequest) {
-  const { q, response } = await req.json();
-  if (!q || !response || response.length < 50) {
-    return NextResponse.json({ error: 'q and response (≥50 chars) required' }, { status: 400 });
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 });
+  }
+  const q = body?.q;
+  const response = body?.response;
+  if (!q || typeof q !== 'object' || !q.prompt || !q.dimension) {
+    return NextResponse.json({ error: 'q must be an object with prompt + dimension' }, { status: 400 });
+  }
+  if (!response || typeof response !== 'string' || response.length < 50) {
+    return NextResponse.json({ error: 'response (string, ≥50 chars) required' }, { status: 400 });
   }
 
   const system = `You are a behavioral interview coach. Score the candidate's STAR-format

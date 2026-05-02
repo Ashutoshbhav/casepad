@@ -120,6 +120,8 @@ try {
 } catch (err) {
   console.error('[pm-gate] LLM call failed:', err.message);
   console.error('[pm-gate] Allowing commit. Re-run manually if you want to gate.');
+  // Windows libuv async-handle race: defer exit one tick so fetch handles close cleanly.
+  await new Promise((res) => setTimeout(res, 50));
   process.exit(0);
 }
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
@@ -25,7 +26,7 @@ function computeStreak(dates: Date[]): number {
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ track?: string }> }) {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
+  if (!user) redirect('/auth/signin');
 
   const sp = await searchParams;
   const validTracks = TRACK_LIST as readonly string[];

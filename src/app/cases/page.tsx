@@ -1,7 +1,10 @@
+import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { CaseCard } from '@/components/case-card';
 import { CaseFilters } from '@/components/case-filters';
 import { TRACKS, type Track } from '@/lib/tracks';
+
+export const dynamic = 'force-dynamic';
 
 export default async function CasesPage({
   searchParams,
@@ -9,6 +12,7 @@ export default async function CasesPage({
   const sp = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/auth/signin');
   const userTrack: Track = (user?.user_metadata?.preferred_track as Track) || 'consulting';
   const activeTrack: Track = (sp.track as Track) || userTrack;
 
