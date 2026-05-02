@@ -99,9 +99,18 @@ export default async function CasesPage({
     : visibleRows;
 
   // Sparse-track fallback: load consulting cases as a secondary grid when a
-  // non-consulting track has thin coverage.
+  // non-consulting track has thin coverage. We check the TRUE row count via
+  // a count() query — not the limit-60 sample's post-filter size, which
+  // would falsely flag 146-row tracks as sparse just because the displayed
+  // sample is small.
   const isNonConsulting = activeTrack !== 'consulting';
-  const isSparse = isNonConsulting && fullLength.length < SPARSE_TRACK_THRESHOLD;
+  const trackTotal = isNonConsulting
+    ? (await supabase
+        .from('cases')
+        .select('id', { count: 'exact', head: true })
+        .contains('tracks', [activeTrack])).count ?? 0
+    : 0;
+  const isSparse = isNonConsulting && trackTotal < SPARSE_TRACK_THRESHOLD;
   const { data: fallbackRows } = isSparse
     ? await withRetry(() => {
         let q = supabase
@@ -163,10 +172,10 @@ export default async function CasesPage({
 
       {isSparse && (
         <div className="mb-5 rounded-lg border border-amber-900/50 bg-amber-950/30 p-4 text-sm text-amber-200">
-          <div className="font-medium mb-1">🔄 Track-tagging is still backfilling</div>
+          <div className="font-medium mb-1">🔄 Sparse track</div>
           <p className="text-amber-200/80 leading-relaxed">
-            We&apos;re showing the {fullLength.length} {TRACKS[activeTrack].short} case{fullLength.length === 1 ? '' : 's'} tagged so far,
-            plus the broader consulting library below. Check back in a few hours for the full filtered set.
+            Only {trackTotal} {TRACKS[activeTrack].short} case{trackTotal === 1 ? '' : 's'} in the library so far
+            — we&apos;re also showing the broader consulting library below.
           </p>
         </div>
       )}
