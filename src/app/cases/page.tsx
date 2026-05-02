@@ -1,8 +1,11 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { CaseCard } from '@/components/case-card';
 import { CaseFilters } from '@/components/case-filters';
+import { CasesTour } from '@/components/cases-tour';
 import { TRACKS, type Track } from '@/lib/tracks';
+import { TUTORIAL_FIRST_CASE_ID } from '@/lib/starter-cases';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,13 +40,14 @@ export default async function CasesPage({
           <h1 className="text-xl sm:text-2xl font-semibold">Cases</h1>
           <p className="text-xs text-zinc-500 mt-1">Track: {TRACKS[activeTrack].label}</p>
         </div>
-        <nav className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+        <nav data-tour="cases-nav" className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+          <Link href={`/solve/${TUTORIAL_FIRST_CASE_ID}?tutorial=1`} data-tour="cases-tutorial-btn" className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</Link>
           <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
           <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
           <a href="/dashboard" className="text-zinc-400 hover:text-zinc-200">Dashboard →</a>
         </nav>
       </header>
-      <div className="flex gap-1 flex-wrap mb-4">
+      <div data-tour="cases-track" className="flex gap-1 flex-wrap mb-4">
         {(['consulting','ib_pe_vc','pm','marketing','strategy_bizops'] as Track[]).map((t) => (
           <a
             key={t}
@@ -54,13 +58,20 @@ export default async function CasesPage({
           </a>
         ))}
       </div>
-      <CaseFilters />
+      <div data-tour="cases-filters">
+        <CaseFilters />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {(cases ?? []).map((c) => <CaseCard key={c.id} c={c as any} />)}
+        {(cases ?? []).map((c, i) => (
+          <div key={c.id} data-tour={i === 0 ? 'cases-card' : undefined}>
+            <CaseCard c={c as any} />
+          </div>
+        ))}
       </div>
       {(cases ?? []).length === 0 && (
         <div className="text-zinc-500 text-sm mt-12">No cases match these filters.</div>
       )}
+      <CasesTour />
     </main>
   );
 }

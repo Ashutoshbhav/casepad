@@ -1,0 +1,35 @@
+'use client';
+
+import { TourOverlay, type TourStep } from './tour-overlay';
+
+const STEPS: TourStep[] = [
+  {
+    target: 'cases-track',
+    title: 'Your track',
+    body: 'CasePad supports consulting, IB, PM, marketing, and strategy tracks. Your active track filters which cases show up here. Switch via /onboarding/track anytime.',
+  },
+  {
+    target: 'cases-filters',
+    title: 'Filter the library',
+    body: '1,100+ real cases. Filter by industry, type (profitability, market entry, M&A, …), and difficulty. Search by keyword.',
+  },
+  {
+    target: 'cases-card',
+    title: 'Click a card to start',
+    body: 'A case opens the solve arena: AI interviewer on the left, live cheat sheet on the right. You talk through the case in turns — same format as a real interview.',
+  },
+  {
+    target: 'cases-tutorial-btn',
+    title: 'First time? Take a guided case',
+    body: 'Want a hand-held walkthrough on a curated easy case? Click "Take me through a case" — we point at every feature as you go.',
+  },
+  {
+    target: 'cases-nav',
+    title: 'Drills + dashboard',
+    body: 'Beyond cases: math drill (mental math under time), behavioral drill (STAR + LLM feedback), recovery drill (curveballs), and dashboard for your score curve.',
+  },
+];
+
+export function CasesTour() {
+  return <TourOverlay steps={STEPS} storageKey="casepad-tour-seen" />;
+}

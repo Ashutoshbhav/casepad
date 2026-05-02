@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SolveLayout } from '@/components/solve-layout';
 import { PreCaseCrammerPanel } from '@/components/pre-case-crammer-panel';
 import { InSolveHintPanel } from '@/components/in-solve-hint-panel';
+import { SolveTour } from '@/components/solve-tour';
 import type { Track } from '@/lib/tracks';
 import { startSession } from '@/server-actions/start-session';
 import { endSession } from '@/server-actions/end-session';
@@ -11,10 +12,11 @@ export default async function SolvePage({
   params, searchParams,
 }: {
   params: Promise<{ caseId: string }>;
-  searchParams: Promise<{ session?: string }>;
+  searchParams: Promise<{ session?: string; tutorial?: string }>;
 }) {
   const { caseId } = await params;
-  const { session: sessionParam } = await searchParams;
+  const { session: sessionParam, tutorial } = await searchParams;
+  const isTutorial = tutorial === '1';
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/signin');
@@ -43,14 +45,16 @@ export default async function SolvePage({
 
   return (
     <main className="h-screen flex flex-col bg-zinc-950 relative">
-      <header className="border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
+      <header data-tour="solve-header" className="border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
         <div>
           <div className="text-xs text-zinc-500 uppercase">{caseRow.difficulty}</div>
           <h1 className="text-sm font-semibold">{caseRow.title}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <PreCaseCrammerPanel caseId={caseId} initial={(caseRow.pre_case_crammer as any) || null} />
-          <form action={endSession.bind(null, sessionId)}>
+          <span data-tour="solve-crammer">
+            <PreCaseCrammerPanel caseId={caseId} initial={(caseRow.pre_case_crammer as any) || null} />
+          </span>
+          <form action={endSession.bind(null, sessionId)} data-tour="solve-end">
             <button className="text-xs px-3 py-1.5 bg-rose-900/40 text-rose-300 rounded">End session</button>
           </form>
         </div>
@@ -64,7 +68,10 @@ export default async function SolvePage({
         <summary className="text-xs text-zinc-500 cursor-pointer">Show problem statement</summary>
         <p className="text-sm text-zinc-400 mt-2">{caseRow.problem_statement}</p>
       </details>
-      <InSolveHintPanel track={(user.user_metadata?.preferred_track as Track) || 'consulting'} />
+      <span data-tour="solve-hint">
+        <InSolveHintPanel track={(user.user_metadata?.preferred_track as Track) || 'consulting'} />
+      </span>
+      {isTutorial && <SolveTour />}
     </main>
   );
 }

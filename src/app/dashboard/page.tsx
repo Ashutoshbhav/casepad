@@ -32,6 +32,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const validTracks = TRACK_LIST as readonly string[];
   const trackFilter: Track | null = sp.track && validTracks.includes(sp.track) ? (sp.track as Track) : null;
 
+  // Auto-expire stuck in_progress sessions older than 24h. Cheap one-shot
+  // update on every dashboard view — no cron needed for a cohort of <30.
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  await supabase
+    .from('sessions')
+    .update({ status: 'abandoned' })
+    .eq('user_id', user.id)
+    .eq('status', 'in_progress')
+    .lt('started_at', cutoff);
+
   const { data: allSessions } = await supabase
     .from('sessions')
     .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
@@ -41,6 +51,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   const sessions = trackFilter ? (allSessions ?? []).filter((s: any) => s.track === trackFilter) : (allSessions ?? []).slice(0, 50);
   const completed = sessions.filter((s) => s.status === 'completed');
+  const inProgress = (allSessions ?? []).filter((s) => s.status === 'in_progress');
   const avg = completed.length
     ? Math.round(completed.reduce((a, s) => a + (s.score ?? 0), 0) / completed.length)
     : 0;
@@ -99,6 +110,23 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <Stat label="Avg score" value={`${avg}`} />
         <Stat label="Streak (days)" value={`${streak}${streak >= 3 ? ' 🔥' : ''}`} />
       </section>
+
+      {inProgress.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-sm font-semibold text-zinc-300 mb-2">Resume in-progress</h2>
+          <div className="flex flex-wrap gap-2">
+            {inProgress.map((s: any) => (
+              <Link
+                key={s.id}
+                href={`/solve/${s.case_id}?session=${s.id}`}
+                className="text-xs px-3 py-1.5 rounded bg-amber-900/30 text-amber-200 hover:bg-amber-900/50 border border-amber-800/50"
+              >
+                ▶ {(s.cases?.title || 'Case').slice(0, 40)} <span className="text-amber-400/70">({new Date(s.started_at).toLocaleDateString()})</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mb-8">
         <ScoreCurve points={completed.slice().reverse().map((s: any) => ({

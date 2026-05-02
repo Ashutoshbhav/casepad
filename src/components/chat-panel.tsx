@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 
 type Msg = { role: 'user' | 'interviewer'; content: string };
 
-export function ChatPanel({ sessionId, initial }: { sessionId: string; initial: Msg[] }) {
+export function ChatPanel({ sessionId, initial, onTurnComplete }: { sessionId: string; initial: Msg[]; onTurnComplete?: () => void }) {
   const [messages, setMessages] = useState<Msg[]>(initial);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
@@ -46,6 +46,9 @@ export function ChatPanel({ sessionId, initial }: { sessionId: string; initial: 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sessionId, userQuestion: sentInput, interviewerAnswer: acc }),
     }).catch(() => {});
+
+    // Trigger issue-tree refresh on the parent layout (re-extracts in background).
+    onTurnComplete?.();
   };
 
   return (
