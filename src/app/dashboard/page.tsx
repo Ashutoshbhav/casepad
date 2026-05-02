@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ScoreCurve } from '@/components/score-curve';
+import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,23 +22,35 @@ function computeStreak(dates: Date[]): number {
   return streak;
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ track?: string }> }) {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: sessions } = await supabase
+  const sp = await searchParams;
+  const validTracks = TRACK_LIST as readonly string[];
+  const trackFilter: Track | null = sp.track && validTracks.includes(sp.track) ? (sp.track as Track) : null;
+
+  const { data: allSessions } = await supabase
     .from('sessions')
     .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
     .eq('user_id', user.id)
     .order('started_at', { ascending: false })
-    .limit(50);
+    .limit(200);
 
-  const completed = (sessions ?? []).filter((s) => s.status === 'completed');
+  const sessions = trackFilter ? (allSessions ?? []).filter((s: any) => s.track === trackFilter) : (allSessions ?? []).slice(0, 50);
+  const completed = sessions.filter((s) => s.status === 'completed');
   const avg = completed.length
     ? Math.round(completed.reduce((a, s) => a + (s.score ?? 0), 0) / completed.length)
     : 0;
   const streak = computeStreak(completed.map((s) => new Date(s.started_at)));
+
+  // count sessions per track for filter pill labels
+  const trackCounts: Record<string, number> = {};
+  for (const s of allSessions ?? []) {
+    const t = (s as any).track ?? 'other';
+    trackCounts[t] = (trackCounts[t] ?? 0) + 1;
+  }
 
   const byType: Record<string, { sum: number; n: number }> = {};
   for (const s of completed) {
@@ -57,6 +70,28 @@ export default async function DashboardPage() {
         <Link href="/cases" className="text-xs sm:text-sm text-zinc-400 hover:text-zinc-200">All cases →</Link>
       </header>
 
+      <nav className="flex flex-wrap gap-1.5 mb-5 text-xs">
+        <Link
+          href="/dashboard"
+          className={`px-2.5 py-1 rounded ${trackFilter === null ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
+        >
+          All tracks ({(allSessions ?? []).length})
+        </Link>
+        {TRACK_LIST.map((k) => {
+          const n = trackCounts[k] ?? 0;
+          if (n === 0) return null;
+          return (
+            <Link
+              key={k}
+              href={`/dashboard?track=${k}`}
+              className={`px-2.5 py-1 rounded ${trackFilter === k ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
+            >
+              {TRACKS[k].short} ({n})
+            </Link>
+          );
+        })}
+      </nav>
+
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <Stat label="Sessions" value={String((sessions ?? []).length)} />
         <Stat label="Completed" value={String(completed.length)} />
@@ -74,7 +109,7 @@ export default async function DashboardPage() {
       <section className="mb-8">
         <h2 className="text-sm font-semibold text-zinc-300 mb-3">Recent sessions</h2>
         <div className="rounded border border-zinc-800 divide-y divide-zinc-800">
-          {(sessions ?? []).map((s: any) => (
+          {sessions.map((s: any) => (
             <Link
               key={s.id}
               href={s.status === 'completed' ? `/debrief/${s.id}` : `/solve/${s.case_id}?session=${s.id}`}
@@ -87,7 +122,7 @@ export default async function DashboardPage() {
               <div className="text-sm">{s.status === 'completed' ? `${s.score ?? 0}/100` : <span className="text-amber-400">in progress</span>}</div>
             </Link>
           ))}
-          {(sessions ?? []).length === 0 && <div className="px-4 py-6 text-sm text-zinc-500">No sessions yet — start one from <a href="/cases" className="underline">Cases</a>.</div>}
+          {sessions.length === 0 && <div className="px-4 py-6 text-sm text-zinc-500">{trackFilter ? `No sessions yet on the ${TRACKS[trackFilter].short} track.` : <>No sessions yet — start one from <a href="/cases" className="underline">Cases</a>.</>}</div>}
         </div>
       </section>
 
