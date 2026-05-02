@@ -16,18 +16,29 @@ const SUPA_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPA_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const GROQ_KEY = process.env.GROQ_API_KEY;
 const NVIDIA_KEY = process.env.NVIDIA_API_KEY;
+const CEREBRAS_KEY = process.env.CEREBRAS_API_KEY;
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
 const DRY_RUN = process.argv.includes('--dry-run');
 const ONLY = process.argv.includes('--only-types') ? 'types' :
              process.argv.includes('--only-tracks') ? 'tracks' : 'both';
 const FORCE_NVIDIA = process.argv.includes('--provider=nvidia');
 
 if (!SUPA_URL || !SUPA_KEY) { console.error('Missing Supabase env'); process.exit(1); }
-if (!GROQ_KEY && !NVIDIA_KEY) { console.error('Missing GROQ_API_KEY and NVIDIA_API_KEY (need at least one)'); process.exit(1); }
+if (!GROQ_KEY && !NVIDIA_KEY && !CEREBRAS_KEY && !OPENROUTER_KEY) {
+  console.error('Need at least one LLM key (GROQ/NVIDIA/CEREBRAS/OPENROUTER)');
+  process.exit(1);
+}
 
 const supa = createClient(SUPA_URL, SUPA_KEY);
 const PROVIDERS = [
+  // Cerebras first — fastest provider, llama3.1-8b is sufficient for our
+  // classification task (case_type + tracks are short outputs). Token budget
+  // for the whole pass is ~150K of 1M daily cap = 15%, well within budget.
+  // Groq + NVIDIA are kept as failover for if Cerebras hits its rate limits.
+  ...(CEREBRAS_KEY ? [{ name: 'cerebras', url: 'https://api.cerebras.ai/v1/chat/completions', key: CEREBRAS_KEY, model: 'llama3.1-8b' }] : []),
   ...(FORCE_NVIDIA ? [] : (GROQ_KEY ? [{ name: 'groq', url: 'https://api.groq.com/openai/v1/chat/completions', key: GROQ_KEY, model: 'llama-3.3-70b-versatile' }] : [])),
   ...(NVIDIA_KEY ? [{ name: 'nvidia', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: NVIDIA_KEY, model: 'meta/llama-3.3-70b-instruct' }] : []),
+  ...(OPENROUTER_KEY ? [{ name: 'openrouter', url: 'https://openrouter.ai/api/v1/chat/completions', key: OPENROUTER_KEY, model: 'meta-llama/llama-3.3-70b-instruct:free' }] : []),
 ];
 console.log(`LLM providers (in order): ${PROVIDERS.map(p => p.name).join(' → ')}`);
 const CONCURRENCY = Number(process.env.BACKFILL_CONCURRENCY || 2);
@@ -149,7 +160,7 @@ function buildTypePrompt(title, problem) {
 - other: only if genuinely none of the above fit
 
 Return JSON: {"case_type": "<value>"}. Pick exactly one. Bias toward a specific type over 'other' when reasonable.`;
-  const user = `TITLE: ${title || '(none)'}\nPROBLEM:\n${(problem || '').slice(0, 600)}\n\nReturn JSON only.`;
+  const user = `TITLE: ${title || '(none)'}\nPROBLEM:\n${(problem || '').slice(0, 300)}\n\nReturn JSON only.`;
   return [{ role: 'system', content: sys }, { role: 'user', content: user }];
 }
 
@@ -163,7 +174,7 @@ function buildTracksPrompt(title, problem) {
 - behavioral: behavioral / fit / personal stories (NOT business problem cases)
 
 Return JSON: {"tracks": ["<v1>", "<v2>", ...]} with 1-3 values. A profitability case is consulting + strategy_bizops. A product launch is consulting + pm + marketing. A valuation/deal case is ib_pe_vc (+ consulting if strategic). Most business cases include "consulting".`;
-  const user = `TITLE: ${title || '(none)'}\nPROBLEM:\n${(problem || '').slice(0, 600)}\n\nReturn JSON only with 1-3 tracks.`;
+  const user = `TITLE: ${title || '(none)'}\nPROBLEM:\n${(problem || '').slice(0, 300)}\n\nReturn JSON only with 1-3 tracks.`;
   return [{ role: 'system', content: sys }, { role: 'user', content: user }];
 }
 

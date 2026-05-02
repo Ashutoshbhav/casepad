@@ -7,8 +7,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function CheatsheetPage() {
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/signin');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) redirect('/auth/signin');
+  const user = session.user;
 
   const track: Track = (user.user_metadata?.preferred_track as Track) || 'consulting';
 

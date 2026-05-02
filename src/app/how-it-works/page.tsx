@@ -3,12 +3,11 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ReplayTourButton } from '@/components/replay-tour-button';
 
-export const dynamic = 'force-dynamic';
-
 export default async function HowItWorksPage() {
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/signin');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) redirect('/auth/signin');
+  const user = session.user;
 
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">

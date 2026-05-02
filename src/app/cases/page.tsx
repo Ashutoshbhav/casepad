@@ -36,8 +36,9 @@ export default async function CasesPage({
 }: { searchParams: Promise<{ industry?: string; type?: string; difficulty?: string; q?: string; track?: string; all?: string }> }) {
   const sp = await searchParams;
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/signin');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) redirect('/auth/signin');
+  const user = session.user;
   const userTrack: Track = (user?.user_metadata?.preferred_track as Track) || 'consulting';
   const activeTrack: Track = (sp.track as Track) || userTrack;
   const showAll = sp.all === '1';

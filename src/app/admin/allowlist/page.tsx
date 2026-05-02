@@ -5,8 +5,9 @@ import { addEmailToAllowlist, removeEmailFromAllowlist } from '@/server-actions/
 
 export default async function AllowlistPage() {
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/signin');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) redirect('/auth/signin');
+  const user = session.user;
   if (user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
     return <main className="p-8">Not admin.</main>;
   }

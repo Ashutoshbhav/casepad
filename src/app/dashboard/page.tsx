@@ -26,31 +26,36 @@ function computeStreak(dates: Date[]): number {
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ track?: string }> }) {
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/signin');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) redirect('/auth/signin');
+  const user = session.user;
 
   const sp = await searchParams;
   const validTracks = TRACK_LIST as readonly string[];
   const trackFilter: Track | null = sp.track && validTracks.includes(sp.track) ? (sp.track as Track) : null;
 
-  // Auto-expire stuck in_progress sessions older than 24h. Cheap one-shot
-  // update on every dashboard view — no cron needed for a cohort of <30.
+  // Auto-expire stuck in_progress sessions + read all sessions in parallel
+  // (the expire-write doesn't affect the upcoming read because the rows
+  // it touches are filtered out by status anyway in the UI; a couple of
+  // 'in_progress' rows showing for one render until the next page load
+  // is fine).
   const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  await supabase
-    .from('sessions')
-    .update({ status: 'abandoned' })
-    .eq('user_id', user.id)
-    .eq('status', 'in_progress')
-    .lt('started_at', cutoff);
-
-  const { data: allSessions } = await withRetry(() =>
+  const [, { data: allSessions }] = await Promise.all([
     supabase
       .from('sessions')
-      .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
+      .update({ status: 'abandoned' })
       .eq('user_id', user.id)
-      .order('started_at', { ascending: false })
-      .limit(200)
-  );
+      .eq('status', 'in_progress')
+      .lt('started_at', cutoff),
+    withRetry(() =>
+      supabase
+        .from('sessions')
+        .select('id, started_at, score, case_id, status, track, cases(title, case_type)')
+        .eq('user_id', user.id)
+        .order('started_at', { ascending: false })
+        .limit(200)
+    ),
+  ]);
 
   const sessions = trackFilter ? (allSessions ?? []).filter((s: any) => s.track === trackFilter) : (allSessions ?? []).slice(0, 50);
   const completed = sessions.filter((s) => s.status === 'completed');

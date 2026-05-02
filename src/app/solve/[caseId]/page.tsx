@@ -19,23 +19,21 @@ export default async function SolvePage({
   const { session: sessionParam, tutorial } = await searchParams;
   const isTutorial = tutorial === '1';
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/signin');
+  const { data: { session: authSession } } = await supabase.auth.getSession();
+  if (!authSession) redirect('/auth/signin');
+  const user = authSession.user;
 
   if (!sessionParam) {
     await startSession(caseId);
   }
 
   const sessionId = sessionParam!;
-  const { data: session } = await withRetry(() =>
-    supabase.from('sessions').select('*').eq('id', sessionId).single()
-  );
-  const { data: caseRow } = await withRetry(() =>
-    supabase.from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single()
-  );
-  const { data: cs } = await withRetry(() =>
-    supabase.from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle()
-  );
+  // Parallel — all three reads are independent. Was sequential = 3 RTTs.
+  const [{ data: session }, { data: caseRow }, { data: cs }] = await Promise.all([
+    withRetry(() => supabase.from('sessions').select('*').eq('id', sessionId).single()),
+    withRetry(() => supabase.from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single()),
+    withRetry(() => supabase.from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle()),
+  ]);
 
   if (!session || !caseRow) redirect('/cases');
 
