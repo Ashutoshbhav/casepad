@@ -7,10 +7,12 @@ export function PreCaseCrammerPanel({ caseId, initial }: { caseId: string; initi
   const [crammer, setCrammer] = useState<PreCaseCrammer | null>(initial);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   const reveal = async () => {
     if (crammer) { setOpen(true); return; }
     setLoading(true);
+    setErr(null);
     try {
       const r = await fetch('/api/crammer', {
         method: 'POST',
@@ -19,6 +21,10 @@ export function PreCaseCrammerPanel({ caseId, initial }: { caseId: string; initi
       });
       const data = await r.json();
       if (data?.crammer) setCrammer(data.crammer);
+      else setErr(data?.error || 'unknown error');
+      setOpen(true);
+    } catch (e) {
+      setErr((e as Error).message);
       setOpen(true);
     } finally {
       setLoading(false);
@@ -38,7 +44,18 @@ export function PreCaseCrammerPanel({ caseId, initial }: { caseId: string; initi
   }
 
   if (!crammer) {
-    return <div className="text-xs text-rose-400">Crammer unavailable.</div>;
+    return (
+      <div className="absolute right-4 top-16 z-30 max-w-md rounded-lg border border-rose-700 bg-zinc-950 p-4 shadow-2xl">
+        <div className="flex items-start justify-between mb-2">
+          <span className="text-xs font-semibold text-rose-300">Crammer unavailable</span>
+          <button onClick={() => setOpen(false)} className="text-xs text-zinc-500 hover:text-zinc-300">×</button>
+        </div>
+        <div className="text-xs text-zinc-400">{err || 'unknown error'}</div>
+        <button onClick={() => { setOpen(false); reveal(); }} className="mt-3 text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded hover:bg-zinc-700">
+          retry
+        </button>
+      </div>
+    );
   }
 
   return (

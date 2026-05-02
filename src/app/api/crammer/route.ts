@@ -40,19 +40,27 @@ export async function POST(req: NextRequest) {
 
   const weakest = computeWeakestDimensions(lastSessions || []);
 
-  const crammer = await generatePreCaseCrammer(
-    caseRow.title,
-    caseRow.problem_statement || '',
-    track,
-    weakest
-  );
+  let crammer = null;
+  let errorDetail = null;
+  try {
+    crammer = await generatePreCaseCrammer(
+      caseRow.title,
+      caseRow.problem_statement || '',
+      track,
+      weakest
+    );
+  } catch (err) {
+    errorDetail = (err as Error).message.slice(0, 300);
+    console.error('[crammer] generation failed:', errorDetail);
+  }
 
   if (crammer) {
     const admin = createSupabaseAdminClient();
     await admin.from('cases').update({ pre_case_crammer: crammer }).eq('id', caseId);
+    return NextResponse.json({ crammer });
   }
 
-  return NextResponse.json({ crammer });
+  return NextResponse.json({ crammer: null, error: errorDetail || 'crammer generation returned null' }, { status: 200 });
 }
 
 function computeWeakestDimensions(sessions: { score_breakdown: any }[]): string[] {

@@ -97,23 +97,39 @@ ${research || '(no research available)'}
 
 Generate the pre-case crammer JSON.`;
 
-  try {
-    const completion = await groq.chat.completions.create({
-      model: MODEL_LARGE,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: user },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.2,
-      max_tokens: 1800,
-    });
-    const content = completion.choices[0].message.content || '{}';
-    const parsed = JSON.parse(content) as PreCaseCrammer;
-    parsed.sources = sources;
-    return parsed;
-  } catch (err) {
-    console.error('crammer generation failed:', (err as Error).message);
-    return null;
+  // Retry with backoff on 429 / network errors. Crammer is user-facing so
+  // we want to be more patient than ingest extractors.
+  let lastErr: any = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const completion = await groq.chat.completions.create({
+        model: MODEL_LARGE,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user },
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.2,
+        max_tokens: 1800,
+      });
+      const content = completion.choices[0].message.content || '{}';
+      const parsed = JSON.parse(content) as PreCaseCrammer;
+      parsed.sources = sources;
+      return parsed;
+    } catch (err: any) {
+      lastErr = err;
+      console.error(`crammer attempt ${attempt + 1} failed:`, err?.status || err?.message);
+      if (err?.status === 429 && attempt < 2) {
+        await new Promise((r) => setTimeout(r, 5000 * (attempt + 1)));
+        continue;
+      }
+      if (attempt < 2 && (err?.code === 'ECONNRESET' || err?.code === 'ETIMEDOUT')) {
+        await new Promise((r) => setTimeout(r, 2000));
+        continue;
+      }
+      break;
+    }
   }
+  // Throw so the API route can surface the error
+  throw lastErr ?? new Error('crammer failed after retries');
 }
