@@ -24,9 +24,9 @@ const STEPS: TourStep[] = [
     body: 'Want a hand-held walkthrough on a curated easy case? Click "Take me through a case" — we point at every feature as you go.',
   },
   {
-    target: 'cases-nav',
+    target: 'topnav-drills',
     title: 'Drills + dashboard',
-    body: 'Beyond cases: math drill (mental math under time), behavioral drill (STAR + LLM feedback), recovery drill (curveballs), and dashboard for your score curve.',
+    body: 'Top bar has Drills (math / behavioral / recovery), Cheats (frameworks + scoring rubric), and Dashboard (your score curve over time). Always available from any page.',
   },
 ];
 

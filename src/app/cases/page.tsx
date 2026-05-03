@@ -143,21 +143,14 @@ export default async function CasesPage({
 
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
-      <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
         <div>
           <h1 className="text-xl sm:text-2xl font-semibold">Cases</h1>
           <p className="text-xs text-zinc-500 mt-1">Track: {TRACKS[activeTrack].label}</p>
         </div>
-        <nav data-tour="cases-nav" className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-          <TutorialLaunchLink className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</TutorialLaunchLink>
-          <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
-          <a href="/how-it-works" className="text-zinc-400 hover:text-zinc-200">How it works</a>
-          <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
-          <a href="/dashboard" className="text-zinc-400 hover:text-zinc-200">Dashboard →</a>
-          {user.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase() && (
-            <a href="/admin" className="text-amber-400 hover:text-amber-300">⚙ Admin</a>
-          )}
-        </nav>
+        <TutorialLaunchLink className="text-xs sm:text-sm text-violet-300 hover:text-violet-200">
+          🎓 Take me through a case →
+        </TutorialLaunchLink>
       </header>
       <div data-tour="cases-track" className="flex gap-1 flex-wrap mb-4">
         {(['consulting','ib_pe_vc','pm','marketing','strategy_bizops'] as Track[]).map((t) => (
