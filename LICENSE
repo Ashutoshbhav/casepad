@@ -1,0 +1,38 @@
+CasePad — Proprietary Software
+Copyright (c) 2026 Ashutosh Bhavale. All rights reserved.
+
+This source code, the dataset of cases, the prompt engineering, the scoring
+rubrics, the user interface, and all derived works are the exclusive
+intellectual property of Ashutosh Bhavale ("the Author").
+
+NO LICENSE IS GRANTED. The following are PROHIBITED without the Author's
+prior written permission:
+
+  1. Copying, redistributing, or republishing the source code in whole or
+     part, including but not limited to mirroring this repository,
+     forking for non-private use, or extracting code snippets for
+     reproduction in another product.
+  2. Reverse-engineering the prompts, scoring rubrics, frameworks, math
+     drills, behavioral questions, or any other content shipped with this
+     application.
+  3. Scraping, crawling, or programmatically extracting data from any
+     deployed instance of this application.
+  4. Building a derivative work, "clone," or "competitor" that reproduces
+     the user-facing experience or the underlying data model — whether
+     via human authorship, AI-assisted authorship, or any combination.
+  5. Sharing access credentials with persons not on the explicit allowlist
+     maintained by the Author.
+
+USE OF THE DEPLOYED APPLICATION (e.g., casepad.vercel.app) is permitted
+solely by individuals whose email address has been explicitly added to
+the Author's allowlist, for the personal purpose of practicing case
+interviews. Any other use — automated probing, bulk export of cases,
+sustained scraping — is unauthorized access and may be prosecuted under
+applicable computer-misuse laws.
+
+NO WARRANTY. The software is provided "as is", without warranty of any
+kind, express or implied. The Author shall not be liable for any claim,
+damages, or other liability arising from use.
+
+For licensing inquiries (e.g., institutional adoption), contact the
+Author directly.

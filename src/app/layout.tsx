@@ -24,6 +24,13 @@ export const metadata: Metadata = {
     description: 'Cohort case interview practice — solve, drill, debrief.',
   },
   robots: { index: false, follow: false },
+  authors: [{ name: 'Ashutosh Bhavale' }],
+  creator: 'Ashutosh Bhavale',
+  publisher: 'Ashutosh Bhavale',
+  other: {
+    'copyright': '© 2026 Ashutosh Bhavale — All rights reserved',
+    'license': 'Proprietary — see /terms',
+  },
   // PWA + favicon
   manifest: '/manifest.webmanifest',
   icons: {
@@ -40,14 +47,22 @@ export const metadata: Metadata = {
   themeColor: '#10b981',
 };
 
+// Watermark — copyright + author embedded as data attributes on every page.
+// Doesn't prevent cloning, but bakes attribution into the DOM so any verbatim
+// copy carries the original author's mark. Author + copyright meta tags are
+// declared via the metadata export above.
+const WATERMARK = '© 2026 Ashutosh Bhavale — CasePad. All rights reserved. Proprietary software, allowlist-only access.';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-app="casepad" data-author="ashutosh-bhavale">
       <body>
         <ConnectionBanner />
         <AuthWatchdog />
         <TopNavMount />
         {children}
+        {/* Watermark — present in DOM, not painted */}
+        <div aria-hidden="true" style={{ display: 'none' }} data-watermark={WATERMARK} />
       </body>
     </html>
   );

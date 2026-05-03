@@ -1,9 +1,11 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { isEmailAllowed } from '@/lib/auth/allowlist';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 // Direct sign-in for allowlisted cohort members.
 //
@@ -27,6 +29,22 @@ export async function directSignIn(formData: FormData) {
   if (!rawEmail) redirect('/auth/signin?error=missing-email');
   if (rawEmail.length > 254 || !EMAIL_RE.test(rawEmail)) {
     redirect('/auth/signin?error=invalid-email');
+  }
+
+  // Rate-limit per IP — 8 attempts per minute. Discourages brute-forcing
+  // through the allowlist via guessed emails.
+  const h = await headers();
+  const ip = h.get('x-forwarded-for')?.split(',')[0].trim() || h.get('x-real-ip') || 'unknown';
+  const rl = checkRateLimit(`signin:${ip}`, 8, 60_000);
+  if (!rl.ok) {
+    redirect('/auth/signin?error=rate-limited');
+  }
+
+  // Per-email rate limit too — 4 attempts per minute. Stops focused
+  // attacks on a single email.
+  const rlEmail = checkRateLimit(`signin:email:${rawEmail}`, 4, 60_000);
+  if (!rlEmail.ok) {
+    redirect('/auth/signin?error=rate-limited');
   }
 
   const admin = createSupabaseAdminClient();

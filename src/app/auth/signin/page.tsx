@@ -16,6 +16,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   'expired': 'Your session expired. Sign in again to pick up where you left off.',
   'exchange': 'Sign-in link is invalid or expired. Try entering your email again.',
   'otp': 'Sign-in code is invalid or expired. Try entering your email again.',
+  'rate-limited': 'Too many sign-in attempts. Please wait a minute and try again.',
 };
 
 export default async function SignInPage({ searchParams }: { searchParams: Promise<{ error?: string; return_to?: string }> }) {
@@ -62,6 +63,11 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
 
         <div className="text-[10px] text-zinc-600 leading-relaxed">
           Not on the allowlist? Ask the admin (your cohort lead) to add your email at /admin/allowlist.
+        </div>
+        <div className="text-[9px] text-zinc-700 leading-relaxed">
+          By signing in, you agree to the{' '}
+          <a href="/terms" className="underline hover:text-zinc-500">Terms of Use</a>{' '}
+          (allowlist-only · no copying · no scraping · personal use).
         </div>
       </div>
     </main>
