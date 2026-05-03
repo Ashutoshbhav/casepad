@@ -51,7 +51,9 @@ A real case-interview tree looks like this (example: profitability case):
 - Levels are measured from L0 (the root question itself).
 - A non-MECE branch is one with overlapping siblings, missing siblings, or a single child where the parent should split.
 
-Your job: extract or update the tree from the transcript. The candidate's USER turns are the source of structure. Interviewer turns are context.
+Your job: extract or update the tree from the TRANSCRIPT ONLY. **Strict rule: the tree must reflect ONLY what the candidate has explicitly said in chat or what the interviewer has explicitly disclosed in their replies.** You are NOT given the case prompt's data — you only see the title (for orientation) and the conversation. If the candidate hasn't yet mentioned a branch / hypothesis / number, it MUST NOT appear in the tree. Do not pre-populate nodes from any external knowledge of the case.
+
+The candidate's USER turns are the source of structure. The interviewer's turns are how data + facts enter the candidate's awareness. Both inform the tree.
 
 Output JSON only:
 {
@@ -88,16 +90,19 @@ export async function extractIssueTree(
     .join('\n\n');
 
   const prior = priorTree ?? EMPTY_TREE;
-  const userMsg = `CASE: ${caseTitle}
-PROMPT: ${problemStatement.slice(0, 500)}
+  // Intentionally NOT including problem_statement — the tree should reflect
+  // only what the candidate has discovered through chat. Otherwise the tree
+  // pre-populates branches from data the candidate hasn't yet asked about,
+  // which spoils the case (prompt visible to extractor → hidden from candidate).
+  const userMsg = `CASE TITLE: ${caseTitle}
 
 PRIOR_TREE (extend or restructure):
 ${JSON.stringify(prior, null, 2)}
 
-TRANSCRIPT (last ${tail.length} turns):
+TRANSCRIPT (last ${tail.length} turns — your ONLY source for tree content):
 ${transcriptText}
 
-Return the updated issue_tree JSON.`;
+Return the updated issue_tree JSON. Remember: if the candidate hasn't mentioned it AND the interviewer hasn't disclosed it, it does NOT belong in the tree.`;
 
   let raw: string;
   try {
