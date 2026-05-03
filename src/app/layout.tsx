@@ -23,6 +23,20 @@ export const metadata: Metadata = {
     description: 'Cohort case interview practice — solve, drill, debrief.',
   },
   robots: { index: false, follow: false },
+  // PWA + favicon
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/icon.svg',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'CasePad',
+    statusBarStyle: 'black-translucent',
+  },
+  themeColor: '#10b981',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
