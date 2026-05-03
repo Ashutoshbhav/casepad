@@ -56,7 +56,33 @@ export async function directSignIn(formData: FormData) {
     redirect('/auth/signin?error=verify-failed');
   }
 
-  // 4. New users → onboarding/track. Existing users with a track → cases.
+  const userId = verify!.user!.id;
+
+  // 4. Enforce max-2-devices-per-user. The newly-minted session was just
+  //    inserted into auth.sessions. Query the table, sort by created_at
+  //    DESC, keep top 2, delete the rest. The booted devices' refresh
+  //    tokens cascade-delete with the session row, so on their next nav
+  //    /api/* call returns 401 → AuthWatchdog intercepts → redirects them
+  //    to /auth/signin with a "session expired" toast.
+  //
+  //    Service role is required to read/delete the auth schema. We do this
+  //    after sign-in (not before) so the new device always wins; even if
+  //    you already had 2 sessions, the new one stays.
+  try {
+    const { data: deletedCount, error: pruneErr } = await admin.rpc('prune_user_sessions', {
+      p_user_id: userId,
+      p_keep: 2,
+    });
+    if (pruneErr) throw pruneErr;
+    if ((deletedCount ?? 0) > 0) {
+      console.log(`[direct-signin] booted ${deletedCount} oldest sessions for ${rawEmail}`);
+    }
+  } catch (err) {
+    // Non-fatal — sign-in still succeeds. Worst case: user has 3+ sessions.
+    console.warn('[direct-signin] device-cap prune failed:', (err as Error).message);
+  }
+
+  // 5. New users → onboarding/track. Existing users with a track → cases.
   const hasTrack = !!verify!.user!.user_metadata?.preferred_track;
   redirect(hasTrack ? '/cases' : '/onboarding/track');
 }
