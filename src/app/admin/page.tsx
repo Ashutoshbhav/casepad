@@ -52,6 +52,12 @@ export default async function AdminHubPage() {
       <h2 className="text-sm font-semibold text-zinc-300 mb-3">Tools</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
         <AdminLink
+          href="/admin/activity"
+          icon="📊"
+          title="Cohort activity"
+          desc="What every cohort member is doing — sessions, scores, transcripts, drill-down."
+        />
+        <AdminLink
           href="/admin/allowlist"
           icon="📧"
           title="Allowlist"
@@ -59,7 +65,7 @@ export default async function AdminHubPage() {
         />
         <AdminLink
           href="/dashboard"
-          icon="📊"
+          icon="📈"
           title="My dashboard"
           desc="Your own session history + scores."
         />
