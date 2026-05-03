@@ -149,11 +149,14 @@ export default async function CasesPage({
           <p className="text-xs text-zinc-500 mt-1">Track: {TRACKS[activeTrack].label}</p>
         </div>
         <nav data-tour="cases-nav" className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-          <TutorialLaunchLink href={`/solve/${TUTORIAL_FIRST_CASE_ID}?tutorial=1`} className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</TutorialLaunchLink>
+          <TutorialLaunchLink className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</TutorialLaunchLink>
           <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
           <a href="/how-it-works" className="text-zinc-400 hover:text-zinc-200">How it works</a>
           <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
           <a href="/dashboard" className="text-zinc-400 hover:text-zinc-200">Dashboard →</a>
+          {user.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase() && (
+            <a href="/admin" className="text-amber-400 hover:text-amber-300">⚙ Admin</a>
+          )}
         </nav>
       </header>
       <div data-tour="cases-track" className="flex gap-1 flex-wrap mb-4">

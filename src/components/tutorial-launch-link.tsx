@@ -4,8 +4,14 @@
 // solve-overlay tour ALWAYS fires when this button is clicked, even if the
 // user previously dismissed it. Otherwise the button silently no-ops for
 // returning users.
+//
+// Default href is /tutorial (the menu picker). Caller can override.
 
-export function TutorialLaunchLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
+export function TutorialLaunchLink({
+  href = '/tutorial',
+  children,
+  className,
+}: { href?: string; children: React.ReactNode; className?: string }) {
   const click = (e: React.MouseEvent) => {
     e.preventDefault();
     if (typeof window !== 'undefined') {
