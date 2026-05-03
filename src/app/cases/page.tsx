@@ -5,6 +5,7 @@ import { withRetry } from '@/lib/supabase/with-retry';
 import { CaseCard } from '@/components/case-card';
 import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
+import { TutorialLaunchLink } from '@/components/tutorial-launch-link';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { TUTORIAL_FIRST_CASE_ID, STARTER_CASE_IDS } from '@/lib/starter-cases';
 
@@ -148,7 +149,7 @@ export default async function CasesPage({
           <p className="text-xs text-zinc-500 mt-1">Track: {TRACKS[activeTrack].label}</p>
         </div>
         <nav data-tour="cases-nav" className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-          <Link href={`/solve/${TUTORIAL_FIRST_CASE_ID}?tutorial=1`} data-tour="cases-tutorial-btn" className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</Link>
+          <TutorialLaunchLink href={`/solve/${TUTORIAL_FIRST_CASE_ID}?tutorial=1`} className="text-violet-300 hover:text-violet-200">🎓 Take me through a case</TutorialLaunchLink>
           <a href="/cheatsheet" className="text-emerald-300 hover:text-emerald-200">⚡ Cheat sheet</a>
           <a href="/how-it-works" className="text-zinc-400 hover:text-zinc-200">How it works</a>
           <a href="/onboarding/track" className="text-zinc-400 hover:text-zinc-200">Switch track</a>
