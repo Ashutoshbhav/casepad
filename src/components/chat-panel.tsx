@@ -349,7 +349,7 @@ export function ChatPanel({
                 <AshMark size={18} state={orbState} />
               </div>
               <div
-                className="flex-1 min-w-0 py-1 font-headline italic text-base leading-relaxed"
+                className="flex-1 min-w-0 py-1 font-body text-[15px] leading-[1.6]"
                 style={{ color: 'var(--color-text-primary)' }}
               >
                 {m.content ? (

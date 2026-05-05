@@ -158,7 +158,7 @@ function SampleChatSnippet() {
             <AshMark size={18} state="idle" />
           </div>
           <div
-            className="flex-1 min-w-0 py-1 font-headline italic text-[15px] sm:text-base leading-relaxed"
+            className="flex-1 min-w-0 py-1 font-body text-[15px] sm:text-base leading-[1.6]"
             style={{ color: 'var(--color-text-primary)' }}
           >
             Hi, I&apos;m Ash, an Engagement Manager at Bain. Today, we&apos;re
@@ -187,7 +187,7 @@ function SampleChatSnippet() {
             <AshMark size={18} state="idle" />
           </div>
           <div
-            className="flex-1 min-w-0 py-1 font-headline italic text-[15px] sm:text-base leading-relaxed"
+            className="flex-1 min-w-0 py-1 font-body text-[15px] sm:text-base leading-[1.6]"
             style={{ color: 'var(--color-text-primary)' }}
           >
             Good first move. Defend the 0.5 figure — what&apos;s your
