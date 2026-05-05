@@ -2,11 +2,23 @@
 
 import { useEffect, useState } from 'react';
 
-// Theme toggle — fixed top-right, sun/moon icon. Persists choice in
-// localStorage and flips `<html data-theme="…">`. The pre-paint script
-// in app/layout.tsx already sets the right attribute before React
-// mounts (no flash), so this component just hydrates with the current
-// state and handles user clicks.
+// Theme toggle — temporarily disabled 2026-05-05.
+//
+// Light theme is currently a half-finished port of the dark palette
+// (the persistent asterisk reads as a smudge on near-white, the brass
+// /coral relationship inverts awkwardly, and the editorial italic
+// loses its weight). Per the visual-baseline-reset audit, shipping a
+// half-built mode signals "we're not done yet" — the worst possible
+// first impression for the cohort. The toggle is hidden until we do a
+// proper light-mode design pass (re-tune coral/brass for paper, switch
+// asterisk to filled-not-glowing, cooler ivory canvas).
+//
+// The pre-paint script in app/layout.tsx still respects user-saved
+// preferences if any exist, so users who already toggled to light
+// keep their choice — they just can't toggle BACK from inside the app
+// until we ship the redesign. New users land on dark by default.
+//
+// To re-enable: remove the early return below.
 
 type Theme = 'dark' | 'light';
 
@@ -16,6 +28,12 @@ function readTheme(): Theme {
 }
 
 export function ThemeToggle() {
+  // Toggle hidden until light theme gets a proper design pass.
+  return null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _ThemeToggleRetained() {
   const [theme, setTheme] = useState<Theme>('dark');
   const [hydrated, setHydrated] = useState(false);
 
