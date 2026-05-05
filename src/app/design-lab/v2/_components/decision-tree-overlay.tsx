@@ -208,31 +208,57 @@ export function DecisionTreeOverlay({
     });
     svg.appendChild(ring);
 
-    // Hand-drawn labels next to each node — appended as plain SVG text
-    // (Rough.js doesn't draw text; we add it ourselves at the right
-    // baseline-aligned offset, using the page's mono font.)
-    tree.nodes.forEach((n) => {
+    // Hand-drawn labels — standard SVG legibility trick: paint-order
+    // "stroke fill" + a dark stroke around the bright fill creates a
+    // dark "halo" outline behind the text so it reads on ANY photo
+    // region, no matter what's behind it. Plus bumped font size and
+    // weight from the prior unreadable version. Labels positioned
+    // above (root) or below (everything else) to avoid intersecting
+    // the branch lines.
+    const isLightStroke = !stroke.includes('rgb(50');
+    const haloColor = isLightStroke
+      ? 'rgba(0,0,0,0.85)'   // dark halo around white text on photo
+      : 'rgba(255,255,255,0.85)'; // light halo around dark text on white card
+    const fillColor = isLightStroke ? '#FFFFFF' : 'rgb(28,28,28)';
+
+    tree.nodes.forEach((n, i) => {
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', String(n.x + 14));
-      text.setAttribute('y', String(n.y + 4));
-      text.setAttribute('fill', stroke);
+      // Root above, leaves above, mid-tier below — keeps text off lines
+      const isRoot = i === 0;
+      const isLeaf = !tree.edges.some(([from]) => from === n.id);
+      const yOffset = isRoot ? -18 : isLeaf ? 22 : -14;
+      text.setAttribute('x', String(n.x));
+      text.setAttribute('y', String(n.y + yOffset));
+      text.setAttribute('text-anchor', 'middle');
       text.setAttribute('font-family', 'var(--font-v2-mono), monospace');
-      text.setAttribute('font-size', '11');
-      text.setAttribute('letter-spacing', '0.04em');
+      text.setAttribute('font-size', '15');
+      text.setAttribute('font-weight', '600');
+      text.setAttribute('letter-spacing', '0.03em');
+      // Paint-order trick: stroke renders BEHIND fill so the dark halo
+      // sits behind the bright text without thickening the visible glyph.
+      text.setAttribute('fill', fillColor);
+      text.setAttribute('stroke', haloColor);
+      text.setAttribute('stroke-width', '4');
+      text.setAttribute('stroke-linejoin', 'round');
+      text.setAttribute('paint-order', 'stroke fill');
       text.textContent = n.label;
       svg.appendChild(text);
     });
 
-    // Framework name caption — small mono caps in the lower-right of
-    // the tree, like a research-paper figure label
+    // Framework caption — bottom-right, larger + halo'd for visibility
     const caption = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    caption.setAttribute('x', '740');
-    caption.setAttribute('y', '460');
-    caption.setAttribute('fill', stroke);
+    caption.setAttribute('x', '780');
+    caption.setAttribute('y', '480');
     caption.setAttribute('text-anchor', 'end');
     caption.setAttribute('font-family', 'var(--font-v2-mono), monospace');
-    caption.setAttribute('font-size', '10');
-    caption.setAttribute('letter-spacing', '0.18em');
+    caption.setAttribute('font-size', '12');
+    caption.setAttribute('font-weight', '500');
+    caption.setAttribute('letter-spacing', '0.22em');
+    caption.setAttribute('fill', fillColor);
+    caption.setAttribute('stroke', haloColor);
+    caption.setAttribute('stroke-width', '4');
+    caption.setAttribute('stroke-linejoin', 'round');
+    caption.setAttribute('paint-order', 'stroke fill');
     caption.textContent = `FRAMEWORK · ${labelName.toUpperCase()}`;
     svg.appendChild(caption);
   }, [stroke, roughness, bowing, tree, labelName]);
