@@ -23,17 +23,43 @@ export default async function SolvePage({
   if (!authSession) redirect('/auth/signin');
   const user = authSession.user;
 
+  // Defensive guard: if no ?session= param, hand off to startSession which
+  // performs its own redirect. The redirect throws a NEXT_REDIRECT signal; we
+  // re-throw it so Next.js can navigate. Anything else gets caught and lands
+  // us in the no-session fallback below (which redirects to /cases).
   if (!sessionParam) {
-    await startSession(caseId);
+    try {
+      await startSession(caseId);
+    } catch (e) {
+      // NEXT_REDIRECT must be re-thrown so the framework can act on it.
+      if (e && typeof e === 'object' && 'digest' in e && typeof (e as { digest: unknown }).digest === 'string' && ((e as { digest: string }).digest).startsWith('NEXT_REDIRECT')) {
+        throw e;
+      }
+      console.error('[solve] startSession failed:', e);
+      redirect('/cases');
+    }
+    // If startSession returned without redirecting (shouldn't happen) we
+    // can't safely render — bail to /cases so we never query with undefined.
+    redirect('/cases');
   }
 
-  const sessionId = sessionParam!;
-  // Parallel — all three reads are independent. Was sequential = 3 RTTs.
-  const [{ data: session }, { data: caseRow }, { data: cs }] = await Promise.all([
-    withRetry(() => supabase.from('sessions').select('*').eq('id', sessionId).single()),
-    withRetry(() => supabase.from('cases').select('title, difficulty, problem_statement').eq('id', caseId).single()),
-    withRetry(() => supabase.from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle()),
-  ]);
+  const sessionId = sessionParam;
+  let session: any = null;
+  let caseRow: any = null;
+  let cs: any = null;
+  try {
+    const [sessRes, caseRes, csRes] = await Promise.all([
+      withRetry(() => supabase.from('sessions').select('*').eq('id', sessionId).single()),
+      withRetry(() => supabase.from('cases').select('title, difficulty, problem_statement, source').eq('id', caseId).single()),
+      withRetry(() => supabase.from('cheat_sheets').select('*').eq('session_id', sessionId).maybeSingle()),
+    ]);
+    session = sessRes.data;
+    caseRow = caseRes.data;
+    cs = csRes.data;
+  } catch (e) {
+    console.error('[solve] data fetch failed:', e);
+    redirect('/cases');
+  }
 
   if (!session || !caseRow) redirect('/cases');
 
@@ -44,32 +70,70 @@ export default async function SolvePage({
     framework: null, hypothesis: null, key_numbers: [],
     decisions: [], next_steps: [], manual_notes: null, locked_fields: [],
   };
+  const ended = (session as any).ended_at != null;
 
   return (
-    <main className="h-screen flex flex-col bg-zinc-950 relative">
-      <header data-tour="solve-header" className="border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
-        <div>
-          <div className="text-xs text-zinc-500 uppercase">{caseRow.difficulty}</div>
-          <h1 className="text-sm font-semibold">{caseRow.title}</h1>
-        </div>
-        <form action={endSession.bind(null, sessionId)} data-tour="solve-end">
-          <button className="text-xs px-3 py-1.5 bg-rose-900/40 text-rose-300 rounded">End session</button>
-        </form>
-      </header>
+    <main
+      className="h-screen flex flex-col relative"
+      style={{ background: 'var(--color-bg-canvas)' }}
+    >
       <SolveLayout
         sessionId={sessionId}
+        caseTitle={caseRow.title}
+        caseDifficulty={caseRow.difficulty}
+        caseSource={(caseRow as any).source ?? null}
+        endSessionAction={endSession.bind(null, sessionId)}
         initialMessages={initialMessages as any}
         initialCs={initialCs as any}
+        ended={ended}
       />
-      <details className="border-t border-zinc-800 px-4 py-2">
-        <summary className="text-xs text-zinc-500 cursor-pointer">Show problem statement</summary>
-        <p className="text-sm text-zinc-400 mt-2">{caseRow.problem_statement}</p>
+      <details
+        className="px-5 py-2"
+        style={{ borderTop: '1px solid var(--color-border)' }}
+      >
+        <summary
+          className="font-mono text-[10px] uppercase tracking-[0.14em] cursor-pointer"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          Show problem statement
+        </summary>
+        <p
+          className="font-headline text-sm mt-2 leading-relaxed"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          {caseRow.problem_statement}
+        </p>
       </details>
-      <details className="border-t border-zinc-900 px-4 py-1">
-        <summary className="text-[11px] text-zinc-600 cursor-pointer">Session stuck or broken? Reset.</summary>
+      <details
+        className="px-5 py-1"
+        style={{ borderTop: '1px solid var(--color-border)' }}
+      >
+        <summary
+          className="font-mono text-[10px] uppercase tracking-[0.14em] cursor-pointer"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          Session stuck or broken? Reset.
+        </summary>
         <form action={resetSession.bind(null, sessionId)} className="mt-2 mb-1">
-          <p className="text-[11px] text-zinc-500 mb-1.5">Clears the chat, tree, and cheat sheet for this session and starts you fresh on the same case. Your other sessions are unaffected.</p>
-          <button type="submit" className="text-[11px] px-2 py-0.5 rounded bg-rose-950/50 text-rose-400 border border-rose-900/50 hover:bg-rose-900/30">↺ reset this session</button>
+          <p
+            className="text-[11px] mb-1.5"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Clears the chat, tree, and cheat sheet for this session and starts you fresh on the same case. Your other sessions are unaffected.
+          </p>
+          <button
+            type="submit"
+            className="text-[11px] px-2 py-0.5 rounded font-mono uppercase tracking-[0.14em]"
+            style={{
+              background: 'transparent',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--color-signal-danger)',
+              color: 'var(--color-signal-danger)',
+            }}
+          >
+            ↺ reset this session
+          </button>
         </form>
       </details>
       <span data-tour="solve-hint">

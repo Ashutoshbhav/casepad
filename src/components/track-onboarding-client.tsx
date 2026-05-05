@@ -14,7 +14,8 @@ export function TrackOnboardingClient() {
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
     await supabase.auth.updateUser({ data: { preferred_track: selected } });
-    router.push('/cases');
+    // Land on /dashboard (journey home) instead of /cases (library).
+    router.push('/dashboard');
   };
 
   return (

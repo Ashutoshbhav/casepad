@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const returnTo =
     returnToRaw && returnToRaw.startsWith('/') && !returnToRaw.startsWith('//')
       ? returnToRaw
-      : '/cases';
+      : '/dashboard';
 
   if (!code && !tokenHash) {
     return NextResponse.redirect(new URL('/auth/signin', req.url));
@@ -49,11 +49,11 @@ export async function GET(req: NextRequest) {
   }
 
   // First-time users haven't picked a track yet. Send them through
-  // /onboarding/track first so they don't land on /cases as default
+  // /onboarding/track first so they don't land on /dashboard as default
   // consulting and miss that they can switch to PM/IB/marketing.
   // Only do this when the user is naturally landing post-auth (returnTo
-  // is the default /cases). If they had a return_to (re-auth flow), honor it.
-  if (returnTo === '/cases') {
+  // is the default /dashboard). If they had a return_to (re-auth flow), honor it.
+  if (returnTo === '/dashboard') {
     const { data: { user } } = await supabase.auth.getUser();
     const hasTrack = !!user?.user_metadata?.preferred_track;
     if (!hasTrack) {

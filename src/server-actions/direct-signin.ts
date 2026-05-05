@@ -20,7 +20,10 @@ import { checkRateLimit } from '@/lib/rate-limit';
 //      (creates it if first sign-in).
 //   3. The browser-cookie SSR client immediately verifies that token_hash,
 //      which mints a real Supabase session and sets the auth cookies.
-//   4. Redirect to /onboarding/track if no track yet, else /cases.
+//   4. Redirect priority:
+//      - return_to (deep-link recovery from AuthWatchdog) wins if safe
+//      - else /onboarding/track if no track yet
+//      - else /dashboard (the journey home — not /cases the library)
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -100,7 +103,21 @@ export async function directSignIn(formData: FormData) {
     console.warn('[direct-signin] device-cap prune failed:', (err as Error).message);
   }
 
-  // 5. New users → onboarding/track. Existing users with a track → cases.
+  // 5. Pick redirect target.
+  //    a) return_to (deep-link recovery from AuthWatchdog) takes priority,
+  //       but only if it's a safe relative path. This preserves the original
+  //       UX where someone bumped from a deep link lands back on it post-auth.
+  //    b) New users without a track → /onboarding/track.
+  //    c) Default home is now /dashboard (the journey frame), not /cases.
+  const rawReturnTo = (formData.get('return_to') ?? '').toString();
+  const safeReturnTo =
+    rawReturnTo &&
+    rawReturnTo.startsWith('/') &&
+    !rawReturnTo.startsWith('//') &&
+    !rawReturnTo.startsWith('/auth')
+      ? rawReturnTo
+      : null;
   const hasTrack = !!verify!.user!.user_metadata?.preferred_track;
-  redirect(hasTrack ? '/cases' : '/onboarding/track');
+  if (safeReturnTo) redirect(safeReturnTo);
+  redirect(hasTrack ? '/dashboard' : '/onboarding/track');
 }

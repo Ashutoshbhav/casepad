@@ -6,21 +6,31 @@ import type { IssueTree, TreeNode } from '@/lib/groq/issue-tree';
 // IssueTreePanel — renders the AI-inferred tree, lets user edit nodes
 // inline, drag-drop to re-parent, and re-run extraction. The tree is
 // fetched on mount + after every chat turn (parent triggers via prop).
+//
+// War Room visuals: active node = brass ring; decided branches = ivory;
+// non-committed siblings of the committed root fade + scale down 400ms.
 
-export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: string; refreshTrigger: number }) {
+export function IssueTreePanel({
+  sessionId,
+  refreshTrigger,
+  committedRootId,
+  onCommitRoot,
+}: {
+  sessionId: string;
+  refreshTrigger: number;
+  committedRootId?: string | null;
+  onCommitRoot?: (id: string | null) => void;
+}) {
   const [tree, setTree] = useState<IssueTree | null>(null);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState('');
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-  // On mount: fetch the SAVED tree instantly (no LLM call).
-  // After mount: every chat turn bumps refreshTrigger, which kicks off a
-  // background re-extract to pick up new nodes from latest turns.
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
       const isInitial = refreshTrigger === 0;
-      // Initial: 'get' (fast, returns cached tree). Subsequent: 'extract' (LLM, slow).
       if (!isInitial) setLoading(true);
       try {
         const r = await fetch('/api/issue-tree', {
@@ -89,7 +99,6 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
   const reparentNode = (id: string, newParentId: string | null) => {
     if (!tree) return;
     if (id === newParentId) return;
-    // Recompute level based on new parent
     const byId = new Map(tree.nodes.map((n) => [n.id, n]));
     const parent = newParentId ? byId.get(newParentId) : null;
     const newLevel = parent ? parent.level + 1 : 0;
@@ -111,31 +120,85 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
     if (id) reparentNode(id, newParent);
   };
 
+  // User commits a root branch by clicking it (toggle behavior). Sibling
+  // roots tuck. Click again on the same committed root to un-commit.
+  const commitRoot = (id: string) => {
+    if (!onCommitRoot) return;
+    onCommitRoot(committedRootId === id ? null : id);
+  };
+
   if (!tree) {
     return (
-      <div className="flex flex-col h-full p-4 text-xs text-zinc-500">
+      <div
+        className="flex flex-col h-full p-4 text-xs"
+        style={{ color: 'var(--color-text-muted)' }}
+      >
         {loading
-          ? <span>🌳 Inferring tree from your latest turn… <span className="inline-block animate-pulse">●●●</span></span>
+          ? <span>Inferring tree from your latest turn…</span>
           : 'Empty. The tree fills as you state your structure in chat.'}
       </div>
     );
   }
 
-  // Build child map
   const childrenOf = (pid: string | null) =>
     tree.nodes.filter((n) => n.parent_id === pid);
 
-  const renderNode = (n: TreeNode, indent: number): React.ReactElement => {
+  // Vertical family-hierarchy renderer. Each node is a card with its
+  // L0..L5 level badge in the top-left corner. Children render in a
+  // horizontal row directly beneath the parent. Connector lines are
+  // pure CSS via ::before/::after on the .org-li class (defined in
+  // globals.css). Drag-drop, edit, delete, commit, tucking — all preserved.
+  const renderNode = (n: TreeNode, rootId: string): React.ReactElement => {
     const kids = childrenOf(n.id);
     const isEditing = editingId === n.id;
+    const isActive = activeId === n.id;
+    const lvl = Math.max(0, Math.min(5, n.level ?? 0));
+    const isRoot = lvl === 0;
+    const isTucked = committedRootId != null && rootId !== committedRootId;
+
     return (
-      <li key={n.id} className="my-0.5" onDragOver={(e) => e.preventDefault()} onDrop={(e) => onDrop(e, n.id)}>
+      <li
+        key={n.id}
+        className={`org-li ${isTucked ? 'tree-node-tucked' : 'tree-node-active'}`}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => onDrop(e, n.id)}
+      >
         <div
           draggable
           onDragStart={(e) => onDragStart(e, n.id)}
-          className="group flex items-center gap-1 py-0.5 hover:bg-zinc-900 rounded px-1"
+          onClick={() => {
+            setActiveId(n.id);
+            if (isRoot) commitRoot(n.id);
+          }}
+          className="group org-card relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md cursor-pointer transition-colors"
+          style={{
+            background: isActive
+              ? 'rgba(217, 119, 87, 0.08)'
+              : 'var(--color-bg-elevated)',
+            border: `1px solid ${isActive
+              ? 'var(--color-accent)'
+              : isRoot
+                ? 'var(--color-accent-bright)'
+                : 'var(--color-border)'}`,
+            color: 'var(--color-text-primary)',
+            minWidth: 110,
+            maxWidth: 240,
+          }}
         >
-          <span className="text-zinc-600 text-xs">{'·  '.repeat(indent)}</span>
+          {/* Level badge — top-left of the card. L0 coral, L1+ muted. */}
+          <span
+            className="font-mono text-[9px] uppercase tracking-[0.12em] px-1 py-px rounded"
+            style={{
+              background: isRoot ? 'var(--color-accent)' : 'var(--color-bg-sunken)',
+              color: isRoot ? 'var(--color-accent-fg)' : 'var(--color-text-muted)',
+              fontWeight: 700,
+              flexShrink: 0,
+            }}
+            aria-label={`level ${lvl}`}
+          >
+            L{lvl}
+          </span>
+
           {isEditing ? (
             <input
               autoFocus
@@ -146,57 +209,104 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
                 if (e.key === 'Enter') { renameNode(n.id, editLabel); setEditingId(null); }
                 if (e.key === 'Escape') setEditingId(null);
               }}
-              className="text-xs bg-zinc-900 border border-zinc-700 rounded px-1 py-0.5 text-zinc-100 flex-1"
+              className="text-xs rounded px-1 py-0.5 flex-1"
+              style={{
+                background: 'var(--color-bg-sunken)',
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)',
+              }}
             />
           ) : (
             <span
-              onClick={() => { setEditingId(n.id); setEditLabel(n.label); }}
-              className={`text-xs cursor-pointer flex-1 ${n.level === 0 ? 'text-emerald-300 font-semibold' : n.level === 1 ? 'text-emerald-400' : 'text-zinc-200'}`}
-              title="click to edit"
+              onDoubleClick={() => { setEditingId(n.id); setEditLabel(n.label); }}
+              className="text-[12px] flex-1 select-none leading-tight"
+              style={{
+                color: isRoot ? 'var(--color-accent-bright)' : 'var(--color-text-primary)',
+                fontWeight: isRoot ? 600 : 400,
+              }}
+              title="click to set active · double-click to rename · drag to re-parent"
             >
               {n.label}
             </span>
           )}
           {n.mece_warning && (
-            <span title={n.mece_warning} className="text-amber-400 text-xs">⚠</span>
+            <span
+              title={n.mece_warning}
+              className="text-xs"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              ⚠
+            </span>
           )}
           <button
-            onClick={() => deleteNode(n.id)}
-            className="invisible group-hover:visible text-rose-500 text-xs px-1"
+            onClick={(e) => { e.stopPropagation(); deleteNode(n.id); }}
+            className="invisible group-hover:visible text-xs px-1"
+            style={{ color: 'var(--color-signal-danger)' }}
             title="delete this node + its children"
           >
             ×
           </button>
         </div>
+
         {n.hypothesis && (
-          <div className="ml-6 text-[11px] text-violet-300 italic">↳ {n.hypothesis}</div>
+          <div
+            className="text-[10px] italic font-headline mt-0.5"
+            style={{ color: 'var(--color-text-secondary)', maxWidth: 240, margin: '4px auto 0' }}
+          >
+            ↳ {n.hypothesis}
+          </div>
         )}
+
         {kids.length > 0 && (
-          <ul className="ml-3">{kids.map((c) => renderNode(c, indent + 1))}</ul>
+          <ul className="org-children">
+            {kids.map((c) => renderNode(c, rootId))}
+          </ul>
         )}
       </li>
     );
   };
 
   const roots = childrenOf(null);
+  const maxLevel = Math.min(5, Math.max(0, ...tree.nodes.map((n) => n.level ?? 0)));
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto p-3 text-zinc-200">
+    <div
+      className="flex flex-col h-full overflow-auto p-4"
+      style={{ color: 'var(--color-text-primary)' }}
+    >
       <header className="flex items-center justify-between mb-3">
-        <div className="text-xs uppercase text-emerald-300 flex items-center gap-1.5">
+        <div
+          className="font-mono text-[11px] uppercase tracking-[0.16em] flex items-center gap-2"
+          style={{ color: 'var(--color-accent)' }}
+        >
           Issue tree
-          {loading && <span className="text-[9px] text-zinc-500 animate-pulse normal-case">updating…</span>}
+          {loading && (
+            <span
+              className="text-[9px] normal-case"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              updating…
+            </span>
+          )}
         </div>
         <button
           onClick={rebuild}
           disabled={loading}
-          className="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 hover:bg-zinc-700 disabled:opacity-50"
+          className="font-mono text-[10px] uppercase tracking-[0.14em] px-2 py-0.5 rounded disabled:opacity-50 transition-colors"
+          style={{
+            background: 'var(--color-bg-elevated)',
+            borderWidth: '1px',
+            borderStyle: 'solid',
+            borderColor: 'var(--color-border)',
+            color: 'var(--color-text-secondary)',
+          }}
         >
           {loading ? '…' : '↻ rebuild'}
         </button>
       </header>
 
-      {/* Mini-rubric */}
       <div className="grid grid-cols-2 gap-1.5 mb-3 text-[10px]">
         <RubricBar label="MECE" value={tree.rubric.mece} />
         <RubricBar label="depth balance" value={tree.rubric.depth_balance} />
@@ -204,31 +314,98 @@ export function IssueTreePanel({ sessionId, refreshTrigger }: { sessionId: strin
         <RubricBar label="root-driven" value={tree.rubric.driven_from_issue} />
       </div>
 
+      {/* Level legend — explicit L0..L5 markers */}
+      <div
+        className="flex items-center gap-2 mb-3 font-mono text-[10px] uppercase tracking-[0.14em]"
+        style={{ color: 'var(--color-text-muted)' }}
+      >
+        <span>levels:</span>
+        {[0, 1, 2, 3, 4, 5].map((lvl) => {
+          const reached = lvl <= maxLevel;
+          return (
+            <span
+              key={lvl}
+              className="px-1 py-px rounded"
+              style={{
+                background: lvl === 0
+                  ? 'var(--color-accent)'
+                  : reached ? 'var(--color-bg-sunken)' : 'transparent',
+                color: lvl === 0
+                  ? 'var(--color-accent-fg)'
+                  : reached ? 'var(--color-text-secondary)' : 'var(--color-text-muted)',
+                opacity: reached ? 1 : 0.4,
+                fontWeight: 700,
+              }}
+            >
+              L{lvl}
+            </span>
+          );
+        })}
+      </div>
+
       {roots.length === 0 ? (
-        <div className="text-xs text-zinc-500 mt-4">Empty. The tree fills as you state your structure in chat.</div>
+        <div
+          className="text-xs mt-4"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          Empty. The tree fills as you state your structure in chat.
+        </div>
       ) : (
-        <ul onDragOver={(e) => e.preventDefault()} onDrop={(e) => onDrop(e, null)}>
-          {roots.map((r) => renderNode(r, 0))}
-        </ul>
+        <div className="org-tree">
+          <ul onDragOver={(e) => e.preventDefault()} onDrop={(e) => onDrop(e, null)}>
+            {roots.map((r) => renderNode(r, r.id))}
+          </ul>
+        </div>
       )}
 
-      <div className="mt-auto pt-3 text-[10px] text-zinc-600 border-t border-zinc-900 mt-3">
-        Click a node to rename. × to delete. Drag to re-parent.
+      <div
+        className="mt-auto pt-3 text-[10px] font-mono uppercase tracking-[0.14em]"
+        style={{
+          color: 'var(--color-text-muted)',
+          borderTop: '1px solid var(--color-border)',
+          marginTop: '0.75rem',
+        }}
+      >
+        Click L0 to commit · double-click to rename · drag to re-parent
       </div>
     </div>
   );
 }
 
 function RubricBar({ label, value }: { label: string; value: number }) {
-  const color = value >= 70 ? 'bg-emerald-500' : value >= 40 ? 'bg-amber-500' : 'bg-rose-500';
+  // Brass for healthy, muted for low. Single accent — no rose/amber stack.
+  const filled = value >= 70;
   return (
     <div>
-      <div className="flex justify-between text-zinc-500">
+      <div
+        className="flex justify-between font-mono text-[10px] uppercase tracking-[0.14em]"
+        style={{ color: 'var(--color-text-muted)' }}
+      >
         <span>{label}</span>
-        <span>{value}</span>
+        <span style={{ color: 'var(--color-text-secondary)' }}>{value}</span>
       </div>
-      <div className="h-1 bg-zinc-900 rounded mt-0.5 overflow-hidden">
-        <div className={`h-full ${color} transition-all`} style={{ width: `${value}%` }} />
+      <div
+        className="h-1 rounded mt-0.5 overflow-hidden"
+        style={{ background: 'var(--color-bg-sunken)' }}
+      >
+        {/* GPU-friendly fill: full-width element scaled on transform-X.
+            Was previously animating `width: %` with `transition: all` —
+            triggered layout per frame and showed up as jank under the
+            tree's frequent re-renders. Now transform-only, transition
+            scoped to the single property that actually moves. */}
+        <div
+          className="h-full"
+          style={{
+            width: '100%',
+            transformOrigin: 'left center',
+            transform: `scaleX(${Math.max(0, Math.min(100, value)) / 100})`,
+            transition: 'transform 240ms cubic-bezier(0.32, 0.72, 0, 1)',
+            background: filled
+              ? 'var(--color-accent)'
+              : 'var(--color-text-muted)',
+            willChange: 'transform',
+          }}
+        />
       </div>
     </div>
   );

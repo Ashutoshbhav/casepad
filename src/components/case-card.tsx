@@ -2,41 +2,67 @@ import Link from 'next/link';
 import type { CaseRow } from '@/lib/types/domain';
 import { IndustryPrimerButton } from './industry-primer-button';
 
+// War Room list-mode card. Used by any legacy caller still rendering a
+// CaseCard. The /cases page now uses an inline list-row component, but
+// other surfaces (e.g. tutorial picker, search results) may still hit
+// this. `featured` keeps a brass top border for emphasis.
+
+function DifficultyDots({ d }: { d: string }) {
+  const fill = d === 'easy' ? 1 : d === 'medium' ? 2 : 3;
+  return (
+    <span
+      aria-label={`Difficulty: ${d}`}
+      className="inline-flex items-center gap-[3px] align-middle"
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="block h-1.5 w-1.5 rounded-full"
+          style={{
+            background: i < fill ? 'var(--color-accent)' : 'transparent',
+            border: i < fill ? 'none' : '1px solid var(--color-text-muted)',
+          }}
+        />
+      ))}
+    </span>
+  );
+}
+
 export function CaseCard({ c, featured = false }: { c: CaseRow; featured?: boolean }) {
   return (
     <div
-      className={`rounded-lg border bg-zinc-900 transition relative ${
-        featured
-          ? 'border-amber-700/50 hover:border-amber-500 shadow-[0_0_0_1px_rgba(217,119,6,0.15)]'
-          : 'border-zinc-800 hover:border-zinc-600'
-      }`}
+      className="rounded-md relative transition-colors"
+      style={{
+        background: 'var(--color-bg-elevated)',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: featured ? 'var(--color-accent)' : 'var(--color-border)',
+      }}
     >
-      {featured && (
-        <div className="absolute -top-2 left-3 px-2 py-0.5 rounded-full bg-amber-600 text-amber-50 text-[10px] font-medium uppercase tracking-wide">
-          ⭐ Starter
-        </div>
-      )}
       <Link href={`/solve/${c.id}`} className="block p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs uppercase text-zinc-500">{c.case_type.replace('_', ' ')}</span>
-          <span className={`text-xs px-2 py-0.5 rounded ${diffStyle(c.difficulty)}`}>{c.difficulty}</span>
+        <div
+          className="flex items-center justify-between mb-2 font-mono text-[10px] uppercase tracking-[0.16em]"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          <span>{c.case_type.replace('_', ' ')}</span>
+          <DifficultyDots d={c.difficulty} />
         </div>
-        <h3 className="font-medium text-zinc-100 mb-1 line-clamp-2 pr-12">{c.title}</h3>
-        <div className="text-xs text-zinc-500">{c.source ?? 'unknown'} · {c.industry}</div>
+        <h3
+          className="font-headline text-base leading-snug line-clamp-2 pr-12"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          {c.title}
+        </h3>
+        <div
+          className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em]"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          {(c.source ?? 'unknown')} · {c.industry}
+        </div>
       </Link>
       <div className="absolute right-3 bottom-3">
         <IndustryPrimerButton caseId={c.id} />
       </div>
     </div>
   );
-}
-
-function diffStyle(d: string) {
-  switch (d) {
-    case 'easy': return 'bg-emerald-900/40 text-emerald-300';
-    case 'medium': return 'bg-amber-900/40 text-amber-300';
-    case 'hard': return 'bg-rose-900/40 text-rose-300';
-    case 'expert': return 'bg-fuchsia-900/40 text-fuchsia-300';
-    default: return 'bg-zinc-800 text-zinc-300';
-  }
 }

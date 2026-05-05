@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from '@/server-actions/sign-out';
+import { AshMark } from './ash-mark';
 
 // Persistent top navigation. Mounted on every authenticated page via the
 // root layout (server component picks user/admin status, passes here).
@@ -56,28 +57,50 @@ export function TopNav({ email, isAdmin }: Props) {
 
   return (
     <>
-      <nav className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/80">
-        <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between gap-3">
-          {/* Logo */}
-          <Link href="/cases" className="flex items-center gap-1.5 text-zinc-100 font-semibold">
-            <span className="text-emerald-400">✨</span>
-            <span>CasePad</span>
+      <nav
+        className="sticky top-0 z-30"
+        style={{ background: 'var(--color-bg-canvas)' }}
+      >
+        <div className="max-w-6xl mx-auto px-6 sm:px-12 h-14 flex items-center justify-between gap-6">
+          {/* Wordmark — Anthropic-style lockup: [asterisk] casepad. Geist
+              700 lowercase, tight tracking. The asterisk sits 10px before
+              the wordmark, vertically centered. */}
+          <Link
+            href="/cases"
+            className="inline-flex items-center"
+            style={{
+              color: 'var(--color-text-primary)',
+              gap: 10,
+            }}
+          >
+            <AshMark size={20} />
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontWeight: 700,
+                fontSize: 17,
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+              }}
+            >
+              casepad
+            </span>
           </Link>
 
-          {/* Desktop primary links */}
-          <ul className="hidden md:flex items-center gap-1 text-sm">
+          {/* Desktop primary links — ghost, generous spacing. */}
+          <ul className="hidden md:flex items-center gap-7 text-sm">
             {PRIMARY_NAV.map((n) => (
               <li key={n.href}>
                 <Link
                   href={n.href}
                   data-tour={n.href === '/drills' ? 'topnav-drills' : undefined}
-                  className={`px-2.5 py-1.5 rounded transition ${
-                    isActive(n.href)
-                      ? 'text-emerald-300 bg-emerald-950/40'
-                      : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900'
-                  }`}
+                  className="font-mono text-[11px] uppercase tracking-[0.16em] transition-colors"
+                  style={{
+                    color: isActive(n.href)
+                      ? 'var(--color-accent)'
+                      : 'var(--color-text-secondary)',
+                  }}
                 >
-                  <span className="mr-1.5">{n.icon}</span>
                   {n.label}
                 </Link>
               </li>
