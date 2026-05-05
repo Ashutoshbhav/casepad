@@ -132,10 +132,7 @@ export function SheetDrawer({ open, onClose, title, children }: Props) {
               className="px-4 py-3 flex items-center justify-between"
               style={{ borderBottom: '1px solid var(--color-border)' }}
             >
-              <span
-                className="font-mono text-[10px] uppercase tracking-[0.22em]"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
+              <span className="meta-label">
                 {title ?? ''}
               </span>
               <button

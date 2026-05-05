@@ -353,6 +353,31 @@ code, pre, kbd, samp {
   border-color: var(--color-signal-danger);
 }
 
+/* =========================================================================
+   Visual baseline reset — typography utilities (added 2026-05-05).
+   Visual audit found 80+ uses of font-mono uppercase tracked eyebrows
+   across 21 files, making every surface read in the same whisper key.
+   Per the audit: keep .eyebrow ONLY for true section dividers. Use
+   .meta-label everywhere else for ambient status / metadata.
+   .meta-label is Geist 12-13px medium, sentence case, normal tracking
+   — Linear / Notion pattern.
+   ========================================================================= */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+.meta-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--color-text-secondary);
+}
+
 /* CTA hover — opacity-only fade, no shadow / transform shift. */
 .hero-cta {
   transition: opacity var(--dur-micro) var(--ease-snap);

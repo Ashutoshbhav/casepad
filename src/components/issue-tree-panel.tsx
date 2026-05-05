@@ -315,11 +315,8 @@ export function IssueTreePanel({
       </div>
 
       {/* Level legend — explicit L0..L5 markers */}
-      <div
-        className="flex items-center gap-2 mb-3 font-mono text-[10px] uppercase tracking-[0.14em]"
-        style={{ color: 'var(--color-text-muted)' }}
-      >
-        <span>levels:</span>
+      <div className="meta-label flex items-center gap-2 mb-3">
+        <span>Levels</span>
         {[0, 1, 2, 3, 4, 5].map((lvl) => {
           const reached = lvl <= maxLevel;
           return (
@@ -359,9 +356,8 @@ export function IssueTreePanel({
       )}
 
       <div
-        className="mt-auto pt-3 text-[10px] font-mono uppercase tracking-[0.14em]"
+        className="meta-label mt-auto pt-3"
         style={{
-          color: 'var(--color-text-muted)',
           borderTop: '1px solid var(--color-border)',
           marginTop: '0.75rem',
         }}
@@ -377,10 +373,7 @@ function RubricBar({ label, value }: { label: string; value: number }) {
   const filled = value >= 70;
   return (
     <div>
-      <div
-        className="flex justify-between font-mono text-[10px] uppercase tracking-[0.14em]"
-        style={{ color: 'var(--color-text-muted)' }}
-      >
+      <div className="meta-label flex justify-between">
         <span>{label}</span>
         <span style={{ color: 'var(--color-text-secondary)' }}>{value}</span>
       </div>

@@ -199,10 +199,7 @@ export function SolveLayout({
             )}
           </div>
           <div className="min-w-0">
-            <div
-              className="font-mono text-[10px] uppercase tracking-[0.18em] flex items-center gap-2"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
+            <div className="meta-label flex items-center gap-2">
               <span>{caseDifficulty}</span>
               <HeaderDots d={caseDifficulty} />
               {caseSource && (

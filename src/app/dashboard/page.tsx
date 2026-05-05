@@ -299,8 +299,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </div>
           <Link
             href="/cases"
-            className="font-mono text-[11px] uppercase tracking-[0.18em] hover:opacity-80"
-            style={{ color: 'var(--color-text-secondary)' }}
+            className="meta-label hover:opacity-80"
           >
             Library →
           </Link>
@@ -336,10 +335,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             COHORT TODAY
           </span>
           <span
-            className="font-mono text-[10px] uppercase tracking-[0.16em]"
+            className="meta-label"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            top score · last 7 days
+            Top score · last 7 days
           </span>
         </div>
         <div
@@ -415,11 +414,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             THIS WEEK
           </span>
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            className="meta-label"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            {activeDaysThisWeek} OF 7 DAYS ACTIVE
-            {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-accent-bright)' }}>· {streak}-DAY STREAK</span>}
+            {activeDaysThisWeek} of 7 days active
+            {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-accent-bright)' }}>· {streak}-day streak</span>}
           </span>
         </div>
         <div className="grid grid-cols-7 gap-2 sm:gap-3">
@@ -494,7 +493,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   )}
                 </span>
                 <span
-                  className="font-mono text-[10px] uppercase tracking-wider"
+                  className="meta-label"
                   style={{ color: 'var(--color-text-muted)' }}
                 >
                   {new Date(s.started_at).toLocaleDateString(undefined, {
@@ -658,14 +657,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       >
         <Link
           href="/cases"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] hover:opacity-80"
-          style={{ color: 'var(--color-text-secondary)' }}
+          className="meta-label hover:opacity-80"
         >
           Wander the library — 1,165 cases →
         </Link>
         <Link
           href="/how-it-works"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] hover:opacity-80"
+          className="meta-label hover:opacity-80"
           style={{ color: 'var(--color-text-muted)' }}
         >
           How it works
@@ -726,10 +724,10 @@ function TodaysCaseCard({
       </h2>
 
       <div
-        className="font-mono text-[10px] uppercase tracking-[0.18em] mb-5"
+        className="meta-label mb-5"
         style={{ color: 'var(--color-text-muted)' }}
       >
-        {sourceLine}
+        {assignment.caseType.replace(/_/g, ' ')}
       </div>
 
       <p
@@ -741,20 +739,14 @@ function TodaysCaseCard({
 
       <div className="flex flex-wrap items-center gap-3">
         <span
-          className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full"
-          style={{
-            color: 'var(--color-text-secondary)',
-            border: '1px solid var(--color-border)',
-          }}
+          className="meta-label px-3 py-1.5 rounded-full"
+          style={{ border: '1px solid var(--color-border)' }}
         >
           ≈ {minutes} min
         </span>
         <span
-          className="font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-full"
-          style={{
-            color: 'var(--color-text-secondary)',
-            border: '1px solid var(--color-border)',
-          }}
+          className="meta-label px-3 py-1.5 rounded-full"
+          style={{ border: '1px solid var(--color-border)' }}
         >
           {assignment.caseDifficulty}
         </span>

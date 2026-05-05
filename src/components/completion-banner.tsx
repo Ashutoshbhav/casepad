@@ -68,10 +68,7 @@ function Stat({
 }) {
   return (
     <div className="flex flex-col gap-1 min-w-0">
-      <span
-        className="font-mono text-[10px] uppercase tracking-[0.16em] truncate"
-        style={{ color: 'var(--color-text-muted)' }}
-      >
+      <span className="meta-label truncate">
         {label}
       </span>
       <span

@@ -191,10 +191,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       >
         {caseRow?.title ?? '—'}
       </h1>
-      <p
-        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4"
-        style={{ color: 'var(--color-text-secondary)' }}
-      >
+      <p className="meta-label mb-4">
         Your debrief
       </p>
       <CompletionBanner
@@ -292,12 +289,9 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
             >
               {tomorrowAssignment.caseTitle}
             </h3>
-            <div
-              className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              {tomorrowAssignment.caseType.replace(/_/g, ' ').toUpperCase()} · ≈{' '}
-              {estimatedMinutes(tomorrowAssignment.caseDifficulty)} MIN
+            <div className="meta-label mb-3">
+              {tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈{' '}
+              {estimatedMinutes(tomorrowAssignment.caseDifficulty)} min
             </div>
             <p
               className="font-headline italic text-[16px] leading-snug mb-5 max-w-prose"
@@ -327,8 +321,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
           </Link>
           <Link
             href="/cases"
-            className="font-mono text-[11px] uppercase tracking-[0.18em] hover:opacity-80"
-            style={{ color: 'var(--color-text-secondary)' }}
+            className="meta-label hover:opacity-80"
           >
             Or keep going now →
           </Link>

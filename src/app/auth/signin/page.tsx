@@ -96,17 +96,11 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           backdrop-blur for legibility. */}
       <section className="relative z-10 flex min-h-screen flex-col px-6 sm:px-12 md:px-16 py-10">
         <header className="flex items-baseline justify-between">
-          <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            COHORT · MAY 2026
+          <span className="meta-label">
+            Cohort · May 2026
           </span>
-          <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            CASEPAD
+          <span className="meta-label">
+            casepad
           </span>
         </header>
 
@@ -250,8 +244,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         {/* Scroll affordance — small hint at the bottom of viewport 1
             so users know there's more below. */}
         <div
-          className="mt-4 flex justify-center font-mono text-[10px] uppercase tracking-[0.24em]"
-          style={{ color: 'var(--color-text-muted)' }}
+          className="meta-label mt-4 flex justify-center"
           aria-hidden="true"
         >
           ↓ scroll

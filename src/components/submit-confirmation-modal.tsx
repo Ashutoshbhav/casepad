@@ -145,12 +145,6 @@ export function SubmitConfirmationModal({ open, onClose, onConfirm, pending }: P
               }}
             >
               <div className="px-6 pt-6 pb-2">
-                <div
-                  className="font-mono text-[10px] uppercase tracking-[0.18em] mb-2"
-                  style={{ color: 'var(--color-accent)' }}
-                >
-                  Confirm submission
-                </div>
                 <h2
                   className="font-headline text-2xl leading-tight"
                   style={{ color: 'var(--color-text-primary)' }}

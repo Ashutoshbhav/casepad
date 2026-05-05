@@ -91,10 +91,7 @@ export default async function SolvePage({
         className="px-5 py-2"
         style={{ borderTop: '1px solid var(--color-border)' }}
       >
-        <summary
-          className="font-mono text-[10px] uppercase tracking-[0.14em] cursor-pointer"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
+        <summary className="meta-label cursor-pointer">
           Show problem statement
         </summary>
         <p
@@ -108,10 +105,7 @@ export default async function SolvePage({
         className="px-5 py-1"
         style={{ borderTop: '1px solid var(--color-border)' }}
       >
-        <summary
-          className="font-mono text-[10px] uppercase tracking-[0.14em] cursor-pointer"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
+        <summary className="meta-label cursor-pointer">
           Session stuck or broken? Reset.
         </summary>
         <form action={resetSession.bind(null, sessionId)} className="mt-2 mb-1">

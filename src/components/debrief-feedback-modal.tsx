@@ -297,7 +297,7 @@ export function DebriefFeedbackModal({ sessionId, initiallyDismissed = false }: 
                 {/* Inline error */}
                 {error && (
                   <div
-                    className="px-6 pt-2 font-mono text-[10px] uppercase tracking-[0.18em]"
+                    className="meta-label px-6 pt-2"
                     style={{ color: '#e58c6f' }}
                     role="alert"
                   >
@@ -358,7 +358,7 @@ export function DebriefFeedbackModal({ sessionId, initiallyDismissed = false }: 
             }}
           >
             <span
-              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              className="meta-label"
               style={{ color: 'var(--color-text-primary)' }}
             >
               Got it. Thanks.

@@ -40,10 +40,7 @@ export function CaseCard({ c, featured = false }: { c: CaseRow; featured?: boole
       }}
     >
       <Link href={`/solve/${c.id}`} className="block p-4">
-        <div
-          className="flex items-center justify-between mb-2 font-mono text-[10px] uppercase tracking-[0.16em]"
-          style={{ color: 'var(--color-text-secondary)' }}
-        >
+        <div className="meta-label flex items-center justify-between mb-2">
           <span>{c.case_type.replace('_', ' ')}</span>
           <DifficultyDots d={c.difficulty} />
         </div>
@@ -53,10 +50,7 @@ export function CaseCard({ c, featured = false }: { c: CaseRow; featured?: boole
         >
           {c.title}
         </h3>
-        <div
-          className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em]"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
+        <div className="meta-label mt-1.5">
           {(c.source ?? 'unknown')} · {c.industry}
         </div>
       </Link>

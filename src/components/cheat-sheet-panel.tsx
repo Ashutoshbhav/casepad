@@ -39,10 +39,7 @@ export function CheatSheetPanel({ sessionId, initial }: { sessionId: string; ini
         }}
       >
         <div className="flex items-center justify-between mb-2">
-          <span
-            className="font-mono text-[10px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
+          <span className="meta-label">
             {label}
           </span>
           <button

@@ -135,10 +135,7 @@ export function CasesHero({
           </span>
           <span>Begin</span>
         </Link>
-        <span
-          className="font-mono text-[11px] uppercase tracking-[0.14em] flex items-center gap-2"
-          style={{ color: 'var(--color-text-secondary)' }}
-        >
+        <span className="meta-label flex items-center gap-2">
           {caseTypeLabel} ·{' '}
           <span aria-label={`Difficulty: ${difficulty}`} className="inline-flex items-center gap-[3px] align-middle">
             {[0, 1, 2].map((i) => (

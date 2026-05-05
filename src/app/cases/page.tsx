@@ -226,8 +226,7 @@ export default async function CasesPage({
             Cases
           </h1>
           <p
-            className="font-mono text-[11px] uppercase tracking-[0.14em] mt-1"
-            style={{ color: 'var(--color-text-secondary)' }}
+            className="meta-label mt-1"
           >
             Track · {TRACKS[activeTrack].label}
           </p>
@@ -334,7 +333,7 @@ export default async function CasesPage({
             aria-hidden="true"
           />
           <span
-            className="font-mono text-[10px] uppercase tracking-[0.14em]"
+            className="meta-label"
             style={{ color: 'var(--color-text-muted)' }}
           >
             {trackTotal.toLocaleString()} total

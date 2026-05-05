@@ -61,11 +61,8 @@ export function CohortRail({ cards }: { cards: CohortCard[] }) {
               borderColor: 'var(--color-border)',
             }}
           >
-            <div
-              className="font-mono text-[10px] uppercase tracking-[0.16em] mb-2"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              {(c.source ?? 'unknown').toUpperCase()}
+            <div className="meta-label mb-2">
+              {c.source ?? 'Unknown'}
             </div>
             <h3
               className="font-headline text-lg leading-snug line-clamp-3"
@@ -73,10 +70,7 @@ export function CohortRail({ cards }: { cards: CohortCard[] }) {
             >
               {c.title}
             </h3>
-            <div
-              className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] flex items-center gap-2"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
+            <div className="meta-label mt-3 flex items-center gap-2">
               {c.case_type.replace('_', ' ')} · <DifficultyDots d={c.difficulty} />
             </div>
           </Link>

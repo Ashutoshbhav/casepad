@@ -55,10 +55,7 @@ export function CasesLoadMore({
               {buttonLabel}
             </button>
           )}
-          <span
-            className="font-mono text-[10px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
+          <span className="meta-label">
             Showing {visible} of {totalLibrarySize.toLocaleString()}
           </span>
         </div>

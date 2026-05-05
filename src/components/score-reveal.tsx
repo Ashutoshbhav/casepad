@@ -132,10 +132,7 @@ export function ScoreReveal({
       >
         {safeScore}
       </motion.div>
-      <span
-        className="font-mono text-[11px] uppercase tracking-[0.16em] absolute bottom-2"
-        style={{ color: 'var(--color-text-muted)' }}
-      >
+      <span className="meta-label absolute bottom-2">
         / {outOf}
       </span>
     </div>
