@@ -494,6 +494,13 @@ function Scene({ isMobile, reducedMotion }: { isMobile: boolean; reducedMotion: 
   const coolerEmissive = useMemo(() => new THREE.Color('#c66f4d'), []);
   const warmerEmissive = useMemo(() => new THREE.Color('#e88d6a'), []);
 
+  // Theme-aware solid color (asterisk's diffuse fill, separate from emissive
+  // glow). Light mode reads themeMode and lerps the diffuse color toward
+  // a deeper coral so the mark holds on paper instead of fading. Dark mode
+  // stays on the standard brand coral.
+  const darkColor = useMemo(() => new THREE.Color('#d97757'), []);
+  const lightColor = useMemo(() => new THREE.Color('#c4623a'), []);
+
   const cursor = useRef({ nx: 0, ny: 0 });
   useEffect(() => {
     if (isMobile) return;
@@ -1000,9 +1007,21 @@ function Scene({ isMobile, reducedMotion }: { isMobile: boolean; reducedMotion: 
     // the backdrop, not a focal "pop". aiEmissiveMult drives per-state
     // intensity; pickedEmissive picks coral / warmer / cooler color.
     // `flash` adds the windup spike at shatter ≈ 0.10.
+    //
+    // Theme: light mode kills emissive (no glow on paper — the mark would
+    // read as a smudge) and lerps diffuse color toward the deeper coral
+    // tuned for paper. Dark mode keeps full emissive choreography.
+    const themeMode = useAsteriskSceneStore.getState().themeMode;
+    const themeEmissiveMult = themeMode === 'light' ? 0.05 : 1.0;
     material.emissiveIntensity =
-      (0.03 + target.keyLightIntensity * 0.10) * (aiEmissiveMult + flash);
+      (0.03 + target.keyLightIntensity * 0.10) *
+      (aiEmissiveMult + flash) *
+      themeEmissiveMult;
     material.emissive.lerp(pickedEmissive, LERP_FACTOR);
+    // Diffuse color: lerp toward theme-appropriate coral. Light mode
+    // anchors at deeper #c4623a so the asterisk reads as a solid mark
+    // against paper; dark mode stays on standard coral.
+    material.color.lerp(themeMode === 'light' ? lightColor : darkColor, LERP_FACTOR);
 
     if (keyLightRef.current) {
       keyLightRef.current.intensity = lerp(
@@ -1117,6 +1136,7 @@ function PersistentAsteriskInner() {
   const [isMobile, setIsMobile] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [contextLost, setContextLost] = useState(false);
+  const themeMode = useAsteriskSceneStore((s) => s.themeMode);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -1135,6 +1155,22 @@ function PersistentAsteriskInner() {
     }
   }, []);
 
+  // Theme awareness: seed the store from <html data-theme=...> on mount
+  // and observe attribute changes so external toggles (theme-toggle button,
+  // cross-tab localStorage syncs) flow into the asterisk's material.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const html = document.documentElement;
+    const read = (): 'dark' | 'light' =>
+      (html.getAttribute('data-theme') as 'dark' | 'light') || 'dark';
+    useAsteriskSceneStore.getState().setThemeMode(read());
+    const obs = new MutationObserver(() => {
+      useAsteriskSceneStore.getState().setThemeMode(read());
+    });
+    obs.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => obs.disconnect();
+  }, []);
+
   if (!eligible) return null;
 
   return (
@@ -1144,9 +1180,11 @@ function PersistentAsteriskInner() {
         zIndex: 0,
         // Cohort feedback: the wandering asterisk was disrupting the foreground —
         // sometimes drifting over chat content. Cap wrapper opacity so it reads
-        // as a subtle ambient layer, not a competing focal element. 0.4 keeps
-        // the coral mark visible without fighting text readability.
-        opacity: contextLost ? 0 : 0.4,
+        // as a subtle ambient layer, not a competing focal element.
+        // Light mode bumps to 0.55 so the asterisk has presence on paper
+        // (without the dark canvas + bloom, the same 0.4 reads as a smudge);
+        // dark mode stays at 0.4 — bloom + emissive carry visibility.
+        opacity: contextLost ? 0 : themeMode === 'light' ? 0.55 : 0.4,
         transition: 'opacity 240ms ease-out',
       }}
       aria-hidden="true"

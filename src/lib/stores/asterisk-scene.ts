@@ -149,11 +149,20 @@ const PRESET_HIDDEN: AsteriskTarget = {
   scrollChoreography: false,
 };
 
+// Active theme — the persistent asterisk's material reads this to swap
+// emissive intensity (glow on dark, solid color on paper) and base color
+// (coral deepens on paper for saturation). Pre-paint script in layout.tsx
+// sets the initial document attribute; persistent-asterisk seeds the store
+// from that on mount and listens for changes via MutationObserver +
+// theme-toggle imperative writes.
+export type AsteriskThemeMode = 'dark' | 'light';
+
 interface AsteriskSceneStore {
   target: AsteriskTarget;
   paused: boolean;
   scrollProgress: number;
   aiState: AsteriskAiState;
+  themeMode: AsteriskThemeMode;
   setScene: (partial: Partial<AsteriskTarget>) => void;
   setSignin: () => void;
   setCases: () => void;
@@ -168,6 +177,7 @@ interface AsteriskSceneStore {
   // (used by useFrame's auto-revert for timed states, where we DO want
   // to drop back to idle). Setting 'idle' explicitly always succeeds.
   setAiState: (s: AsteriskAiState, opts?: { force?: boolean }) => void;
+  setThemeMode: (m: AsteriskThemeMode) => void;
 }
 
 export const useAsteriskSceneStore = create<AsteriskSceneStore>((set) => ({
@@ -177,6 +187,9 @@ export const useAsteriskSceneStore = create<AsteriskSceneStore>((set) => ({
   paused: false,
   scrollProgress: 0,
   aiState: 'idle',
+  // Default to dark — pre-paint script in layout.tsx + MutationObserver in
+  // persistent-asterisk seed/sync the real value before paint.
+  themeMode: 'dark',
   setScene: (partial) =>
     set((s) => ({ target: { ...s.target, ...partial } })),
   // Switching presets resets scrollProgress so a stale value from /signin
@@ -202,6 +215,7 @@ export const useAsteriskSceneStore = create<AsteriskSceneStore>((set) => ({
       if (next < cur) return state; // drop the write
       return { aiState: s };
     }),
+  setThemeMode: (m) => set({ themeMode: m }),
 }));
 
 // Exported presets — handy if a future route wants to set a custom blend

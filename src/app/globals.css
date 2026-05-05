@@ -41,29 +41,45 @@
 }
 
 /* =========================================================================
-   Light theme — activated by `<html data-theme="light">`. Coral accent
-   stays the same (pops on both); everything else inverts. Warm ivory
-   canvas, pure-white panels, near-black text. Zinc/emerald/rose/amber
-   legacy overrides flipped so existing class hooks still resolve. The
-   pre-paint script in layout.tsx sets the attribute before React mounts
-   to avoid theme flash.
+   Light theme — activated by `<html data-theme="light">`. Re-tuned
+   2026-05-05 after the visual audit flagged the original port as
+   half-finished. Tuning notes:
+   - Canvas warmed (#faf9f5 paper, not stark white) — Linear / Stripe
+     pattern. Stark white reads "bleached" with editorial italic type.
+   - Coral DEEPENED for paper (#c4623a vs #d97757 dark). Paper needs
+     more saturation; the lighter coral was getting washed out.
+   - accent-bright DARKENED (#a85128) so hover state has visible delta.
+   - Secondary text uses warm-charcoal (#5a5853) — pure black is too
+     harsh for body, pure gray reads "wireframe".
+   - Borders soft (#e8e4dd) — paper hairlines should whisper, not
+     ship-tape.
+   - The persistent asterisk reads themeMode from the Zustand store and
+     drops emissiveIntensity to 0 in light mode (no glow on paper) +
+     uses a deeper coral so it reads as a solid mark, not a smudge.
+
+   Contrast on body text against bg.canvas (#faf9f5):
+   - text.primary  #1a1817 vs #faf9f5  → ~16.0:1 (AAA)
+   - text.secondary #5a5853 vs #faf9f5 →  ~8.4:1 (AAA)
+   - accent #c4623a vs #faf9f5         →  ~4.7:1 (AA)
+
+   Pre-paint script in layout.tsx sets data-theme before React mounts.
    ========================================================================= */
 :root[data-theme="light"] {
   color-scheme: light;
 
   --color-bg-canvas:   #faf9f5;
   --color-bg-elevated: #ffffff;
-  --color-bg-sunken:   #f0ede4;
+  --color-bg-sunken:   #f3f0e8;
 
   --color-text-primary:   #1a1817;
-  --color-text-secondary: #4a4845;
-  --color-text-muted:     #8a8780;
+  --color-text-secondary: #5a5853;
+  --color-text-muted:     #9a9893;
 
-  --color-accent:        #d97757;
+  --color-accent:        #c4623a;
   --color-accent-fg:     #ffffff;
-  --color-accent-bright: #c2664a;
-  --color-border:        #dcd9d0;
-  --color-signal-danger: #c33c3c;
+  --color-accent-bright: #a85128;
+  --color-border:        #e8e4dd;
+  --color-signal-danger: #b33c3c;
 }
 @theme inline {
   /* Re-apply light overrides for backward-compat tokens used across

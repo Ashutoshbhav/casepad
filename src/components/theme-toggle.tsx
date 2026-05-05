@@ -1,24 +1,20 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
 
-// Theme toggle — temporarily disabled 2026-05-05.
+// Theme toggle — fixed top-right, sun/moon icon. Persists choice in
+// localStorage and flips `<html data-theme="…">`. The pre-paint script
+// in app/layout.tsx already sets the right attribute before React
+// mounts (no flash), so this component just hydrates with the current
+// state and handles user clicks.
 //
-// Light theme is currently a half-finished port of the dark palette
-// (the persistent asterisk reads as a smudge on near-white, the brass
-// /coral relationship inverts awkwardly, and the editorial italic
-// loses its weight). Per the visual-baseline-reset audit, shipping a
-// half-built mode signals "we're not done yet" — the worst possible
-// first impression for the cohort. The toggle is hidden until we do a
-// proper light-mode design pass (re-tune coral/brass for paper, switch
-// asterisk to filled-not-glowing, cooler ivory canvas).
-//
-// The pre-paint script in app/layout.tsx still respects user-saved
-// preferences if any exist, so users who already toggled to light
-// keep their choice — they just can't toggle BACK from inside the app
-// until we ship the redesign. New users land on dark by default.
-//
-// To re-enable: remove the early return below.
+// 2026-05-05 redesign pass: light mode is now first-class (token block
+// re-tuned in globals.css, asterisk reads themeMode via Zustand and
+// drops emissiveIntensity to ~0 + uses deeper coral on paper). Toggle
+// is restored. Imperatively writes themeMode into the asterisk store
+// so the WebGL canvas updates without waiting on the MutationObserver
+// (instant feedback on click).
 
 type Theme = 'dark' | 'light';
 
@@ -28,12 +24,6 @@ function readTheme(): Theme {
 }
 
 export function ThemeToggle() {
-  // Toggle hidden until light theme gets a proper design pass.
-  return null;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _ThemeToggleRetained() {
   const [theme, setTheme] = useState<Theme>('dark');
   const [hydrated, setHydrated] = useState(false);
 
@@ -47,11 +37,16 @@ function _ThemeToggleRetained() {
     setTheme(next);
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('casepad-theme', next); } catch {}
+    // Push directly into the asterisk store so the WebGL canvas reacts
+    // this frame (the MutationObserver in persistent-asterisk also catches
+    // this, but the imperative write avoids a one-frame lag on click).
+    try {
+      useAsteriskSceneStore.getState().setThemeMode(next);
+    } catch {
+      // store unavailable in some test contexts — non-fatal
+    }
   };
 
-  // Render a placeholder during SSR / pre-hydration so the layout is
-  // stable. After hydration we know the actual theme and render the
-  // correct icon.
   const isLight = theme === 'light';
 
   return (
