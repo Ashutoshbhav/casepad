@@ -23,17 +23,22 @@
     "audit:pdfs": "tsx scripts/ingest/audit-pdfs.ts"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.6.1",
+    "@react-three/postprocessing": "^3.0.4",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.1",
     "cheerio": "^1.2.0",
     "groq-sdk": "^1.1.2",
+    "motion": "^12.38.0",
     "next": "16.2.4",
     "pdf-parse": "^2.4.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1",
     "tesseract.js": "^7.0.0",
-    "zod": "^4.4.1"
+    "three": "^0.184.0",
+    "zod": "^4.4.1",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
@@ -44,6 +49,7 @@
     "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.184.0",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
