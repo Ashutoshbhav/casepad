@@ -6,6 +6,7 @@ import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
+import { AsteriskHotspot } from '@/components/asterisk-hotspot';
 
 export const dynamic = 'force-dynamic';
 
@@ -282,6 +283,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   return (
     <main className="min-h-screen px-4 sm:px-8 py-8 sm:py-12 max-w-5xl mx-auto">
       <AsteriskSceneRegister preset="dashboard" />
+      {/* Dashboard-only: invisible click target over the asterisk's render
+          area. Hover triggers anticipating, click triggers celebrating +
+          smooth-scroll to today's case section. Item #5 of the visual
+          baseline reset — gives the character agency without re-enabling
+          WebGL raycasting (which previously ate every click site-wide). */}
+      <AsteriskHotspot />
       {/* A. HERO BAND */}
       <section className="mb-10 sm:mb-14">
         <div className="flex items-start justify-between gap-4 mb-3">
@@ -312,8 +319,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </h1>
       </section>
 
-      {/* B. TODAY'S CASE CARD */}
-      <section className="mb-12 sm:mb-16">
+      {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
+          asterisk-hotspot click action. Hotspot smooth-scrolls here. */}
+      <section className="mb-12 sm:mb-16" data-tour="todays-case">
         {dailyAssignment ? (
           <TodaysCaseCard
             assignment={dailyAssignment}
