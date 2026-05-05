@@ -1,10 +1,16 @@
 # CasePad — Session State Snapshot
 
-**Saved:** 2026-05-03 (post-cohort-share)
+**Saved:** 2026-05-05 (post-chunked-deploy)
 **Trigger word:** `PAD` — say it in any new session to surface this state
 **Project root:** `C:\Users\Ashutosh Bhavale\Documents\casepad`
 **Production URL:** https://casepad.vercel.app (alias of latest main deploy)
 **Latest commit:** run `git log --oneline | head -5` to see most recent
+
+> **2026-05-05 push:** 5 chunked commits landed (interviewer opener + daily
+> journey, War Room palette + asterisk personality, completion-loop UX +
+> sharper interviewer, surface redesigns, voice + ingestion + design-lab).
+> Build clean. Pushed to main → Vercel auto-deploys to prod. Cohort sees
+> the redesigned product on next visit.
 
 ---
 
@@ -138,6 +144,62 @@ Functions:
 
 ---
 
+## 2026-05-04 afternoon — completion-loop fixes (post-design-overhaul)
+
+After AM design work, refocused on product. 6 substantive fixes shipped:
+
+1. **Migration 0011 applied** via Supabase Studio — `daily_assignments` table exists. Journey shell (Today's case card on /dashboard, Tomorrow's case on /debrief) is now LIVE, not dormant.
+2. **End-session UX revamp** — "End session" → "Submit for scoring" (coral CTA, not red ghost). Inline CTA at chat turn 6 + pulse+copy switch at turn 10. Confirmation modal. Disabled until ≥1 user turn. Already-ended sessions show "Already scored — see debrief →"
+3. **/debrief feedback modal** — auto-pops 8s after mount. 😊/🤔/😴 sentiment + optional comment + skip. localStorage gate + server-side defensive check. POSTs to existing `/api/session-feedback` with camelCase keys. Existing form at bottom of page kept.
+4. **Canned-opener detection** — server-side exact-string match in `/api/chat`. When user message equals one of the 4 `FIRST_TURN_SUGGESTIONS` (single source: `src/lib/canned-templates.ts`), prepends a one-turn directive to system prompt: "Acknowledge briefly, push for original thinking." Silent.
+5. **Data hygiene backfill** — ran `scripts/qa/backfill-tracks-and-types.mjs`. 9 'other' cases stayed 'other' (LLM agreed they're vague). 50 single-track-consulting cases got multi-track tags. strategy_bizops +10, pm +1.
+6. **Asterisk personality system + space lighting + scroll shatter** — see project memory for full visual/character architecture. Net: a calm, present, focused coach character with 7 reactive states wired to user actions.
+
+### Outstanding (offline action by Ash)
+1. **DM 3 no-shows** (Geetika, Shreya, Mahnoor) with one-line nudge
+2. **Thursday 2026-05-07 morning** — say "PAD" to trigger 5-agent signal panel with real workday cohort data
+
+---
+
 ## In a new session, just say `PAD`
 
-Memory will surface this file. The build phase is done — next phase is signal collection from real cohort users.
+Memory will surface this file. Past the build phase. Currently in design-iteration loop driven by cohort signal.
+
+---
+
+## 2026-05-04 update — Sunday-skewed signal + 3-stream design overhaul
+
+Cohort shipped on Sunday 2026-05-03 (holiday). Workday signal collection deferred to **Thu 2026-05-07**. Sunday data: only 2 real conversations, both abandoned mid-flow, no completions, no feedback rows (because nobody reaches /debrief without an end-session affordance). 3/6 cohort never signed in (3 holiday no-shows).
+
+Ash's diagnosis: design is bland, no interviewer initiation, no motivation to come back. Decided to fix all three before next signal round.
+
+### Stream 1 — AI interviewer-first opener (SHIPPED, confirmed working)
+- Persona v1: "Priya, EM at Bain"
+- New `src/lib/groq/opener.ts`. Modified `start-session.ts`, `reset-session.ts`.
+- Fallback: Groq 8b → 4-layer fortress → static fallback using real `problem_statement`
+- Backwards-compat: existing in-progress sessions don't get retroactive openers
+
+### Stream 2 — Anticipation Hook (CODE SHIPPED, migration NOT yet applied)
+- New table `daily_assignments(user_id, assigned_for date, case_id, reason, started_session_id)` — RLS owner-only
+- Picker logic in `src/server-actions/assign-daily-case.ts`: starter 1-10 → weak-spot → track default. IST timezone.
+- Dashboard top card with "Today's / Tomorrow's case" + reason + Begin CTA + est. minutes
+- **Manual step pending:** Open https://supabase.com/dashboard/project/cjanrluuqzyrpjtmuilc/sql/new, paste `supabase/migrations/0011_daily_assignments.sql`, run.
+- Code is defensive — dashboard catches missing-table errors and renders without the card until applied
+- Success metric: ≥40% assignment-completion week-over-week
+
+### Stream 3 — "War Room" visual redesign (SHIPPED)
+- Palette: `bg.canvas` `#0B1220`, `text.primary` `#F5F1E8` ivory, `accent` `#C9A961` brass. Emerald gone.
+- Fonts via `next/font/google`: Fraunces + Inter + JetBrains Mono
+- `/auth/signin` — split 60/40 with editorial *"The room before the room."*
+- `/cases` — hero editorial card → THE COHORT FIVE rail → THE LIBRARY list-mode rows
+- `/solve` — 2px brass progress bar, serif transcript chat with no bubbles, mono cheat sheet, typewriter on first interviewer message only
+- New components: `brass-progress-bar.tsx` + `typewriter-message.tsx`
+- Tree decision tuck animation: siblings fade to opacity 0.3 + scale 0.97 over 400ms
+- Untouched: `/admin/*`, `/drills`, `/cheatsheet`, `/debrief` (inherit palette via Tailwind token overrides)
+
+### Outstanding (next session)
+1. Apply migration 0011 via Supabase Studio (~30 sec)
+2. Smoke-test visual redesign across 3 surfaces
+3. Re-fire 5-agent panel Thu 2026-05-07 morning for real workday cohort signal
+4. Deferred until signal: end-session button, feedback modal auto-trigger, canned-opener nudge, interviewer-prompt cap
+
