@@ -49,4 +49,9 @@ logs/
 playwright-report/
 test-results/
 
+# debug artifacts (kept local, not in repo)
+diagnose-clicks.png
+scripts/ux-audit-output.json
+supabase/.temp/
+
 .vercel

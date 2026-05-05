@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { generateOpener } from '@/lib/groq/opener';
 
 // Last-resort affordance for stuck/corrupt sessions: nulls the transcript,
 // issue_tree, and resets to in_progress so the user can start the chat
@@ -10,6 +11,9 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 //
 // Why not just delete & re-create? Because the URL has the session id; if
 // we delete the row the page 404s. This way the URL stays valid.
+//
+// Reset also re-seeds the interviewer's opening turn so the user doesn't
+// end up at the same blank-box starting point we just engineered away.
 export async function resetSession(sessionId: string) {
   if (!sessionId || typeof sessionId !== 'string') return;
 
@@ -27,10 +31,34 @@ export async function resetSession(sessionId: string) {
 
   if (!session) redirect('/cases');
 
+  // Re-fetch case content for a fresh opener. Same projection as startSession —
+  // never select ideal_structure or interviewer_notes here.
+  const { data: caseRow } = await supabase
+    .from('cases')
+    .select('title, problem_statement')
+    .eq('id', session.case_id)
+    .maybeSingle();
+
+  // Build the seed transcript. If the case row vanished mid-reset (extremely
+  // unlikely — cascade delete would have wiped the session too), fall back to
+  // an empty transcript instead of failing the reset.
+  const seedTranscript = caseRow
+    ? [
+        {
+          role: 'interviewer' as const,
+          content: await generateOpener({
+            caseTitle: caseRow.title,
+            problemStatement: caseRow.problem_statement,
+          }),
+          timestamp: new Date().toISOString(),
+        },
+      ]
+    : [];
+
   await supabase
     .from('sessions')
     .update({
-      transcript: [],
+      transcript: seedTranscript,
       issue_tree: null,
       score: null,
       score_breakdown: null,
