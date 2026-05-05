@@ -1,10 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { AshMark } from './ash-mark';
 import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
 import { SPRING, EASE, INSTANT } from '@/lib/motion-tokens';
+
+// Count-up hook — drives the score number from 0 to target over `durationMs`
+// once `start` flips true. Uses requestAnimationFrame, eased out so the
+// count slows toward the final number (Apple Activity-ring pattern).
+function useCountUp(target: number, start: boolean, durationMs: number, reduced: boolean): number {
+  const [value, setValue] = useState<number>(reduced || start ? target : 0);
+  const startedAtRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (reduced) {
+      setValue(target);
+      return;
+    }
+    if (!start) return;
+    const tick = (now: number) => {
+      if (startedAtRef.current === null) startedAtRef.current = now;
+      const elapsed = now - startedAtRef.current;
+      const t = Math.min(elapsed / durationMs, 1);
+      // Ease-out cubic — feels like the number "lands" instead of slamming.
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(target * eased));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      startedAtRef.current = null;
+    };
+  }, [start, target, durationMs, reduced]);
+  return value;
+}
 
 // Debrief score reveal. Sequence — each step driven by motion/react's
 // declarative `animate` prop with derived target values (no rAF, no
@@ -83,6 +114,12 @@ export function ScoreReveal({
   const markSpring = SPRING.smooth;
   const NUMBER_DELAY = 0.45;
 
+  // Count-up — score animates from 0 to target over ~900ms once revealed,
+  // ease-out so it lands instead of slams. Apple Activity-ring pattern.
+  // The cinematic moment cohort feedback was missing: the climax of the
+  // case stops being a static price tag and becomes "you earned this".
+  const displayedScore = useCountUp(safeScore, revealed, 900, Boolean(reduced));
+
   return (
     <div
       style={{
@@ -127,10 +164,11 @@ export function ScoreReveal({
           fontWeight: 400,
           color: 'var(--color-text-primary)',
           letterSpacing: '-0.04em',
+          fontVariantNumeric: 'tabular-nums',
           willChange: 'transform, opacity',
         }}
       >
-        {safeScore}
+        {displayedScore}
       </motion.div>
       <span className="meta-label absolute bottom-2">
         / {outOf}
