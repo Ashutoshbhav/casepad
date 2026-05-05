@@ -4,6 +4,9 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ScoreBar } from '@/components/score-bar';
 import { ScoreReveal } from '@/components/score-reveal';
+import { CompletionBanner } from '@/components/completion-banner';
+import { totalXp } from '@/lib/xp-heuristics';
+import { streakDaysFromTimestamps } from '@/lib/streak-copy';
 import { IdealStructureTree } from '@/components/ideal-structure-tree';
 import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
 import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
@@ -137,6 +140,40 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
 
   const b = (session.score_breakdown ?? {}) as any;
   const usedFallback = b?.fallback_used === true;
+
+  // COMPLETION-BANNER DATA — XP from this session's transcript + streak +
+  // total cases done. All single-shot queries; failures degrade silently
+  // (banner shows zeros rather than crashing the page).
+  let xpEarned = 0;
+  try {
+    const t = Array.isArray(session.transcript) ? session.transcript : [];
+    xpEarned = totalXp(t);
+  } catch (e) {
+    console.warn('[debrief] xp compute failed:', e);
+  }
+  let streakDays = 0;
+  let totalCompleted = 0;
+  let isNewRecord = false;
+  if (user?.id) {
+    try {
+      const sinceIso = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+      const r = await supabase
+        .from('sessions')
+        .select('ended_at, started_at, status')
+        .eq('user_id', user.id)
+        .eq('status', 'completed')
+        .gte('started_at', sinceIso);
+      const rows = (r.data ?? []) as Array<{ ended_at: string | null; started_at: string }>;
+      totalCompleted = rows.length;
+      const stamps = rows.map((row) => row.ended_at || row.started_at).filter(Boolean) as string[];
+      streakDays = streakDaysFromTimestamps(stamps);
+      // Personal record requires a streak ledger; skipped for now. The
+      // headline copy still picks a sensible line without the flag.
+      isNewRecord = false;
+    } catch (e) {
+      console.warn('[debrief] streak fetch failed:', e);
+    }
+  }
   const walkthroughFallback = (walkthrough as any)?.fallback_used === true;
 
   return (
@@ -160,6 +197,12 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       >
         Your debrief
       </p>
+      <CompletionBanner
+        xpEarned={xpEarned}
+        streakDays={streakDays}
+        totalCompleted={totalCompleted}
+        isNewRecord={isNewRecord}
+      />
       <ScoreReveal score={session.score ?? 0} outOf={100} />
 
       {(usedFallback || walkthroughFallback) && (
