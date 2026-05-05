@@ -60,7 +60,9 @@ function DifficultyDots({ d }: { d: string }) {
 }
 
 // List-mode row — replaces the dense grid card for the main library.
-function CaseListRowItem({ c }: { c: CaseListRow }) {
+// `completed` shows a faint checkmark in the right gutter so users see
+// the cases they've already done at a glance. Linear's done-state pattern.
+function CaseListRowItem({ c, completed }: { c: CaseListRow; completed?: boolean }) {
   const meta = [
     c.industry,
     c.case_type.replace('_', ' '),
@@ -72,6 +74,7 @@ function CaseListRowItem({ c }: { c: CaseListRow }) {
       className="case-row block py-5 px-1 group"
       style={{
         borderBottom: '1px solid var(--color-border)',
+        opacity: completed ? 0.65 : 1,
       }}
     >
       <div className="flex items-baseline justify-between gap-4">
@@ -91,6 +94,16 @@ function CaseListRowItem({ c }: { c: CaseListRow }) {
             <DifficultyDots d={c.difficulty} />
           </div>
         </div>
+        {completed && (
+          <span
+            aria-label="Completed"
+            title="You've completed this case"
+            className="flex-shrink-0 font-mono text-[11px] tracking-wide"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            ✓ done
+          </span>
+        )}
       </div>
     </CaseListLink>
   );
@@ -127,6 +140,23 @@ export default async function CasesPage({
     cases = (r.data ?? null) as CaseListRow[] | null;
   } catch (e) {
     console.error('[cases] main query failed:', e);
+  }
+
+  // Fetch user's completed case IDs so list rows can mark "done" in the
+  // right gutter. Single query, defensive — failure degrades to no
+  // checkmarks rather than crashing the page.
+  let completedCaseIds = new Set<string>();
+  try {
+    const { data: completedSessions } = await supabase
+      .from('sessions')
+      .select('case_id')
+      .eq('user_id', user.id)
+      .eq('status', 'completed');
+    completedCaseIds = new Set(
+      (completedSessions ?? []).map((s) => s.case_id as string).filter(Boolean)
+    );
+  } catch (e) {
+    console.warn('[cases] completed-sessions lookup failed:', e);
   }
 
   const allRows = (cases ?? []) as CaseListRow[];
@@ -342,7 +372,13 @@ export default async function CasesPage({
         <CasesLoadMore totalLibrarySize={trackTotal}>
           {mainRows.map((c, i) => (
             <div key={c.id} data-tour={i === 0 && !showFeatured ? 'cases-card' : undefined}>
-              <CaseListRowItem c={c} />
+              {/* Section divider every 6 rows — gives the eye a breath
+                  point on the long library list. NYT Cooking pattern.
+                  Skipped at i=0 (no leading rest beat). */}
+              {i > 0 && i % 6 === 0 && (
+                <div className="case-section-rest" aria-hidden="true" />
+              )}
+              <CaseListRowItem c={c} completed={completedCaseIds.has(c.id)} />
             </div>
           ))}
         </CasesLoadMore>
@@ -403,7 +439,7 @@ export default async function CasesPage({
           <div>
             {fallbackFiltered.map((c) => (
               <div key={c.id}>
-                <CaseListRowItem c={c} />
+                <CaseListRowItem c={c} completed={completedCaseIds.has(c.id)} />
               </div>
             ))}
           </div>

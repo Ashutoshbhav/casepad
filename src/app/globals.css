@@ -400,13 +400,45 @@ code, pre, kbd, samp {
 }
 .hero-cta:hover { opacity: 0.9; }
 
-/* List rows on /cases — subtle bg tint on hover, transform-free so
-   adjacent rows never reflow. */
+/* List rows on /cases — slide-in coral left-bar on hover (Linear / NYT
+   Cooking pattern). Replaces the previous full-row bg tint which made
+   scanning feel like dragging through molasses. The bar is a 2px-wide
+   pseudo-element that grows from height: 0 to height: 100% on hover.
+   No background shift → adjacent rows never reflow, the eye can scan
+   freely.
+   Position relative needed because the ::before is absolutely-positioned
+   to the left edge. */
 .case-row {
-  transition: background-color var(--dur-micro) var(--ease-snap);
+  position: relative;
+  transition: opacity var(--dur-micro) var(--ease-snap);
+}
+.case-row::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  background: var(--color-accent);
+  transform: translateY(-50%);
+  transition: height var(--dur-micro) var(--ease-snap);
+  pointer-events: none;
+}
+.case-row:hover::before {
+  height: 60%;
 }
 .case-row:hover {
-  background-color: color-mix(in srgb, var(--color-bg-elevated) 60%, transparent);
+  opacity: 0.92;
+}
+
+/* Section divider on /cases — thin hairline + small "every 5-7 rows"
+   rest beat so the eye gets visual chunking instead of a relentless
+   wall of identical rows. Used in the list-mode loop. */
+.case-section-rest {
+  height: 1px;
+  background: var(--color-border);
+  margin: 24px 0 8px;
+  opacity: 0.6;
 }
 
 @media (prefers-reduced-motion: reduce) {
