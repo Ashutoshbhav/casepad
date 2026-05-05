@@ -11,6 +11,7 @@ import { useAsteriskScene, useAsteriskPaused } from '@/hooks/use-asterisk-scene'
 import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
 import { EASE, DURATION, INSTANT } from '@/lib/motion-tokens';
 import { SubmitForScoringButton } from './submit-for-scoring-button';
+import { XpTicker } from './xp-ticker';
 
 // Solve-page main layout — header + body + drawer.
 //
@@ -81,6 +82,12 @@ export function SolveLayout({
   // button doesn't flicker enabled/disabled on first paint.
   const [messageCount, setMessageCount] = useState<number>(
     Array.isArray(initialMessages) ? initialMessages.length : 0
+  );
+  // Lifted messages array — drives XP ticker. Backfills from server-rendered
+  // initialMessages so resume/refresh of an in-progress session shows correct
+  // accumulated XP on first paint, not zero.
+  const [messagesArr, setMessagesArr] = useState<{ role: 'user' | 'interviewer'; content: string }[]>(
+    Array.isArray(initialMessages) ? initialMessages : []
   );
   // Talk-to-Ash-first gate: enable from messageCount ≥ 2 (Ash's opener +
   // at least one user turn). Always enabled once a session is ended (the
@@ -153,6 +160,7 @@ export function SolveLayout({
           onTurnComplete={onTurnComplete}
           onStreamingChange={setStreaming}
           onMessagesChange={setMessageCount}
+          onMessagesArrayChange={setMessagesArr}
           endSessionAction={endSessionAction}
           ended={ended}
         />
@@ -213,6 +221,11 @@ export function SolveLayout({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Live XP ticker — pure derived state from messages array, no
+              persistence. Only the LLM-graded /api/evaluate score is the
+              source of truth at submit. This is the gamified "your turn
+              registered" feedback to fix cohort signal "AI feels boring". */}
+          <XpTicker messages={messagesArr} />
           {/* Cheat sheet toggle — hidden on mobile (mobile uses tab toggle).
               Hover state via CSS class (ghost-btn) rather than JS to avoid
               style-mutation churn under fast pointer moves. */}
@@ -301,6 +314,7 @@ export function SolveLayout({
             onTurnComplete={onTurnComplete}
             onStreamingChange={setStreaming}
             onMessagesChange={setMessageCount}
+            onMessagesArrayChange={setMessagesArr}
             endSessionAction={endSessionAction}
             ended={ended}
           />

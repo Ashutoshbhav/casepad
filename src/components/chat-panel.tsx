@@ -19,6 +19,7 @@ export function ChatPanel({
   initial,
   onTurnComplete,
   onMessagesChange,
+  onMessagesArrayChange,
   onStreamingChange,
   endSessionAction,
   ended,
@@ -27,6 +28,10 @@ export function ChatPanel({
   initial: Msg[];
   onTurnComplete?: () => void;
   onMessagesChange?: (count: number) => void;
+  // New (additive) — lifts the full messages array up so /solve-layout can
+  // run client-side derivations (XP ticker) without ChatPanel knowing about
+  // them. Fires on length change, NOT on streaming-token mutations.
+  onMessagesArrayChange?: (msgs: { role: 'user' | 'interviewer'; content: string }[]) => void;
   // Lifted up so the solve header's 3D AshMark can pause its rotation
   // while the interviewer is mid-reply — keeps the CPU free for streaming
   // and lets the mark sit still while the words flow.
@@ -68,6 +73,10 @@ export function ChatPanel({
 
   // Notify parent of message count for progress-bar mapping.
   useEffect(() => { onMessagesChange?.(messages.length); }, [messages.length, onMessagesChange]);
+  // Lifted messages array (length-gated so streaming tokens don't re-fire).
+  // Pairs with onMessagesChange — the parent gets count + array on the same
+  // tick, no double bookkeeping.
+  useEffect(() => { onMessagesArrayChange?.(messages); }, [messages.length, onMessagesArrayChange]);
 
   // Notify parent when streaming starts/stops so ambient surfaces (e.g.
   // the /solve header AshMark3D) can pause animation during a reply.
