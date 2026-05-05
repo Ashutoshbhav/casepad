@@ -7,6 +7,13 @@
 import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
 import { Masthead, SectionEyebrow, Marquee } from '../_components/masthead';
+import {
+  SketchyCircle,
+  SketchyConnector,
+  SketchyUnderline,
+  SketchyCornerTick,
+  SketchyLine,
+} from '../_components/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -50,7 +57,7 @@ export default async function DashboardV2Page() {
       <Masthead />
       <SectionEyebrow label="Today · Day 12" meta="cohort one · ssb · scaler" />
 
-      {/* HERO — massive stacked headline */}
+      {/* HERO — massive stacked headline + sketchy underline */}
       <section style={{ padding: '120px 36px 80px', maxWidth: 1400, margin: '0 auto' }}>
         <h1
           style={{
@@ -66,6 +73,9 @@ export default async function DashboardV2Page() {
         >
           COFFEE CHAIN PROFITABILITY.
         </h1>
+        <div style={{ width: 'min(420px, 35vw)', marginTop: 12 }}>
+          <SketchyUnderline strokeWidth={5} roughness={2.4} bowing={4} />
+        </div>
         <div
           style={{
             display: 'flex',
@@ -116,32 +126,42 @@ export default async function DashboardV2Page() {
         <div
           style={{
             display: 'flex',
-            gap: 14,
+            alignItems: 'center',
+            gap: 6,
             paddingTop: 32,
             paddingBottom: 32,
           }}
         >
-          {days.map((d) => (
+          {days.map((d, idx) => (
             <div
               key={d.day}
-              style={{
-                width: 72,
-                height: 72,
-                borderRadius: 999,
-                background: d.active ? 'rgb(50,50,52)' : 'transparent',
-                border: d.today
-                  ? '2px solid rgb(50,50,52)'
-                  : '1px solid rgba(50,50,52,0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'var(--font-v2-mono)',
-                fontSize: 11,
-                color: d.active ? '#F5F0E8' : 'rgba(50,50,52,0.5)',
-                letterSpacing: '0.08em',
-              }}
+              style={{ display: 'flex', alignItems: 'center', gap: 6 }}
             >
-              {d.today ? 'TDY' : `D${d.day + 1}`}
+              <SketchyCircle
+                size={72}
+                filled={d.active}
+                stroke={d.today ? 'rgb(50,50,52)' : d.active ? 'rgb(50,50,52)' : 'rgba(50,50,52,0.45)'}
+                fillColor="rgb(50,50,52)"
+                roughness={d.today ? 0.8 : 1.4}
+              >
+                <span
+                  style={{
+                    fontFamily: 'var(--font-v2-mono)',
+                    fontSize: 11,
+                    fontWeight: 500,
+                    color: d.active ? '#F5F0E8' : 'rgba(50,50,52,0.6)',
+                    letterSpacing: '0.08em',
+                  }}
+                >
+                  {d.today ? 'TDY' : `D${d.day + 1}`}
+                </span>
+              </SketchyCircle>
+              {idx < days.length - 1 && (
+                <SketchyConnector
+                  width={20}
+                  stroke={d.active && days[idx + 1].active ? 'rgba(50,50,52,0.7)' : 'rgba(50,50,52,0.25)'}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -171,6 +191,7 @@ export default async function DashboardV2Page() {
             <div
               key={c.title}
               style={{
+                position: 'relative',
                 background: 'rgb(58,58,58)',
                 aspectRatio: '4 / 5',
                 padding: 24,
@@ -180,6 +201,10 @@ export default async function DashboardV2Page() {
                 color: '#F5F0E8',
               }}
             >
+              {/* Sketchy corner tick — top-right of each card */}
+              <div style={{ position: 'absolute', top: 14, right: 14 }}>
+                <SketchyCornerTick size={20} stroke="rgba(245,240,232,0.6)" strokeWidth={1.4} />
+              </div>
               <div>
                 <div
                   style={{

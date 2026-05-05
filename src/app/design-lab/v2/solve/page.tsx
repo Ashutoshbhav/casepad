@@ -9,6 +9,7 @@ import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
 import { Masthead, SectionEyebrow } from '../_components/masthead';
 import { DecisionTreeOverlay } from '../_components/decision-tree-overlay';
+import { SketchyCircle, SketchyConnector, SketchyUnderline } from '../_components/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -76,12 +77,15 @@ export default async function SolveV2Page() {
               letterSpacing: '-0.025em',
               color: 'rgb(50,50,52)',
               margin: 0,
-              marginBottom: 16,
+              marginBottom: 4,
               maxWidth: '14ch',
             }}
           >
             COFFEE CHAIN PROFITABILITY.
           </h1>
+          <div style={{ width: 'min(280px, 40%)', marginBottom: 24 }}>
+            <SketchyUnderline strokeWidth={4} roughness={2.2} bowing={3} />
+          </div>
           <p
             style={{
               fontFamily: 'var(--font-v2-mono)',
@@ -223,6 +227,40 @@ export default async function SolveV2Page() {
               bowing={1.6}
             />
           </div>
+          {/* Turn counter — 6 sketchy circles, first 4 filled (turns
+              completed), last 2 hollow (remaining). Hand-drawn feel
+              consistent with the issue tree above. */}
+          <div
+            style={{
+              marginTop: 18,
+              paddingTop: 14,
+              borderTop: '1px solid rgba(0,0,0,0.18)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+            }}
+          >
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+              >
+                <SketchyCircle
+                  size={20}
+                  filled={i < 4}
+                  stroke="rgb(50,50,52)"
+                  fillColor="rgb(50,50,52)"
+                  roughness={i === 4 ? 0.8 : 1.4}
+                />
+                {i < 5 && (
+                  <SketchyConnector
+                    width={6}
+                    stroke={i < 3 ? 'rgba(50,50,52,0.6)' : 'rgba(50,50,52,0.25)'}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           <div
             style={{
               fontFamily: 'var(--font-v2-mono)',
@@ -230,9 +268,7 @@ export default async function SolveV2Page() {
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               color: 'rgba(50,50,52,0.55)',
-              marginTop: 14,
-              paddingTop: 14,
-              borderTop: '1px solid rgba(0,0,0,0.18)',
+              marginTop: 12,
             }}
           >
             04 / 06 turns · 18 min remaining

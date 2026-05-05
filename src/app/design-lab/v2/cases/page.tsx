@@ -8,6 +8,7 @@
 import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
 import { Masthead, SectionEyebrow, Marquee } from '../_components/masthead';
+import { SketchyCornerTick, SketchyUnderline } from '../_components/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -105,6 +106,9 @@ export default async function CasesV2Page() {
         >
           THE LIBRARY.
         </h1>
+        <div style={{ width: 'min(360px, 30vw)', marginTop: 12 }}>
+          <SketchyUnderline strokeWidth={5} roughness={2.4} bowing={4} />
+        </div>
         <p
           style={{
             fontFamily: 'var(--font-v2-mono)',
@@ -172,6 +176,7 @@ export default async function CasesV2Page() {
                 <div
                   key={c.title}
                   style={{
+                    position: 'relative',
                     background: 'rgb(28,28,28)',
                     aspectRatio: '4 / 5',
                     padding: 22,
@@ -181,6 +186,11 @@ export default async function CasesV2Page() {
                     color: '#FFFFFF',
                   }}
                 >
+                  {/* Sketchy corner tick — every case card carries the
+                      instrumentation mark, even at this small scale. */}
+                  <div style={{ position: 'absolute', top: 12, right: 12 }}>
+                    <SketchyCornerTick size={18} stroke="rgba(255,255,255,0.5)" strokeWidth={1.2} />
+                  </div>
                   <div
                     style={{
                       fontFamily: 'var(--font-v2-mono)',

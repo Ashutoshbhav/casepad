@@ -8,6 +8,7 @@
 import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
 import { Masthead, SectionEyebrow, Marquee } from '../_components/masthead';
+import { SketchyUnderline, SketchyProgressBar, SketchyLine } from '../_components/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -70,6 +71,15 @@ export default async function DebriefV2Page() {
           }}
         >
           78
+        </div>
+        {/* Sketchy underline — bigger one for the score reveal moment */}
+        <div
+          style={{
+            width: 'min(280px, 22vw)',
+            margin: '4px auto 0',
+          }}
+        >
+          <SketchyUnderline strokeWidth={6} roughness={2.6} bowing={5} />
         </div>
         <p
           style={{
@@ -149,6 +159,17 @@ export default async function DebriefV2Page() {
                 >
                   / {s.max}
                 </span>
+              </div>
+              {/* Sketchy hand-drawn progress bar — Rough.js stroked
+                  rectangle with hachure fill at percentage width */}
+              <div style={{ marginTop: 16 }}>
+                <SketchyProgressBar
+                  pct={(s.value / s.max) * 100}
+                  height={24}
+                  stroke="rgb(50,50,52)"
+                  fillColor="rgb(50,50,52)"
+                  roughness={1.5}
+                />
               </div>
               <div
                 style={{
