@@ -7,6 +7,21 @@ import { NextRequest } from 'next/server';
 import { streamChat } from '@/lib/llm-router';
 import { buildInterviewerMessages } from '@/lib/groq/interviewer';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { isCannedTemplate } from '@/lib/canned-templates';
+
+// Single-turn directive prepended to the system prompt when we detect that
+// the candidate's message is a VERBATIM paste of one of the chat-panel
+// FIRST_TURN_SUGGESTIONS. The detection is exact-string equality only —
+// students who add their own thought won't trigger this. Goal: behaviorally
+// reinforce that "structure for structure's sake" doesn't satisfy a real EM.
+const CANNED_TEMPLATE_DIRECTIVE = `
+
+== COACHING-TEMPLATE DETECTED (this turn only) ==
+The candidate just used a textbook coaching opener verbatim — they didn't author this thinking. Your response for THIS TURN ONLY must:
+1. Briefly acknowledge the structural habit ("Good scoping habit" or similar — 1 short clause).
+2. Push for THEIR original thinking — invite them to express it in their own words. Examples: "now in your own words, what's the first hypothesis you'd test?" / "good — but tell me what YOU actually think the answer is going to be."
+3. Stay 2–3 sentences total. Don't lecture. Don't penalize them. Don't break character.
+4. After this single nudge, return to normal interviewer behavior on subsequent turns.`;
 
 export const runtime = 'nodejs';
 
@@ -56,6 +71,22 @@ export async function POST(req: NextRequest) {
     .map((t) => t.content);
 
   const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any);
+
+  // Detect verbatim coaching-template pastes. Append a one-turn directive to
+  // the system prompt so Ash gently pushes for original thinking. We mutate
+  // the messages array (not the persistent transcript / system builder), so
+  // this only affects the current Groq call. Wrapped in try/catch so a
+  // detection bug can never break the chat call.
+  try {
+    if (isCannedTemplate(safeUserTurn) && messages.length > 0 && messages[0].role === 'system') {
+      messages[0] = {
+        ...messages[0],
+        content: messages[0].content + CANNED_TEMPLATE_DIRECTIVE,
+      };
+    }
+  } catch {
+    // fall through — never block the chat call on detection
+  }
 
   const encoder = new TextEncoder();
   const readable = new ReadableStream({
