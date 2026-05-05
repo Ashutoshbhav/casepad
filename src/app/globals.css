@@ -1,10 +1,417 @@
 @import 'tailwindcss';
 
+/* =========================================================================
+   Liquid Tutor — Claude Dark palette. Anthropic's verified tokens applied
+   site-wide. Coral accent (#d97757) replaces brass. Canvas warmed up from
+   the original coffin-black #141413 to a warmer #1a1817 — the dark feels
+   lived-in, not sterile.
+   Contrast on body text against bg.canvas (#1a1817):
+   - text.primary  #faf9f5 vs #1a1817  → ~15.4:1 (AAA)
+   - text.secondary #b0aea5 vs #1a1817 →  ~7.5:1 (AAA)
+   - accent #d97757 vs #1a1817         →  ~4.6:1 (AA)
+   ========================================================================= */
 :root {
   color-scheme: dark;
+
+  /* Surfaces — pitch black canvas so the WebGL asterisk reads as space.
+     Elevated/sunken kept warm-dark for cards & panels (contrast against
+     the black canvas, not against each other). */
+  --color-bg-canvas:   #000000;
+  --color-bg-elevated: #1a1817;
+  --color-bg-sunken:   #0a0908;
+
+  /* Text — Anthropic Light / Mid Gray / muted. */
+  --color-text-primary:   #faf9f5;
+  --color-text-secondary: #b0aea5;
+  --color-text-muted:     #7a7873;
+
+  /* Accents / signals — Anthropic Orange (coral). */
+  --color-accent:        #d97757;
+  --color-accent-fg:     #1a1817;
+  --color-accent-bright: #e58c6f;
+  --color-border:        #2f2c29;
+  --color-signal-danger: #D94B4B;
+
+  /* Font CSS variables — wired from src/app/layout.tsx via next/font.
+     Names preserved (--font-headline / --font-body / --font-mono) so
+     existing class hooks keep working. */
+  --font-headline: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body:     'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:     'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
 }
+
+/* =========================================================================
+   Light theme — activated by `<html data-theme="light">`. Coral accent
+   stays the same (pops on both); everything else inverts. Warm ivory
+   canvas, pure-white panels, near-black text. Zinc/emerald/rose/amber
+   legacy overrides flipped so existing class hooks still resolve. The
+   pre-paint script in layout.tsx sets the attribute before React mounts
+   to avoid theme flash.
+   ========================================================================= */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-bg-canvas:   #faf9f5;
+  --color-bg-elevated: #ffffff;
+  --color-bg-sunken:   #f0ede4;
+
+  --color-text-primary:   #1a1817;
+  --color-text-secondary: #4a4845;
+  --color-text-muted:     #8a8780;
+
+  --color-accent:        #d97757;
+  --color-accent-fg:     #ffffff;
+  --color-accent-bright: #c2664a;
+  --color-border:        #dcd9d0;
+  --color-signal-danger: #c33c3c;
+}
+@theme inline {
+  /* Re-apply light overrides for backward-compat tokens used across
+     the legacy admin/drills/dashboard pages. */
+}
+:root[data-theme="light"] {
+  /* Backwards-compat zinc/emerald/rose/amber overrides for light mode.
+     Names preserved; values flipped so hover/border classes feel right. */
+  --color-zinc-50:   #1a1817;
+  --color-zinc-100:  #1a1817;
+  --color-zinc-200:  #2f2c29;
+  --color-zinc-300:  #4a4845;
+  --color-zinc-400:  #8a8780;
+  --color-zinc-500:  #b0aea5;
+  --color-zinc-600:  #c7c4b8;
+  --color-zinc-700:  #dcd9d0;
+  --color-zinc-800:  #ece9de;
+  --color-zinc-900:  #f0ede4;
+  --color-zinc-950:  #faf9f5;
+}
+
+/* Tailwind v4 theme — extend tokens so utilities resolve correctly. */
+@theme inline {
+  /* Custom palette tokens — bg-canvas, text-primary, border-border, etc. */
+  --color-canvas:   var(--color-bg-canvas);
+  --color-elevated: var(--color-bg-elevated);
+  --color-sunken:   var(--color-bg-sunken);
+
+  --color-primary:   var(--color-text-primary);
+  --color-secondary: var(--color-text-secondary);
+  --color-muted:     var(--color-text-muted);
+
+  --color-accent:        var(--color-accent);
+  --color-accent-fg:     var(--color-accent-fg);
+  --color-accent-bright: var(--color-accent-bright);
+  --color-border:        var(--color-border);
+  --color-danger:        var(--color-signal-danger);
+
+  /* Backwards-compat overrides — pages still using zinc/emerald/rose/amber
+     classes inherit the Claude Dark palette automatically (admin, drills,
+     cheatsheet, dashboard). Only the values change; classnames stay.
+     Re-tuned 2026-05-04 to the warmer-dark palette (#1a1817 base). */
+  --color-zinc-50:   #faf9f5;
+  --color-zinc-100:  #faf9f5;
+  --color-zinc-200:  #ece9de;
+  --color-zinc-300:  #c7c4b8;
+  --color-zinc-400:  #b0aea5;
+  --color-zinc-500:  #918f87;
+  --color-zinc-600:  #7a7873;
+  --color-zinc-700:  #3f3c39;
+  --color-zinc-800:  #2f2c29;
+  --color-zinc-900:  #252220;
+  --color-zinc-950:  #000000;
+
+  /* Map emerald (the previous brand accent) to coral — buttons/badges/CTAs. */
+  --color-emerald-200: #f0b8a4;
+  --color-emerald-300: #e58c6f;
+  --color-emerald-400: #d97757;
+  --color-emerald-500: #d97757;
+  --color-emerald-600: #c2664a;
+  --color-emerald-700: #9a4f38;
+  --color-emerald-800: #6b3727;
+  --color-emerald-900: #432217;
+  --color-emerald-950: #25130d;
+
+  /* Rose (destructive) — keep readable. */
+  --color-rose-300: #E89B9B;
+  --color-rose-400: #D94B4B;
+  --color-rose-500: #D94B4B;
+  --color-rose-700: #8C2E2E;
+  --color-rose-900: #4A1A1A;
+  --color-rose-950: #2A0F0F;
+
+  /* Amber — used on warnings / starter chips. Tune toward coral. */
+  --color-amber-200: #f0b8a4;
+  --color-amber-300: #e58c6f;
+  --color-amber-400: #d97757;
+  --color-amber-500: #d97757;
+  --color-amber-600: #c2664a;
+  --color-amber-700: #9a4f38;
+  --color-amber-900: #432217;
+  --color-amber-950: #25130d;
+
+  /* Indigo / sky / violet / fuchsia — soften to neutrals so old badges
+     don't clash with the editorial palette. */
+  --color-indigo-200: #c7c4b8;
+  --color-indigo-800: #3f3c39;
+  --color-indigo-950: #252220;
+  --color-sky-700: #3f3c39;
+  --color-violet-200: #ece9de;
+  --color-violet-300: #e58c6f;
+  --color-violet-400: #d97757;
+  --color-fuchsia-300: #e58c6f;
+
+  /* Font family tokens for Tailwind utilities. */
+  --font-headline: var(--font-headline);
+  --font-body:     var(--font-body);
+  --font-mono:     var(--font-mono);
+  --font-sans:     var(--font-body);
+  --font-serif:    var(--font-headline);
+}
+
 html, body {
-  background: #09090b;
-  color: #fafafa;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-bg-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* (Signin override removed — body bg is now pitch black globally via the
+   --color-bg-canvas token. Kept as a no-op anchor in case future routes
+   want a different canvas tint.) */
+
+/* Editorial typographic defaults — restraint > flourish. */
+h1, h2, h3, h4 {
+  font-family: var(--font-headline);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}
+
+/* Coral milestone pulse — kept for any legacy mounts that still call it,
+   but the brass progress bar itself has been retired. */
+@keyframes brassPulse {
+  0%   { filter: brightness(1);   box-shadow: 0 0 0 rgba(217, 119, 87, 0); }
+  35%  { filter: brightness(1.6); box-shadow: 0 0 12px rgba(217, 119, 87, 0.55); }
+  100% { filter: brightness(1);   box-shadow: 0 0 0 rgba(217, 119, 87, 0); }
+}
+.brass-pulse {
+  animation: brassPulse 600ms ease-out;
+}
+
+/* Blinking caret used by the typewriter component. */
+@keyframes brassCaret {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.brass-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: var(--color-accent);
+  vertical-align: text-bottom;
+  animation: brassCaret 1s step-end infinite;
+}
+
+/* Tree decision tuck — siblings of a committed branch fade + shrink. */
+.tree-node-tucked {
+  opacity: 0.3;
+  transform: scale(0.97);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+.tree-node-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+/* =========================================================================
+   Vertical family-hierarchy / org-chart layout for the issue tree.
+   Pure-CSS connectors via ::before/::after — no JS measurement.
+   Each level renders as a horizontal row of sibling cards. Children
+   appear directly beneath their parent, joined by a vertical drop line
+   into a horizontal bus that fans out to each child. L0..L5 are
+   visually distinct via the level badge inside each card, not via row
+   gutters (which break when subtrees have uneven depths).
+   ========================================================================= */
+.org-tree {
+  width: 100%;
+  overflow-x: auto;
+  padding: 8px 0;
+  text-align: center;
+}
+.org-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  text-align: center;
+}
+/* Children of a node sit in a row beneath it. The 24px top padding leaves
+   room for the connector lines drawn via pseudo-elements below. */
+.org-tree ul.org-children {
+  padding-top: 24px;
+  position: relative;
+  white-space: nowrap;
+}
+/* Each <li> in a children-row: vertical column (card on top, its own
+   children below), with connectors drawn from its top edge up to the
+   horizontal bus shared with its siblings. */
+.org-tree li.org-li {
+  display: inline-block;
+  vertical-align: top;
+  padding: 24px 12px 0;
+  position: relative;
+  list-style: none;
+  white-space: normal;
+}
+/* Vertical drop from parent's bottom to the bus above each row of kids. */
+.org-tree ul.org-children::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 24px;
+  border-left: 1px solid var(--color-border);
+}
+/* Horizontal bus — connectors above each child connecting siblings. */
+.org-tree li.org-li::before,
+.org-tree li.org-li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  height: 24px;
+  width: 50%;
+  border-top: 1px solid var(--color-border);
+}
+.org-tree li.org-li::before { right: 50%; }
+.org-tree li.org-li::after { left: 50%; border-left: 1px solid var(--color-border); }
+/* Hide outer half-connectors on first / last children so the bus reads clean. */
+.org-tree li.org-li:first-child::before,
+.org-tree li.org-li:last-child::after { border-color: transparent; }
+.org-tree li.org-li:last-child::before { border-right: 1px solid var(--color-border); }
+/* Single-child case: just a straight drop, no bus. */
+.org-tree li.org-li:only-child {
+  padding-top: 24px;
+}
+.org-tree li.org-li:only-child::before,
+.org-tree li.org-li:only-child::after { display: none; }
+
+/* Top-level roots row — no connectors above (no parent). */
+.org-tree > ul > li.org-li {
+  padding-top: 0;
+}
+.org-tree > ul > li.org-li::before,
+.org-tree > ul > li.org-li::after { display: none; }
+
+.org-card {
+  white-space: normal;
+  text-align: left;
+}
+
+/* =========================================================================
+   Motion tokens — single source of truth for the "buttery" feel.
+   ease-snap   — custom expo, perfect for micro-interactions
+   ease-soft   — gentle ease-out for fades
+   ========================================================================= */
+:root {
+  --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 180ms;
+  --dur-soft:  240ms;
+}
+
+/* Ghost button — transparent border that lights up on hover. Replaces
+   inline JS-driven onMouseEnter/Leave style mutation across the app.
+   Animating border-color + color only (both cheap), no transform on
+   hover so the button never visually shifts adjacent layout.
+   Variants: --accent (coral), --danger (rose). */
+.ghost-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-secondary);
+  transition: color var(--dur-micro) var(--ease-snap),
+              border-color var(--dur-micro) var(--ease-snap),
+              background-color var(--dur-micro) var(--ease-snap);
+}
+.ghost-btn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+.ghost-btn--accent { color: var(--color-accent); }
+.ghost-btn--accent:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.ghost-btn--danger { color: var(--color-signal-danger); }
+.ghost-btn--danger:hover {
+  color: var(--color-signal-danger);
+  border-color: var(--color-signal-danger);
+}
+
+/* CTA hover — opacity-only fade, no shadow / transform shift. */
+.hero-cta {
+  transition: opacity var(--dur-micro) var(--ease-snap);
+}
+.hero-cta:hover { opacity: 0.9; }
+
+/* List rows on /cases — subtle bg tint on hover, transform-free so
+   adjacent rows never reflow. */
+.case-row {
+  transition: background-color var(--dur-micro) var(--ease-snap);
+}
+.case-row:hover {
+  background-color: color-mix(in srgb, var(--color-bg-elevated) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brass-pulse,
+  .brass-caret {
+    animation: none;
+  }
+}
+
+/* =========================================================================
+   View Transitions — atmospheric page nav cross-fade.
+   Cut from 480ms → 220ms 2026-05-04: half-second cross-fade was reading as
+   nav lag on every click. 220ms is the threshold below which a transition
+   feels "instant" while still being visibly atmospheric.
+   Sequencing: old/new are pure cross-fade with a light blur — no fancy
+   sequenced overlap because at 220ms the human eye reads it as a single
+   beat regardless of timing curve.
+   Reduced-motion users skip animation entirely.
+   ========================================================================= */
+@keyframes vt-fade-out {
+  0%   { opacity: 1; filter: blur(0); }
+  100% { opacity: 0; filter: blur(2px); }
+}
+@keyframes vt-fade-in {
+  0%   { opacity: 0; filter: blur(2px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+::view-transition-old(root) {
+  animation: 220ms cubic-bezier(0.32, 0.72, 0, 1) both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 220ms cubic-bezier(0.32, 0.72, 0, 1) both vt-fade-in;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Note: previously this section assigned `view-transition-name: persistent-canvas`
+   to the WebGL canvas wrapper. Removed 2026-05-04 because browsers throw or
+   fail when trying to snapshot a WebGL canvas (the drawing buffer isn't
+   capturable cleanly), which propagates to the React error boundary on every
+   route navigation. The canvas is `position: fixed` so it visually persists
+   across navigations regardless. Brief snapshot stutter during 220ms
+   cross-fade is acceptable in exchange for not throwing. */
