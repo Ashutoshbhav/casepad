@@ -262,7 +262,7 @@ export default async function CasesPage({
             </h2>
             <span
               className="flex-1 h-px"
-              style={{ background: 'var(--color-accent)', opacity: 0.5 }}
+              style={{ background: 'var(--color-border)' }}
               aria-hidden="true"
             />
           </div>

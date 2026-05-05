@@ -48,8 +48,11 @@ export function CheatSheetPanel({ sessionId, initial }: { sessionId: string; ini
             aria-label={tooltip}
             className="font-mono text-[10px] uppercase tracking-[0.14em] flex items-center gap-1"
             style={{
+              // Locked state used coral; per one-job rule, locked uses primary
+              // text + the filled glyph carries the signal. Coral reserved for
+              // CTAs + asterisk character only.
               color: locked
-                ? 'var(--color-accent)'
+                ? 'var(--color-text-primary)'
                 : 'var(--color-text-muted)',
             }}
           >
@@ -79,7 +82,7 @@ export function CheatSheetPanel({ sessionId, initial }: { sessionId: string; ini
     <div className="h-full overflow-y-auto p-4 space-y-3">
       <h2
         className="font-mono text-[11px] uppercase tracking-[0.22em]"
-        style={{ color: 'var(--color-accent)' }}
+        style={{ color: 'var(--color-text-primary)' }}
       >
         Cheat Sheet
       </h2>

@@ -359,15 +359,19 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 className="flex items-center px-4 py-2.5 gap-3"
                 style={{
                   borderTop: i === 0 ? 'none' : '1px solid var(--color-border)',
+                  // isMe row used to use coral tint; per one-job rule (coral
+                  // reserved for CTAs + asterisk), highlight is now a subtle
+                  // elevated bg + bold weight on the name. Same behavioral
+                  // signal, no ambient coral leak.
                   background: row.isMe
-                    ? 'color-mix(in oklab, var(--color-accent) 8%, transparent)'
+                    ? 'var(--color-bg-sunken)'
                     : 'transparent',
                 }}
               >
                 <span
                   className="font-mono text-[11px] w-6 tabular-nums"
                   style={{
-                    color: i === 0 ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
+                    color: i === 0 ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                     fontWeight: i === 0 ? 700 : 400,
                   }}
                 >
@@ -376,7 +380,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 <span
                   className="text-sm flex-1"
                   style={{
-                    color: row.isMe ? 'var(--color-accent-bright)' : 'var(--color-text-primary)',
+                    color: 'var(--color-text-primary)',
                     fontWeight: row.isMe ? 600 : 400,
                   }}
                 >
@@ -703,13 +707,16 @@ function TodaysCaseCard({
         border: '1px solid var(--color-border)',
       }}
     >
-      {/* Eyebrow + brass underline */}
+      {/* Eyebrow — coral underline removed per one-job rule (coral reserved
+          for primary CTAs + asterisk character). Section dividers now use
+          ambient text color so the Begin button is the only coral element
+          on the card. */}
       <div className="mb-4">
         <div
           className="font-mono text-[11px] uppercase tracking-[0.18em] inline-block pb-1.5"
           style={{
-            color: 'var(--color-accent-bright)',
-            borderBottom: '1.5px solid var(--color-accent)',
+            color: 'var(--color-text-secondary)',
+            borderBottom: '1px solid var(--color-border)',
           }}
         >
           {eyebrow}
