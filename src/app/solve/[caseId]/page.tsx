@@ -82,25 +82,12 @@ export default async function SolvePage({
         caseTitle={caseRow.title}
         caseDifficulty={caseRow.difficulty}
         caseSource={(caseRow as any).source ?? null}
+        problemStatement={caseRow.problem_statement || ''}
         endSessionAction={endSession.bind(null, sessionId)}
         initialMessages={initialMessages as any}
         initialCs={initialCs as any}
         ended={ended}
       />
-      <details
-        className="px-5 py-2"
-        style={{ borderTop: '1px solid var(--color-border)' }}
-      >
-        <summary className="meta-label cursor-pointer">
-          Show problem statement
-        </summary>
-        <p
-          className="font-headline text-sm mt-2 leading-relaxed"
-          style={{ color: 'var(--color-text-secondary)' }}
-        >
-          {caseRow.problem_statement}
-        </p>
-      </details>
       <details
         className="px-5 py-1"
         style={{ borderTop: '1px solid var(--color-border)' }}

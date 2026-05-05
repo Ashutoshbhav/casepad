@@ -34,6 +34,62 @@ function difficultyDotCount(d: string): number {
   return 3;
 }
 
+// Pinned problem statement banner — replaces the hidden <details>
+// accordion that previously lived at page bottom. Three states:
+//   1. "expanded" — full prompt visible (default before first user turn)
+//   2. "auto-collapsed" — 1-line teaser after the user has taken a turn,
+//      preserves their chat real estate but the prompt is one click away
+//   3. "manually expanded" — user clicked the teaser to bring it back
+// Local state overrides auto-collapse so user intent always wins.
+function ProblemStatementBanner({
+  text,
+  autoCollapsedAfterFirstTurn,
+}: {
+  text: string;
+  autoCollapsedAfterFirstTurn: boolean;
+}) {
+  const [manualOpen, setManualOpen] = useState<boolean | null>(null);
+  const open = manualOpen ?? !autoCollapsedAfterFirstTurn;
+  return (
+    <div
+      className="px-6 sm:px-8 py-3"
+      style={{
+        borderTop: '1px solid var(--color-border)',
+        borderBottom: '1px solid var(--color-border)',
+        background: 'var(--color-bg-sunken)',
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => setManualOpen(!open)}
+        className="flex items-center gap-2 w-full text-left"
+        aria-expanded={open}
+      >
+        <span
+          className="font-mono text-[10px] uppercase tracking-[0.18em]"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          Case prompt
+        </span>
+        <span
+          className="meta-label flex-1 truncate"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          {open ? '— hide' : '— click to expand'}
+        </span>
+      </button>
+      {open && (
+        <p
+          className="font-body text-[14px] leading-[1.6] mt-2 max-w-[80ch]"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          {text}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function HeaderDots({ d }: { d: string }) {
   const fill = difficultyDotCount(d);
   return (
@@ -57,6 +113,7 @@ export function SolveLayout({
   caseTitle,
   caseDifficulty,
   caseSource,
+  problemStatement,
   endSessionAction,
   initialMessages,
   initialCs,
@@ -66,6 +123,7 @@ export function SolveLayout({
   caseTitle: string;
   caseDifficulty: string;
   caseSource: string | null;
+  problemStatement?: string;
   endSessionAction: () => Promise<void> | void;
   initialMessages: any;
   initialCs: any;
@@ -244,6 +302,20 @@ export function SolveLayout({
           />
         </div>
       </header>
+
+      {/* PROBLEM STATEMENT — pinned below header. Expanded by default
+          before the candidate types (so they SEE the case prompt, instead
+          of hunting for it in a collapsed accordion at page bottom).
+          Auto-collapses to a 1-line teaser after the first user turn so
+          the chat has more room. Click to re-expand any time. The teaser
+          is ALWAYS clickable — Agent 2 #12, "the user should never have
+          to hunt for the case prompt mid-interview". */}
+      {problemStatement && (
+        <ProblemStatementBanner
+          text={problemStatement}
+          autoCollapsedAfterFirstTurn={messageCount >= 2}
+        />
+      )}
 
       {/* Mobile tab toggle (hidden md+) */}
       <div className="md:hidden flex">
