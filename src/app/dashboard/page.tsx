@@ -289,34 +289,34 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           baseline reset — gives the character agency without re-enabling
           WebGL raycasting (which previously ate every click site-wide). */}
       <AsteriskHotspot />
-      {/* A. HERO BAND */}
-      <section className="mb-10 sm:mb-14">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <div className="flex items-center gap-3 flex-wrap">
-            <span
-              className="font-mono text-[11px] uppercase tracking-[0.18em]"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              DAY {dayNumber} OF YOUR PREP
-            </span>
-            {/* Streak flame — always visible. Greys out at 0 (loss-aversion
-                cue). Coral at ≥1. Direct port of Duolingo's flame mechanic:
-                the artifact-at-risk lives above the fold, every visit. */}
-            <StreakFlame streak={streak} />
-          </div>
-          <Link
-            href="/cases"
-            className="meta-label hover:opacity-80"
+      {/* A. HERO BAND — collapsed to a single line above the today's case
+          card. Greeting + streak + library link in one row. The case card
+          IS the hero now; this band is just orientation. Headspace pattern:
+          one decision per surface, supporting context demoted. */}
+      <section className="mb-6 sm:mb-8 flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
+          <span
+            className="font-headline italic text-xl sm:text-2xl"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
-            Library →
-          </Link>
+            {greeting}
+          </span>
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.18em]"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Day {dayNumber}
+          </span>
+          {/* Streak flame — always visible. Greys out at 0 (loss-aversion
+              cue). Coral at ≥1. Direct port of Duolingo's flame mechanic. */}
+          <StreakFlame streak={streak} />
         </div>
-        <h1
-          className="font-headline italic text-3xl sm:text-5xl leading-[1.1] tracking-tight mb-3"
-          style={{ color: 'var(--color-text-primary)' }}
+        <Link
+          href="/cases"
+          className="meta-label hover:opacity-80"
         >
-          {greeting}
-        </h1>
+          Library →
+        </Link>
       </section>
 
       {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
@@ -709,44 +709,30 @@ function TodaysCaseCard({
 
   return (
     <div
-      className="relative rounded-lg p-6 sm:p-8 max-w-[88%]"
+      className="relative rounded-xl p-8 sm:p-12 lg:p-16"
       style={{
         background: 'var(--color-bg-elevated)',
         border: '1px solid var(--color-border)',
       }}
     >
-      {/* Eyebrow — coral underline removed per one-job rule (coral reserved
-          for primary CTAs + asterisk character). Section dividers now use
-          ambient text color so the Begin button is the only coral element
-          on the card. */}
-      <div className="mb-4">
-        <div
-          className="font-mono text-[11px] uppercase tracking-[0.18em] inline-block pb-1.5"
-          style={{
-            color: 'var(--color-text-secondary)',
-            borderBottom: '1px solid var(--color-border)',
-          }}
-        >
-          {eyebrow}
-        </div>
+      {/* Eyebrow — kept simple, no underline, no coral. The headline
+          carries weight; the eyebrow just labels the section. */}
+      <div
+        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
+        style={{ color: 'var(--color-text-muted)' }}
+      >
+        {eyebrow}
       </div>
 
       <h2
-        className="font-headline italic text-[28px] sm:text-[40px] leading-[1.05] tracking-tight mb-4"
+        className="font-headline italic text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.0] tracking-tight mb-6 sm:mb-8 max-w-[18ch]"
         style={{ color: 'var(--color-text-primary)' }}
       >
         {assignment.caseTitle}
       </h2>
 
-      <div
-        className="meta-label mb-5"
-        style={{ color: 'var(--color-text-muted)' }}
-      >
-        {assignment.caseType.replace(/_/g, ' ')}
-      </div>
-
       <p
-        className="font-headline italic text-[17px] leading-snug mb-6 max-w-prose"
+        className="font-headline italic text-[19px] sm:text-[22px] leading-[1.4] mb-10 sm:mb-12 max-w-[44ch]"
         style={{ color: 'var(--color-text-secondary)' }}
       >
         {assignment.reason}
@@ -765,10 +751,16 @@ function TodaysCaseCard({
         >
           {assignment.caseDifficulty}
         </span>
+        <span
+          className="meta-label px-3 py-1.5 rounded-full"
+          style={{ border: '1px solid var(--color-border)' }}
+        >
+          {assignment.caseType.replace(/_/g, ' ')}
+        </span>
         {cta && (
           <Link
             href={cta.href}
-            className="ml-auto px-5 py-2.5 rounded-md text-sm font-medium transition-opacity hover:opacity-90"
+            className="ml-auto px-7 py-3.5 rounded-md text-base sm:text-lg font-medium transition-opacity hover:opacity-90"
             style={{
               background: 'var(--color-accent)',
               color: 'var(--color-accent-fg)',
@@ -823,44 +815,39 @@ function EmptyTodaysCaseCard() {
   // library and let them pick.
   return (
     <div
-      className="relative rounded-lg p-6 sm:p-8 max-w-[88%]"
+      className="relative rounded-xl p-8 sm:p-12 lg:p-16"
       style={{
         background: 'var(--color-bg-elevated)',
         border: '1px dashed var(--color-border)',
       }}
     >
-      <div className="mb-4">
-        <div
-          className="font-mono text-[11px] uppercase tracking-[0.18em] inline-block pb-1.5"
-          style={{
-            color: 'var(--color-text-muted)',
-            borderBottom: '1.5px solid var(--color-border)',
-          }}
-        >
-          TODAY’S CASE
-        </div>
+      <div
+        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
+        style={{ color: 'var(--color-text-muted)' }}
+      >
+        TODAY’S CASE
       </div>
       <h2
-        className="font-headline italic text-[28px] sm:text-[40px] leading-[1.05] tracking-tight mb-4"
+        className="font-headline italic text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.0] tracking-tight mb-6 sm:mb-8 max-w-[18ch]"
         style={{ color: 'var(--color-text-primary)' }}
       >
         Wander the library — pick what calls you.
       </h2>
       <p
-        className="font-headline italic text-[17px] leading-snug mb-6 max-w-prose"
+        className="font-headline italic text-[19px] sm:text-[22px] leading-[1.4] mb-10 sm:mb-12 max-w-[44ch]"
         style={{ color: 'var(--color-text-secondary)' }}
       >
         We’ll line up tomorrow’s case for you once you’ve got a few reps in.
       </p>
       <Link
         href="/cases"
-        className="inline-block px-5 py-2.5 rounded-md text-sm font-medium transition-opacity hover:opacity-90"
+        className="inline-block px-7 py-3.5 rounded-md text-base sm:text-lg font-medium transition-opacity hover:opacity-90"
         style={{
           background: 'var(--color-accent)',
           color: 'var(--color-accent-fg)',
         }}
       >
-        Begin →
+        Pick your first case →
       </Link>
     </div>
   );

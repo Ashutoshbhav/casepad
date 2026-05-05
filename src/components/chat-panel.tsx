@@ -340,6 +340,51 @@ export function ChatPanel({
             return -1;
           })();
           const isLastInterviewer = i === lastInterviewerIdx;
+          // FIRST-TURN HERO MOMENT — when this is the very first message in
+          // the transcript AND no user has typed yet, render the interviewer
+          // turn as a hero introduction: bigger AshMark, identifier line
+          // ("Ash · EM at Bain"), larger type, generous breathing room.
+          // Cohort feedback "AI feels boring" is sharpest exactly here, at
+          // first contact. After the candidate types their first response,
+          // subsequent interviewer turns render in the compact transcript
+          // style.
+          const noUserYet = !messages.some((mm) => mm.role === 'user');
+          const isFirstTurnHero = i === 0 && noUserYet;
+          if (isFirstTurnHero) {
+            return (
+              <div
+                key={i}
+                className="flex flex-col items-start gap-5 py-6 sm:py-10"
+              >
+                <div
+                  ref={isLastInterviewer ? lastOrbRef : undefined}
+                  className="flex-shrink-0"
+                >
+                  <AshMark size={48} state={orbState} />
+                </div>
+                <div
+                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  Ash · EM at Bain
+                </div>
+                <div
+                  className="font-headline italic text-[24px] sm:text-[30px] leading-[1.25] max-w-[40ch]"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {m.content ? (
+                    shouldTypewriter(i, m.role) ? (
+                      <TypewriterMessage text={m.content} />
+                    ) : (
+                      m.content
+                    )
+                  ) : (
+                    <span style={{ color: 'var(--color-text-muted)' }}>…</span>
+                  )}
+                </div>
+              </div>
+            );
+          }
           return (
             <div key={i} className="flex items-start gap-3">
               <div
