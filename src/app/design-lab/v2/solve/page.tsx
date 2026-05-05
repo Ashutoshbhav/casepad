@@ -9,7 +9,15 @@ import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
 import { Masthead, SectionEyebrow } from '../_components/masthead';
 import { DecisionTreeOverlay } from '../_components/decision-tree-overlay';
-import { SketchyCircle, SketchyConnector, SketchyUnderline } from '../_components/sketchy';
+import {
+  SketchyCircle,
+  SketchyConnector,
+  SketchyUnderline,
+  SketchyMarginRule,
+  SketchyArrow,
+  SketchyBracket,
+  SketchyLine,
+} from '../_components/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -59,15 +67,30 @@ export default async function SolveV2Page() {
       <section
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 380px',
-          gap: 48,
+          gridTemplateColumns: '1fr 520px',
+          gap: 56,
           padding: '64px 36px 80px',
-          maxWidth: 1400,
+          maxWidth: 1480,
           margin: '0 auto',
+          position: 'relative',
         }}
       >
-        {/* CASE TITLE + TRANSCRIPT — left column */}
-        <div>
+        {/* CASE TITLE + TRANSCRIPT — left column with notebook margin */}
+        <div style={{ position: 'relative', paddingLeft: 36 }}>
+          {/* NOTEBOOK MARGIN — vertical sketchy red rule running the
+              full length of the column, like a real consultant's pad */}
+          <div
+            style={{
+              position: 'absolute',
+              left: 8,
+              top: 0,
+              bottom: 0,
+              width: 12,
+              opacity: 0.55,
+            }}
+          >
+            <SketchyMarginRule height={1400} stroke="#A0394A" />
+          </div>
           <h1
             style={{
               fontFamily: 'var(--font-v2-display)',
@@ -104,45 +127,87 @@ export default async function SolveV2Page() {
             through how you’d structure this.
           </p>
 
-          {/* TRANSCRIPT — alternating left/right, no chat bubbles */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+          {/* TRANSCRIPT — notebook entries. Ash's questions get a sketchy
+              left-rule + bold eyebrow. Candidate replies get a sketchy
+              left-bracket annotation, like a TA's marginal mark. Between
+              each Ash → candidate turn pair, a sketchy down-arrow flows
+              the conversation visually. */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {TRANSCRIPT.map((t, i) => {
               const isAsh = t.role === 'ash';
+              const prevWasAsh = i > 0 && TRANSCRIPT[i - 1].role === 'ash';
               return (
-                <div
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: isAsh ? 'flex-start' : 'flex-end',
-                    maxWidth: '100%',
-                  }}
-                >
-                  <span
+                <div key={i}>
+                  {/* Sketchy down-arrow flowing from Ash's question into
+                      the candidate's response — only between turn pairs */}
+                  {!isAsh && prevWasAsh && (
+                    <div
+                      style={{
+                        marginLeft: 32,
+                        marginBottom: 18,
+                        opacity: 0.6,
+                        transform: 'rotate(90deg)',
+                        transformOrigin: 'left center',
+                        height: 12,
+                      }}
+                    >
+                      <SketchyArrow width={48} height={14} stroke="rgba(50,50,52,0.5)" />
+                    </div>
+                  )}
+                  <div
                     style={{
-                      fontFamily: 'var(--font-v2-mono)',
-                      fontSize: 10,
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(50,50,52,0.55)',
-                      marginBottom: 8,
+                      display: 'flex',
+                      gap: 14,
+                      alignItems: 'flex-start',
+                      paddingLeft: isAsh ? 0 : 4,
                     }}
                   >
-                    {isAsh ? '— ASH · EM AT BAIN' : '— YOU'}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-v2-mono)',
-                      fontSize: 14,
-                      lineHeight: 1.65,
-                      color: 'rgb(50,50,52)',
-                      maxWidth: '54ch',
-                      margin: 0,
-                      textAlign: isAsh ? 'left' : 'right',
-                    }}
-                  >
-                    {t.text}
-                  </p>
+                    {/* Candidate reply gets a sketchy bracket annotation
+                        on the left — like a TA's mark on your work */}
+                    {!isAsh && (
+                      <div style={{ flexShrink: 0, height: 'auto', alignSelf: 'stretch', minHeight: 60 }}>
+                        <SketchyBracket
+                          height={Math.max(60, t.text.length * 0.45 + 20)}
+                          side="left"
+                          stroke="rgba(50,50,52,0.55)"
+                        />
+                      </div>
+                    )}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        maxWidth: '60ch',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-v2-mono)',
+                          fontSize: 10,
+                          letterSpacing: '0.18em',
+                          textTransform: 'uppercase',
+                          color: isAsh ? 'rgb(50,50,52)' : 'rgba(50,50,52,0.55)',
+                          fontWeight: isAsh ? 600 : 400,
+                          marginBottom: 8,
+                        }}
+                      >
+                        {isAsh ? 'ASH · EM AT BAIN ↓' : 'YOU'}
+                      </span>
+                      <p
+                        style={{
+                          fontFamily: 'var(--font-v2-mono)',
+                          fontSize: 14,
+                          lineHeight: 1.7,
+                          color: 'rgb(50,50,52)',
+                          margin: 0,
+                          fontWeight: isAsh ? 500 : 400,
+                        }}
+                      >
+                        {t.text}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -194,37 +259,64 @@ export default async function SolveV2Page() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN — issue-tree card sticky */}
+        {/* RIGHT COLUMN — the candidate's notebook scratchpad. BIG live
+            issue tree taking the full right column, like a real
+            consultant's working pad. Sticky so it's always visible
+            while the candidate scrolls the transcript. */}
         <aside
           style={{
             position: 'sticky',
             top: 36,
             alignSelf: 'flex-start',
             background: '#FFFFFF',
-            padding: 22,
+            padding: '24px 24px 28px',
             height: 'fit-content',
+            boxShadow: '0 12px 40px -16px rgba(50,50,52,0.18)',
           }}
         >
           <div
             style={{
-              fontFamily: 'var(--font-v2-mono)',
-              fontWeight: 500,
-              fontSize: 12,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              color: 'rgb(50,50,52)',
-              paddingBottom: 8,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+              paddingBottom: 12,
               borderBottom: '1px solid rgba(0,0,0,0.18)',
-              marginBottom: 18,
+              marginBottom: 8,
             }}
           >
-            Issue tree · live
+            <span
+              style={{
+                fontFamily: 'var(--font-v2-mono)',
+                fontWeight: 600,
+                fontSize: 13,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                color: 'rgb(50,50,52)',
+              }}
+            >
+              Issue tree
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-v2-mono)',
+                fontWeight: 400,
+                fontSize: 10,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(50,50,52,0.55)',
+              }}
+            >
+              · drawing live
+            </span>
           </div>
-          <div style={{ position: 'relative', aspectRatio: '4 / 5' }}>
+          <div style={{ width: '100%', marginBottom: 12 }}>
+            <SketchyLine stroke="rgba(50,50,52,0.55)" strokeWidth={1.2} roughness={1.8} />
+          </div>
+          <div style={{ position: 'relative', height: 520 }}>
             <DecisionTreeOverlay
               stroke="rgb(50,50,52)"
-              roughness={1.4}
-              bowing={1.6}
+              roughness={1.5}
+              bowing={1.8}
             />
           </div>
           {/* Turn counter — 6 sketchy circles, first 4 filled (turns

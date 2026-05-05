@@ -256,6 +256,140 @@ export function SketchyProgressBar({
 }
 
 // ----------------------------------------------------------------------
+// SketchyMarginRule — vertical hand-drawn line, like a notebook's red
+// margin line. Used on /solve to give the transcript a notebook feel.
+// ----------------------------------------------------------------------
+export function SketchyMarginRule({
+  height = 600,
+  stroke = '#A0394A',
+  className,
+  style,
+}: {
+  height?: number;
+  stroke?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    const svg = ref.current;
+    if (!svg) return;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const rc = rough.svg(svg);
+    svg.setAttribute('viewBox', `0 0 12 ${height}`);
+    svg.appendChild(rc.line(6, 4, 6, height - 4, {
+      stroke,
+      strokeWidth: 1.4,
+      roughness: 1.8,
+      bowing: 0.5,
+      seed: 3,
+    }));
+  }, [height, stroke]);
+  return (
+    <svg
+      ref={ref}
+      preserveAspectRatio="none"
+      style={{ display: 'block', width: 12, height: '100%', ...style }}
+      className={className}
+      aria-hidden="true"
+    />
+  );
+}
+
+// ----------------------------------------------------------------------
+// SketchyArrow — short hand-drawn arrow → with arrowhead. Used as a
+// gestural connector between Ash's question and the candidate's reply.
+// ----------------------------------------------------------------------
+export function SketchyArrow({
+  width = 60,
+  height = 20,
+  stroke = 'rgba(50,50,52,0.55)',
+  className,
+  style,
+}: {
+  width?: number;
+  height?: number;
+  stroke?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    const svg = ref.current;
+    if (!svg) return;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const rc = rough.svg(svg);
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    // Shaft
+    svg.appendChild(rc.line(2, height / 2, width - 8, height / 2, {
+      stroke, strokeWidth: 1.4, roughness: 1.6, bowing: 1, seed: 17,
+    }));
+    // Arrowhead — two short strokes
+    svg.appendChild(rc.line(width - 12, 4, width - 4, height / 2, {
+      stroke, strokeWidth: 1.4, roughness: 1.6, bowing: 0, seed: 19,
+    }));
+    svg.appendChild(rc.line(width - 12, height - 4, width - 4, height / 2, {
+      stroke, strokeWidth: 1.4, roughness: 1.6, bowing: 0, seed: 21,
+    }));
+  }, [width, height, stroke]);
+  return (
+    <svg
+      ref={ref}
+      style={{ display: 'inline-block', width, height, ...style }}
+      className={className}
+      aria-hidden="true"
+    />
+  );
+}
+
+// ----------------------------------------------------------------------
+// SketchyBracket — left or right hand-drawn bracket [ ] used to
+// annotate candidate answers like a consultant's marginal notes.
+// ----------------------------------------------------------------------
+export function SketchyBracket({
+  height = 80,
+  side = 'left',
+  stroke = 'rgba(50,50,52,0.6)',
+  className,
+  style,
+}: {
+  height?: number;
+  side?: 'left' | 'right';
+  stroke?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    const svg = ref.current;
+    if (!svg) return;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const rc = rough.svg(svg);
+    const w = 14;
+    svg.setAttribute('viewBox', `0 0 ${w} ${height}`);
+    const sw = 1.5;
+    if (side === 'left') {
+      svg.appendChild(rc.line(2, 4, w - 2, 4, { stroke, strokeWidth: sw, roughness: 1.4, seed: 31 }));
+      svg.appendChild(rc.line(2, 4, 2, height - 4, { stroke, strokeWidth: sw, roughness: 1.4, seed: 32 }));
+      svg.appendChild(rc.line(2, height - 4, w - 2, height - 4, { stroke, strokeWidth: sw, roughness: 1.4, seed: 33 }));
+    } else {
+      svg.appendChild(rc.line(2, 4, w - 2, 4, { stroke, strokeWidth: sw, roughness: 1.4, seed: 34 }));
+      svg.appendChild(rc.line(w - 2, 4, w - 2, height - 4, { stroke, strokeWidth: sw, roughness: 1.4, seed: 35 }));
+      svg.appendChild(rc.line(2, height - 4, w - 2, height - 4, { stroke, strokeWidth: sw, roughness: 1.4, seed: 36 }));
+    }
+  }, [height, side, stroke]);
+  return (
+    <svg
+      ref={ref}
+      preserveAspectRatio="none"
+      style={{ display: 'block', width: 14, height: '100%', ...style }}
+      className={className}
+      aria-hidden="true"
+    />
+  );
+}
+
+// ----------------------------------------------------------------------
 // SketchyCornerTick — small angle-bracket mark in the corner of a card.
 // Used as decorative "this thing exists" instrumentation on case cards.
 // ----------------------------------------------------------------------
