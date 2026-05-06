@@ -268,8 +268,13 @@ export function SolveLayout({
               )}
             </div>
             <h1
-              className="font-headline text-base sm:text-lg truncate"
-              style={{ color: 'var(--color-text-primary)' }}
+              className="font-headline italic truncate"
+              style={{
+                color: 'var(--color-text-primary)',
+                fontSize: 'clamp(18px, 2.2vw, 26px)',
+                lineHeight: 1.1,
+                letterSpacing: '-0.015em',
+              }}
             >
               {caseTitle}
             </h1>
