@@ -7,6 +7,7 @@ import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
 import { AsteriskHotspot } from '@/components/asterisk-hotspot';
+import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 
 export const dynamic = 'force-dynamic';
 
@@ -281,42 +282,52 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const assignmentCompleted = assignmentSession?.status === 'completed';
 
   return (
-    <main className="min-h-screen px-4 sm:px-8 py-8 sm:py-12 max-w-5xl mx-auto">
+    <main
+      className="min-h-screen px-4 sm:px-8 py-8 sm:py-12 max-w-5xl mx-auto"
+      style={{ background: 'var(--color-bg-canvas)' }}
+    >
+      <HuprObserveReveals />
+      {/* AsteriskSceneRegister + AsteriskHotspot are no-ops now (the
+          PersistentAsterisk root was removed in the HUPR makeover). They
+          stay imported until the cleanup pass since their components don't
+          throw on unmounted-canvas — they just don't paint. */}
       <AsteriskSceneRegister preset="dashboard" />
-      {/* Dashboard-only: invisible click target over the asterisk's render
-          area. Hover triggers anticipating, click triggers celebrating +
-          smooth-scroll to today's case section. Item #5 of the visual
-          baseline reset — gives the character agency without re-enabling
-          WebGL raycasting (which previously ate every click site-wide). */}
       <AsteriskHotspot />
       {/* A. HERO BAND — collapsed to a single line above the today's case
           card. Greeting + streak + library link in one row. The case card
           IS the hero now; this band is just orientation. Headspace pattern:
           one decision per surface, supporting context demoted. */}
-      <section className="mb-6 sm:mb-8 flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-4 flex-wrap">
-          <span
-            className="font-headline italic text-xl sm:text-2xl"
+      <section className="mb-10 sm:mb-12">
+        <div className="flex items-baseline justify-between gap-4 flex-wrap mb-3">
+          <span className="hupr-mono-eyebrow">
+            Day {dayNumber} · CasePad
+          </span>
+          <Link
+            href="/cases"
+            className="hupr-mono-eyebrow underline"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            {greeting}
-          </span>
-          <span
-            className="font-mono text-[10px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
+            Library →
+          </Link>
+        </div>
+        <hr className="hupr-hairline" />
+        <div className="mt-6 flex items-end justify-between gap-6 flex-wrap">
+          <h1
+            className="uppercase"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(40px, 6vw, 72px)',
+              lineHeight: 1,
+              margin: 0,
+              color: 'var(--color-text-primary)',
+              maxWidth: '20ch',
+            }}
           >
-            Day {dayNumber}
-          </span>
-          {/* Streak flame — always visible. Greys out at 0 (loss-aversion
-              cue). Coral at ≥1. Direct port of Duolingo's flame mechanic. */}
+            {greeting}
+          </h1>
           <StreakFlame streak={streak} />
         </div>
-        <Link
-          href="/cases"
-          className="meta-label hover:opacity-80"
-        >
-          Library →
-        </Link>
       </section>
 
       {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
@@ -337,8 +348,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <section className="mb-12 sm:mb-16">
         <div className="flex items-baseline justify-between mb-4">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="hupr-mono-eyebrow"
+            style={{ color: 'var(--color-text-primary)' }}
           >
             COHORT TODAY
           </span>
@@ -350,8 +361,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </span>
         </div>
         <div
-          className="rounded-md overflow-hidden"
-          style={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
+          className="overflow-hidden"
+          style={{ background: 'var(--color-bg-canvas)', border: '1px solid var(--color-border)' }}
         >
           {leaderboard.length === 0 ? (
             <div
@@ -420,8 +431,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <section className="mb-12 sm:mb-16">
         <div className="flex items-baseline justify-between mb-4">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="hupr-mono-eyebrow"
+            style={{ color: 'var(--color-text-primary)' }}
           >
             THIS WEEK
           </span>
@@ -430,27 +441,33 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             style={{ color: 'var(--color-text-muted)' }}
           >
             {activeDaysThisWeek} of 7 days active
-            {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-accent-bright)' }}>· {streak}-day streak</span>}
+            {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>· {streak}-day streak</span>}
           </span>
         </div>
         <div className="grid grid-cols-7 gap-2 sm:gap-3">
           {weekDays.map((d) => (
             <div key={d.dateISO} className="flex flex-col items-center">
               <div
-                className="aspect-square w-full rounded-md"
+                className="aspect-square w-full"
                 style={{
-                  background: d.hasSession ? 'var(--color-accent)' : 'transparent',
+                  background: d.hasSession ? 'var(--color-text-primary)' : 'transparent',
                   border: d.isToday
-                    ? '1.5px solid var(--color-accent-bright)'
-                    : d.hasSession
-                      ? '1px solid var(--color-accent)'
-                      : '1px solid var(--color-border)',
+                    ? '2px solid var(--color-text-primary)'
+                    : '1px solid var(--color-border)',
+                  borderRadius: 2,
                 }}
                 aria-label={`${d.dateISO}${d.hasSession ? ' (active)' : ' (inactive)'}${d.isToday ? ' (today)' : ''}`}
               />
               <span
-                className="font-mono text-[10px] mt-1.5"
-                style={{ color: d.isToday ? 'var(--color-accent-bright)' : 'var(--color-text-muted)' }}
+                className="mt-1.5"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  color: d.isToday ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                  fontWeight: d.isToday ? 700 : 400,
+                }}
               >
                 {d.isToday ? 'today' : d.label}
               </span>
@@ -463,8 +480,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <section className="mb-12 sm:mb-16">
         <div className="mb-4">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="hupr-mono-eyebrow"
+            style={{ color: 'var(--color-text-primary)' }}
           >
             RECENT REPS
           </span>
@@ -474,29 +491,43 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <Link
               key={s.id}
               href={`/debrief/${s.id}`}
-              className="block rounded-md p-4 transition-colors hover:opacity-90"
+              className="block p-5 transition-opacity hover:opacity-90"
               style={{
-                background: 'var(--color-bg-elevated)',
+                background: 'var(--color-bg-sunken)',
                 border: '1px solid var(--color-border)',
               }}
             >
               <div
-                className="font-headline text-base leading-snug mb-3 line-clamp-2"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="uppercase mb-4 line-clamp-2"
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 16,
+                  lineHeight: 1.2,
+                  color: 'var(--color-text-primary)',
+                }}
               >
                 {(s as any).cases?.title ?? 'Case'}
               </div>
               <div className="flex items-baseline justify-between">
                 <span
-                  className="font-mono text-[20px] tabular-nums"
-                  style={{ color: 'var(--color-text-primary)' }}
+                  className="tabular-nums"
+                  style={{
+                    fontFamily: 'var(--font-headline)',
+                    fontWeight: 700,
+                    fontSize: 36,
+                    lineHeight: 1,
+                    color: 'var(--color-text-primary)',
+                  }}
                 >
                   {s.score ?? 0}
                   {delta !== null && delta !== 0 && (
                     <span
-                      className="ml-2 text-[11px]"
+                      className="ml-2"
                       style={{
-                        color: delta > 0 ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 12,
+                        color: 'var(--color-text-secondary)',
                       }}
                     >
                       {delta > 0 ? '▲' : '▼'}
@@ -519,16 +550,20 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {Array.from({ length: Math.max(0, 3 - recentDebriefRows.length) }).map((_, i) => (
             <div
               key={`placeholder-${i}`}
-              className="rounded-md p-4 flex items-center justify-center"
+              className="p-5 flex items-center justify-center"
               style={{
                 background: 'transparent',
                 border: '1px dashed var(--color-border)',
-                minHeight: '96px',
+                minHeight: '120px',
               }}
             >
               <span
-                className="font-headline italic text-sm text-center"
-                style={{ color: 'var(--color-text-muted)' }}
+                className="text-center"
+                style={{
+                  fontFamily: 'var(--font-accent)',
+                  fontSize: 14,
+                  color: 'var(--color-text-muted)',
+                }}
               >
                 Your reps will land here
               </span>
@@ -553,11 +588,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <Link
                 key={s.id}
                 href={`/solve/${s.case_id}?session=${s.id}`}
-                className="text-xs px-3 py-1.5 rounded-md transition-colors"
+                className="px-3 py-2 transition-opacity hover:opacity-90"
                 style={{
-                  background: 'color-mix(in oklab, var(--color-accent) 14%, transparent)',
-                  color: 'var(--color-accent-bright)',
-                  border: '1px solid color-mix(in oklab, var(--color-accent) 35%, transparent)',
+                  background: 'var(--color-bg-sunken)',
+                  color: 'var(--color-text-primary)',
+                  border: '1px solid var(--color-border)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  textDecoration: 'none',
                 }}
               >
                 ▶ {(s.cases?.title || 'Case').slice(0, 40)}{' '}
@@ -605,11 +645,15 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               {weakSpots.map((w) => (
                 <span
                   key={w.type}
-                  className="text-xs px-3 py-1.5 rounded-md"
+                  className="px-3 py-2"
                   style={{
-                    background: 'color-mix(in oklab, var(--color-accent) 10%, transparent)',
-                    color: 'var(--color-accent-bright)',
-                    border: '1px solid color-mix(in oklab, var(--color-accent) 25%, transparent)',
+                    background: 'var(--color-bg-sunken)',
+                    color: 'var(--color-text-primary)',
+                    border: '1px solid var(--color-border)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
                   }}
                 >
                   {w.type.replace(/_/g, ' ')} · avg {w.avg} ({w.n})
@@ -632,11 +676,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <nav className="flex flex-wrap gap-1.5 mb-10 text-xs">
           <Link
             href="/dashboard"
-            className="px-2.5 py-1 rounded-md transition-colors"
+            className="px-3 py-2 transition-opacity hover:opacity-90"
             style={{
-              background: trackFilter === null ? 'var(--color-accent)' : 'transparent',
-              color: trackFilter === null ? 'var(--color-accent-fg)' : 'var(--color-text-secondary)',
+              background: trackFilter === null ? 'var(--color-text-primary)' : 'transparent',
+              color: trackFilter === null ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
               border: '1px solid var(--color-border)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              textDecoration: 'none',
             }}
           >
             All tracks ({(allSessions ?? []).length})
@@ -648,11 +697,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <Link
                 key={k}
                 href={`/dashboard?track=${k}`}
-                className="px-2.5 py-1 rounded-md transition-colors"
+                className="px-3 py-2 transition-opacity hover:opacity-90"
                 style={{
-                  background: trackFilter === k ? 'var(--color-accent)' : 'transparent',
-                  color: trackFilter === k ? 'var(--color-accent-fg)' : 'var(--color-text-secondary)',
+                  background: trackFilter === k ? 'var(--color-text-primary)' : 'transparent',
+                  color: trackFilter === k ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
                   border: '1px solid var(--color-border)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  textDecoration: 'none',
                 }}
               >
                 {TRACKS[k].short} ({n})
@@ -709,50 +763,60 @@ function TodaysCaseCard({
 
   return (
     <div
-      className="relative rounded-xl p-8 sm:p-12 lg:p-16"
+      className="relative p-8 sm:p-12 lg:p-16"
       style={{
-        background: 'var(--color-bg-elevated)',
+        background: 'var(--color-bg-sunken)',
         border: '1px solid var(--color-border)',
       }}
     >
-      {/* Eyebrow — kept simple, no underline, no coral. The headline
-          carries weight; the eyebrow just labels the section. */}
-      <div
-        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
-        style={{ color: 'var(--color-text-muted)' }}
-      >
+      <div className="hupr-mono-eyebrow mb-3" style={{ color: 'var(--color-text-primary)' }}>
         {eyebrow}
       </div>
+      <hr className="hupr-hairline mb-8" />
 
       <h2
-        className="font-headline italic text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.0] tracking-tight mb-6 sm:mb-8 max-w-[18ch]"
-        style={{ color: 'var(--color-text-primary)' }}
+        className="uppercase mb-6 sm:mb-8 max-w-[18ch]"
+        style={{
+          fontFamily: 'var(--font-headline)',
+          fontWeight: 700,
+          fontSize: 'clamp(36px, 6vw, 64px)',
+          lineHeight: 0.95,
+          letterSpacing: '-0.005em',
+          color: 'var(--color-text-primary)',
+          margin: 0,
+        }}
       >
         {assignment.caseTitle}
       </h2>
 
       <p
-        className="font-headline italic text-[19px] sm:text-[22px] leading-[1.4] mb-10 sm:mb-12 max-w-[44ch]"
-        style={{ color: 'var(--color-text-secondary)' }}
+        className="hupr-fade-up mb-10 sm:mb-12 max-w-[50ch]"
+        style={{
+          fontFamily: 'var(--font-accent)',
+          fontSize: 17,
+          lineHeight: 1.55,
+          color: 'var(--color-text-primary)',
+          margin: 0,
+        }}
       >
         {assignment.reason}
       </p>
 
       <div className="flex flex-wrap items-center gap-3">
         <span
-          className="meta-label px-3 py-1.5 rounded-full"
+          className="meta-label px-3 py-1.5"
           style={{ border: '1px solid var(--color-border)' }}
         >
           ≈ {minutes} min
         </span>
         <span
-          className="meta-label px-3 py-1.5 rounded-full"
+          className="meta-label px-3 py-1.5"
           style={{ border: '1px solid var(--color-border)' }}
         >
           {assignment.caseDifficulty}
         </span>
         <span
-          className="meta-label px-3 py-1.5 rounded-full"
+          className="meta-label px-3 py-1.5"
           style={{ border: '1px solid var(--color-border)' }}
         >
           {assignment.caseType.replace(/_/g, ' ')}
@@ -760,13 +824,22 @@ function TodaysCaseCard({
         {cta && (
           <Link
             href={cta.href}
-            className="ml-auto px-7 py-3.5 rounded-md text-base sm:text-lg font-medium transition-opacity hover:opacity-90"
+            className="hupr-anim-btn ml-auto"
             style={{
-              background: 'var(--color-accent)',
-              color: 'var(--color-accent-fg)',
+              background: 'var(--color-text-primary)',
+              color: 'var(--color-bg-canvas)',
+              padding: '14px 22px',
+              borderRadius: 6,
+              fontFamily: 'var(--font-body)',
+              fontSize: 13,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              textDecoration: 'none',
+              display: 'inline-block',
             }}
           >
-            {cta.label}
+            <span className="top">{cta.label}</span>
+            <span className="btm">{cta.label}</span>
           </Link>
         )}
       </div>
@@ -780,31 +853,25 @@ function TodaysCaseCard({
 // can see it on every visit.
 function StreakFlame({ streak }: { streak: number }) {
   const active = streak >= 1;
-  const onFire = streak >= 7;
-  const color = onFire
-    ? 'var(--color-accent-bright)'
-    : active
-      ? 'var(--color-accent)'
-      : 'var(--color-text-muted)';
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-mono text-[11px] uppercase tracking-[0.16em]"
+      className="inline-flex items-center gap-2 px-3 py-2"
       style={{
-        color,
-        border: `1px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
-        background: active
-          ? 'color-mix(in oklab, var(--color-accent) 10%, transparent)'
-          : 'transparent',
-        opacity: active ? 1 : 0.65,
+        background: active ? 'var(--color-text-primary)' : 'transparent',
+        color: active ? 'var(--color-bg-canvas)' : 'var(--color-text-muted)',
+        border: `1px solid ${active ? 'var(--color-text-primary)' : 'var(--color-border)'}`,
+        borderRadius: 4,
+        fontFamily: 'var(--font-mono)',
+        fontSize: 12,
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+        opacity: active ? 1 : 0.7,
       }}
       aria-label={active ? `${streak}-day streak` : 'No active streak — start one today'}
       title={active ? `${streak}-day streak` : 'No active streak — start one today'}
     >
-      <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor" aria-hidden="true">
-        {/* Simple flame glyph — Pro icon paths are heavy, this stays tight. */}
-        <path d="M6 0c1.5 2 3 3.5 3 6.5C9 9 7.5 11 6 11c-1.5 0-3-2-3-4.5C3 8 1.5 9 1.5 10.5 1.5 12.5 3.5 14 6 14s4.5-1.5 4.5-3.5C10.5 7 8 5 6 0z" />
-      </svg>
-      {streak} {streak === 1 ? 'day' : 'days'}
+      <span aria-hidden="true">{active ? '●' : '○'}</span>
+      {streak} {streak === 1 ? 'day streak' : 'day streak'}
     </span>
   );
 }
@@ -815,39 +882,61 @@ function EmptyTodaysCaseCard() {
   // library and let them pick.
   return (
     <div
-      className="relative rounded-xl p-8 sm:p-12 lg:p-16"
+      className="relative p-8 sm:p-12 lg:p-16"
       style={{
-        background: 'var(--color-bg-elevated)',
+        background: 'var(--color-bg-sunken)',
         border: '1px dashed var(--color-border)',
       }}
     >
       <div
-        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
-        style={{ color: 'var(--color-text-muted)' }}
+        className="hupr-mono-eyebrow mb-3"
+        style={{ color: 'var(--color-text-primary)' }}
       >
         TODAY’S CASE
       </div>
+      <hr className="hupr-hairline mb-8" />
       <h2
-        className="font-headline italic text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.0] tracking-tight mb-6 sm:mb-8 max-w-[18ch]"
-        style={{ color: 'var(--color-text-primary)' }}
+        className="uppercase mb-6 sm:mb-8 max-w-[18ch]"
+        style={{
+          fontFamily: 'var(--font-headline)',
+          fontWeight: 700,
+          fontSize: 'clamp(36px, 6vw, 64px)',
+          lineHeight: 0.95,
+          color: 'var(--color-text-primary)',
+          margin: 0,
+        }}
       >
         Wander the library — pick what calls you.
       </h2>
       <p
-        className="font-headline italic text-[19px] sm:text-[22px] leading-[1.4] mb-10 sm:mb-12 max-w-[44ch]"
-        style={{ color: 'var(--color-text-secondary)' }}
+        className="hupr-fade-up mb-10 sm:mb-12 max-w-[50ch]"
+        style={{
+          fontFamily: 'var(--font-accent)',
+          fontSize: 17,
+          lineHeight: 1.55,
+          color: 'var(--color-text-primary)',
+          margin: 0,
+        }}
       >
         We’ll line up tomorrow’s case for you once you’ve got a few reps in.
       </p>
       <Link
         href="/cases"
-        className="inline-block px-7 py-3.5 rounded-md text-base sm:text-lg font-medium transition-opacity hover:opacity-90"
+        className="hupr-anim-btn inline-block"
         style={{
-          background: 'var(--color-accent)',
-          color: 'var(--color-accent-fg)',
+          background: 'var(--color-text-primary)',
+          color: 'var(--color-bg-canvas)',
+          padding: '14px 22px',
+          borderRadius: 6,
+          fontFamily: 'var(--font-body)',
+          fontSize: 13,
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          textDecoration: 'none',
         }}
       >
-        Pick your first case →
+        <span className="top">Pick your first case →</span>
+        <span className="btm">Pick your first case →</span>
       </Link>
     </div>
   );

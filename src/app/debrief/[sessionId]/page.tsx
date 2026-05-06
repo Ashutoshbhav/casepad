@@ -14,6 +14,7 @@ import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
+import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 
 // Hardcoded transition lines case_type → case_type. The today→tomorrow connection
 // is the editorial moment that makes the journey feel deliberate. We keep these
@@ -177,23 +178,36 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   const walkthroughFallback = (walkthrough as any)?.fallback_used === true;
 
   return (
-    <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">
+    <main
+      className="min-h-screen p-6 sm:p-12 max-w-4xl mx-auto"
+      style={{ background: 'var(--color-bg-canvas)' }}
+    >
+      <HuprObserveReveals />
       <a
         href="/dashboard"
-        className="text-sm hover:opacity-80"
-        style={{ color: 'var(--color-text-muted)' }}
+        className="hupr-mono-eyebrow underline"
+        style={{ color: 'var(--color-text-secondary)' }}
       >
         ← back to dashboard
       </a>
+      <div className="mt-6">
+        <span className="hupr-mono-eyebrow">Debrief</span>
+        <hr className="hupr-hairline" />
+      </div>
       <h1
-        className="font-headline text-2xl sm:text-3xl mt-2 mb-1"
-        style={{ color: 'var(--color-text-primary)' }}
+        className="uppercase mt-6 mb-2"
+        style={{
+          fontFamily: 'var(--font-headline)',
+          fontWeight: 700,
+          fontSize: 'clamp(36px, 5vw, 64px)',
+          lineHeight: 1,
+          color: 'var(--color-text-primary)',
+          margin: 0,
+          maxWidth: '24ch',
+        }}
       >
         {caseRow?.title ?? '—'}
       </h1>
-      <p className="meta-label mb-4">
-        Your debrief
-      </p>
       <CompletionBanner
         xpEarned={xpEarned}
         streakDays={streakDays}
@@ -203,7 +217,16 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       <ScoreReveal score={session.score ?? 0} outOf={100} />
 
       {(usedFallback || walkthroughFallback) && (
-        <div className="mb-6 rounded border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">
+        <div
+          className="mb-6 p-3 mt-6"
+          style={{
+            border: '1px solid var(--color-signal-danger)',
+            background: 'var(--color-bg-sunken)',
+            color: 'var(--color-signal-danger)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 12,
+          }}
+        >
           ⚠ {usedFallback && walkthroughFallback ? 'Scoring AND walkthrough services were temporarily down' : usedFallback ? 'The scoring service was temporarily down' : 'The walkthrough service was temporarily down'} when you ended this session — what you see below is a generic placeholder. Re-run the case to get the real score. Your transcript + tree are saved.
         </div>
       )}
@@ -232,31 +255,60 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
             startDelay={1.2}
           />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <h3 className="text-sm font-semibold text-zinc-300 mb-2">Strengths</h3>
-            <ul className="text-sm text-zinc-400 space-y-1">
-              {(b.strengths ?? []).map((s: string, i: number) => <li key={i}>• {s}</li>)}
+            <span className="hupr-mono-eyebrow">Strengths</span>
+            <hr className="hupr-hairline" />
+            <ul
+              className="mt-3 space-y-1.5"
+              style={{
+                fontFamily: 'var(--font-accent)',
+                fontSize: 15,
+                lineHeight: 1.55,
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {(b.strengths ?? []).map((s: string, i: number) => <li key={i}>· {s}</li>)}
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-zinc-300 mb-2">Gaps</h3>
-            <ul className="text-sm text-zinc-400 space-y-1">
-              {(b.gaps ?? []).map((g: string, i: number) => <li key={i}>• {g}</li>)}
+            <span className="hupr-mono-eyebrow">Gaps</span>
+            <hr className="hupr-hairline" />
+            <ul
+              className="mt-3 space-y-1.5"
+              style={{
+                fontFamily: 'var(--font-accent)',
+                fontSize: 15,
+                lineHeight: 1.55,
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {(b.gaps ?? []).map((g: string, i: number) => <li key={i}>· {g}</li>)}
             </ul>
           </div>
         </div>
       </section>
 
-      <section className="rounded border border-zinc-800 p-5 mb-8">
-        <h3 className="text-sm font-semibold text-zinc-300 mb-3">Ideal structure</h3>
+      <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
+        <span className="hupr-mono-eyebrow">Ideal structure</span>
+        <hr className="hupr-hairline mb-4" />
         <IdealStructureTree s={(caseRow?.ideal_structure ?? {}) as any} />
       </section>
 
       {walkthrough && (
-        <section className="rounded border border-zinc-800 p-5 mb-8">
-          <h2 className="text-lg font-semibold text-zinc-100 mb-1">How a top candidate would solve this</h2>
-          <p className="text-xs text-zinc-500 mb-5">Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.</p>
+        <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
+          <span className="hupr-mono-eyebrow">How a top candidate would solve this</span>
+          <hr className="hupr-hairline" />
+          <p
+            className="mt-3 mb-5"
+            style={{
+              fontFamily: 'var(--font-accent)',
+              fontSize: 14,
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.
+          </p>
           <IdealWalkthroughView w={walkthrough} />
         </section>
       )}
@@ -264,64 +316,94 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       {/* TOMORROW — anticipation outro. Routes to /dashboard (set anticipation),
           not /cases. The library is still reachable via the secondary link below. */}
       <section
-        className="rounded-lg p-5 sm:p-6 mb-8 max-w-[64%]"
+        className="p-6 sm:p-8 mb-8"
         style={{
-          background: 'var(--color-bg-elevated)',
+          background: 'var(--color-bg-sunken)',
           border: '1px solid var(--color-border)',
         }}
       >
-        <div className="mb-3">
-          <div
-            className="font-mono text-[11px] uppercase tracking-[0.18em] inline-block pb-1"
-            style={{
-              color: 'var(--color-accent-bright)',
-              borderBottom: '1.5px solid var(--color-accent)',
-            }}
-          >
-            TOMORROW’S CASE
-          </div>
-        </div>
+        <span className="hupr-mono-eyebrow">Tomorrow’s case</span>
+        <hr className="hupr-hairline mb-6" />
         {tomorrowAssignment ? (
           <>
             <h3
-              className="font-headline italic text-2xl sm:text-3xl leading-tight tracking-tight mb-2"
-              style={{ color: 'var(--color-text-primary)' }}
+              className="uppercase mb-2"
+              style={{
+                fontFamily: 'var(--font-headline)',
+                fontWeight: 700,
+                fontSize: 'clamp(28px, 4vw, 48px)',
+                lineHeight: 1,
+                color: 'var(--color-text-primary)',
+                margin: 0,
+                maxWidth: '20ch',
+              }}
             >
               {tomorrowAssignment.caseTitle}
             </h3>
-            <div className="meta-label mb-3">
+            <div
+              className="mt-3 mb-4"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
               {tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈{' '}
               {estimatedMinutes(tomorrowAssignment.caseDifficulty)} min
             </div>
             <p
-              className="font-headline italic text-[16px] leading-snug mb-5 max-w-prose"
-              style={{ color: 'var(--color-text-secondary)' }}
+              className="hupr-fade-up mb-6 max-w-prose"
+              style={{
+                fontFamily: 'var(--font-accent)',
+                fontSize: 16,
+                lineHeight: 1.55,
+                color: 'var(--color-text-primary)',
+                margin: 0,
+              }}
             >
               {pickTransitionLine(tomorrowAssignment.caseType)}
             </p>
           </>
         ) : (
           <p
-            className="font-headline italic text-[16px] leading-snug mb-5 max-w-prose"
-            style={{ color: 'var(--color-text-secondary)' }}
+            className="hupr-fade-up mb-6 max-w-prose"
+            style={{
+              fontFamily: 'var(--font-accent)',
+              fontSize: 16,
+              lineHeight: 1.55,
+              color: 'var(--color-text-primary)',
+              margin: 0,
+            }}
           >
             Wander the library tomorrow — pick what calls you.
           </p>
         )}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 mt-6">
           <Link
             href="/dashboard"
-            className="px-5 py-2.5 rounded-md text-sm font-medium transition-opacity hover:opacity-90"
+            className="hupr-anim-btn"
             style={{
-              background: 'var(--color-accent)',
-              color: 'var(--color-accent-fg)',
+              background: 'var(--color-text-primary)',
+              color: 'var(--color-bg-canvas)',
+              padding: '12px 18px',
+              borderRadius: 6,
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              textDecoration: 'none',
+              display: 'inline-block',
             }}
           >
-            Set anticipation →
+            <span className="top">Set anticipation →</span>
+            <span className="btm">Set anticipation →</span>
           </Link>
           <Link
             href="/cases"
-            className="meta-label hover:opacity-80"
+            className="hupr-mono-eyebrow underline"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
             Or keep going now →
           </Link>
