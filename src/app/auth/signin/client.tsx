@@ -180,16 +180,20 @@ export function SigninClient({
       >
         <div
           style={{
-            fontFamily: 'var(--font-v2-mono)',
-            fontWeight: 500,
-            fontSize: 14,
+            // Wave C: italic editorial heading instead of mono caps.
+            fontFamily: 'var(--font-headline, ui-serif)',
+            fontStyle: 'italic',
+            fontWeight: 400,
+            fontSize: 26,
+            lineHeight: 1.0,
+            letterSpacing: '-0.02em',
             color: 'rgb(50,50,52)',
-            paddingBottom: 8,
+            paddingBottom: 12,
             borderBottom: '1px solid rgba(0,0,0,0.18)',
-            marginBottom: 16,
+            marginBottom: 18,
           }}
         >
-          Cohort sign-in
+          Cohort sign-in.
         </div>
         <p
           style={{

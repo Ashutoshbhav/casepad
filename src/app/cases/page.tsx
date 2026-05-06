@@ -72,23 +72,34 @@ function CaseListRowItem({ c, completed }: { c: CaseListRow; completed?: boolean
   return (
     <CaseListLink
       href={`/solve/${c.id}`}
-      className="case-row block py-5 px-1 group"
+      // Wave C: HUPR-flavor — italic Instrument Serif title, wider
+      // tracked metadata (Anthropic 0.22em), v2 sketchy DNA via
+      // case-row class hover (defined in globals.css).
+      className="case-row block py-6 px-2 group"
       style={{
         borderBottom: '1px solid var(--color-border)',
-        opacity: completed ? 0.65 : 1,
+        opacity: completed ? 0.55 : 1,
       }}
     >
       <div className="flex items-baseline justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h3
-            className="font-headline text-[18px] leading-snug truncate group-hover:opacity-90"
-            style={{ color: 'var(--color-text-primary)' }}
+            className="font-headline italic group-hover:opacity-90"
+            style={{
+              color: 'var(--color-text-primary)',
+              fontSize: 'clamp(20px, 2.4vw, 28px)',
+              lineHeight: 1.1,
+              letterSpacing: '-0.015em',
+            }}
           >
             {c.title}
           </h3>
           <div
-            className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] flex items-center gap-2 flex-wrap"
-            style={{ color: 'var(--color-text-secondary)' }}
+            className="mt-2 font-mono text-[10px] uppercase flex items-center gap-2 flex-wrap"
+            style={{
+              color: 'var(--color-text-secondary)',
+              letterSpacing: '0.22em',
+            }}
           >
             <span>{meta.join(' · ')}</span>
             <span aria-hidden="true">·</span>
@@ -99,8 +110,12 @@ function CaseListRowItem({ c, completed }: { c: CaseListRow; completed?: boolean
           <span
             aria-label="Completed"
             title="You've completed this case"
-            className="flex-shrink-0 font-mono text-[11px] tracking-wide"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="flex-shrink-0 font-mono text-[10px]"
+            style={{
+              color: 'var(--color-accent)',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+            }}
           >
             ✓ done
           </span>

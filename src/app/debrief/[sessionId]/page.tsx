@@ -283,8 +283,14 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         {tomorrowAssignment ? (
           <>
             <h3
-              className="font-headline italic text-2xl sm:text-3xl leading-tight tracking-tight mb-2"
-              style={{ color: 'var(--color-text-primary)' }}
+              className="font-headline italic mb-2"
+              style={{
+                color: 'var(--color-text-primary)',
+                fontSize: 'clamp(28px, 4vw, 44px)',
+                lineHeight: 1.0,
+                letterSpacing: '-0.025em',
+                maxWidth: '14ch',
+              }}
             >
               {tomorrowAssignment.caseTitle}
             </h3>
