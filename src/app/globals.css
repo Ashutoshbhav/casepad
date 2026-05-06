@@ -201,6 +201,112 @@ html, body {
    --color-bg-canvas token. Kept as a no-op anchor in case future routes
    want a different canvas tint.) */
 
+/* =========================================================================
+   HUPR-flavor utility classes — Wave B.
+   Opt-in classes that production routes can layer onto existing markup.
+   Each one corresponds to a Refero borrowing already battle-tested in
+   /design-lab/v2:
+
+     .btn-stamped     — Ed Hinrichsen hard-offset stamped shadow on the
+                        primary accent CTA. Tactile rubber-stamp feel.
+     .btn-asym-tab    — Anthropic asymmetric 0 0 8px 8px radius (flat
+                        top, rounded bottom) for index-tab / nav buttons.
+     .emph            — Anthropic thick double-underline for academic-
+                        journal phrase emphasis (replaces bold/color).
+     .card-warm-dark  — #1a1817 warm-dark card surface w/ ElevenLabs
+                        hairline inset border. Index-card / leather-
+                        bound feel.
+     .eyebrow-tracked — Anthropic 0.22em positive tracking on uppercase
+                        mono metadata (library-card field-label).
+     .input-pill      — Vanta 999px fully-pill input with hairline border
+                        + Zed mechanical-keyboard focus state in orange.
+     .marquee-sm      — smaller, faster marquee (HUPR-flavor).
+     .panel-elevated  — Cursor multi-layer oklab shadow on elevated cards.
+     .panel-flat      — Family inset warm-stone border for paper-on-paper
+                        passive surfaces.
+   ========================================================================= */
+.btn-stamped {
+  box-shadow: rgba(50,50,52,0.45) 4px 4px 0px 0px;
+  transition: box-shadow 120ms ease, transform 120ms ease;
+}
+.btn-stamped:active {
+  box-shadow: rgba(50,50,52,0.45) 2px 2px 0px 0px;
+  transform: translate(2px, 2px);
+}
+
+.btn-asym-tab {
+  border-radius: 0 0 8px 8px;
+}
+
+.emph {
+  text-decoration: underline double currentColor;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
+}
+
+.card-warm-dark {
+  background: #1a1817;
+  color: #faf9f5;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+.eyebrow-tracked {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.input-pill {
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px solid rgba(50,50,52,0.30);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.input-pill:focus {
+  border-color: #f54e00;
+  box-shadow:
+    #f54e00 0 -2px 0 inset,
+    rgba(245, 78, 0, 0.18) 0 1px 6px 0;
+}
+
+.marquee-sm {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: clamp(48px, 6vw, 88px);
+  line-height: 0.9;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  display: flex;
+  animation: marquee-sm 16s linear infinite;
+}
+@keyframes marquee-sm {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-sm { animation: none !important; }
+}
+
+.panel-elevated {
+  box-shadow:
+    0 24px 60px -12px rgba(0,0,0,0.25),
+    0 12px 24px -8px rgba(0,0,0,0.15),
+    0 0 0 1px rgba(0,0,0,0.06);
+}
+.panel-flat {
+  box-shadow: inset 0 0 0 1px #e8e4dd;
+}
+
 /* Editorial typographic defaults — restraint > flourish. */
 h1, h2, h3, h4 {
   font-family: var(--font-headline);
