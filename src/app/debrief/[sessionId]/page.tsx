@@ -311,10 +311,13 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         <div className="flex flex-wrap items-center gap-4">
           <Link
             href="/dashboard"
-            className="px-5 py-2.5 rounded-md text-sm font-medium transition-opacity hover:opacity-90"
+            // Wave C surgical: pill + Ed Hinrichsen stamped shadow.
+            className="px-7 py-2.5 text-sm font-medium uppercase tracking-[0.18em] transition-transform active:translate-x-[2px] active:translate-y-[2px]"
             style={{
               background: 'var(--color-accent)',
               color: 'var(--color-accent-fg)',
+              borderRadius: 999,
+              boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
             }}
           >
             Set anticipation →

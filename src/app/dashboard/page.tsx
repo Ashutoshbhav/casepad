@@ -7,6 +7,7 @@ import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
 import { AsteriskHotspot } from '@/components/asterisk-hotspot';
+import { DashboardWeekStreak } from '@/components/dashboard-week-streak';
 
 export const dynamic = 'force-dynamic';
 
@@ -433,30 +434,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-accent-bright)' }}>· {streak}-day streak</span>}
           </span>
         </div>
-        <div className="grid grid-cols-7 gap-2 sm:gap-3">
-          {weekDays.map((d) => (
-            <div key={d.dateISO} className="flex flex-col items-center">
-              <div
-                className="aspect-square w-full rounded-md"
-                style={{
-                  background: d.hasSession ? 'var(--color-accent)' : 'transparent',
-                  border: d.isToday
-                    ? '1.5px solid var(--color-accent-bright)'
-                    : d.hasSession
-                      ? '1px solid var(--color-accent)'
-                      : '1px solid var(--color-border)',
-                }}
-                aria-label={`${d.dateISO}${d.hasSession ? ' (active)' : ' (inactive)'}${d.isToday ? ' (today)' : ''}`}
-              />
-              <span
-                className="font-mono text-[10px] mt-1.5"
-                style={{ color: d.isToday ? 'var(--color-accent-bright)' : 'var(--color-text-muted)' }}
-              >
-                {d.isToday ? 'today' : d.label}
-              </span>
-            </div>
-          ))}
-        </div>
+        {/* v2 sketchy streak (Wave C surgical):
+              today    → Onyx Outline #f54e00 (live, your turn now)
+              past     → Aether Blue #5e6ad2 (completed)
+              inactive → muted ink ring */}
+        <DashboardWeekStreak weekDays={weekDays} />
       </section>
 
       {/* D. RECENT DEBRIEFS */}
