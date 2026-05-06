@@ -8,6 +8,7 @@ import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
 import { AsteriskHotspot } from '@/components/asterisk-hotspot';
 import { DashboardWeekStreak } from '@/components/dashboard-week-streak';
+import { HuprMarquee } from '@/components/hupr-marquee';
 
 export const dynamic = 'force-dynamic';
 
@@ -651,6 +652,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           })}
         </nav>
       )}
+
+      {/* Wave C HUPR-flavor bottom marquee — decorative ribbon */}
+      <HuprMarquee text="The practice compounds." />
 
       {/* F. LIBRARY ESCAPE HATCH */}
       <footer

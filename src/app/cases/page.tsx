@@ -5,6 +5,7 @@ import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
 import { TutorialLaunchLink } from '@/components/tutorial-launch-link';
 import { CasesHero } from '@/components/cases-hero';
+import { HuprMarquee } from '@/components/hupr-marquee';
 import { CohortRail } from '@/components/cohort-rail';
 import { CasesLoadMore } from '@/components/cases-load-more';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
@@ -249,17 +250,22 @@ export default async function CasesPage({
       <AsteriskSceneRegister preset="cases" />
       <header className="mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
         <div>
-          <h1
-            className="font-headline text-2xl sm:text-3xl"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Cases
-          </h1>
-          <p
-            className="meta-label mt-1"
-          >
+          <p className="meta-label mb-2">
             Track · {TRACKS[activeTrack].label}
           </p>
+          <h1
+            className="font-headline italic"
+            style={{
+              color: 'var(--color-text-primary)',
+              fontSize: 'clamp(48px, 8vw, 112px)',
+              lineHeight: 0.95,
+              letterSpacing: '-0.025em',
+              margin: 0,
+              maxWidth: '14ch',
+            }}
+          >
+            The library.
+          </h1>
         </div>
         <TutorialLaunchLink className="text-xs sm:text-sm hover:opacity-80 text-[color:var(--color-accent)]">
           Take me through a case →
@@ -456,6 +462,9 @@ export default async function CasesPage({
       )}
 
       <CasesTour />
+
+      {/* Wave C HUPR-flavor bottom marquee */}
+      <HuprMarquee text="The archive is the work." />
     </main>
   );
 }

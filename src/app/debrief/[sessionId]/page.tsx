@@ -13,6 +13,7 @@ import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
 import { DebriefScoreUnderline } from '@/components/debrief-score-underline';
+import { HuprMarquee } from '@/components/hupr-marquee';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
 
@@ -342,6 +343,9 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       </section>
 
       <SessionFeedbackForm sessionId={sessionId} />
+
+      {/* Wave C HUPR-flavor bottom marquee — debrief outro */}
+      <HuprMarquee text="Reps in the silence pay off in the room." />
 
       <DebriefFeedbackModal
         sessionId={sessionId}
