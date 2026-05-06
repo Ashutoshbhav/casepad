@@ -303,11 +303,12 @@ export function SigninCarouselClient() {
             whiteSpace: 'nowrap',
             fontFamily: 'var(--font-v2-display)',
             fontWeight: 700,
-            fontSize: 'clamp(110px, 14vw, 192px)',
+            // Smaller + tighter to match the shared Marquee component.
+            fontSize: 'clamp(48px, 6vw, 88px)',
             lineHeight: 0.9,
             color: '#FFFFFF',
             letterSpacing: '-0.012em',
-            paddingBottom: 12,
+            paddingBottom: 8,
           }}
         >
           {Array.from({ length: 4 }).map((_, i) => (
@@ -420,7 +421,7 @@ export function SigninCarouselClient() {
           100% { transform: translateX(-50%); }
         }
         .v2-marquee {
-          animation: v2-marquee 36s linear infinite;
+          animation: v2-marquee 16s linear infinite;
         }
         @media (prefers-reduced-motion: reduce) {
           .v2-marquee { animation: none !important; }

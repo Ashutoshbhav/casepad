@@ -208,8 +208,9 @@ export default async function DashboardV2Page() {
                 // /cases case cards; reads as the same leather-bound
                 // book-cover surface across both libraries.
                 background: '#1a1817',
-                aspectRatio: '4 / 5',
-                padding: 24,
+                // Smaller, denser index-card feel (matches /cases).
+                aspectRatio: '1 / 1.25',
+                padding: 18,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -240,7 +241,7 @@ export default async function DashboardV2Page() {
                   style={{
                     fontFamily: 'var(--font-v2-display)',
                     fontWeight: 700,
-                    fontSize: 22,
+                    fontSize: 17,
                     lineHeight: 1.1,
                     letterSpacing: '-0.01em',
                   }}
@@ -258,7 +259,7 @@ export default async function DashboardV2Page() {
                 <span
                   style={{
                     fontFamily: 'var(--font-v2-mono)',
-                    fontSize: 28,
+                    fontSize: 22,
                     fontWeight: 500,
                     fontVariantNumeric: 'tabular-nums',
                   }}

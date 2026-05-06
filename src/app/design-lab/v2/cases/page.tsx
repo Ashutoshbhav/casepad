@@ -177,8 +177,10 @@ export default async function CasesV2Page() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: 18,
+                // 5 per row instead of 4 — denser library shelf,
+                // less hero-card / more index-card.
+                gridTemplateColumns: 'repeat(5, 1fr)',
+                gap: 14,
               }}
             >
               {track.cases.map((c) => (
@@ -190,8 +192,10 @@ export default async function CasesV2Page() {
                     // replaces flat gray. Reads as leather-bound
                     // book cover, not a Slack message bubble.
                     background: '#1a1817',
-                    aspectRatio: '4 / 5',
-                    padding: 22,
+                    // Slightly less tall — closer to a 1:1.2 ratio,
+                    // index-card feel.
+                    aspectRatio: '1 / 1.25',
+                    padding: 16,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -204,8 +208,8 @@ export default async function CasesV2Page() {
                 >
                   {/* Sketchy corner tick — every case card carries the
                       instrumentation mark, even at this small scale. */}
-                  <div style={{ position: 'absolute', top: 12, right: 12 }}>
-                    <SketchyCornerTick size={18} stroke="rgba(255,255,255,0.5)" strokeWidth={1.2} />
+                  <div style={{ position: 'absolute', top: 10, right: 10 }}>
+                    <SketchyCornerTick size={14} stroke="rgba(255,255,255,0.5)" strokeWidth={1.2} />
                   </div>
                   <div
                     style={{
@@ -225,8 +229,8 @@ export default async function CasesV2Page() {
                     style={{
                       fontFamily: 'var(--font-v2-display)',
                       fontWeight: 700,
-                      fontSize: 20,
-                      lineHeight: 1.12,
+                      fontSize: 16,
+                      lineHeight: 1.1,
                       letterSpacing: '-0.005em',
                     }}
                   >
