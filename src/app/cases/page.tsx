@@ -306,7 +306,7 @@ export default async function CasesPage({
         <section className="mb-10">
           <div className="flex items-baseline gap-3 mb-4">
             <h2
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
+              className="font-mono text-[11px] uppercase tracking-[0.22em] hupr-eyebrow"
               style={{ color: 'var(--color-text-primary)' }}
             >
               The Cohort Five
@@ -336,7 +336,7 @@ export default async function CasesPage({
             <a
               key={t}
               href={`/cases?track=${t}`}
-              className="font-mono text-[11px] uppercase tracking-[0.16em] pb-2 whitespace-nowrap"
+              className="font-mono text-[11px] uppercase tracking-[0.22em] pb-2 whitespace-nowrap"
               style={{
                 color: isActive ? 'var(--color-accent)' : 'var(--color-text-secondary)',
                 borderBottom: isActive
@@ -373,7 +373,7 @@ export default async function CasesPage({
       <section>
         <div className="flex items-baseline gap-3 mb-3">
           <h2
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
+            className="font-mono text-[11px] uppercase tracking-[0.22em] hupr-eyebrow"
             style={{ color: 'var(--color-text-primary)' }}
           >
             The Library
@@ -440,7 +440,7 @@ export default async function CasesPage({
         <section className="mt-12">
           <div className="flex items-baseline gap-3 mb-3">
             <h2
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
+              className="font-mono text-[11px] uppercase tracking-[0.22em] hupr-eyebrow"
               style={{ color: 'var(--color-text-primary)' }}
             >
               Cases from other tracks
