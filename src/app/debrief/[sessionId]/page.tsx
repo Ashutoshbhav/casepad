@@ -12,9 +12,6 @@ import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
 import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
-import { DebriefScoreUnderline } from '@/components/debrief-score-underline';
-import { DebriefSketchyScores } from '@/components/debrief-sketchy-scores';
-import { HuprMarquee } from '@/components/hupr-marquee';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
 
@@ -189,14 +186,8 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         ← back to dashboard
       </a>
       <h1
-        className="font-headline italic mt-2 mb-1"
-        style={{
-          color: 'var(--color-text-primary)',
-          fontSize: 'clamp(28px, 5vw, 64px)',
-          lineHeight: 1.0,
-          letterSpacing: '-0.025em',
-          maxWidth: '20ch',
-        }}
+        className="font-headline text-2xl sm:text-3xl mt-2 mb-1"
+        style={{ color: 'var(--color-text-primary)' }}
       >
         {caseRow?.title ?? '—'}
       </h1>
@@ -210,9 +201,6 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         isNewRecord={isNewRecord}
       />
       <ScoreReveal score={session.score ?? 0} outOf={100} />
-      {/* Wave C: Fire Opal sketchy underline beneath the score reveal —
-          chromatic punctuation moment (delphi refero). */}
-      <DebriefScoreUnderline />
 
       {(usedFallback || walkthroughFallback) && (
         <div className="mb-6 rounded border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">
@@ -221,133 +209,54 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       )}
 
       <section className="grid md:grid-cols-2 gap-6 mb-8 mt-8">
-        <div>
-          {/* Wave C: linear ScoreBars replaced by v2 SketchyProgressBar
-              with meaning-colour hachure fills. Structure=orange,
-              Insight=Aether Blue, Speed=Fire Opal. */}
-          <DebriefSketchyScores
-            structure={b.structure ?? 0}
-            insight={b.insight ?? 0}
-            speed={b.speed ?? 0}
+        <div className="space-y-3">
+          <ScoreBar
+            label="Structure"
+            value={b.structure ?? 0}
+            max={40}
+            staggerIndex={0}
+            startDelay={1.2}
+          />
+          <ScoreBar
+            label="Insight"
+            value={b.insight ?? 0}
+            max={40}
+            staggerIndex={1}
+            startDelay={1.2}
+          />
+          <ScoreBar
+            label="Speed"
+            value={b.speed ?? 0}
+            max={20}
+            staggerIndex={2}
+            startDelay={1.2}
           />
         </div>
-        <div
-          className="p-5 space-y-5"
-          style={{
-            background: '#1a1817',
-            color: '#faf9f5',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-          }}
-        >
+        <div className="space-y-4">
           <div>
-            <div
-              className="font-mono uppercase mb-3"
-              style={{
-                color: '#5e6ad2', // Aether Blue — wisdom signal
-                fontSize: 11,
-                letterSpacing: '0.22em',
-                fontWeight: 500,
-              }}
-            >
-              STRENGTHS
-            </div>
-            <ul className="text-sm space-y-2" style={{ color: 'rgba(250,249,245,0.92)' }}>
-              {(b.strengths ?? []).map((s: string, i: number) => (
-                <li key={i} className="flex gap-2">
-                  <span style={{ color: '#5e6ad2' }} aria-hidden="true">+</span>
-                  <span>{s}</span>
-                </li>
-              ))}
+            <h3 className="text-sm font-semibold text-zinc-300 mb-2">Strengths</h3>
+            <ul className="text-sm text-zinc-400 space-y-1">
+              {(b.strengths ?? []).map((s: string, i: number) => <li key={i}>• {s}</li>)}
             </ul>
           </div>
-          <div
-            style={{ borderTop: '1px solid rgba(250,249,245,0.10)', paddingTop: 16 }}
-          >
-            <div
-              className="font-mono uppercase mb-3"
-              style={{
-                color: '#f54e00', // Onyx Outline — action signal (gaps are where you act)
-                fontSize: 11,
-                letterSpacing: '0.22em',
-                fontWeight: 500,
-              }}
-            >
-              GAPS
-            </div>
-            <ul className="text-sm space-y-2" style={{ color: 'rgba(250,249,245,0.92)' }}>
-              {(b.gaps ?? []).map((g: string, i: number) => (
-                <li key={i} className="flex gap-2">
-                  <span style={{ color: '#f54e00' }} aria-hidden="true">−</span>
-                  <span>{g}</span>
-                </li>
-              ))}
+          <div>
+            <h3 className="text-sm font-semibold text-zinc-300 mb-2">Gaps</h3>
+            <ul className="text-sm text-zinc-400 space-y-1">
+              {(b.gaps ?? []).map((g: string, i: number) => <li key={i}>• {g}</li>)}
             </ul>
           </div>
         </div>
       </section>
 
-      <section
-        className="p-6 mb-8"
-        style={{
-          background: '#1a1817',
-          color: '#faf9f5',
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-        }}
-      >
-        <div
-          className="font-mono uppercase mb-4"
-          style={{
-            color: 'rgba(250,249,245,0.55)',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-          }}
-        >
-          IDEAL STRUCTURE
-        </div>
+      <section className="rounded border border-zinc-800 p-5 mb-8">
+        <h3 className="text-sm font-semibold text-zinc-300 mb-3">Ideal structure</h3>
         <IdealStructureTree s={(caseRow?.ideal_structure ?? {}) as any} />
       </section>
 
       {walkthrough && (
-        <section
-          className="p-6 mb-8"
-          style={{
-            background: '#1a1817',
-            color: '#faf9f5',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-          }}
-        >
-          <div
-            className="font-mono uppercase mb-2"
-            style={{
-              color: 'rgba(250,249,245,0.55)',
-              fontSize: 11,
-              letterSpacing: '0.22em',
-            }}
-          >
-            IDEAL WALKTHROUGH
-          </div>
-          <h2
-            className="font-headline italic mb-2"
-            style={{
-              color: '#faf9f5',
-              fontSize: 'clamp(22px, 3vw, 36px)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            How a top candidate would solve this.
-          </h2>
-          <p
-            className="font-mono mb-5"
-            style={{
-              color: 'rgba(250,249,245,0.55)',
-              fontSize: 11,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Issue tree · hypothesis tree · L0–L4 thinking depth
-          </p>
+        <section className="rounded border border-zinc-800 p-5 mb-8">
+          <h2 className="text-lg font-semibold text-zinc-100 mb-1">How a top candidate would solve this</h2>
+          <p className="text-xs text-zinc-500 mb-5">Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.</p>
           <IdealWalkthroughView w={walkthrough} />
         </section>
       )}
@@ -375,14 +284,8 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         {tomorrowAssignment ? (
           <>
             <h3
-              className="font-headline italic mb-2"
-              style={{
-                color: 'var(--color-text-primary)',
-                fontSize: 'clamp(28px, 4vw, 44px)',
-                lineHeight: 1.0,
-                letterSpacing: '-0.025em',
-                maxWidth: '14ch',
-              }}
+              className="font-headline italic text-2xl sm:text-3xl leading-tight tracking-tight mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
             >
               {tomorrowAssignment.caseTitle}
             </h3>
@@ -408,13 +311,10 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         <div className="flex flex-wrap items-center gap-4">
           <Link
             href="/dashboard"
-            // Wave C surgical: pill + Ed Hinrichsen stamped shadow.
-            className="px-7 py-2.5 text-sm font-medium uppercase tracking-[0.18em] transition-transform active:translate-x-[2px] active:translate-y-[2px]"
+            className="px-5 py-2.5 rounded-md text-sm font-medium transition-opacity hover:opacity-90"
             style={{
               background: 'var(--color-accent)',
               color: 'var(--color-accent-fg)',
-              borderRadius: 999,
-              boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
             }}
           >
             Set anticipation →
@@ -429,9 +329,6 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       </section>
 
       <SessionFeedbackForm sessionId={sessionId} />
-
-      {/* Wave C HUPR-flavor bottom marquee — debrief outro */}
-      <HuprMarquee text="Reps in the silence pay off in the room." />
 
       <DebriefFeedbackModal
         sessionId={sessionId}

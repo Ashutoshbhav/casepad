@@ -5,7 +5,6 @@ import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
 import { TutorialLaunchLink } from '@/components/tutorial-launch-link';
 import { CasesHero } from '@/components/cases-hero';
-import { HuprMarquee } from '@/components/hupr-marquee';
 import { CohortRail } from '@/components/cohort-rail';
 import { CasesLoadMore } from '@/components/cases-load-more';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
@@ -72,34 +71,23 @@ function CaseListRowItem({ c, completed }: { c: CaseListRow; completed?: boolean
   return (
     <CaseListLink
       href={`/solve/${c.id}`}
-      // Wave C: HUPR-flavor — italic Instrument Serif title, wider
-      // tracked metadata (Anthropic 0.22em), v2 sketchy DNA via
-      // case-row class hover (defined in globals.css).
-      className="case-row block py-6 px-2 group"
+      className="case-row block py-5 px-1 group"
       style={{
         borderBottom: '1px solid var(--color-border)',
-        opacity: completed ? 0.55 : 1,
+        opacity: completed ? 0.65 : 1,
       }}
     >
       <div className="flex items-baseline justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h3
-            className="font-headline italic group-hover:opacity-90"
-            style={{
-              color: 'var(--color-text-primary)',
-              fontSize: 'clamp(20px, 2.4vw, 28px)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.015em',
-            }}
+            className="font-headline text-[18px] leading-snug truncate group-hover:opacity-90"
+            style={{ color: 'var(--color-text-primary)' }}
           >
             {c.title}
           </h3>
           <div
-            className="mt-2 font-mono text-[10px] uppercase flex items-center gap-2 flex-wrap"
-            style={{
-              color: 'var(--color-text-secondary)',
-              letterSpacing: '0.22em',
-            }}
+            className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] flex items-center gap-2 flex-wrap"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
             <span>{meta.join(' · ')}</span>
             <span aria-hidden="true">·</span>
@@ -110,12 +98,8 @@ function CaseListRowItem({ c, completed }: { c: CaseListRow; completed?: boolean
           <span
             aria-label="Completed"
             title="You've completed this case"
-            className="flex-shrink-0 font-mono text-[10px]"
-            style={{
-              color: 'var(--color-accent)',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-            }}
+            className="flex-shrink-0 font-mono text-[11px] tracking-wide"
+            style={{ color: 'var(--color-text-muted)' }}
           >
             ✓ done
           </span>
@@ -265,22 +249,17 @@ export default async function CasesPage({
       <AsteriskSceneRegister preset="cases" />
       <header className="mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
         <div>
-          <p className="meta-label mb-2">
+          <h1
+            className="font-headline text-2xl sm:text-3xl"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Cases
+          </h1>
+          <p
+            className="meta-label mt-1"
+          >
             Track · {TRACKS[activeTrack].label}
           </p>
-          <h1
-            className="font-headline italic"
-            style={{
-              color: 'var(--color-text-primary)',
-              fontSize: 'clamp(48px, 8vw, 112px)',
-              lineHeight: 0.95,
-              letterSpacing: '-0.025em',
-              margin: 0,
-              maxWidth: '14ch',
-            }}
-          >
-            The library.
-          </h1>
         </div>
         <TutorialLaunchLink className="text-xs sm:text-sm hover:opacity-80 text-[color:var(--color-accent)]">
           Take me through a case →
@@ -306,7 +285,7 @@ export default async function CasesPage({
         <section className="mb-10">
           <div className="flex items-baseline gap-3 mb-4">
             <h2
-              className="font-mono text-[11px] uppercase tracking-[0.22em] hupr-eyebrow"
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: 'var(--color-text-primary)' }}
             >
               The Cohort Five
@@ -336,7 +315,7 @@ export default async function CasesPage({
             <a
               key={t}
               href={`/cases?track=${t}`}
-              className="font-mono text-[11px] uppercase tracking-[0.22em] pb-2 whitespace-nowrap"
+              className="font-mono text-[11px] uppercase tracking-[0.16em] pb-2 whitespace-nowrap"
               style={{
                 color: isActive ? 'var(--color-accent)' : 'var(--color-text-secondary)',
                 borderBottom: isActive
@@ -373,7 +352,7 @@ export default async function CasesPage({
       <section>
         <div className="flex items-baseline gap-3 mb-3">
           <h2
-            className="font-mono text-[11px] uppercase tracking-[0.22em] hupr-eyebrow"
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
             style={{ color: 'var(--color-text-primary)' }}
           >
             The Library
@@ -440,7 +419,7 @@ export default async function CasesPage({
         <section className="mt-12">
           <div className="flex items-baseline gap-3 mb-3">
             <h2
-              className="font-mono text-[11px] uppercase tracking-[0.22em] hupr-eyebrow"
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: 'var(--color-text-primary)' }}
             >
               Cases from other tracks
@@ -477,9 +456,6 @@ export default async function CasesPage({
       )}
 
       <CasesTour />
-
-      {/* Wave C HUPR-flavor bottom marquee */}
-      <HuprMarquee text="The archive is the work." />
     </main>
   );
 }

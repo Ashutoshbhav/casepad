@@ -102,13 +102,10 @@ export function SubmitForScoringButton({
           disabled={disabled || pending}
           title={disabled ? disabledReason : undefined}
           aria-disabled={disabled || pending}
-          className={`${sharedClass} transition-transform active:translate-x-[2px] active:translate-y-[2px]`}
+          className={sharedClass}
           style={{
             background: 'var(--color-accent)',
             color: 'var(--color-accent-fg)',
-            // Wave C surgical: pill + Ed Hinrichsen stamped shadow.
-            borderRadius: 999,
-            boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
           }}
         >
           {label}

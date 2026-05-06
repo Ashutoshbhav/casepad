@@ -25,13 +25,10 @@ export function CompletionBanner({
 
   return (
     <div
-      className="mb-6 mt-2 p-4 sm:p-5 grid grid-cols-3 gap-2 sm:gap-4"
+      className="mb-6 mt-2 rounded-md p-4 sm:p-5 grid grid-cols-3 gap-2 sm:gap-4"
       style={{
-        // Wave C: v2-flavor warm-dark stat card. Matches /dashboard
-        // recent reps + cohort leaderboard surface.
-        background: '#1a1817',
-        color: '#faf9f5',
-        boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+        background: 'var(--color-bg-elevated, transparent)',
+        border: '1px solid var(--color-border, rgba(255,255,255,0.08))',
       }}
       data-tour="debrief-completion-banner"
       aria-label="Session completion summary"
@@ -52,7 +49,7 @@ export function CompletionBanner({
       {/* Headline strip on second row, full-width — Ash's voice on the moment. */}
       <p
         className="col-span-3 mt-2 sm:mt-3 font-headline italic text-sm sm:text-base"
-        style={{ color: 'rgba(250,249,245,0.85)' }}
+        style={{ color: 'var(--color-text-secondary)' }}
       >
         {headline}
       </p>
@@ -71,19 +68,13 @@ function Stat({
 }) {
   return (
     <div className="flex flex-col gap-1 min-w-0">
-      <span
-        className="font-mono text-[10px] uppercase truncate"
-        style={{
-          color: 'rgba(250,249,245,0.55)',
-          letterSpacing: '0.22em',
-        }}
-      >
+      <span className="meta-label truncate">
         {label}
       </span>
       <span
-        className="font-headline italic text-xl sm:text-2xl truncate"
+        className="font-headline text-xl sm:text-2xl truncate"
         style={{
-          color: accent ? '#f54e00' : '#faf9f5',
+          color: accent ? 'var(--color-accent)' : 'var(--color-text-primary)',
         }}
       >
         {value}

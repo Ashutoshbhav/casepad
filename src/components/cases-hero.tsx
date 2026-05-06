@@ -94,14 +94,8 @@ export function CasesHero({
         transition={
           reduced ? INSTANT : { ...SPRING.smooth, delay: 0.10 }
         }
-        className="font-headline italic"
-        style={{
-          color: 'var(--color-text-primary)',
-          fontSize: 'clamp(40px, 7vw, 88px)',
-          lineHeight: 1.0,
-          letterSpacing: '-0.025em',
-          maxWidth: '16ch',
-        }}
+        className="font-headline text-3xl sm:text-[40px] leading-tight"
+        style={{ color: 'var(--color-text-primary)' }}
       >
         {title}
       </motion.h2>

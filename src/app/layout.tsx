@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Instrument_Serif, IBM_Plex_Mono, Montserrat } from 'next/font/google';
+import { Instrument_Serif, Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ConnectionBanner } from '@/components/connection-banner';
 import { AuthWatchdog } from '@/components/auth-watchdog';
@@ -13,51 +13,28 @@ import PersistentAsterisk from './_components/persistent-asterisk';
 // <head> so the page is already styled correctly before paint — no flash.
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('casepad-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(_){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
-// HUPR-flavor typography (Wave C — locked 2026-05-06).
-// Two fonts in two roles, plus Instrument Serif kept as a tertiary
-// italic-capable serif for editorial moments where mixed-case italic
-// reads better than caps. CSS var names preserved across the codebase.
-//
-//   --font-headline  → Montserrat 700/800 — billboard caps display.
-//                      The v2 sample's "COFFEE CHAIN PROFITABILITY."
-//                      look. Replaces Instrument Serif italic as the
-//                      primary headline face.
-//   --font-body      → IBM Plex Mono 400/500 — body / UI text. Replaces
-//                      Geist sans. Pairs with Montserrat caps for the
-//                      HUPR editorial-tech voice.
-//   --font-mono      → IBM Plex Mono 400/500 — same face as body so
-//                      tabular numerals + telemetry text feel native.
-//   --font-serif     → Instrument Serif italic — kept on the same DOM
-//                      node so .font-serif (or font-headline-italic)
-//                      utilities can opt back to italic editorial type
-//                      where the v2 sample uses it (e.g. score reveal).
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-headline',
-  weight: ['400', '500', '700', '800'],
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-body',
-  weight: ['400', '500'],
-});
-
-const plexMonoMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-mono',
-  weight: ['400', '500'],
-});
-
+// Liquid Tutor typography — Instrument Serif (headline, italic-capable),
+// Geist (body / UI), Geist Mono (mono / telemetry). All free Google Fonts,
+// self-hosted via next/font. CSS var names preserved (--font-headline /
+// --font-body / --font-mono) so existing class hooks keep working.
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-serif',
+  variable: '--font-headline',
   weight: '400',
   style: ['normal', 'italic'],
+});
+
+const geist = Geist({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://casepad.vercel.app';
@@ -115,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       data-app="casepad"
       data-author="ashutosh-bhavale"
-      className={`${montserrat.variable} ${plexMono.variable} ${plexMonoMono.variable} ${instrumentSerif.variable}`}
+      className={`${instrumentSerif.variable} ${geist.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>

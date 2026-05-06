@@ -6,14 +6,7 @@ import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
-import { DashboardWeekStreak } from '@/components/dashboard-week-streak';
-import { HuprMarquee } from '@/components/hupr-marquee';
-import { DashboardHeroUnderline } from '@/components/dashboard-hero-underline';
-import {
-  Masthead,
-  SectionEyebrow,
-} from '@/app/design-lab/v2/_components/masthead';
-import { SketchyCornerTick } from '@/app/design-lab/v2/_components/sketchy';
+import { AsteriskHotspot } from '@/components/asterisk-hotspot';
 
 export const dynamic = 'force-dynamic';
 
@@ -287,293 +280,406 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     assignmentSession?.status === 'in_progress' ? assignmentSession : null;
   const assignmentCompleted = assignmentSession?.status === 'completed';
 
-  // ── HUPR-flavor v2-sample composition (Wave D — full structural rewrite).
-  // Replaces the prior 9-section "data dashboard" IA with v2's editorial
-  // 4-section composition: Masthead → Hero billboard → Streak → Recent
-  // reps → Marquee. The case title is the page's massive centerpiece;
-  // everything else is supporting context. Data sections that don't fit
-  // (cohort leaderboard / score curve / weak spots / track filter /
-  // resume-in-progress) are dropped from the default surface.
-
-  const titleText = dailyAssignment?.caseTitle ?? 'Wander the library';
-  const cta = dailyAssignment
-    ? assignmentCompleted
-      ? null
-      : assignmentInProgress
-        ? { label: 'Resume →', href: `/solve/${dailyAssignment.caseId}?session=${assignmentInProgress.id}` }
-        : { label: 'Begin →', href: `/solve/${dailyAssignment.caseId}` }
-    : { label: 'Pick a case →', href: '/cases' };
-  const minutes = dailyAssignment ? estimatedMinutes(dailyAssignment.caseDifficulty) : null;
-  const metaLine = dailyAssignment
-    ? `${dailyAssignment.caseType.replace(/_/g, ' ').toUpperCase()} · ${dailyAssignment.caseDifficulty} · ≈ ${minutes} min`
-    : '1,165 cases — pick what calls you';
-
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        background: '#F5F0E8',
-        color: 'rgb(50,50,52)',
-        fontFamily: 'var(--font-mono)',
-      }}
-    >
+    <main className="min-h-screen px-4 sm:px-8 py-8 sm:py-12 max-w-5xl mx-auto">
       <AsteriskSceneRegister preset="dashboard" />
-
-      {/* ── Masthead — CASEPAD wordmark + caption + MENU pill ── */}
-      <Masthead caption={['Practice', 'Centre for', 'Consulting Cases']} />
-      <SectionEyebrow
-        label={`Today · Day ${dayNumber}`}
-        meta={`cohort one · ${greeting.toLowerCase()}`}
-      />
-
-      {/* ── HERO BILLBOARD — case title at clamp(64-192px) Montserrat 700 caps ── */}
-      <section
-        style={{
-          padding: 'clamp(60px, 10vw, 120px) 36px 80px',
-          maxWidth: 1400,
-          margin: '0 auto',
-        }}
-        data-tour="todays-case"
-      >
-        <h1
-          style={{
-            fontFamily: 'var(--font-headline)',
-            fontWeight: 700,
-            fontSize: 'clamp(56px, 11vw, 192px)',
-            lineHeight: 0.92,
-            letterSpacing: '-0.025em',
-            color: 'rgb(50,50,52)',
-            margin: 0,
-            maxWidth: '14ch',
-            textTransform: 'uppercase',
-          }}
+      {/* Dashboard-only: invisible click target over the asterisk's render
+          area. Hover triggers anticipating, click triggers celebrating +
+          smooth-scroll to today's case section. Item #5 of the visual
+          baseline reset — gives the character agency without re-enabling
+          WebGL raycasting (which previously ate every click site-wide). */}
+      <AsteriskHotspot />
+      {/* A. HERO BAND — collapsed to a single line above the today's case
+          card. Greeting + streak + library link in one row. The case card
+          IS the hero now; this band is just orientation. Headspace pattern:
+          one decision per surface, supporting context demoted. */}
+      <section className="mb-6 sm:mb-8 flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
+          <span
+            className="font-headline italic text-xl sm:text-2xl"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            {greeting}
+          </span>
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.18em]"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Day {dayNumber}
+          </span>
+          {/* Streak flame — always visible. Greys out at 0 (loss-aversion
+              cue). Coral at ≥1. Direct port of Duolingo's flame mechanic. */}
+          <StreakFlame streak={streak} />
+        </div>
+        <Link
+          href="/cases"
+          className="meta-label hover:opacity-80"
         >
-          {titleText}.
-        </h1>
-        <div style={{ width: 'min(420px, 35vw)', marginTop: 12 }}>
-          <DashboardHeroUnderline />
+          Library →
+        </Link>
+      </section>
+
+      {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
+          asterisk-hotspot click action. Hotspot smooth-scrolls here. */}
+      <section className="mb-12 sm:mb-16" data-tour="todays-case">
+        {dailyAssignment ? (
+          <TodaysCaseCard
+            assignment={dailyAssignment}
+            inProgressSessionId={assignmentInProgress?.id ?? null}
+            completed={assignmentCompleted}
+          />
+        ) : (
+          <EmptyTodaysCaseCard />
+        )}
+      </section>
+
+      {/* B.2 COHORT LEADERBOARD */}
+      <section className="mb-12 sm:mb-16">
+        <div className="flex items-baseline justify-between mb-4">
+          <span
+            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            COHORT TODAY
+          </span>
+          <span
+            className="meta-label"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Top score · last 7 days
+          </span>
         </div>
         <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 24,
-            marginTop: 56,
-            paddingTop: 24,
-            borderTop: '1px solid rgba(0,0,0,0.18)',
-            maxWidth: 760,
-            flexWrap: 'wrap',
-          }}
+          className="rounded-md overflow-hidden"
+          style={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
         >
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'rgba(50,50,52,0.65)',
-            }}
-          >
-            {metaLine}
-          </span>
-          {cta && (
-            <Link
-              href={cta.href}
-              style={{
-                marginLeft: 'auto',
-                background: '#f54e00',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: 999,
-                padding: '14px 32px',
-                boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: '0.20em',
-                textTransform: 'uppercase',
-                transition: 'transform 120ms ease',
-              }}
+          {leaderboard.length === 0 ? (
+            <div
+              className="p-4 text-xs text-center"
+              style={{ color: 'var(--color-text-muted)' }}
             >
-              {cta.label}
-            </Link>
+              No reps yet today. Be the first.
+            </div>
+          ) : (
+            leaderboard.map((row, i) => (
+              <div
+                key={row.userId}
+                className="flex items-center px-4 py-2.5 gap-3"
+                style={{
+                  borderTop: i === 0 ? 'none' : '1px solid var(--color-border)',
+                  // isMe row used to use coral tint; per one-job rule (coral
+                  // reserved for CTAs + asterisk), highlight is now a subtle
+                  // elevated bg + bold weight on the name. Same behavioral
+                  // signal, no ambient coral leak.
+                  background: row.isMe
+                    ? 'var(--color-bg-sunken)'
+                    : 'transparent',
+                }}
+              >
+                <span
+                  className="font-mono text-[11px] w-6 tabular-nums"
+                  style={{
+                    color: i === 0 ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                    fontWeight: i === 0 ? 700 : 400,
+                  }}
+                >
+                  #{i + 1}
+                </span>
+                <span
+                  className="text-sm flex-1"
+                  style={{
+                    color: 'var(--color-text-primary)',
+                    fontWeight: row.isMe ? 600 : 400,
+                  }}
+                >
+                  {row.label}
+                </span>
+                <span
+                  className="font-mono text-[11px] tabular-nums"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  week {row.weekScore}
+                </span>
+                <span
+                  className="font-mono text-base tabular-nums w-12 text-right"
+                  style={{
+                    color: row.todayScore == null
+                      ? 'var(--color-text-muted)'
+                      : 'var(--color-text-primary)',
+                  }}
+                >
+                  {row.todayScore == null ? '—' : row.todayScore}
+                </span>
+              </div>
+            ))
           )}
         </div>
       </section>
 
-      {/* ── STREAK — sketchy 7-day calendar circles ── */}
-      <section style={{ padding: '40px 36px 80px', maxWidth: 1400, margin: '0 auto' }}>
-        <SectionEyebrow
-          label={`Streak · ${activeDaysThisWeek} of 7 days`}
-          meta={streak >= 1 ? `${streak}-day run` : 'no active streak'}
-        />
-        <div style={{ paddingTop: 36, paddingBottom: 36 }}>
-          <DashboardWeekStreak weekDays={weekDays} />
+      {/* C. THE WEEK */}
+      <section className="mb-12 sm:mb-16">
+        <div className="flex items-baseline justify-between mb-4">
+          <span
+            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            THIS WEEK
+          </span>
+          <span
+            className="meta-label"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            {activeDaysThisWeek} of 7 days active
+            {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-accent-bright)' }}>· {streak}-day streak</span>}
+          </span>
+        </div>
+        <div className="grid grid-cols-7 gap-2 sm:gap-3">
+          {weekDays.map((d) => (
+            <div key={d.dateISO} className="flex flex-col items-center">
+              <div
+                className="aspect-square w-full rounded-md"
+                style={{
+                  background: d.hasSession ? 'var(--color-accent)' : 'transparent',
+                  border: d.isToday
+                    ? '1.5px solid var(--color-accent-bright)'
+                    : d.hasSession
+                      ? '1px solid var(--color-accent)'
+                      : '1px solid var(--color-border)',
+                }}
+                aria-label={`${d.dateISO}${d.hasSession ? ' (active)' : ' (inactive)'}${d.isToday ? ' (today)' : ''}`}
+              />
+              <span
+                className="font-mono text-[10px] mt-1.5"
+                style={{ color: d.isToday ? 'var(--color-accent-bright)' : 'var(--color-text-muted)' }}
+              >
+                {d.isToday ? 'today' : d.label}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── RECENT REPS — 4-up warm-dark index card grid (2-up on mobile) ── */}
-      {recentDebriefRows.length > 0 && (
-        <section style={{ padding: '40px 36px 80px', maxWidth: 1400, margin: '0 auto' }}>
-          <SectionEyebrow
-            label="Recent reps"
-            meta={`last ${recentDebriefRows.length} sessions`}
-          />
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: 16,
-              paddingTop: 32,
-            }}
+      {/* D. RECENT DEBRIEFS */}
+      <section className="mb-12 sm:mb-16">
+        <div className="mb-4">
+          <span
+            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            style={{ color: 'var(--color-text-muted)' }}
           >
-            {recentDebriefRows.map(({ session: s, delta }) => (
-              <Link
-                key={s.id}
-                href={`/debrief/${s.id}`}
-                style={{
-                  position: 'relative',
-                  background: '#1a1817',
-                  color: '#faf9f5',
-                  aspectRatio: '4 / 5',
-                  padding: 22,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  textDecoration: 'none',
-                  boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-                }}
+            RECENT REPS
+          </span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {recentDebriefRows.map(({ session: s, delta }) => (
+            <Link
+              key={s.id}
+              href={`/debrief/${s.id}`}
+              className="block rounded-md p-4 transition-colors hover:opacity-90"
+              style={{
+                background: 'var(--color-bg-elevated)',
+                border: '1px solid var(--color-border)',
+              }}
+            >
+              <div
+                className="font-headline text-base leading-snug mb-3 line-clamp-2"
+                style={{ color: 'var(--color-text-primary)' }}
               >
-                <div style={{ position: 'absolute', top: 12, right: 12 }}>
-                  <SketchyCornerTick
-                    size={18}
-                    stroke="rgba(250,249,245,0.5)"
-                    strokeWidth={1.2}
-                  />
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 10,
-                      letterSpacing: '0.22em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(250,249,245,0.55)',
-                      marginBottom: 12,
-                    }}
-                  >
-                    {new Date(s.started_at).toLocaleDateString(undefined, {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-headline)',
-                      fontWeight: 700,
-                      fontSize: 18,
-                      lineHeight: 1.1,
-                      letterSpacing: '-0.005em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {((s as any).cases?.title ?? 'Case')}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'baseline',
-                  }}
+                {(s as any).cases?.title ?? 'Case'}
+              </div>
+              <div className="flex items-baseline justify-between">
+                <span
+                  className="font-mono text-[20px] tabular-nums"
+                  style={{ color: 'var(--color-text-primary)' }}
                 >
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 24,
-                      fontWeight: 500,
-                      fontVariantNumeric: 'tabular-nums',
-                    }}
-                  >
-                    {s.score ?? 0}
-                  </span>
+                  {s.score ?? 0}
                   {delta !== null && delta !== 0 && (
                     <span
+                      className="ml-2 text-[11px]"
                       style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: 11,
-                        letterSpacing: '0.16em',
-                        color: delta > 0 ? '#f54e00' : 'rgba(250,249,245,0.55)',
+                        color: delta > 0 ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
                       }}
                     >
-                      {delta > 0 ? '▲' : '▼'}{Math.abs(delta)}
+                      {delta > 0 ? '▲' : '▼'}
+                      {Math.abs(delta)}
                     </span>
                   )}
-                </div>
+                </span>
+                <span
+                  className="meta-label"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  {new Date(s.started_at).toLocaleDateString(undefined, {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </div>
+            </Link>
+          ))}
+          {Array.from({ length: Math.max(0, 3 - recentDebriefRows.length) }).map((_, i) => (
+            <div
+              key={`placeholder-${i}`}
+              className="rounded-md p-4 flex items-center justify-center"
+              style={{
+                background: 'transparent',
+                border: '1px dashed var(--color-border)',
+                minHeight: '96px',
+              }}
+            >
+              <span
+                className="font-headline italic text-sm text-center"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                Your reps will land here
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* E. RESUME IN-PROGRESS (above weak spots) */}
+      {inProgress.length > 0 && (
+        <section className="mb-10">
+          <div className="mb-3">
+            <span
+              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              UNFINISHED
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {inProgress.map((s: any) => (
+              <Link
+                key={s.id}
+                href={`/solve/${s.case_id}?session=${s.id}`}
+                className="text-xs px-3 py-1.5 rounded-md transition-colors"
+                style={{
+                  background: 'color-mix(in oklab, var(--color-accent) 14%, transparent)',
+                  color: 'var(--color-accent-bright)',
+                  border: '1px solid color-mix(in oklab, var(--color-accent) 35%, transparent)',
+                }}
+              >
+                ▶ {(s.cases?.title || 'Case').slice(0, 40)}{' '}
+                <span style={{ color: 'var(--color-text-muted)' }}>
+                  ({new Date(s.started_at).toLocaleDateString()})
+                </span>
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ── MARQUEE — decorative italic ribbon ── */}
-      <HuprMarquee text="The practice compounds." />
+      {/* E.2 SCORE CURVE + WEAK SPOTS — side by side on desktop */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="md:col-span-2">
+          <div className="mb-3">
+            <span
+              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              TRAJECTORY
+            </span>
+          </div>
+          <ScoreCurve
+            points={completed
+              .slice()
+              .reverse()
+              .map((s: any) => ({
+                date: s.started_at,
+                score: s.score ?? 0,
+              }))}
+          />
+        </div>
+        <div>
+          <div className="mb-3">
+            <span
+              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              WEAK SPOTS
+            </span>
+          </div>
+          {weakSpots.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {weakSpots.map((w) => (
+                <span
+                  key={w.type}
+                  className="text-xs px-3 py-1.5 rounded-md"
+                  style={{
+                    background: 'color-mix(in oklab, var(--color-accent) 10%, transparent)',
+                    color: 'var(--color-accent-bright)',
+                    border: '1px solid color-mix(in oklab, var(--color-accent) 25%, transparent)',
+                  }}
+                >
+                  {w.type.replace(/_/g, ' ')} · avg {w.avg} ({w.n})
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div
+              className="text-xs"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              No weak spots yet — complete a few more reps and patterns will surface here.
+            </div>
+          )}
+        </div>
+      </section>
 
-      {/* ── FOOTER — quiet editorial closer ── */}
+      {/* Optional track filter — kept for power users but pushed below the fold */}
+      {Object.keys(trackCounts).length > 1 && (
+        <nav className="flex flex-wrap gap-1.5 mb-10 text-xs">
+          <Link
+            href="/dashboard"
+            className="px-2.5 py-1 rounded-md transition-colors"
+            style={{
+              background: trackFilter === null ? 'var(--color-accent)' : 'transparent',
+              color: trackFilter === null ? 'var(--color-accent-fg)' : 'var(--color-text-secondary)',
+              border: '1px solid var(--color-border)',
+            }}
+          >
+            All tracks ({(allSessions ?? []).length})
+          </Link>
+          {TRACK_LIST.map((k) => {
+            const n = trackCounts[k] ?? 0;
+            if (n === 0) return null;
+            return (
+              <Link
+                key={k}
+                href={`/dashboard?track=${k}`}
+                className="px-2.5 py-1 rounded-md transition-colors"
+                style={{
+                  background: trackFilter === k ? 'var(--color-accent)' : 'transparent',
+                  color: trackFilter === k ? 'var(--color-accent-fg)' : 'var(--color-text-secondary)',
+                  border: '1px solid var(--color-border)',
+                }}
+              >
+                {TRACKS[k].short} ({n})
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+
+      {/* F. LIBRARY ESCAPE HATCH */}
       <footer
-        style={{
-          padding: '24px 36px 32px',
-          borderTop: '1px solid rgba(0,0,0,0.18)',
-          display: 'flex',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          gap: 16,
-          flexWrap: 'wrap',
-          maxWidth: 1400,
-          margin: '0 auto',
-        }}
+        className="pt-8 mt-4 border-t flex items-center justify-between"
+        style={{ borderColor: 'var(--color-border)' }}
       >
         <Link
           href="/cases"
-          className="font-headline italic hover:opacity-80"
-          style={{
-            color: 'rgb(50,50,52)',
-            fontSize: 'clamp(20px, 2.4vw, 28px)',
-            lineHeight: 1.1,
-            letterSpacing: '-0.015em',
-            textDecoration: 'none',
-          }}
+          className="meta-label hover:opacity-80"
         >
           Wander the library — 1,165 cases →
         </Link>
-        <div style={{ display: 'flex', gap: 24 }}>
-          <Link
-            href="/dashboard?view=stats"
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 10,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'rgba(50,50,52,0.6)',
-              textDecoration: 'none',
-            }}
-          >
-            Stats →
-          </Link>
-          <Link
-            href="/how-it-works"
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 10,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'rgba(50,50,52,0.5)',
-              textDecoration: 'none',
-            }}
-          >
-            How it works
-          </Link>
-        </div>
+        <Link
+          href="/how-it-works"
+          className="meta-label hover:opacity-80"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          How it works
+        </Link>
       </footer>
     </main>
   );
@@ -612,29 +718,18 @@ function TodaysCaseCard({
       {/* Eyebrow — kept simple, no underline, no coral. The headline
           carries weight; the eyebrow just labels the section. */}
       <div
-        className="font-mono text-[11px] uppercase tracking-[0.22em] mb-6 sm:mb-8"
+        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
         style={{ color: 'var(--color-text-muted)' }}
       >
         {eyebrow}
       </div>
 
       <h2
-        className="font-headline italic mb-3 max-w-[18ch]"
-        style={{
-          color: 'var(--color-text-primary)',
-          fontSize: 'clamp(40px, 6vw, 72px)',
-          lineHeight: 1.0,
-          letterSpacing: '-0.025em',
-        }}
+        className="font-headline italic text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.0] tracking-tight mb-6 sm:mb-8 max-w-[18ch]"
+        style={{ color: 'var(--color-text-primary)' }}
       >
         {assignment.caseTitle}
       </h2>
-      {/* Wave C: sketchy ink underline beneath the case-title hero —
-          same Rough.js mark as the dashboard greeting + debrief
-          score reveal. Visual through-line across the journey. */}
-      <div className="mb-6 sm:mb-8" style={{ width: 'min(220px, 30vw)' }}>
-        <DashboardHeroUnderline />
-      </div>
 
       <p
         className="font-headline italic text-[19px] sm:text-[22px] leading-[1.4] mb-10 sm:mb-12 max-w-[44ch]"
@@ -645,55 +740,30 @@ function TodaysCaseCard({
 
       <div className="flex flex-wrap items-center gap-3">
         <span
-          className="font-mono uppercase px-4 py-2"
-          style={{
-            background: '#1a1817',
-            color: '#faf9f5',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-            borderRadius: 999,
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-          }}
+          className="meta-label px-3 py-1.5 rounded-full"
+          style={{ border: '1px solid var(--color-border)' }}
         >
-          ≈ {minutes} MIN
+          ≈ {minutes} min
         </span>
         <span
-          className="font-mono uppercase px-4 py-2"
-          style={{
-            background: '#1a1817',
-            color: '#faf9f5',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-            borderRadius: 999,
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-          }}
+          className="meta-label px-3 py-1.5 rounded-full"
+          style={{ border: '1px solid var(--color-border)' }}
         >
           {assignment.caseDifficulty}
         </span>
         <span
-          className="font-mono uppercase px-4 py-2"
-          style={{
-            background: '#1a1817',
-            color: '#faf9f5',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-            borderRadius: 999,
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-          }}
+          className="meta-label px-3 py-1.5 rounded-full"
+          style={{ border: '1px solid var(--color-border)' }}
         >
           {assignment.caseType.replace(/_/g, ' ')}
         </span>
         {cta && (
           <Link
             href={cta.href}
-            // refero: cursor (Onyx Outline color via token) + ed
-            // hinrichsen (stamped offset shadow) + elevenlabs (pill).
-            className="ml-auto px-8 py-3.5 text-sm sm:text-base font-medium uppercase tracking-[0.18em] transition-transform active:translate-x-[2px] active:translate-y-[2px]"
+            className="ml-auto px-7 py-3.5 rounded-md text-base sm:text-lg font-medium transition-opacity hover:opacity-90"
             style={{
               background: 'var(--color-accent)',
               color: 'var(--color-accent-fg)',
-              borderRadius: 999,
-              boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
             }}
           >
             {cta.label}
@@ -718,18 +788,14 @@ function StreakFlame({ streak }: { streak: number }) {
       : 'var(--color-text-muted)';
   return (
     <span
-      // Wave C: warm-dark pill matching meta chips + resume chips.
-      className="inline-flex items-center gap-2 px-3 py-1.5 font-mono uppercase"
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-mono text-[11px] uppercase tracking-[0.16em]"
       style={{
-        color: active ? '#f54e00' : 'rgba(250,249,245,0.55)',
-        background: active ? '#1a1817' : 'transparent',
-        boxShadow: active
-          ? '0 0 0 1px rgba(255,255,255,0.08) inset'
-          : '0 0 0 1px rgba(50,50,52,0.20) inset',
-        borderRadius: 999,
-        fontSize: 11,
-        letterSpacing: '0.22em',
-        opacity: active ? 1 : 0.7,
+        color,
+        border: `1px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
+        background: active
+          ? 'color-mix(in oklab, var(--color-accent) 10%, transparent)'
+          : 'transparent',
+        opacity: active ? 1 : 0.65,
       }}
       aria-label={active ? `${streak}-day streak` : 'No active streak — start one today'}
       title={active ? `${streak}-day streak` : 'No active streak — start one today'}
@@ -756,7 +822,7 @@ function EmptyTodaysCaseCard() {
       }}
     >
       <div
-        className="font-mono text-[11px] uppercase tracking-[0.22em] mb-6 sm:mb-8"
+        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
         style={{ color: 'var(--color-text-muted)' }}
       >
         TODAY’S CASE
