@@ -462,50 +462,72 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             RECENT REPS
           </span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {recentDebriefRows.map(({ session: s, delta }) => (
             <Link
               key={s.id}
               href={`/debrief/${s.id}`}
-              className="block rounded-md p-4 transition-colors hover:opacity-90"
+              // Wave C: v2-style warm-dark index card with hairline
+              // inset border (ElevenLabs refero). Replaces the previous
+              // light rounded-md card so recent reps read as the same
+              // leather-bound book-cover surface as /cases case cards.
+              className="relative block p-4 transition-opacity hover:opacity-90"
               style={{
-                background: 'var(--color-bg-elevated)',
-                border: '1px solid var(--color-border)',
+                background: '#1a1817',
+                color: '#faf9f5',
+                aspectRatio: '1 / 1.25',
+                boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
               }}
             >
-              <div
-                className="font-headline text-base leading-snug mb-3 line-clamp-2"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                {(s as any).cases?.title ?? 'Case'}
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span
-                  className="font-mono text-[20px] tabular-nums"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  {s.score ?? 0}
-                  {delta !== null && delta !== 0 && (
-                    <span
-                      className="ml-2 text-[11px]"
-                      style={{
-                        color: delta > 0 ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
-                      }}
-                    >
-                      {delta > 0 ? '▲' : '▼'}
-                      {Math.abs(delta)}
-                    </span>
-                  )}
-                </span>
-                <span
-                  className="meta-label"
-                  style={{ color: 'var(--color-text-muted)' }}
+              <div>
+                <div
+                  className="font-mono"
+                  style={{
+                    fontSize: 10,
+                    letterSpacing: '0.22em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(250,249,245,0.55)',
+                    marginBottom: 10,
+                  }}
                 >
                   {new Date(s.started_at).toLocaleDateString(undefined, {
                     month: 'short',
                     day: 'numeric',
                   })}
+                </div>
+                <div
+                  className="font-headline italic"
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.15,
+                    letterSpacing: '-0.01em',
+                    color: '#faf9f5',
+                  }}
+                >
+                  {(s as any).cases?.title ?? 'Case'}
+                </div>
+              </div>
+              <div className="flex items-baseline justify-between">
+                <span
+                  className="font-mono tabular-nums"
+                  style={{ fontSize: 22, color: '#faf9f5', fontWeight: 500 }}
+                >
+                  {s.score ?? 0}
                 </span>
+                {delta !== null && delta !== 0 && (
+                  <span
+                    style={{
+                      fontSize: 11,
+                      letterSpacing: '0.16em',
+                      color: delta > 0 ? '#f54e00' : 'rgba(250,249,245,0.55)',
+                    }}
+                  >
+                    {delta > 0 ? '▲' : '▼'}{Math.abs(delta)}
+                  </span>
+                )}
               </div>
             </Link>
           ))}
