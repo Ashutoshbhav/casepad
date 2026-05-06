@@ -6,10 +6,14 @@ import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
-import { AsteriskHotspot } from '@/components/asterisk-hotspot';
 import { DashboardWeekStreak } from '@/components/dashboard-week-streak';
 import { HuprMarquee } from '@/components/hupr-marquee';
 import { DashboardHeroUnderline } from '@/components/dashboard-hero-underline';
+import {
+  Masthead,
+  SectionEyebrow,
+} from '@/app/design-lab/v2/_components/masthead';
+import { SketchyCornerTick } from '@/app/design-lab/v2/_components/sketchy';
 
 export const dynamic = 'force-dynamic';
 
@@ -283,446 +287,293 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     assignmentSession?.status === 'in_progress' ? assignmentSession : null;
   const assignmentCompleted = assignmentSession?.status === 'completed';
 
+  // ── HUPR-flavor v2-sample composition (Wave D — full structural rewrite).
+  // Replaces the prior 9-section "data dashboard" IA with v2's editorial
+  // 4-section composition: Masthead → Hero billboard → Streak → Recent
+  // reps → Marquee. The case title is the page's massive centerpiece;
+  // everything else is supporting context. Data sections that don't fit
+  // (cohort leaderboard / score curve / weak spots / track filter /
+  // resume-in-progress) are dropped from the default surface.
+
+  const titleText = dailyAssignment?.caseTitle ?? 'Wander the library';
+  const cta = dailyAssignment
+    ? assignmentCompleted
+      ? null
+      : assignmentInProgress
+        ? { label: 'Resume →', href: `/solve/${dailyAssignment.caseId}?session=${assignmentInProgress.id}` }
+        : { label: 'Begin →', href: `/solve/${dailyAssignment.caseId}` }
+    : { label: 'Pick a case →', href: '/cases' };
+  const minutes = dailyAssignment ? estimatedMinutes(dailyAssignment.caseDifficulty) : null;
+  const metaLine = dailyAssignment
+    ? `${dailyAssignment.caseType.replace(/_/g, ' ').toUpperCase()} · ${dailyAssignment.caseDifficulty} · ≈ ${minutes} min`
+    : '1,165 cases — pick what calls you';
+
   return (
-    <main className="min-h-screen px-4 sm:px-8 py-8 sm:py-12 max-w-5xl mx-auto">
+    <main
+      style={{
+        minHeight: '100vh',
+        background: '#F5F0E8',
+        color: 'rgb(50,50,52)',
+        fontFamily: 'var(--font-mono)',
+      }}
+    >
       <AsteriskSceneRegister preset="dashboard" />
-      {/* Dashboard-only: invisible click target over the asterisk's render
-          area. Hover triggers anticipating, click triggers celebrating +
-          smooth-scroll to today's case section. Item #5 of the visual
-          baseline reset — gives the character agency without re-enabling
-          WebGL raycasting (which previously ate every click site-wide). */}
-      <AsteriskHotspot />
-      {/* A. HERO BAND — Wave C HUPR upgrade.
-          Greeting promoted from a one-liner to an editorial headline:
-          Instrument Serif italic, large, with a sketchy ink underline
-          (Rough.js via Wave A token). Day number + streak flame + library
-          link sit on a meta strip below the headline. */}
-      <section className="mb-10 sm:mb-12">
-        <div
-          className="font-mono text-[10px] uppercase tracking-[0.22em] mb-4"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          Day {dayNumber} · Cohort One
-        </div>
+
+      {/* ── Masthead — CASEPAD wordmark + caption + MENU pill ── */}
+      <Masthead caption={['Practice', 'Centre for', 'Consulting Cases']} />
+      <SectionEyebrow
+        label={`Today · Day ${dayNumber}`}
+        meta={`cohort one · ${greeting.toLowerCase()}`}
+      />
+
+      {/* ── HERO BILLBOARD — case title at clamp(64-192px) Montserrat 700 caps ── */}
+      <section
+        style={{
+          padding: 'clamp(60px, 10vw, 120px) 36px 80px',
+          maxWidth: 1400,
+          margin: '0 auto',
+        }}
+        data-tour="todays-case"
+      >
         <h1
-          className="font-headline italic"
           style={{
-            color: 'var(--color-text-primary)',
-            fontSize: 'clamp(40px, 7vw, 96px)',
-            lineHeight: 1.0,
+            fontFamily: 'var(--font-headline)',
+            fontWeight: 700,
+            fontSize: 'clamp(56px, 11vw, 192px)',
+            lineHeight: 0.92,
             letterSpacing: '-0.025em',
+            color: 'rgb(50,50,52)',
             margin: 0,
-            maxWidth: '20ch',
+            maxWidth: '14ch',
+            textTransform: 'uppercase',
           }}
         >
-          {greeting}
+          {titleText}.
         </h1>
-        <DashboardHeroUnderline />
-        <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-4 flex-wrap">
-            <StreakFlame streak={streak} />
-          </div>
-          <Link
-            href="/cases"
-            className="meta-label hover:opacity-80"
-          >
-            Library →
-          </Link>
-        </div>
-      </section>
-
-      {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
-          asterisk-hotspot click action. Hotspot smooth-scrolls here. */}
-      <section className="mb-12 sm:mb-16" data-tour="todays-case">
-        {dailyAssignment ? (
-          <TodaysCaseCard
-            assignment={dailyAssignment}
-            inProgressSessionId={assignmentInProgress?.id ?? null}
-            completed={assignmentCompleted}
-          />
-        ) : (
-          <EmptyTodaysCaseCard />
-        )}
-      </section>
-
-      {/* B.2 COHORT LEADERBOARD — v2 warm-dark card surface
-          Wave C: leather-bound book-cover surface (matches /cases case
-          cards + /dashboard recent reps). ElevenLabs hairline inset. */}
-      <section className="mb-12 sm:mb-16">
-        <div className="flex items-baseline justify-between mb-4">
-          <span
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            COHORT TODAY
-          </span>
-          <span
-            className="meta-label"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            Top score · last 7 days
-          </span>
+        <div style={{ width: 'min(420px, 35vw)', marginTop: 12 }}>
+          <DashboardHeroUnderline />
         </div>
         <div
-          className="overflow-hidden"
           style={{
-            background: '#1a1817',
-            color: '#faf9f5',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 24,
+            marginTop: 56,
+            paddingTop: 24,
+            borderTop: '1px solid rgba(0,0,0,0.18)',
+            maxWidth: 760,
+            flexWrap: 'wrap',
           }}
         >
-          {leaderboard.length === 0 ? (
-            <div
-              className="p-4 text-xs text-center"
-              style={{ color: 'rgba(250,249,245,0.55)' }}
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(50,50,52,0.65)',
+            }}
+          >
+            {metaLine}
+          </span>
+          {cta && (
+            <Link
+              href={cta.href}
+              style={{
+                marginLeft: 'auto',
+                background: '#f54e00',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: 999,
+                padding: '14px 32px',
+                boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: '0.20em',
+                textTransform: 'uppercase',
+                transition: 'transform 120ms ease',
+              }}
             >
-              No reps yet today. Be the first.
-            </div>
-          ) : (
-            leaderboard.map((row, i) => (
-              <div
-                key={row.userId}
-                className="flex items-center px-4 py-2.5 gap-3"
-                style={{
-                  borderTop: i === 0 ? 'none' : '1px solid rgba(250,249,245,0.10)',
-                  background: row.isMe
-                    ? 'rgba(245,78,0,0.08)'
-                    : 'transparent',
-                }}
-              >
-                <span
-                  className="font-mono text-[11px] w-6 tabular-nums"
-                  style={{
-                    color: i === 0 ? '#f54e00' : 'rgba(250,249,245,0.55)',
-                    fontWeight: i === 0 ? 700 : 400,
-                  }}
-                >
-                  #{i + 1}
-                </span>
-                <span
-                  className="text-sm flex-1"
-                  style={{
-                    color: '#faf9f5',
-                    fontWeight: row.isMe ? 600 : 400,
-                  }}
-                >
-                  {row.label}
-                </span>
-                <span
-                  className="font-mono text-[11px] tabular-nums"
-                  style={{ color: 'rgba(250,249,245,0.55)' }}
-                >
-                  week {row.weekScore}
-                </span>
-                <span
-                  className="font-mono text-base tabular-nums w-12 text-right"
-                  style={{
-                    color: row.todayScore == null
-                      ? 'rgba(250,249,245,0.45)'
-                      : '#faf9f5',
-                  }}
-                >
-                  {row.todayScore == null ? '—' : row.todayScore}
-                </span>
-              </div>
-            ))
+              {cta.label}
+            </Link>
           )}
         </div>
       </section>
 
-      {/* C. THE WEEK */}
-      <section className="mb-12 sm:mb-16">
-        <div className="flex items-baseline justify-between mb-4">
-          <span
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            THIS WEEK
-          </span>
-          <span
-            className="meta-label"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            {activeDaysThisWeek} of 7 days active
-            {streak >= 3 && <span className="ml-2" style={{ color: 'var(--color-accent-bright)' }}>· {streak}-day streak</span>}
-          </span>
-        </div>
-        {/* v2 sketchy streak (Wave C surgical):
-              today    → Onyx Outline #f54e00 (live, your turn now)
-              past     → Aether Blue #5e6ad2 (completed)
-              inactive → muted ink ring */}
-        <DashboardWeekStreak weekDays={weekDays} />
-      </section>
-
-      {/* D. RECENT DEBRIEFS */}
-      <section className="mb-12 sm:mb-16">
-        <div className="mb-4">
-          <span
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            RECENT REPS
-          </span>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {recentDebriefRows.map(({ session: s, delta }) => (
-            <Link
-              key={s.id}
-              href={`/debrief/${s.id}`}
-              // Wave C: v2-style warm-dark index card with hairline
-              // inset border (ElevenLabs refero). Replaces the previous
-              // light rounded-md card so recent reps read as the same
-              // leather-bound book-cover surface as /cases case cards.
-              className="relative block p-4 transition-opacity hover:opacity-90"
-              style={{
-                background: '#1a1817',
-                color: '#faf9f5',
-                aspectRatio: '1 / 1.25',
-                boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div>
-                <div
-                  className="font-mono"
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: '0.22em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(250,249,245,0.55)',
-                    marginBottom: 10,
-                  }}
-                >
-                  {new Date(s.started_at).toLocaleDateString(undefined, {
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </div>
-                <div
-                  className="font-headline italic"
-                  style={{
-                    fontSize: 16,
-                    lineHeight: 1.15,
-                    letterSpacing: '-0.01em',
-                    color: '#faf9f5',
-                  }}
-                >
-                  {(s as any).cases?.title ?? 'Case'}
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span
-                  className="font-mono tabular-nums"
-                  style={{ fontSize: 22, color: '#faf9f5', fontWeight: 500 }}
-                >
-                  {s.score ?? 0}
-                </span>
-                {delta !== null && delta !== 0 && (
-                  <span
-                    style={{
-                      fontSize: 11,
-                      letterSpacing: '0.16em',
-                      color: delta > 0 ? '#f54e00' : 'rgba(250,249,245,0.55)',
-                    }}
-                  >
-                    {delta > 0 ? '▲' : '▼'}{Math.abs(delta)}
-                  </span>
-                )}
-              </div>
-            </Link>
-          ))}
-          {Array.from({ length: Math.max(0, 3 - recentDebriefRows.length) }).map((_, i) => (
-            <div
-              key={`placeholder-${i}`}
-              className="rounded-md p-4 flex items-center justify-center"
-              style={{
-                background: 'transparent',
-                border: '1px dashed var(--color-border)',
-                minHeight: '96px',
-              }}
-            >
-              <span
-                className="font-headline italic text-sm text-center"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                Your reps will land here
-              </span>
-            </div>
-          ))}
+      {/* ── STREAK — sketchy 7-day calendar circles ── */}
+      <section style={{ padding: '40px 36px 80px', maxWidth: 1400, margin: '0 auto' }}>
+        <SectionEyebrow
+          label={`Streak · ${activeDaysThisWeek} of 7 days`}
+          meta={streak >= 1 ? `${streak}-day run` : 'no active streak'}
+        />
+        <div style={{ paddingTop: 36, paddingBottom: 36 }}>
+          <DashboardWeekStreak weekDays={weekDays} />
         </div>
       </section>
 
-      {/* E. RESUME IN-PROGRESS (above weak spots) */}
-      {inProgress.length > 0 && (
-        <section className="mb-10">
-          <div className="mb-3">
-            <span
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              UNFINISHED
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {inProgress.map((s: any) => (
+      {/* ── RECENT REPS — 4-up warm-dark index card grid (2-up on mobile) ── */}
+      {recentDebriefRows.length > 0 && (
+        <section style={{ padding: '40px 36px 80px', maxWidth: 1400, margin: '0 auto' }}>
+          <SectionEyebrow
+            label="Recent reps"
+            meta={`last ${recentDebriefRows.length} sessions`}
+          />
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+              gap: 16,
+              paddingTop: 32,
+            }}
+          >
+            {recentDebriefRows.map(({ session: s, delta }) => (
               <Link
                 key={s.id}
-                href={`/solve/${s.case_id}?session=${s.id}`}
-                // Wave C: warm-dark resume chip with Onyx Outline play
-                // glyph. Reads as "this rep is paused, click to resume."
-                className="px-4 py-2 transition-opacity hover:opacity-90 inline-flex items-center gap-2"
+                href={`/debrief/${s.id}`}
                 style={{
+                  position: 'relative',
                   background: '#1a1817',
                   color: '#faf9f5',
-                  borderRadius: 999,
+                  aspectRatio: '4 / 5',
+                  padding: 22,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  textDecoration: 'none',
                   boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 12,
-                  letterSpacing: '0.04em',
                 }}
               >
-                <span style={{ color: '#f54e00' }} aria-hidden="true">▶</span>
-                <span>{(s.cases?.title || 'Case').slice(0, 40)}</span>
-                <span style={{ color: 'rgba(250,249,245,0.55)', fontSize: 10 }}>
-                  {new Date(s.started_at).toLocaleDateString()}
-                </span>
+                <div style={{ position: 'absolute', top: 12, right: 12 }}>
+                  <SketchyCornerTick
+                    size={18}
+                    stroke="rgba(250,249,245,0.5)"
+                    strokeWidth={1.2}
+                  />
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 10,
+                      letterSpacing: '0.22em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(250,249,245,0.55)',
+                      marginBottom: 12,
+                    }}
+                  >
+                    {new Date(s.started_at).toLocaleDateString(undefined, {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-headline)',
+                      fontWeight: 700,
+                      fontSize: 18,
+                      lineHeight: 1.1,
+                      letterSpacing: '-0.005em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {((s as any).cases?.title ?? 'Case')}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 24,
+                      fontWeight: 500,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {s.score ?? 0}
+                  </span>
+                  {delta !== null && delta !== 0 && (
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 11,
+                        letterSpacing: '0.16em',
+                        color: delta > 0 ? '#f54e00' : 'rgba(250,249,245,0.55)',
+                      }}
+                    >
+                      {delta > 0 ? '▲' : '▼'}{Math.abs(delta)}
+                    </span>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* E.2 SCORE CURVE + WEAK SPOTS — side by side on desktop */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="md:col-span-2">
-          <div className="mb-3">
-            <span
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              TRAJECTORY
-            </span>
-          </div>
-          <ScoreCurve
-            points={completed
-              .slice()
-              .reverse()
-              .map((s: any) => ({
-                date: s.started_at,
-                score: s.score ?? 0,
-              }))}
-          />
-        </div>
-        <div>
-          <div className="mb-3">
-            <span
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              WEAK SPOTS
-            </span>
-          </div>
-          {weakSpots.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {weakSpots.map((w) => (
-                <span
-                  key={w.type}
-                  // Wave C: hot orange chip on warm-dark.
-                  className="text-xs px-3 py-1.5 font-mono uppercase"
-                  style={{
-                    background: '#1a1817',
-                    color: '#f54e00',
-                    boxShadow: '0 0 0 1px rgba(245,78,0,0.35) inset',
-                    letterSpacing: '0.16em',
-                  }}
-                >
-                  {w.type.replace(/_/g, ' ')} · avg {w.avg} ({w.n})
-                </span>
-              ))}
-            </div>
-          ) : (
-            <div
-              className="text-xs"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              No weak spots yet — complete a few more reps and patterns will surface here.
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Optional track filter — kept for power users but pushed below the fold */}
-      {Object.keys(trackCounts).length > 1 && (
-        <nav className="flex flex-wrap gap-1.5 mb-10 text-xs">
-          <Link
-            href="/dashboard"
-            className="px-2.5 py-1 rounded-md transition-colors"
-            style={{
-              background: trackFilter === null ? 'var(--color-accent)' : 'transparent',
-              color: trackFilter === null ? 'var(--color-accent-fg)' : 'var(--color-text-secondary)',
-              border: '1px solid var(--color-border)',
-            }}
-          >
-            All tracks ({(allSessions ?? []).length})
-          </Link>
-          {TRACK_LIST.map((k) => {
-            const n = trackCounts[k] ?? 0;
-            if (n === 0) return null;
-            return (
-              <Link
-                key={k}
-                href={`/dashboard?track=${k}`}
-                className="px-2.5 py-1 rounded-md transition-colors"
-                style={{
-                  background: trackFilter === k ? 'var(--color-accent)' : 'transparent',
-                  color: trackFilter === k ? 'var(--color-accent-fg)' : 'var(--color-text-secondary)',
-                  border: '1px solid var(--color-border)',
-                }}
-              >
-                {TRACKS[k].short} ({n})
-              </Link>
-            );
-          })}
-        </nav>
-      )}
-
-      {/* Wave C HUPR-flavor bottom marquee — decorative ribbon */}
+      {/* ── MARQUEE — decorative italic ribbon ── */}
       <HuprMarquee text="The practice compounds." />
 
-      {/* F. LIBRARY ESCAPE HATCH */}
+      {/* ── FOOTER — quiet editorial closer ── */}
       <footer
-        className="pt-12 mt-4 flex items-baseline justify-between gap-4 flex-wrap"
-        style={{ borderTop: '1px solid var(--color-border)' }}
+        style={{
+          padding: '24px 36px 32px',
+          borderTop: '1px solid rgba(0,0,0,0.18)',
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 16,
+          flexWrap: 'wrap',
+          maxWidth: 1400,
+          margin: '0 auto',
+        }}
       >
         <Link
           href="/cases"
-          // Wave C: footer wander-the-library upgraded from a meta-
-          // label one-liner to a real italic editorial closer. The
-          // marquee just above this is decorative; this link is the
-          // actual call to action for "I'm not done."
           className="font-headline italic hover:opacity-80"
           style={{
-            color: 'var(--color-text-primary)',
+            color: 'rgb(50,50,52)',
             fontSize: 'clamp(20px, 2.4vw, 28px)',
             lineHeight: 1.1,
             letterSpacing: '-0.015em',
+            textDecoration: 'none',
           }}
         >
           Wander the library — 1,165 cases →
         </Link>
-        <Link
-          href="/how-it-works"
-          className="font-mono uppercase hover:opacity-80"
-          style={{
-            color: 'var(--color-text-muted)',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-          }}
-        >
-          How it works
-        </Link>
+        <div style={{ display: 'flex', gap: 24 }}>
+          <Link
+            href="/dashboard?view=stats"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(50,50,52,0.6)',
+              textDecoration: 'none',
+            }}
+          >
+            Stats →
+          </Link>
+          <Link
+            href="/how-it-works"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(50,50,52,0.5)',
+              textDecoration: 'none',
+            }}
+          >
+            How it works
+          </Link>
+        </div>
       </footer>
     </main>
   );
@@ -867,14 +718,18 @@ function StreakFlame({ streak }: { streak: number }) {
       : 'var(--color-text-muted)';
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-mono text-[11px] uppercase tracking-[0.16em]"
+      // Wave C: warm-dark pill matching meta chips + resume chips.
+      className="inline-flex items-center gap-2 px-3 py-1.5 font-mono uppercase"
       style={{
-        color,
-        border: `1px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
-        background: active
-          ? 'color-mix(in oklab, var(--color-accent) 10%, transparent)'
-          : 'transparent',
-        opacity: active ? 1 : 0.65,
+        color: active ? '#f54e00' : 'rgba(250,249,245,0.55)',
+        background: active ? '#1a1817' : 'transparent',
+        boxShadow: active
+          ? '0 0 0 1px rgba(255,255,255,0.08) inset'
+          : '0 0 0 1px rgba(50,50,52,0.20) inset',
+        borderRadius: 999,
+        fontSize: 11,
+        letterSpacing: '0.22em',
+        opacity: active ? 1 : 0.7,
       }}
       aria-label={active ? `${streak}-day streak` : 'No active streak — start one today'}
       title={active ? `${streak}-day streak` : 'No active streak — start one today'}
