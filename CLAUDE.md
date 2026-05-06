@@ -29,3 +29,29 @@ Cohort case-prep app for B-school students. Path A: real cases only — no synth
 - `no-assumptions` skill applies to all stats / market data shown in cases
 - Apply `frontend-design:frontend-design` for UI work
 - Read installed Next.js 16 docs before using APIs (training data is stale)
+
+## Design supervision (locked 2026-05-06)
+**Every design decision in CasePad MUST go through the
+`design-supervisor` agent first.** No exceptions. The agent lives at
+`~/.claude/agents/design/design-supervisor.md` and reads/writes its
+accumulated learnings to
+`~/.claude/projects/C--Users-Ashutosh-Bhavale/memory/design_supervisor_log.md`.
+
+Trigger words that auto-route through design-supervisor before any
+work begins:
+- palette / color / hex / accent
+- typography / font / type / weight / tracking
+- shadow / radius / spacing / margin / gap
+- redesign / restyle / reskin / refresh / polish
+- "make it look like" / "make it match" / "make it pop"
+- new visual component (card / button / hero / banner / chart / etc.)
+
+Workflow when any of those triggers fires:
+1. Main Claude invokes design-supervisor with a self-contained prompt
+2. Agent reads its log + the project's globals.css + the Refero cache
+3. Agent returns the surgical edit table + delegation hint
+4. Main Claude executes; agent appends a new entry to the log
+
+Skip the agent ONLY for: trivial single-token edits (`#aaa → #bbb`)
+the user explicitly requested, or when Ash explicitly says "skip the
+design agent, just code it." Never skip on your own initiative.

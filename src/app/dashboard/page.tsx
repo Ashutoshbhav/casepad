@@ -345,11 +345,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         )}
       </section>
 
-      {/* B.2 COHORT LEADERBOARD */}
+      {/* B.2 COHORT LEADERBOARD — v2 warm-dark card surface
+          Wave C: leather-bound book-cover surface (matches /cases case
+          cards + /dashboard recent reps). ElevenLabs hairline inset. */}
       <section className="mb-12 sm:mb-16">
         <div className="flex items-baseline justify-between mb-4">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
             style={{ color: 'var(--color-text-muted)' }}
           >
             COHORT TODAY
@@ -362,13 +364,17 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </span>
         </div>
         <div
-          className="rounded-md overflow-hidden"
-          style={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
+          className="overflow-hidden"
+          style={{
+            background: '#1a1817',
+            color: '#faf9f5',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+          }}
         >
           {leaderboard.length === 0 ? (
             <div
               className="p-4 text-xs text-center"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{ color: 'rgba(250,249,245,0.55)' }}
             >
               No reps yet today. Be the first.
             </div>
@@ -378,20 +384,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 key={row.userId}
                 className="flex items-center px-4 py-2.5 gap-3"
                 style={{
-                  borderTop: i === 0 ? 'none' : '1px solid var(--color-border)',
-                  // isMe row used to use coral tint; per one-job rule (coral
-                  // reserved for CTAs + asterisk), highlight is now a subtle
-                  // elevated bg + bold weight on the name. Same behavioral
-                  // signal, no ambient coral leak.
+                  borderTop: i === 0 ? 'none' : '1px solid rgba(250,249,245,0.10)',
                   background: row.isMe
-                    ? 'var(--color-bg-sunken)'
+                    ? 'rgba(245,78,0,0.08)'
                     : 'transparent',
                 }}
               >
                 <span
                   className="font-mono text-[11px] w-6 tabular-nums"
                   style={{
-                    color: i === 0 ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                    color: i === 0 ? '#f54e00' : 'rgba(250,249,245,0.55)',
                     fontWeight: i === 0 ? 700 : 400,
                   }}
                 >
@@ -400,7 +402,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 <span
                   className="text-sm flex-1"
                   style={{
-                    color: 'var(--color-text-primary)',
+                    color: '#faf9f5',
                     fontWeight: row.isMe ? 600 : 400,
                   }}
                 >
@@ -408,7 +410,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 </span>
                 <span
                   className="font-mono text-[11px] tabular-nums"
-                  style={{ color: 'var(--color-text-muted)' }}
+                  style={{ color: 'rgba(250,249,245,0.55)' }}
                 >
                   week {row.weekScore}
                 </span>
@@ -416,8 +418,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   className="font-mono text-base tabular-nums w-12 text-right"
                   style={{
                     color: row.todayScore == null
-                      ? 'var(--color-text-muted)'
-                      : 'var(--color-text-primary)',
+                      ? 'rgba(250,249,245,0.45)'
+                      : '#faf9f5',
                   }}
                 >
                   {row.todayScore == null ? '—' : row.todayScore}
