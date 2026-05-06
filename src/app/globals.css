@@ -25,10 +25,12 @@
   --color-text-secondary: #b0aea5;
   --color-text-muted:     #7a7873;
 
-  /* Accents / signals — Anthropic Orange (coral). */
-  --color-accent:        #d97757;
-  --color-accent-fg:     #1a1817;
-  --color-accent-bright: #e58c6f;
+  /* Accents / signals — HUPR-flavor Onyx Outline (Cursor refero).
+     Replaced Anthropic coral #d97757 with Cursor's hot orange so the
+     Live-Action color is unmistakable across the app. */
+  --color-accent:        #f54e00;
+  --color-accent-fg:     #ffffff;
+  --color-accent-bright: #ff7a3d;
   --color-border:        #2f2c29;
   --color-signal-danger: #D94B4B;
 
@@ -67,17 +69,21 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --color-bg-canvas:   #faf9f5;
+  /* HUPR-flavor cream canvas. Slightly warmer than the previous
+     #faf9f5 paper — closer to v2's #F5F0E8. */
+  --color-bg-canvas:   #F5F0E8;
   --color-bg-elevated: #ffffff;
-  --color-bg-sunken:   #f3f0e8;
+  --color-bg-sunken:   #ECE5DC;
 
   --color-text-primary:   #1a1817;
   --color-text-secondary: #5a5853;
   --color-text-muted:     #9a9893;
 
-  --color-accent:        #c4623a;
+  /* HUPR-flavor Onyx Outline (Cursor refero) — hot orange replaces
+     the muted earth-coral on light theme. */
+  --color-accent:        #f54e00;
   --color-accent-fg:     #ffffff;
-  --color-accent-bright: #a85128;
+  --color-accent-bright: #d04200;
   --color-border:        #e8e4dd;
   --color-signal-danger: #b33c3c;
 }
@@ -134,16 +140,16 @@
   --color-zinc-900:  #252220;
   --color-zinc-950:  #000000;
 
-  /* Map emerald (the previous brand accent) to coral — buttons/badges/CTAs. */
-  --color-emerald-200: #f0b8a4;
-  --color-emerald-300: #e58c6f;
-  --color-emerald-400: #d97757;
-  --color-emerald-500: #d97757;
-  --color-emerald-600: #c2664a;
-  --color-emerald-700: #9a4f38;
-  --color-emerald-800: #6b3727;
-  --color-emerald-900: #432217;
-  --color-emerald-950: #25130d;
+  /* Map emerald (the previous brand accent) to HUPR Onyx Outline orange. */
+  --color-emerald-200: #ffb38a;
+  --color-emerald-300: #ff8a4d;
+  --color-emerald-400: #f54e00;
+  --color-emerald-500: #f54e00;
+  --color-emerald-600: #d04200;
+  --color-emerald-700: #a23300;
+  --color-emerald-800: #6b2200;
+  --color-emerald-900: #401400;
+  --color-emerald-950: #200a00;
 
   /* Rose (destructive) — keep readable. */
   --color-rose-300: #E89B9B;
@@ -153,15 +159,15 @@
   --color-rose-900: #4A1A1A;
   --color-rose-950: #2A0F0F;
 
-  /* Amber — used on warnings / starter chips. Tune toward coral. */
-  --color-amber-200: #f0b8a4;
-  --color-amber-300: #e58c6f;
-  --color-amber-400: #d97757;
-  --color-amber-500: #d97757;
-  --color-amber-600: #c2664a;
-  --color-amber-700: #9a4f38;
-  --color-amber-900: #432217;
-  --color-amber-950: #25130d;
+  /* Amber — used on warnings / starter chips. Tuned to HUPR orange. */
+  --color-amber-200: #ffb38a;
+  --color-amber-300: #ff8a4d;
+  --color-amber-400: #f54e00;
+  --color-amber-500: #f54e00;
+  --color-amber-600: #d04200;
+  --color-amber-700: #a23300;
+  --color-amber-900: #401400;
+  --color-amber-950: #200a00;
 
   /* Indigo / sky / violet / fuchsia — soften to neutrals so old badges
      don't clash with the editorial palette. */
