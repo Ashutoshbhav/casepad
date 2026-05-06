@@ -4,7 +4,6 @@ import { withRetry } from '@/lib/supabase/with-retry';
 import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
 import { TutorialLaunchLink } from '@/components/tutorial-launch-link';
-import { CohortRail } from '@/components/cohort-rail';
 import { CasesLoadMore } from '@/components/cases-load-more';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { STARTER_CASE_IDS } from '@/lib/starter-cases';
@@ -18,8 +17,14 @@ const SPARSE_TRACK_THRESHOLD = 50;
 
 type CaseListRow = HuprCaseRowData;
 
-const HERO_PHOTO =
-  'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=2400&q=80';
+// Track → glyph for the sticky pill row. Visual glance signal.
+const TRACK_ICONS: Partial<Record<Track, string>> = {
+  consulting: '◆',
+  ib_pe_vc: '$',
+  pm: '▲',
+  marketing: '✱',
+  strategy_bizops: '◇',
+};
 
 export default async function CasesPage({
   searchParams,
@@ -75,31 +80,22 @@ export default async function CasesPage({
   const shortCount = allRows.length - fullLength.length;
   const visibleRows = showAll ? allRows : fullLength;
 
+  // Featured = first starter case for the consulting track when no filters
+  // are active. Cohort Five rail removed — starter pool now feeds only the
+  // hero, the rest get folded into the main library list.
   const showFeatured = !hasFilters && activeTrack === 'consulting';
   const { data: starterRows } = showFeatured
     ? await withRetry(() =>
         supabase
           .from('cases')
           .select('id,title,industry,case_type,difficulty,source,problem_statement')
-          .in('id', STARTER_CASE_IDS)
+          .in('id', STARTER_CASE_IDS.slice(0, 1))
       )
     : { data: null };
-  const starterById = new Map<string, CaseListRow>(
-    (starterRows ?? []).map((r) => [r.id, r as CaseListRow])
-  );
-  const orderedStarters: CaseListRow[] = showFeatured
-    ? STARTER_CASE_IDS.map((id) => starterById.get(id)).filter(
-        (r): r is CaseListRow => Boolean(r)
-      )
-    : [];
+  const heroCase = (starterRows?.[0] ?? null) as CaseListRow | null;
 
-  const heroCase = orderedStarters[0];
-  const cohortFive = orderedStarters.slice(1, 7);
-
-  const starterIdSet = new Set(orderedStarters.map((r) => r.id));
-  const mainRows = showFeatured
-    ? visibleRows.filter((r) => !starterIdSet.has(r.id))
-    : visibleRows;
+  const heroIdSet = new Set(heroCase ? [heroCase.id] : []);
+  const mainRows = visibleRows.filter((r) => !heroIdSet.has(r.id));
 
   const isNonConsulting = activeTrack !== 'consulting';
   const trackTotal =
@@ -150,41 +146,44 @@ export default async function CasesPage({
     >
       <HuprObserveReveals />
 
-      {/* HERO — full-bleed photo + floating featured-case card on right */}
+      {/* HERO — cognac band, full-bleed photo + floating featured-case card */}
       {showFeatured && heroCase ? (
         <section
           className="relative w-full overflow-hidden"
-          style={{ height: 'min(80vh, 720px)', minHeight: 560 }}
+          style={{
+            height: 'min(72vh, 640px)',
+            minHeight: 480,
+            background: 'var(--hupr-cognac)',
+          }}
         >
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `url(${HERO_PHOTO})`,
+              backgroundImage: `url(/case-photos/case-007.jpg)`,
               backgroundSize: 'cover',
               backgroundPosition: '50% 50%',
-              filter: 'brightness(0.78) saturate(0.92)',
+              filter: 'brightness(0.72) saturate(0.88)',
+              opacity: 0.85,
+              mixBlendMode: 'multiply',
             }}
           />
           <div
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(180deg, rgba(50,50,52,0.40) 0%, rgba(50,50,52,0.10) 35%, rgba(50,50,52,0.0) 65%, rgba(50,50,52,0.55) 100%)',
+                'linear-gradient(180deg, rgba(50,50,52,0.32) 0%, rgba(50,50,52,0.08) 35%, rgba(50,50,52,0.0) 65%, rgba(50,50,52,0.50) 100%)',
             }}
           />
-          {/* Header band over the photo */}
+
           <header className="absolute top-0 left-0 right-0 z-10 flex items-baseline justify-between px-6 sm:px-12 py-6 sm:py-8">
-            <div>
-              <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
-                Cases · {TRACKS[activeTrack].label}
-              </span>
-            </div>
-            <TutorialLaunchLink className="hupr-mono-eyebrow underline" >
+            <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
+              Cases · {TRACKS[activeTrack].label}
+            </span>
+            <TutorialLaunchLink className="hupr-mono-eyebrow underline">
               <span style={{ color: '#FFFFFF' }}>Take me through a case →</span>
             </TutorialLaunchLink>
           </header>
 
-          {/* Floating featured-case card on right */}
           <div
             className="absolute z-10 px-6 sm:px-0"
             style={{
@@ -195,10 +194,7 @@ export default async function CasesPage({
             }}
           >
             <div style={{ background: '#FFFFFF', padding: '2rem', borderRadius: 4 }}>
-              <span
-                className="hupr-mono-eyebrow"
-                style={{ color: '#323234' }}
-              >
+              <span className="hupr-mono-eyebrow" style={{ color: '#323234' }}>
                 Featured · {(heroCase.source ?? 'CASEBOOK').toUpperCase()}
               </span>
               <hr
@@ -272,94 +268,106 @@ export default async function CasesPage({
           </div>
         </section>
       ) : (
-        // Non-featured header (track filter active, or non-consulting track)
-        <header className="px-6 sm:px-12 pt-12 pb-8 max-w-6xl mx-auto">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <span className="hupr-mono-eyebrow">Cases</span>
-              <hr className="hupr-hairline" />
-              <h1
-                className="uppercase mt-3"
-                style={{
-                  fontFamily: 'var(--font-headline)',
-                  fontWeight: 700,
-                  fontSize: 'clamp(40px, 6vw, 72px)',
-                  lineHeight: 1,
-                  margin: 0,
-                  color: 'var(--color-text-primary)',
-                }}
-              >
-                {TRACKS[activeTrack].label}
-              </h1>
+        // Non-featured header (track filter active or non-consulting track) —
+        // cream band so the page isn't a wall of white.
+        <header
+          className="px-6 sm:px-12 pt-12 pb-10"
+          style={{ background: 'var(--hupr-cream)' }}
+        >
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <span className="hupr-mono-eyebrow">Cases</span>
+                <hr className="hupr-hairline" />
+                <h1
+                  className="uppercase mt-3"
+                  style={{
+                    fontFamily: 'var(--font-headline)',
+                    fontWeight: 700,
+                    fontSize: 'clamp(40px, 6vw, 72px)',
+                    lineHeight: 1,
+                    margin: 0,
+                    color: 'var(--color-text-primary)',
+                  }}
+                >
+                  {TRACKS[activeTrack].label}
+                </h1>
+              </div>
+              <TutorialLaunchLink className="hupr-mono-eyebrow underline">
+                Take me through a case →
+              </TutorialLaunchLink>
             </div>
-            <TutorialLaunchLink className="hupr-mono-eyebrow underline">
-              Take me through a case →
-            </TutorialLaunchLink>
           </div>
         </header>
       )}
 
-      <div className="px-6 sm:px-12 pt-16 max-w-6xl mx-auto">
-        {/* THE COHORT FIVE — horizontal scroll rail. */}
-        {showFeatured && cohortFive.length > 0 && (
-          <section className="mb-16">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="hupr-mono-eyebrow">The Cohort Five</span>
-              <span
-                className="flex-1 h-px"
-                style={{ background: 'var(--color-border)' }}
-                aria-hidden="true"
-              />
-            </div>
-            <CohortRail
-              cards={cohortFive.map((c) => ({
-                id: c.id,
-                title: c.title,
-                source: c.source,
-                case_type: c.case_type,
-                difficulty: c.difficulty,
-              }))}
-            />
-          </section>
-        )}
-
-        {/* Track tabs */}
-        <div data-tour="cases-track" className="flex gap-8 mb-6 overflow-x-auto pb-1">
+      {/* STICKY TRACK PILLS — visible while scrolling. Big, glanceable. */}
+      <nav
+        className="sticky top-0 z-20"
+        style={{
+          background: 'var(--color-bg-canvas)',
+          borderBottom: '1px solid var(--color-border)',
+        }}
+        data-tour="cases-track"
+      >
+        <div className="max-w-6xl mx-auto px-6 sm:px-12 flex gap-2 overflow-x-auto py-3">
           {(['consulting', 'ib_pe_vc', 'pm', 'marketing', 'strategy_bizops'] as Track[]).map((t) => {
             const isActive = activeTrack === t;
             return (
               <a
                 key={t}
                 href={`/cases?track=${t}`}
+                className="flex items-center gap-2.5 px-4 py-2.5 transition-opacity hover:opacity-90 whitespace-nowrap"
                 style={{
+                  background: isActive ? 'var(--color-text-primary)' : 'transparent',
+                  color: isActive ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
+                  border: '1px solid',
+                  borderColor: isActive ? 'var(--color-text-primary)' : 'var(--color-border)',
+                  borderRadius: 4,
                   fontFamily: 'var(--font-body)',
-                  fontSize: 12,
+                  fontSize: 13,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  paddingBottom: 10,
-                  whiteSpace: 'nowrap',
-                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-                  borderBottom: isActive
-                    ? '2px solid var(--color-text-primary)'
-                    : '2px solid transparent',
+                  letterSpacing: '0.06em',
                   textDecoration: 'none',
+                  fontWeight: isActive ? 700 : 400,
                 }}
               >
+                <span style={{ fontSize: 16 }} aria-hidden>{TRACK_ICONS[t]}</span>
                 {TRACKS[t].short}
               </a>
             );
           })}
         </div>
-        <div data-tour="cases-filters" className="mb-10">
-          <CaseFilters />
-        </div>
+      </nav>
+
+      <div className="px-6 sm:px-12 pt-10 pb-20 max-w-6xl mx-auto">
+        {/* COLLAPSED FILTER — single line until expanded. Reduces clutter. */}
+        <details data-tour="cases-filters" className="mb-10 group">
+          <summary
+            className="cursor-pointer flex items-center justify-between py-3 list-none"
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 13,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              color: 'var(--color-text-secondary)',
+              borderBottom: '1px solid var(--color-border)',
+            }}
+          >
+            <span>Filter cases</span>
+            <span className="group-open:rotate-180 transition-transform">▾</span>
+          </summary>
+          <div className="pt-4">
+            <CaseFilters />
+          </div>
+        </details>
 
         {isSparse && (
           <div
             className="mb-10 p-5"
             style={{
               border: '1px solid var(--color-border)',
-              background: 'var(--color-bg-sunken)',
+              background: 'var(--hupr-cream)',
             }}
           >
             <span className="hupr-mono-eyebrow">Sparse track</span>
@@ -382,7 +390,7 @@ export default async function CasesPage({
 
         {/* THE LIBRARY — news-pair rows. */}
         <section className="mb-12">
-          <div className="flex items-baseline gap-3 mb-4">
+          <div className="flex items-baseline gap-3 mb-6">
             <span className="hupr-mono-eyebrow">The Library</span>
             <span
               className="flex-1 h-px"
@@ -431,7 +439,7 @@ export default async function CasesPage({
                 textDecoration: 'underline',
               }}
             >
-              Show all 1,165 cases (including short prompts)
+              Show all cases (including short prompts)
             </a>
           </div>
         )}
@@ -458,37 +466,44 @@ export default async function CasesPage({
         )}
 
         {isSparse && fallbackFiltered.length > 0 && (
-          <section className="mt-16 mb-16">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="hupr-mono-eyebrow">Cases from other tracks</span>
-              <span
-                className="flex-1 h-px"
-                style={{ background: 'var(--color-border)' }}
-                aria-hidden="true"
-              />
-            </div>
-            <p
-              className="mb-4"
-              style={{
-                fontFamily: 'var(--font-accent)',
-                fontSize: 14,
-                color: 'var(--color-text-muted)',
-              }}
-            >
-              Drawn from the consulting library while {TRACKS[activeTrack].short}{' '}
-              backfill catches up.
-            </p>
-            <div>
-              {fallbackFiltered.map((c) => (
-                <div key={c.id}>
-                  <HuprCaseRow c={c} completed={completedCaseIds.has(c.id)} />
-                </div>
-              ))}
+          <section
+            className="mt-16 -mx-6 sm:-mx-12 px-6 sm:px-12 py-12"
+            style={{ background: 'var(--hupr-slate)', color: '#FFFFFF' }}
+          >
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-baseline gap-3 mb-6">
+                <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
+                  Cases from other tracks
+                </span>
+                <span
+                  className="flex-1 h-px"
+                  style={{ background: 'rgba(255,255,255,0.25)' }}
+                  aria-hidden="true"
+                />
+              </div>
+              <p
+                className="mb-6"
+                style={{
+                  fontFamily: 'var(--font-accent)',
+                  fontSize: 15,
+                  color: 'rgba(255,255,255,0.85)',
+                }}
+              >
+                Drawn from the consulting library while {TRACKS[activeTrack].short}{' '}
+                backfill catches up.
+              </p>
+              <div>
+                {fallbackFiltered.map((c) => (
+                  <div key={c.id}>
+                    <HuprCaseRow c={c} completed={completedCaseIds.has(c.id)} />
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         )}
 
-        {mainRows.length === 0 && orderedStarters.length === 0 && fallbackFiltered.length === 0 && (
+        {mainRows.length === 0 && !heroCase && fallbackFiltered.length === 0 && (
           <div
             className="mt-16 mb-16"
             style={{

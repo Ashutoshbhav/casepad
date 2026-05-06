@@ -179,35 +179,46 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
 
   return (
     <main
-      className="min-h-screen p-6 sm:p-12 max-w-4xl mx-auto"
+      className="min-h-screen"
       style={{ background: 'var(--color-bg-canvas)' }}
     >
       <HuprObserveReveals />
-      <a
-        href="/dashboard"
-        className="hupr-mono-eyebrow underline"
-        style={{ color: 'var(--color-text-secondary)' }}
+
+      {/* HEADER BAND — cognac. Sets debrief tone. */}
+      <section
+        className="px-6 sm:px-12 py-12"
+        style={{ background: 'var(--hupr-cognac)', color: '#FFFFFF' }}
       >
-        ← back to dashboard
-      </a>
-      <div className="mt-6">
-        <span className="hupr-mono-eyebrow">Debrief</span>
-        <hr className="hupr-hairline" />
-      </div>
-      <h1
-        className="uppercase mt-6 mb-2"
-        style={{
-          fontFamily: 'var(--font-headline)',
-          fontWeight: 700,
-          fontSize: 'clamp(36px, 5vw, 64px)',
-          lineHeight: 1,
-          color: 'var(--color-text-primary)',
-          margin: 0,
-          maxWidth: '24ch',
-        }}
-      >
-        {caseRow?.title ?? '—'}
-      </h1>
+        <div className="max-w-4xl mx-auto">
+          <a
+            href="/dashboard"
+            className="hupr-mono-eyebrow underline"
+            style={{ color: '#FFFFFF' }}
+          >
+            ← back to dashboard
+          </a>
+          <div className="mt-6">
+            <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>Debrief</span>
+            <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0' }} />
+          </div>
+          <h1
+            className="uppercase mt-6 mb-2"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(36px, 5vw, 64px)',
+              lineHeight: 1,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '24ch',
+            }}
+          >
+            {caseRow?.title ?? '—'}
+          </h1>
+        </div>
+      </section>
+
+      <div className="p-6 sm:p-12 max-w-4xl mx-auto">
       <CompletionBanner
         xpEarned={xpEarned}
         streakDays={streakDays}
@@ -316,14 +327,14 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       {/* TOMORROW — anticipation outro. Routes to /dashboard (set anticipation),
           not /cases. The library is still reachable via the secondary link below. */}
       <section
-        className="p-6 sm:p-8 mb-8"
+        className="-mx-6 sm:-mx-12 px-6 sm:px-12 py-10 mb-8"
         style={{
-          background: 'var(--color-bg-sunken)',
-          border: '1px solid var(--color-border)',
+          background: 'var(--hupr-terra)',
+          color: '#FFFFFF',
         }}
       >
-        <span className="hupr-mono-eyebrow">Tomorrow’s case</span>
-        <hr className="hupr-hairline mb-6" />
+        <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>Tomorrow’s case</span>
+        <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0 24px' }} />
         {tomorrowAssignment ? (
           <>
             <h3
@@ -333,7 +344,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
                 fontWeight: 700,
                 fontSize: 'clamp(28px, 4vw, 48px)',
                 lineHeight: 1,
-                color: 'var(--color-text-primary)',
+                color: '#FFFFFF',
                 margin: 0,
                 maxWidth: '20ch',
               }}
@@ -347,7 +358,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
                 fontSize: 12,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
-                color: 'var(--color-text-secondary)',
+                color: 'rgba(255,255,255,0.85)',
               }}
             >
               {tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈{' '}
@@ -359,7 +370,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
                 fontFamily: 'var(--font-accent)',
                 fontSize: 16,
                 lineHeight: 1.55,
-                color: 'var(--color-text-primary)',
+                color: '#FFFFFF',
                 margin: 0,
               }}
             >
@@ -373,7 +384,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               fontFamily: 'var(--font-accent)',
               fontSize: 16,
               lineHeight: 1.55,
-              color: 'var(--color-text-primary)',
+              color: '#FFFFFF',
               margin: 0,
             }}
           >
@@ -385,8 +396,8 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
             href="/dashboard"
             className="hupr-anim-btn"
             style={{
-              background: 'var(--color-text-primary)',
-              color: 'var(--color-bg-canvas)',
+              background: '#FFFFFF',
+              color: 'var(--hupr-terra)',
               padding: '12px 18px',
               borderRadius: 6,
               fontFamily: 'var(--font-mono)',
@@ -403,7 +414,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
           <Link
             href="/cases"
             className="hupr-mono-eyebrow underline"
-            style={{ color: 'var(--color-text-secondary)' }}
+            style={{ color: '#FFFFFF' }}
           >
             Or keep going now →
           </Link>
@@ -416,6 +427,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         sessionId={sessionId}
         initiallyDismissed={feedbackAlreadyGiven}
       />
+      </div>
     </main>
   );
 }

@@ -45,6 +45,17 @@
   --color-border:        #e8e8e8;
   --color-signal-danger: #b33c3c;
 
+  /* HUPR section accent palette — extends the mono base with HUPR's exact
+     earth tones from the live site's service-stack cards plus three more
+     muted tones for variety across pages. Used for full-bleed section
+     bands so pages aren't a wall of white. */
+  --hupr-sand:    #a69385;  /* warm sand — featured / case hero */
+  --hupr-terra:   #a64b52;  /* terracotta — debrief warning / reps */
+  --hupr-sage:    #7a8f92;  /* muted sage — reflection / process */
+  --hupr-slate:   #3d5a6c;  /* deep slate-blue — data / dashboard hero */
+  --hupr-cognac:  #c2876d;  /* cognac — CTA emphasis / today */
+  --hupr-cream:   #ede4d3;  /* warm cream — sunken sections */
+
   /* Font CSS variables — wired in src/app/layout.tsx via next/font.
      The actual font-family hash is set by next/font via the className
      on <html>; these are the system fallbacks only. --font-mono

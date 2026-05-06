@@ -283,7 +283,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   return (
     <main
-      className="min-h-screen px-4 sm:px-8 py-8 sm:py-12 max-w-5xl mx-auto"
+      className="min-h-screen"
       style={{ background: 'var(--color-bg-canvas)' }}
     >
       <HuprObserveReveals />
@@ -297,38 +297,45 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           card. Greeting + streak + library link in one row. The case card
           IS the hero now; this band is just orientation. Headspace pattern:
           one decision per surface, supporting context demoted. */}
-      <section className="mb-10 sm:mb-12">
-        <div className="flex items-baseline justify-between gap-4 flex-wrap mb-3">
-          <span className="hupr-mono-eyebrow">
-            Day {dayNumber} · CasePad
-          </span>
-          <Link
-            href="/cases"
-            className="hupr-mono-eyebrow underline"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Library →
-          </Link>
-        </div>
-        <hr className="hupr-hairline" />
-        <div className="mt-6 flex items-end justify-between gap-6 flex-wrap">
-          <h1
-            className="uppercase"
-            style={{
-              fontFamily: 'var(--font-headline)',
-              fontWeight: 700,
-              fontSize: 'clamp(40px, 6vw, 72px)',
-              lineHeight: 1,
-              margin: 0,
-              color: 'var(--color-text-primary)',
-              maxWidth: '20ch',
-            }}
-          >
-            {greeting}
-          </h1>
-          <StreakFlame streak={streak} />
+      <section
+        className="px-4 sm:px-8 py-12 sm:py-16"
+        style={{ background: 'var(--hupr-cognac)', color: '#FFFFFF' }}
+      >
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-baseline justify-between gap-4 flex-wrap mb-3">
+            <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
+              Day {dayNumber} · CasePad
+            </span>
+            <Link
+              href="/cases"
+              className="hupr-mono-eyebrow underline"
+              style={{ color: '#FFFFFF' }}
+            >
+              Library →
+            </Link>
+          </div>
+          <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0' }} />
+          <div className="mt-6 flex items-end justify-between gap-6 flex-wrap">
+            <h1
+              className="uppercase"
+              style={{
+                fontFamily: 'var(--font-headline)',
+                fontWeight: 700,
+                fontSize: 'clamp(40px, 6vw, 72px)',
+                lineHeight: 1,
+                margin: 0,
+                color: '#FFFFFF',
+                maxWidth: '20ch',
+              }}
+            >
+              {greeting}
+            </h1>
+            <StreakFlame streak={streak} />
+          </div>
         </div>
       </section>
+
+      <div className="px-4 sm:px-8 py-12 max-w-5xl mx-auto">
 
       {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
           asterisk-hotspot click action. Hotspot smooth-scrolls here. */}
@@ -427,8 +434,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </div>
       </section>
 
-      {/* C. THE WEEK */}
-      <section className="mb-12 sm:mb-16">
+      {/* C. THE WEEK — cream band so the page isn't a wall of white. */}
+      <section
+        className="mb-12 sm:mb-16 -mx-4 sm:-mx-8 px-4 sm:px-8 py-10"
+        style={{ background: 'var(--hupr-cream)' }}
+      >
         <div className="flex items-baseline justify-between mb-4">
           <span
             className="hupr-mono-eyebrow"
@@ -476,12 +486,15 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </div>
       </section>
 
-      {/* D. RECENT DEBRIEFS */}
-      <section className="mb-12 sm:mb-16">
+      {/* D. RECENT DEBRIEFS — slate band, white text. */}
+      <section
+        className="mb-12 sm:mb-16 -mx-4 sm:-mx-8 px-4 sm:px-8 py-10"
+        style={{ background: 'var(--hupr-slate)', color: '#FFFFFF' }}
+      >
         <div className="mb-4">
           <span
             className="hupr-mono-eyebrow"
-            style={{ color: 'var(--color-text-primary)' }}
+            style={{ color: '#FFFFFF' }}
           >
             RECENT REPS
           </span>
@@ -735,6 +748,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           How it works
         </Link>
       </footer>
+      </div>
     </main>
   );
 }
