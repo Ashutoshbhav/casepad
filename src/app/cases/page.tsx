@@ -4,110 +4,22 @@ import { withRetry } from '@/lib/supabase/with-retry';
 import { CaseFilters } from '@/components/case-filters';
 import { CasesTour } from '@/components/cases-tour';
 import { TutorialLaunchLink } from '@/components/tutorial-launch-link';
-import { CasesHero } from '@/components/cases-hero';
 import { CohortRail } from '@/components/cohort-rail';
 import { CasesLoadMore } from '@/components/cases-load-more';
-import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
-import { CaseListLink } from '@/components/case-list-link';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { STARTER_CASE_IDS } from '@/lib/starter-cases';
+import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
+import { HuprCaseRow, type HuprCaseRowData } from '@/components/hupr/hupr-case-row';
 
 export const dynamic = 'force-dynamic';
 
-// Cases with `problem_statement` shorter than this are treated as partial /
-// noisy extractions and hidden from the default grid. Users can re-enable
-// them by appending `?all=1` to the URL.
 const MIN_PROBLEM_STATEMENT_LEN = 80;
-
-// Threshold under which a non-consulting track is considered "still
-// backfilling" and we surface a banner + consulting fallback.
 const SPARSE_TRACK_THRESHOLD = 50;
 
-// Shape of the rows we actually fetch. Includes problem_statement so we can
-// filter junk client-side (Supabase JS has no easy length() filter).
-type CaseListRow = {
-  id: string;
-  title: string;
-  industry: string;
-  case_type: string;
-  difficulty: string;
-  source: string | null;
-  problem_statement: string | null;
-};
+type CaseListRow = HuprCaseRowData;
 
-// Brass dot indicator for difficulty — ●○○ / ●●○ / ●●●. Ordered to render
-// fill count followed by empties.
-function DifficultyDots({ d }: { d: string }) {
-  const fill = d === 'easy' ? 1 : d === 'medium' ? 2 : 3;
-  return (
-    <span
-      aria-label={`Difficulty: ${d}`}
-      className="inline-flex items-center gap-[3px] align-middle"
-    >
-      {[0, 1, 2].map((i) => (
-        <span
-          key={i}
-          className="block h-1.5 w-1.5 rounded-full"
-          style={{
-            background:
-              i < fill ? 'var(--color-accent)' : 'transparent',
-            border: i < fill ? 'none' : '1px solid var(--color-text-muted)',
-          }}
-        />
-      ))}
-    </span>
-  );
-}
-
-// List-mode row — replaces the dense grid card for the main library.
-// `completed` shows a faint checkmark in the right gutter so users see
-// the cases they've already done at a glance. Linear's done-state pattern.
-function CaseListRowItem({ c, completed }: { c: CaseListRow; completed?: boolean }) {
-  const meta = [
-    c.industry,
-    c.case_type.replace('_', ' '),
-    c.source ?? 'unknown',
-  ].filter(Boolean);
-  return (
-    <CaseListLink
-      href={`/solve/${c.id}`}
-      className="case-row block py-5 px-1 group"
-      style={{
-        borderBottom: '1px solid var(--color-border)',
-        opacity: completed ? 0.65 : 1,
-      }}
-    >
-      <div className="flex items-baseline justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <h3
-            className="font-headline text-[18px] leading-snug truncate group-hover:opacity-90"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            {c.title}
-          </h3>
-          <div
-            className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] flex items-center gap-2 flex-wrap"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            <span>{meta.join(' · ')}</span>
-            <span aria-hidden="true">·</span>
-            <DifficultyDots d={c.difficulty} />
-          </div>
-        </div>
-        {completed && (
-          <span
-            aria-label="Completed"
-            title="You've completed this case"
-            className="flex-shrink-0 font-mono text-[11px] tracking-wide"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            ✓ done
-          </span>
-        )}
-      </div>
-    </CaseListLink>
-  );
-}
+const HERO_PHOTO =
+  'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=2400&q=80';
 
 export default async function CasesPage({
   searchParams,
@@ -142,9 +54,6 @@ export default async function CasesPage({
     console.error('[cases] main query failed:', e);
   }
 
-  // Fetch user's completed case IDs so list rows can mark "done" in the
-  // right gutter. Single query, defensive — failure degrades to no
-  // checkmarks rather than crashing the page.
   let completedCaseIds = new Set<string>();
   try {
     const { data: completedSessions } = await supabase
@@ -184,7 +93,6 @@ export default async function CasesPage({
       )
     : [];
 
-  // Hero = first starter; Cohort Five rail = next 5.
   const heroCase = orderedStarters[0];
   const cohortFive = orderedStarters.slice(1, 7);
 
@@ -194,9 +102,6 @@ export default async function CasesPage({
     : visibleRows;
 
   const isNonConsulting = activeTrack !== 'consulting';
-  // Track-scoped total — used for the sparse banner AND the "Showing X of N"
-  // counter under the load-more button. We always need the count now (not
-  // just for non-consulting tracks) so the counter is accurate per track.
   const trackTotal =
     (await supabase
       .from('cases')
@@ -232,230 +137,372 @@ export default async function CasesPage({
     return qs ? `/cases?${qs}` : '/cases';
   })();
 
-  // Hero excerpt — trim problem statement to ~240 chars for the editorial card.
   const heroExcerpt = heroCase?.problem_statement
-    ? heroCase.problem_statement.length > 240
-      ? heroCase.problem_statement.slice(0, 237).trimEnd() + '…'
+    ? heroCase.problem_statement.length > 280
+      ? heroCase.problem_statement.slice(0, 277).trimEnd() + '…'
       : heroCase.problem_statement
     : '';
 
   return (
     <main
-      className="relative min-h-screen px-6 py-8 sm:px-12 sm:py-12 max-w-6xl mx-auto"
-      style={{ color: 'var(--color-text-primary)' }}
+      className="relative min-h-screen"
+      style={{ background: 'var(--color-bg-canvas)', color: 'var(--color-text-primary)' }}
     >
-      {/* Register 'cases' preset on the persistent canvas — flies the
-          asterisk from signin-center to upper-left at 35% scale. */}
-      <AsteriskSceneRegister preset="cases" />
-      <header className="mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
-        <div>
-          <h1
-            className="font-headline text-2xl sm:text-3xl"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Cases
-          </h1>
-          <p
-            className="meta-label mt-1"
-          >
-            Track · {TRACKS[activeTrack].label}
-          </p>
-        </div>
-        <TutorialLaunchLink className="text-xs sm:text-sm hover:opacity-80 text-[color:var(--color-accent)]">
-          Take me through a case →
-        </TutorialLaunchLink>
-      </header>
+      <HuprObserveReveals />
 
-      {/* HERO — single editorial card for the first starter. */}
-      {showFeatured && heroCase && (
-        <section className="mb-10">
-          <CasesHero
-            caseId={heroCase.id}
-            source={heroCase.source ?? 'CASEBOOK'}
-            title={heroCase.title}
-            excerpt={heroExcerpt}
-            caseTypeLabel={heroCase.case_type.replace('_', ' ')}
-            difficulty={heroCase.difficulty}
+      {/* HERO — full-bleed photo + floating featured-case card on right */}
+      {showFeatured && heroCase ? (
+        <section
+          className="relative w-full overflow-hidden"
+          style={{ height: 'min(80vh, 720px)', minHeight: 560 }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${HERO_PHOTO})`,
+              backgroundSize: 'cover',
+              backgroundPosition: '50% 50%',
+              filter: 'brightness(0.78) saturate(0.92)',
+            }}
           />
-        </section>
-      )}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(50,50,52,0.40) 0%, rgba(50,50,52,0.10) 35%, rgba(50,50,52,0.0) 65%, rgba(50,50,52,0.55) 100%)',
+            }}
+          />
+          {/* Header band over the photo */}
+          <header className="absolute top-0 left-0 right-0 z-10 flex items-baseline justify-between px-6 sm:px-12 py-6 sm:py-8">
+            <div>
+              <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
+                Cases · {TRACKS[activeTrack].label}
+              </span>
+            </div>
+            <TutorialLaunchLink className="hupr-mono-eyebrow underline" >
+              <span style={{ color: '#FFFFFF' }}>Take me through a case →</span>
+            </TutorialLaunchLink>
+          </header>
 
-      {/* THE COHORT FIVE — horizontal scroll rail. */}
-      {showFeatured && cohortFive.length > 0 && (
-        <section className="mb-10">
-          <div className="flex items-baseline gap-3 mb-4">
-            <h2
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              The Cohort Five
-            </h2>
-            <span
-              className="flex-1 h-px"
-              style={{ background: 'var(--color-border)' }}
-              aria-hidden="true"
-            />
+          {/* Floating featured-case card on right */}
+          <div
+            className="absolute z-10 px-6 sm:px-0"
+            style={{
+              top: '50%',
+              right: '2rem',
+              width: 'min(440px, 92vw)',
+              transform: 'translateY(-50%)',
+            }}
+          >
+            <div style={{ background: '#FFFFFF', padding: '2rem', borderRadius: 4 }}>
+              <span
+                className="hupr-mono-eyebrow"
+                style={{ color: '#323234' }}
+              >
+                Featured · {(heroCase.source ?? 'CASEBOOK').toUpperCase()}
+              </span>
+              <hr
+                style={{
+                  border: 0,
+                  borderTop: '1px solid #323234',
+                  margin: '8px 0 20px',
+                }}
+              />
+              <h1
+                className="uppercase"
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 28,
+                  lineHeight: 1.1,
+                  color: '#323234',
+                  margin: 0,
+                }}
+              >
+                {heroCase.title}
+              </h1>
+              <div
+                className="mt-3"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  color: 'rgba(50,50,52,0.65)',
+                }}
+              >
+                {heroCase.case_type.replace('_', ' ')} · {heroCase.difficulty}
+              </div>
+              {heroExcerpt && (
+                <p
+                  className="mt-4"
+                  style={{
+                    fontFamily: 'var(--font-accent)',
+                    fontSize: 15,
+                    lineHeight: 1.55,
+                    color: '#323234',
+                    margin: 0,
+                  }}
+                >
+                  {heroExcerpt}
+                </p>
+              )}
+              <div className="pt-6">
+                <a
+                  href={`/solve/${heroCase.id}`}
+                  className="hupr-anim-btn"
+                  style={{
+                    display: 'inline-block',
+                    background: '#323234',
+                    color: '#FFFFFF',
+                    padding: '12px 18px',
+                    borderRadius: 6,
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <span className="top">Solve this case</span>
+                  <span className="btm">Solve this case</span>
+                </a>
+              </div>
+            </div>
           </div>
-          <CohortRail
-            cards={cohortFive.map((c) => ({
-              id: c.id,
-              title: c.title,
-              source: c.source,
-              case_type: c.case_type,
-              difficulty: c.difficulty,
-            }))}
-          />
         </section>
+      ) : (
+        // Non-featured header (track filter active, or non-consulting track)
+        <header className="px-6 sm:px-12 pt-12 pb-8 max-w-6xl mx-auto">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <span className="hupr-mono-eyebrow">Cases</span>
+              <hr className="hupr-hairline" />
+              <h1
+                className="uppercase mt-3"
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 'clamp(40px, 6vw, 72px)',
+                  lineHeight: 1,
+                  margin: 0,
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                {TRACKS[activeTrack].label}
+              </h1>
+            </div>
+            <TutorialLaunchLink className="hupr-mono-eyebrow underline">
+              Take me through a case →
+            </TutorialLaunchLink>
+          </div>
+        </header>
       )}
-      {/* Track tabs — underline style, no pills. */}
-      <div data-tour="cases-track" className="flex gap-6 mb-6 overflow-x-auto">
-        {(['consulting', 'ib_pe_vc', 'pm', 'marketing', 'strategy_bizops'] as Track[]).map((t) => {
-          const isActive = activeTrack === t;
-          return (
-            <a
-              key={t}
-              href={`/cases?track=${t}`}
-              className="font-mono text-[11px] uppercase tracking-[0.16em] pb-2 whitespace-nowrap"
+
+      <div className="px-6 sm:px-12 pt-16 max-w-6xl mx-auto">
+        {/* THE COHORT FIVE — horizontal scroll rail. */}
+        {showFeatured && cohortFive.length > 0 && (
+          <section className="mb-16">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="hupr-mono-eyebrow">The Cohort Five</span>
+              <span
+                className="flex-1 h-px"
+                style={{ background: 'var(--color-border)' }}
+                aria-hidden="true"
+              />
+            </div>
+            <CohortRail
+              cards={cohortFive.map((c) => ({
+                id: c.id,
+                title: c.title,
+                source: c.source,
+                case_type: c.case_type,
+                difficulty: c.difficulty,
+              }))}
+            />
+          </section>
+        )}
+
+        {/* Track tabs */}
+        <div data-tour="cases-track" className="flex gap-8 mb-6 overflow-x-auto pb-1">
+          {(['consulting', 'ib_pe_vc', 'pm', 'marketing', 'strategy_bizops'] as Track[]).map((t) => {
+            const isActive = activeTrack === t;
+            return (
+              <a
+                key={t}
+                href={`/cases?track=${t}`}
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  paddingBottom: 10,
+                  whiteSpace: 'nowrap',
+                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                  borderBottom: isActive
+                    ? '2px solid var(--color-text-primary)'
+                    : '2px solid transparent',
+                  textDecoration: 'none',
+                }}
+              >
+                {TRACKS[t].short}
+              </a>
+            );
+          })}
+        </div>
+        <div data-tour="cases-filters" className="mb-10">
+          <CaseFilters />
+        </div>
+
+        {isSparse && (
+          <div
+            className="mb-10 p-5"
+            style={{
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-bg-sunken)',
+            }}
+          >
+            <span className="hupr-mono-eyebrow">Sparse track</span>
+            <p
+              className="mt-2"
               style={{
-                color: isActive ? 'var(--color-accent)' : 'var(--color-text-secondary)',
-                borderBottom: isActive
-                  ? '2px solid var(--color-accent)'
-                  : '2px solid transparent',
+                fontFamily: 'var(--font-accent)',
+                fontSize: 15,
+                lineHeight: 1.55,
+                color: 'var(--color-text-primary)',
+                margin: 0,
               }}
             >
-              {TRACKS[t].short}
-            </a>
-          );
-        })}
-      </div>
-      <div data-tour="cases-filters">
-        <CaseFilters />
-      </div>
+              Only {trackTotal} {TRACKS[activeTrack].short} case
+              {trackTotal === 1 ? '' : 's'} in the library so far — we&apos;re also
+              showing the broader consulting library below.
+            </p>
+          </div>
+        )}
 
-      {isSparse && (
-        <div
-          className="mb-6 rounded-md border p-4 text-sm"
-          style={{
-            borderColor: 'var(--color-accent)',
-            color: 'var(--color-accent-bright)',
-          }}
-        >
-          <div className="font-medium mb-1">Sparse track</div>
-          <p className="leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Only {trackTotal} {TRACKS[activeTrack].short} case{trackTotal === 1 ? '' : 's'} in the library so far —
-            we&apos;re also showing the broader consulting library below.
-          </p>
-        </div>
-      )}
-
-      {/* THE LIBRARY — list-mode by default. */}
-      <section>
-        <div className="flex items-baseline gap-3 mb-3">
-          <h2
-            className="font-mono text-[11px] uppercase tracking-[0.22em]"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            The Library
-          </h2>
-          <span
-            className="flex-1 h-px"
-            style={{ background: 'var(--color-border)' }}
-            aria-hidden="true"
-          />
-          <span
-            className="meta-label"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            {trackTotal.toLocaleString()} total
-          </span>
-        </div>
-        <CasesLoadMore totalLibrarySize={trackTotal}>
-          {mainRows.map((c, i) => (
-            <div key={c.id} data-tour={i === 0 && !showFeatured ? 'cases-card' : undefined}>
-              {/* Section divider every 6 rows — gives the eye a breath
-                  point on the long library list. NYT Cooking pattern.
-                  Skipped at i=0 (no leading rest beat). */}
-              {i > 0 && i % 6 === 0 && (
-                <div className="case-section-rest" aria-hidden="true" />
-              )}
-              <CaseListRowItem c={c} completed={completedCaseIds.has(c.id)} />
-            </div>
-          ))}
-        </CasesLoadMore>
-      </section>
-
-      {!showAll && shortCount > 0 && (
-        <div
-          className="mt-6 text-xs"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          {shortCount} case{shortCount === 1 ? '' : 's'} hidden because the prompt is incomplete.{' '}
-          <a
-            href={toggleHref}
-            className="underline"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Show all 1,165 cases (including short prompts)
-          </a>
-        </div>
-      )}
-      {showAll && (
-        <div
-          className="mt-6 text-xs"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          Showing all cases including short / partial prompts.{' '}
-          <a
-            href={toggleHref}
-            className="underline"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Hide short prompts
-          </a>
-        </div>
-      )}
-
-      {isSparse && fallbackFiltered.length > 0 && (
-        <section className="mt-12">
-          <div className="flex items-baseline gap-3 mb-3">
-            <h2
-              className="font-mono text-[11px] uppercase tracking-[0.22em]"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Cases from other tracks
-            </h2>
+        {/* THE LIBRARY — news-pair rows. */}
+        <section className="mb-12">
+          <div className="flex items-baseline gap-3 mb-4">
+            <span className="hupr-mono-eyebrow">The Library</span>
             <span
               className="flex-1 h-px"
               style={{ background: 'var(--color-border)' }}
               aria-hidden="true"
             />
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                color: 'var(--color-text-muted)',
+              }}
+            >
+              {trackTotal.toLocaleString()} total
+            </span>
           </div>
-          <p
-            className="text-xs mb-3"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            Drawn from the consulting library while {TRACKS[activeTrack].short} backfill catches up.
-          </p>
-          <div>
-            {fallbackFiltered.map((c) => (
-              <div key={c.id}>
-                <CaseListRowItem c={c} completed={completedCaseIds.has(c.id)} />
+          <CasesLoadMore totalLibrarySize={trackTotal}>
+            {mainRows.map((c, i) => (
+              <div key={c.id} data-tour={i === 0 && !showFeatured ? 'cases-card' : undefined}>
+                {i > 0 && i % 6 === 0 && (
+                  <div className="case-section-rest" aria-hidden="true" />
+                )}
+                <HuprCaseRow c={c} completed={completedCaseIds.has(c.id)} />
               </div>
             ))}
-          </div>
+          </CasesLoadMore>
         </section>
-      )}
 
-      {mainRows.length === 0 && orderedStarters.length === 0 && fallbackFiltered.length === 0 && (
-        <div
-          className="text-sm mt-12"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          No cases match these filters.
-        </div>
-      )}
+        {!showAll && shortCount > 0 && (
+          <div
+            className="mt-8 mb-12"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            {shortCount} case{shortCount === 1 ? '' : 's'} hidden because the
+            prompt is incomplete.{' '}
+            <a
+              href={toggleHref}
+              style={{
+                color: 'var(--color-text-secondary)',
+                textDecoration: 'underline',
+              }}
+            >
+              Show all 1,165 cases (including short prompts)
+            </a>
+          </div>
+        )}
+        {showAll && (
+          <div
+            className="mt-8 mb-12"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            Showing all cases including short / partial prompts.{' '}
+            <a
+              href={toggleHref}
+              style={{
+                color: 'var(--color-text-secondary)',
+                textDecoration: 'underline',
+              }}
+            >
+              Hide short prompts
+            </a>
+          </div>
+        )}
 
-      <CasesTour />
+        {isSparse && fallbackFiltered.length > 0 && (
+          <section className="mt-16 mb-16">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="hupr-mono-eyebrow">Cases from other tracks</span>
+              <span
+                className="flex-1 h-px"
+                style={{ background: 'var(--color-border)' }}
+                aria-hidden="true"
+              />
+            </div>
+            <p
+              className="mb-4"
+              style={{
+                fontFamily: 'var(--font-accent)',
+                fontSize: 14,
+                color: 'var(--color-text-muted)',
+              }}
+            >
+              Drawn from the consulting library while {TRACKS[activeTrack].short}{' '}
+              backfill catches up.
+            </p>
+            <div>
+              {fallbackFiltered.map((c) => (
+                <div key={c.id}>
+                  <HuprCaseRow c={c} completed={completedCaseIds.has(c.id)} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {mainRows.length === 0 && orderedStarters.length === 0 && fallbackFiltered.length === 0 && (
+          <div
+            className="mt-16 mb-16"
+            style={{
+              fontFamily: 'var(--font-accent)',
+              fontSize: 16,
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            No cases match these filters.
+          </div>
+        )}
+
+        <CasesTour />
+      </div>
     </main>
   );
 }
