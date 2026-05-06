@@ -53,24 +53,52 @@ export function CohortRail({ cards }: { cards: CohortCard[] }) {
         >
           <Link
             href={`/solve/${c.id}`}
-            className="block w-[280px] rounded-lg p-5 transition-colors"
+            // Wave C: warm-dark library-shelf card matching /cases case
+            // grid + /dashboard recent reps + cohort leaderboard.
+            className="block transition-opacity hover:opacity-90"
             style={{
-              background: 'var(--color-bg-elevated)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'var(--color-border)',
+              width: 240,
+              height: 300,
+              background: '#1a1817',
+              color: '#faf9f5',
+              padding: 18,
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
             }}
           >
-            <div className="meta-label mb-2">
-              {c.source ?? 'Unknown'}
+            <div>
+              <div
+                className="font-mono uppercase mb-3"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '0.22em',
+                  color: 'rgba(250,249,245,0.55)',
+                }}
+              >
+                {(c.source ?? 'Unknown').toUpperCase()}
+              </div>
+              <h3
+                className="font-headline italic"
+                style={{
+                  color: '#faf9f5',
+                  fontSize: 22,
+                  lineHeight: 1.05,
+                  letterSpacing: '-0.015em',
+                }}
+              >
+                {c.title}
+              </h3>
             </div>
-            <h3
-              className="font-headline text-lg leading-snug line-clamp-3"
-              style={{ color: 'var(--color-text-primary)' }}
+            <div
+              className="font-mono uppercase flex items-center gap-2"
+              style={{
+                fontSize: 10,
+                letterSpacing: '0.18em',
+                color: 'rgba(250,249,245,0.55)',
+              }}
             >
-              {c.title}
-            </h3>
-            <div className="meta-label mt-3 flex items-center gap-2">
               {c.case_type.replace('_', ' ')} · <DifficultyDots d={c.difficulty} />
             </div>
           </Link>
