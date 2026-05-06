@@ -434,7 +434,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <section className="mb-12 sm:mb-16">
         <div className="flex items-baseline justify-between mb-4">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
             style={{ color: 'var(--color-text-muted)' }}
           >
             THIS WEEK
@@ -458,7 +458,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <section className="mb-12 sm:mb-16">
         <div className="mb-4">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.18em]"
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
             style={{ color: 'var(--color-text-muted)' }}
           >
             RECENT REPS
@@ -559,7 +559,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <section className="mb-10">
           <div className="mb-3">
             <span
-              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: 'var(--color-text-muted)' }}
             >
               UNFINISHED
@@ -592,7 +592,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div className="md:col-span-2">
           <div className="mb-3">
             <span
-              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: 'var(--color-text-muted)' }}
             >
               TRAJECTORY
@@ -611,7 +611,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div>
           <div className="mb-3">
             <span
-              className="font-mono text-[11px] uppercase tracking-[0.18em]"
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
               style={{ color: 'var(--color-text-muted)' }}
             >
               WEAK SPOTS
@@ -622,11 +622,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               {weakSpots.map((w) => (
                 <span
                   key={w.type}
-                  className="text-xs px-3 py-1.5 rounded-md"
+                  // Wave C: hot orange chip on warm-dark.
+                  className="text-xs px-3 py-1.5 font-mono uppercase"
                   style={{
-                    background: 'color-mix(in oklab, var(--color-accent) 10%, transparent)',
-                    color: 'var(--color-accent-bright)',
-                    border: '1px solid color-mix(in oklab, var(--color-accent) 25%, transparent)',
+                    background: '#1a1817',
+                    color: '#f54e00',
+                    boxShadow: '0 0 0 1px rgba(245,78,0,0.35) inset',
+                    letterSpacing: '0.16em',
                   }}
                 >
                   {w.type.replace(/_/g, ' ')} · avg {w.avg} ({w.n})
@@ -738,7 +740,7 @@ function TodaysCaseCard({
       {/* Eyebrow — kept simple, no underline, no coral. The headline
           carries weight; the eyebrow just labels the section. */}
       <div
-        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
+        className="font-mono text-[11px] uppercase tracking-[0.22em] mb-6 sm:mb-8"
         style={{ color: 'var(--color-text-muted)' }}
       >
         {eyebrow}
@@ -857,7 +859,7 @@ function EmptyTodaysCaseCard() {
       }}
     >
       <div
-        className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 sm:mb-8"
+        className="font-mono text-[11px] uppercase tracking-[0.22em] mb-6 sm:mb-8"
         style={{ color: 'var(--color-text-muted)' }}
       >
         TODAY’S CASE
