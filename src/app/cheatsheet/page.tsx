@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { CheatsheetTabs } from '@/components/cheatsheet-tabs';
+import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,22 +48,71 @@ export default async function CheatsheetPage() {
   })).sort((a, b) => a.ratio - b.ratio);
 
   return (
-    <main className="min-h-screen p-4 sm:p-6 max-w-6xl mx-auto">
-      <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Cheat sheet</h1>
-          <p className="text-xs text-zinc-500">{def.label} · {sessions?.length || 0} cases solved</p>
+    <main
+      className="min-h-screen px-6 sm:px-12 py-12 max-w-6xl mx-auto"
+      style={{ background: 'var(--color-bg-canvas)', color: 'var(--color-text-primary)' }}
+    >
+      <HuprObserveReveals />
+
+      {/* Header band */}
+      <header className="mb-12">
+        <span className="hupr-mono-eyebrow">Cheat sheet</span>
+        <hr className="hupr-hairline" />
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div>
+            <h1
+              className="uppercase"
+              style={{
+                fontFamily: 'var(--font-headline)',
+                fontWeight: 700,
+                fontSize: 'clamp(40px, 6vw, 72px)',
+                lineHeight: 1,
+                color: 'var(--color-text-primary)',
+                margin: 0,
+                maxWidth: '20ch',
+              }}
+            >
+              {def.label}
+            </h1>
+            <div
+              className="mt-3"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 13,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              {sessions?.length || 0} cases solved
+            </div>
+          </div>
+          <nav className="flex flex-wrap items-center gap-5">
+            {[
+              { href: '/company-pack', label: 'Company pack' },
+              { href: '/drill', label: 'Recovery' },
+              { href: '/math-drill', label: 'Math' },
+              { href: '/behavioral-drill', label: 'Behavioral' },
+              { href: '/cases', label: '← Cases' },
+            ].map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="hupr-mono-eyebrow underline"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
         </div>
-        <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
-          <a href="/company-pack" className="text-emerald-300 hover:text-emerald-200">📋 Company pack</a>
-          <a href="/drill" className="text-rose-300 hover:text-rose-200">🎯 Recovery</a>
-          <a href="/math-drill" className="text-amber-300 hover:text-amber-200">🧮 Math</a>
-          <a href="/behavioral-drill" className="text-violet-300 hover:text-violet-200">🎤 Behavioral</a>
-          <a href="/cases" className="text-zinc-400 hover:text-zinc-200">← cases</a>
-        </nav>
       </header>
 
-      <CheatsheetTabs track={track} weakestDims={dimRatios.slice(0, 3).map((r) => r.dim)} weakestStats={dimRatios.slice(0, 5)} />
+      <CheatsheetTabs
+        track={track}
+        weakestDims={dimRatios.slice(0, 3).map((r) => r.dim)}
+        weakestStats={dimRatios.slice(0, 5)}
+      />
     </main>
   );
 }
