@@ -164,6 +164,43 @@ const NEWS = [
 ];
 
 export function HuprDesign() {
+  // Single IntersectionObserver wires HUPR's two reveal classes:
+  //   .hupr-image-zoom — scale(1.3) blur(4px) → scale(1) blur(0)
+  //   .hupr-fade-up    — opacity 0 + translateY(24px) → 1 + 0
+  // On reduced-motion preference, instantly mark every target as is-in
+  // so nothing remains hidden.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const targets = document.querySelectorAll<HTMLElement>(
+      '.hupr-image-zoom, .hupr-fade-up'
+    );
+
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    if (reducedMotion || typeof IntersectionObserver === 'undefined') {
+      targets.forEach((el) => el.classList.add('is-in'));
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    targets.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <div
       className={`${plexMono.variable} ${montserrat.variable} ${moderustic.variable}`}
@@ -771,7 +808,7 @@ function StatsBillboard() {
             </h3>
           </div>
           <p
-            className="hupr-prose"
+            className="hupr-prose hupr-fade-up"
             style={{
               fontFamily: 'var(--font-hupr-accent)',
               fontSize: 16,
@@ -915,7 +952,7 @@ function ServiceStack() {
                   <img
                     src={t.photo}
                     alt=""
-                    className="w-full h-full object-cover"
+                    className="hupr-image-zoom w-full h-full object-cover"
                     style={{ filter: 'saturate(0.85)' }}
                   />
                 </div>
@@ -1011,18 +1048,17 @@ function Spheres() {
             style={{ aspectRatio: '4 / 2.8' }}
           >
             <img
-              key={s.label}
               src={s.image}
               alt={s.label}
-              className="w-full h-full object-cover"
+              className="hupr-image-zoom w-full h-full object-cover"
               style={{
                 filter: 'saturate(0.92)',
-                transition: 'opacity .3s',
+                transition: 'opacity .3s, transform 1.2s cubic-bezier(.3,.86,.36,.95), filter 1.2s cubic-bezier(.3,.86,.36,.95)',
               }}
             />
           </div>
           <p
-            className="hupr-prose"
+            className="hupr-prose hupr-fade-up"
             style={{
               fontFamily: 'var(--font-hupr-accent)',
               fontSize: 16,
@@ -1072,7 +1108,7 @@ function News() {
                   <img
                     src={n.image}
                     alt=""
-                    className="w-full h-full object-cover"
+                    className="hupr-image-zoom w-full h-full object-cover"
                     style={{ filter: 'saturate(0.92)' }}
                   />
                 </div>
@@ -1106,7 +1142,7 @@ function News() {
                 </div>
                 <div className="w-full xl:w-6/12 pt-5 xl:pt-0">
                   <p
-                    className="hupr-prose"
+                    className="hupr-prose hupr-fade-up"
                     style={{
                       fontFamily: 'var(--font-hupr-accent)',
                       fontSize: 16,
