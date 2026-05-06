@@ -136,9 +136,13 @@ export default async function DebriefV2Page() {
           }}
         >
           {[
-            { label: 'Structure', value: 32, max: 40, note: 'MECE held' },
-            { label: 'Insight',   value: 30, max: 40, note: 'good cost-mix call' },
-            { label: 'Speed',     value: 16, max: 20, note: 'within window' },
+            // Each sub-score gets its own meaning-colour for the bar:
+            //   Structure → orange (the active work / structure muscle)
+            //   Insight   → Aether Blue (wisdom, depth, considered)
+            //   Speed     → Fire Opal (urgency, time)
+            { label: 'Structure', value: 32, max: 40, note: 'MECE held',          fill: '#f54e00' },
+            { label: 'Insight',   value: 30, max: 40, note: 'good cost-mix call', fill: '#5e6ad2' },
+            { label: 'Speed',     value: 16, max: 20, note: 'within window',      fill: '#f65726' },
           ].map((s, i) => (
             <div
               key={s.label}
@@ -190,15 +194,14 @@ export default async function DebriefV2Page() {
               {/* Sketchy hand-drawn progress bar — Rough.js stroked
                   rectangle with hachure fill at percentage width */}
               <div style={{ marginTop: 16 }}>
-                {/* refero: cursor — Onyx Outline #f54e00 hachure fill
-                    on sub-score progress bars. Ties the bars to the
-                    same live-action color used on CTAs and today's
-                    streak marker. Stroke stays ink. */}
+                {/* Each sub-score's progress-bar hachure uses its own
+                    meaning-colour (Structure orange, Insight Aether
+                    Blue, Speed Fire Opal). Reads at a glance. */}
                 <SketchyProgressBar
                   pct={(s.value / s.max) * 100}
                   height={24}
                   stroke="rgb(50,50,52)"
-                  fillColor="#f54e00"
+                  fillColor={s.fill}
                   roughness={1.5}
                 />
               </div>

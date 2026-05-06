@@ -31,9 +31,10 @@ export const metadata = {
 const TRACKS = [
   {
     label: 'Strategy',
-    // refero: coda — Aura Green pastel from Coda's track-color
-    // quartet. Soft mint, distinguishable but unaggressive on cream.
-    bg: '#aafdc0',
+    // Earth-jewel palette. Pastels (Coda quartet) read too candy/
+    // SaaS for case-prep — deep moss says "leather-bound library
+    // shelf, considered work." White text returns.
+    bg: '#3e5b4f',
     cases: [
       { title: 'Airline Network', source: 'BAIN' },
       { title: 'Telco Repositioning', source: 'MCK' },
@@ -47,8 +48,9 @@ const TRACKS = [
   },
   {
     label: 'Profitability',
-    // refero: coda — Soft Teal pastel.
-    bg: '#b0f4ff',
+    // Earth-jewel — oxblood. Richer than the original burgundy,
+    // closer to leather-armchair / book-cover red.
+    bg: '#7a2837',
     cases: [
       { title: 'Coffee Chain', source: 'BCG' },
       { title: 'Pharma Profit', source: 'MCK' },
@@ -62,8 +64,9 @@ const TRACKS = [
   },
   {
     label: 'Market Entry',
-    // refero: coda — Lavender Mist pastel.
-    bg: '#d3beff',
+    // Earth-jewel — slate-navy. Cool counterpoint to the moss + oxblood;
+    // serious, navigational, "you're going somewhere new."
+    bg: '#34465c',
     cases: [
       { title: 'EV in India', source: 'MCK' },
       { title: 'D2C Brand', source: 'BAIN' },
@@ -140,9 +143,9 @@ export default async function CasesV2Page() {
                 justifyContent: 'space-between',
                 alignItems: 'baseline',
                 paddingBottom: 16,
-                // Pastel bgs (Coda quartet) need ink-on-pastel rule,
-                // not white-on-color. Switching divider + text colors.
-                borderBottom: '1px solid rgba(50,50,52,0.30)',
+                // Earth-jewel bands are deep saturated darks → white
+                // text reads cleanly again.
+                borderBottom: '1px solid rgba(255,255,255,0.30)',
                 marginBottom: 32,
               }}
             >
@@ -153,7 +156,7 @@ export default async function CasesV2Page() {
                   fontSize: 'clamp(48px, 7vw, 92px)',
                   lineHeight: 0.95,
                   letterSpacing: '-0.02em',
-                  color: 'rgb(50,50,52)',
+                  color: '#FFFFFF',
                   margin: 0,
                 }}
               >
@@ -165,7 +168,7 @@ export default async function CasesV2Page() {
                   fontSize: 12,
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  color: 'rgba(50,50,52,0.72)',
+                  color: 'rgba(255,255,255,0.78)',
                 }}
               >
                 {String(track.cases.length).padStart(2, '0')} cases
@@ -183,7 +186,10 @@ export default async function CasesV2Page() {
                   key={c.title}
                   style={{
                     position: 'relative',
-                    background: 'rgb(28,28,28)',
+                    // Warm-dark #1a1817 (production's bg-elevated)
+                    // replaces flat gray. Reads as leather-bound
+                    // book cover, not a Slack message bubble.
+                    background: '#1a1817',
                     aspectRatio: '4 / 5',
                     padding: 22,
                     display: 'flex',

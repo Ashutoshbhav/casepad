@@ -146,11 +146,12 @@ export default async function DashboardV2Page() {
               <SketchyCircle
                 size={72}
                 filled={d.active}
-                // refero: cursor — today's streak marker glows in
-                // Onyx Outline #f54e00 (the live-action color),
-                // earlier days stay in flat ink.
-                stroke={d.today ? '#f54e00' : d.active ? 'rgb(50,50,52)' : 'rgba(50,50,52,0.45)'}
-                fillColor={d.today ? '#f54e00' : 'rgb(50,50,52)'}
+                // Chromatic streak story:
+                //   today    → Onyx Outline #f54e00 (live, your turn now)
+                //   past     → Linear Aether Blue #5e6ad2 (completed, past)
+                //   inactive → muted ink
+                stroke={d.today ? '#f54e00' : d.active ? '#5e6ad2' : 'rgba(50,50,52,0.45)'}
+                fillColor={d.today ? '#f54e00' : '#5e6ad2'}
                 roughness={d.today ? 0.8 : 1.4}
               >
                 <span
@@ -168,7 +169,9 @@ export default async function DashboardV2Page() {
               {idx < days.length - 1 && (
                 <SketchyConnector
                   width={20}
-                  stroke={d.active && days[idx + 1].active ? 'rgba(50,50,52,0.7)' : 'rgba(50,50,52,0.25)'}
+                  // Connector glows Aether Blue between two completed
+                  // past days; muted between inactive/gap days.
+                  stroke={d.active && days[idx + 1].active ? 'rgba(94,106,210,0.65)' : 'rgba(50,50,52,0.25)'}
                 />
               )}
             </div>
@@ -201,7 +204,10 @@ export default async function DashboardV2Page() {
               key={c.title}
               style={{
                 position: 'relative',
-                background: 'rgb(58,58,58)',
+                // Warm-dark #1a1817 instead of flat gray. Matches
+                // /cases case cards; reads as the same leather-bound
+                // book-cover surface across both libraries.
+                background: '#1a1817',
                 aspectRatio: '4 / 5',
                 padding: 24,
                 display: 'flex',
