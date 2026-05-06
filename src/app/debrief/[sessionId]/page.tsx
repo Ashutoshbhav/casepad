@@ -12,6 +12,7 @@ import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
 import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
+import { DebriefScoreUnderline } from '@/components/debrief-score-underline';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
 
@@ -186,8 +187,14 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         ← back to dashboard
       </a>
       <h1
-        className="font-headline text-2xl sm:text-3xl mt-2 mb-1"
-        style={{ color: 'var(--color-text-primary)' }}
+        className="font-headline italic mt-2 mb-1"
+        style={{
+          color: 'var(--color-text-primary)',
+          fontSize: 'clamp(28px, 5vw, 64px)',
+          lineHeight: 1.0,
+          letterSpacing: '-0.025em',
+          maxWidth: '20ch',
+        }}
       >
         {caseRow?.title ?? '—'}
       </h1>
@@ -201,6 +208,9 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         isNewRecord={isNewRecord}
       />
       <ScoreReveal score={session.score ?? 0} outOf={100} />
+      {/* Wave C: Fire Opal sketchy underline beneath the score reveal —
+          chromatic punctuation moment (delphi refero). */}
+      <DebriefScoreUnderline />
 
       {(usedFallback || walkthroughFallback) && (
         <div className="mb-6 rounded border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">

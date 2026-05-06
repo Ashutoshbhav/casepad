@@ -290,34 +290,42 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           baseline reset — gives the character agency without re-enabling
           WebGL raycasting (which previously ate every click site-wide). */}
       <AsteriskHotspot />
-      {/* A. HERO BAND — collapsed to a single line above the today's case
-          card. Greeting + streak + library link in one row. The case card
-          IS the hero now; this band is just orientation. Headspace pattern:
-          one decision per surface, supporting context demoted. */}
-      <section className="mb-6 sm:mb-8 flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-4 flex-wrap">
-          <span
-            className="font-headline italic text-xl sm:text-2xl"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            {greeting}
-          </span>
-          <span
-            className="font-mono text-[10px] uppercase tracking-[0.18em]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            Day {dayNumber}
-          </span>
-          {/* Streak flame — always visible. Greys out at 0 (loss-aversion
-              cue). Coral at ≥1. Direct port of Duolingo's flame mechanic. */}
-          <StreakFlame streak={streak} />
-        </div>
-        <Link
-          href="/cases"
-          className="meta-label hover:opacity-80"
+      {/* A. HERO BAND — Wave C HUPR upgrade.
+          Greeting promoted from a one-liner to an editorial headline:
+          Instrument Serif italic, large, with a sketchy ink underline
+          (Rough.js via Wave A token). Day number + streak flame + library
+          link sit on a meta strip below the headline. */}
+      <section className="mb-10 sm:mb-12">
+        <div
+          className="font-mono text-[10px] uppercase tracking-[0.22em] mb-4"
+          style={{ color: 'var(--color-text-muted)' }}
         >
-          Library →
-        </Link>
+          Day {dayNumber} · Cohort One
+        </div>
+        <h1
+          className="font-headline italic"
+          style={{
+            color: 'var(--color-text-primary)',
+            fontSize: 'clamp(40px, 7vw, 96px)',
+            lineHeight: 1.0,
+            letterSpacing: '-0.025em',
+            margin: 0,
+            maxWidth: '20ch',
+          }}
+        >
+          {greeting}
+        </h1>
+        <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4 flex-wrap">
+            <StreakFlame streak={streak} />
+          </div>
+          <Link
+            href="/cases"
+            className="meta-label hover:opacity-80"
+          >
+            Library →
+          </Link>
+        </div>
       </section>
 
       {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the

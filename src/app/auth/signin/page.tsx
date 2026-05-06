@@ -67,12 +67,16 @@ export default async function SignInPage({
     <main
       className={`v2-signin-scope ${plexMono.variable} ${montserrat.variable}`}
       style={{
-        position: 'fixed',
-        inset: 0,
+        // Wave C scroll fix (2026-05-06): was position:fixed +
+        // overflow:hidden which trapped users in a single viewport on
+        // small screens. Now a relative container at 100vh minimum, so
+        // small-screen content can flow + scroll naturally.
+        position: 'relative',
+        minHeight: '100vh',
         background: '#0E0E0E',
         color: 'rgb(50,50,52)',
         fontFamily: 'var(--font-v2-mono)',
-        overflow: 'hidden',
+        overflowX: 'hidden',
       }}
     >
       <SigninClient
