@@ -36,6 +36,51 @@ function primersFor(track: Track) {
 const TABS = ['Weakness focus', 'Frameworks', 'Math drills', 'Industry primers', 'Recovery', 'Spike Phrases', '30 behavioral Qs', 'Ask anything'] as const;
 type Tab = typeof TABS[number];
 
+// Tab → HUPR section accent. Each tab has its own colored hero band so
+// switching feels like moving between rooms.
+const TAB_BG: Record<Tab, string> = {
+  'Weakness focus':   'var(--hupr-cognac)',
+  'Frameworks':       'var(--hupr-sand)',
+  'Math drills':      'var(--hupr-terra)',
+  'Industry primers': 'var(--hupr-sage)',
+  'Recovery':         'var(--hupr-cream)',
+  'Spike Phrases':    'var(--hupr-slate)',
+  '30 behavioral Qs': 'var(--hupr-cognac)',
+  'Ask anything':     'var(--hupr-sage)',
+};
+
+const cardStyle: React.CSSProperties = {
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-bg-canvas)',
+  padding: '20px',
+  marginBottom: '12px',
+};
+
+const titleStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-headline)',
+  fontWeight: 700,
+  fontSize: 18,
+  color: 'var(--color-text-primary)',
+  marginBottom: 4,
+  textTransform: 'uppercase',
+  letterSpacing: '-0.005em',
+};
+
+const metaStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: 11,
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+  color: 'var(--color-text-muted)',
+};
+
+const proseStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-accent)',
+  fontSize: 14,
+  lineHeight: 1.55,
+  color: 'var(--color-text-primary)',
+};
+
 export function CheatsheetTabs({
   track,
   weakestDims,
@@ -48,159 +93,344 @@ export function CheatsheetTabs({
   const [tab, setTab] = useState<Tab>('Weakness focus');
   const def = TRACKS[track];
 
+  const isLightBg = TAB_BG[tab] === 'var(--hupr-cream)';
+  const heroFg = isLightBg ? '#323234' : '#FFFFFF';
+
   return (
     <div>
-      <nav className="flex gap-2 border-b border-zinc-800 mb-5 overflow-x-auto">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`text-sm px-3 py-2 whitespace-nowrap ${
-              tab === t ? 'text-emerald-300 border-b-2 border-emerald-400 -mb-px' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+      {/* TAB NAV — sticky pill row (matches /cases track pills). */}
+      <nav
+        className="sticky top-0 z-10"
+        style={{
+          background: 'var(--color-bg-canvas)',
+          borderBottom: '1px solid var(--color-border)',
+          marginBottom: 0,
+        }}
+      >
+        <div className="flex gap-2 overflow-x-auto py-3">
+          {TABS.map((t) => {
+            const isActive = tab === t;
+            return (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                style={{
+                  background: isActive ? 'var(--color-text-primary)' : 'transparent',
+                  color: isActive ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
+                  border: '1px solid',
+                  borderColor: isActive ? 'var(--color-text-primary)' : 'var(--color-border)',
+                  padding: '8px 14px',
+                  borderRadius: 4,
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  fontWeight: isActive ? 700 : 400,
+                }}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
       </nav>
 
-      {tab === 'Weakness focus' && (
-        <section className="space-y-4">
-          <p className="text-sm text-zinc-400">
-            Sorted by your lowest performance across last {weakestStats.length || 0} sessions. Drill the top item first.
-          </p>
-          {weakestStats.length === 0 ? (
-            <div className="text-sm text-zinc-500 rounded border border-zinc-800 p-4">
-              No completed cases yet. Complete 1-2 cases to populate this.
-            </div>
-          ) : (
-            <ul className="space-y-2">
-              {weakestStats.map((s, i) => (
-                <li key={s.dim} className="rounded border border-zinc-800 p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-zinc-100 capitalize">{s.dim.replace(/_/g, ' ')}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded ${s.ratio < 0.6 ? 'bg-rose-900/50 text-rose-200' : s.ratio < 0.75 ? 'bg-amber-900/50 text-amber-200' : 'bg-emerald-900/50 text-emerald-200'}`}>
-                      {(s.ratio * 100).toFixed(0)}% of weight
-                    </span>
-                  </div>
-                  <div className="text-xs text-zinc-500">avg {s.avg.toFixed(1)} of {s.weight} max</div>
-                  {i === 0 && s.ratio < 0.7 && (
-                    <div className="mt-2 text-xs text-amber-300">⚠ This is your priority focus.</div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      )}
+      {/* HERO BAND for the active tab */}
+      <section
+        className="-mx-6 sm:-mx-12 px-6 sm:px-12 py-12"
+        style={{ background: TAB_BG[tab], color: heroFg }}
+      >
+        <span
+          className="hupr-mono-eyebrow"
+          style={{ color: heroFg, opacity: 0.85 }}
+        >
+          Module · {tab}
+        </span>
+        <hr
+          style={{
+            border: 0,
+            borderTop: `1px solid ${isLightBg ? '#323234' : 'rgba(255,255,255,0.4)'}`,
+            margin: '8px 0 20px',
+          }}
+        />
+        <h2
+          className="uppercase"
+          style={{
+            fontFamily: 'var(--font-headline)',
+            fontWeight: 700,
+            fontSize: 'clamp(36px, 5vw, 64px)',
+            lineHeight: 1,
+            color: heroFg,
+            margin: 0,
+            maxWidth: '24ch',
+          }}
+        >
+          {tab}
+        </h2>
+      </section>
 
-      {tab === 'Frameworks' && (
-        <section className="space-y-3">
-          {(frameworksFor(track).length ? frameworksFor(track) : def.frameworks.map(f => ({ name: f.name, when_to_use: f.when_to_use, when_NOT_to_use: '', structure: f.structure, example: '' }))).map((f: any) => (
-            <div key={f.name} className="rounded border border-zinc-800 p-4">
-              <div className="flex items-baseline justify-between mb-1">
-                <h3 className="font-medium text-emerald-300">{f.name}</h3>
+      <div className="py-10">
+        {tab === 'Weakness focus' && (
+          <section>
+            <p style={{ ...proseStyle, marginBottom: 16, color: 'var(--color-text-secondary)' }}>
+              Sorted by your lowest performance across last {weakestStats.length || 0} sessions. Drill the top item first.
+            </p>
+            {weakestStats.length === 0 ? (
+              <div style={cardStyle}>
+                <p style={proseStyle}>
+                  No completed cases yet. Complete 1–2 cases to populate this.
+                </p>
               </div>
-              <div className="text-xs text-zinc-500 mt-1"><span className="text-emerald-400">when:</span> {f.when_to_use}</div>
-              {f.when_NOT_to_use && <div className="text-xs text-zinc-500"><span className="text-rose-400">NOT when:</span> {f.when_NOT_to_use}</div>}
-              <ul className="text-sm text-zinc-300 mt-2 space-y-0.5">
-                {f.structure.map((s: string, i: number) => <li key={i}>· {s}</li>)}
-              </ul>
-              {f.example && <div className="text-xs text-zinc-400 mt-2 italic">e.g. {f.example}</div>}
-              <CohortNotes scope="framework" scope_id={`${track}:${f.name}`} />
-            </div>
-          ))}
-        </section>
-      )}
-
-      {tab === 'Math drills' && (
-        <section className="space-y-3">
-          {[1,2,3,4].map((level) => {
-            const drills = (mathFor(track).length ? mathFor(track) : def.math.map(m => ({ level: 1 as const, name: m.name, formula: m.formula, shortcut: m.mnemonic || '', example: '', threshold_to_advance: '' }))).filter((d: any) => d.level === level);
-            if (drills.length === 0) return null;
-            const colors = { 1: 'emerald', 2: 'sky', 3: 'amber', 4: 'rose' } as Record<number, string>;
-            return (
-              <div key={level} className="rounded border border-zinc-800 p-4">
-                <h3 className={`text-sm font-semibold text-${colors[level]}-300 mb-2`}>Level {level} {level === 1 ? '(beginner)' : level === 2 ? '(core)' : level === 3 ? '(advanced)' : '(expert)'}</h3>
-                <ul className="space-y-2">
-                  {drills.map((d: any) => (
-                    <li key={d.name} className="text-sm">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-amber-300 font-medium">{d.name}</span>
-                        <code className="text-xs text-zinc-300 font-mono">{d.formula}</code>
+            ) : (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {weakestStats.map((s, i) => (
+                  <li key={s.dim} style={cardStyle}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span style={titleStyle}>{s.dim.replace(/_/g, ' ')}</span>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: 11,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          padding: '4px 10px',
+                          background: s.ratio < 0.6 ? '#a64b52' : s.ratio < 0.75 ? '#c2876d' : '#7a8f92',
+                          color: '#FFFFFF',
+                          borderRadius: 3,
+                        }}
+                      >
+                        {(s.ratio * 100).toFixed(0)}% of weight
+                      </span>
+                    </div>
+                    <div style={metaStyle}>avg {s.avg.toFixed(1)} of {s.weight} max</div>
+                    {i === 0 && s.ratio < 0.7 && (
+                      <div style={{ ...metaStyle, color: '#a64b52', marginTop: 8, fontWeight: 700 }}>
+                        ⚠ Priority focus
                       </div>
-                      {d.shortcut && <div className="text-xs text-zinc-500 mt-0.5">↳ shortcut: {d.shortcut}</div>}
-                      {d.example && <div className="text-xs text-zinc-400 italic">e.g. {d.example}</div>}
-                      {d.threshold_to_advance && <div className="text-xs text-emerald-400 mt-0.5">→ unlock next: {d.threshold_to_advance}</div>}
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
+
+        {tab === 'Frameworks' && (
+          <section>
+            {(frameworksFor(track).length ? frameworksFor(track) : def.frameworks.map(f => ({ name: f.name, when_to_use: f.when_to_use, when_NOT_to_use: '', structure: f.structure, example: '' }))).map((f: any) => (
+              <div key={f.name} style={cardStyle}>
+                <h3 style={titleStyle}>{f.name}</h3>
+                <div style={{ ...metaStyle, marginTop: 6 }}>
+                  WHEN: <span style={{ color: 'var(--color-text-primary)', textTransform: 'none', letterSpacing: 0 }}>{f.when_to_use}</span>
+                </div>
+                {f.when_NOT_to_use && (
+                  <div style={{ ...metaStyle, marginTop: 4, color: '#a64b52' }}>
+                    NOT WHEN: <span style={{ color: 'var(--color-text-primary)', textTransform: 'none', letterSpacing: 0 }}>{f.when_NOT_to_use}</span>
+                  </div>
+                )}
+                <ul style={{ listStyle: 'none', padding: 0, margin: '12px 0 0' }}>
+                  {f.structure.map((s: string, i: number) => (
+                    <li key={i} style={{ ...proseStyle, padding: '3px 0' }}>· {s}</li>
+                  ))}
+                </ul>
+                {f.example && (
+                  <div style={{ ...proseStyle, marginTop: 10, fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>
+                    e.g. {f.example}
+                  </div>
+                )}
+                <CohortNotes scope="framework" scope_id={`${track}:${f.name}`} />
+              </div>
+            ))}
+          </section>
+        )}
+
+        {tab === 'Math drills' && (
+          <section>
+            {[1, 2, 3, 4].map((level) => {
+              const drills = (mathFor(track).length ? mathFor(track) : def.math.map(m => ({ level: 1 as const, name: m.name, formula: m.formula, shortcut: m.mnemonic || '', example: '', threshold_to_advance: '' }))).filter((d: any) => d.level === level);
+              if (drills.length === 0) return null;
+              const levelTone = ['#7a8f92', '#a69385', '#c2876d', '#a64b52'][level - 1];
+              return (
+                <div key={level} style={{ ...cardStyle, borderLeft: `4px solid ${levelTone}` }}>
+                  <h3 style={{ ...titleStyle, color: levelTone }}>
+                    Level {level}{' '}
+                    <span style={{ ...metaStyle, color: 'var(--color-text-muted)', marginLeft: 8 }}>
+                      ({level === 1 ? 'beginner' : level === 2 ? 'core' : level === 3 ? 'advanced' : 'expert'})
+                    </span>
+                  </h3>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0' }}>
+                    {drills.map((d: any) => (
+                      <li
+                        key={d.name}
+                        style={{
+                          padding: '10px 0',
+                          borderBottom: '1px solid var(--color-border)',
+                        }}
+                      >
+                        <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                          <span
+                            style={{
+                              fontFamily: 'var(--font-headline)',
+                              fontWeight: 700,
+                              fontSize: 14,
+                              color: 'var(--color-text-primary)',
+                              textTransform: 'uppercase',
+                            }}
+                          >
+                            {d.name}
+                          </span>
+                          <code
+                            style={{
+                              fontFamily: 'var(--font-mono)',
+                              fontSize: 12,
+                              color: 'var(--color-text-secondary)',
+                              background: 'var(--color-bg-sunken)',
+                              padding: '2px 8px',
+                              borderRadius: 3,
+                            }}
+                          >
+                            {d.formula}
+                          </code>
+                        </div>
+                        {d.shortcut && (
+                          <div style={{ ...proseStyle, marginTop: 4, color: 'var(--color-text-secondary)' }}>
+                            ↳ shortcut: {d.shortcut}
+                          </div>
+                        )}
+                        {d.example && (
+                          <div style={{ ...proseStyle, marginTop: 4, fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>
+                            e.g. {d.example}
+                          </div>
+                        )}
+                        {d.threshold_to_advance && (
+                          <div style={{ ...metaStyle, marginTop: 4, color: '#7a8f92' }}>
+                            → unlock next: {d.threshold_to_advance}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </section>
+        )}
+
+        {tab === 'Industry primers' && (
+          <section>
+            {primersFor(track).length > 0 ? (
+              primersFor(track).map((p: any) => (
+                <div key={p.sector} style={cardStyle}>
+                  <h3 style={titleStyle}>{p.sector}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                    <div style={proseStyle}>
+                      <span style={metaStyle}>Margins:</span> {p.typical_margin_range}
+                    </div>
+                    <div style={proseStyle}>
+                      <span style={metaStyle}>Cycle / KPI:</span> {p.cycle_or_kpi}
+                    </div>
+                    <div style={proseStyle}>
+                      <span style={metaStyle}>Cost drivers:</span> {p.cost_drivers.join(', ')}
+                    </div>
+                    <div style={proseStyle}>
+                      <span style={metaStyle}>Revenue drivers:</span> {p.revenue_drivers.join(', ')}
+                    </div>
+                  </div>
+                  <div style={{ ...proseStyle, marginTop: 10, color: '#a64b52' }}>
+                    <span style={metaStyle}>Disruption:</span>{' '}
+                    <span style={{ color: 'var(--color-text-primary)' }}>{p.recent_disruption}</span>
+                  </div>
+                  <div style={{ ...proseStyle, marginTop: 6, fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>
+                    → ask interviewer: &ldquo;{p.diagnostic_q_for_interviewer}&rdquo;
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p style={proseStyle}>Industry primers not yet curated for this track.</p>
+            )}
+            {track === 'pm' && PM_APP_KPIS.length > 0 && (
+              <div style={{ ...cardStyle, marginTop: 16 }}>
+                <h3 style={titleStyle}>App-specific KPIs (memorize these)</h3>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0' }}>
+                  {PM_APP_KPIS.map((a) => (
+                    <li
+                      key={a.app}
+                      style={{
+                        padding: '10px 0',
+                        borderBottom: '1px solid var(--color-border)',
+                      }}
+                    >
+                      <div style={{ ...titleStyle, fontSize: 14, marginBottom: 4 }}>
+                        {a.app} <span style={{ ...metaStyle, marginLeft: 8 }}>· {a.sector}</span>
+                      </div>
+                      <div style={proseStyle}>key: {a.key_metrics.join(', ')}</div>
+                      <div style={proseStyle}>
+                        NSM: <span style={{ color: '#7a8f92', fontWeight: 700 }}>{a.north_star}</span>{' '}
+                        · counter: <span style={{ color: '#a64b52', fontWeight: 700 }}>{a.counter}</span>
+                      </div>
                     </li>
                   ))}
                 </ul>
               </div>
-            );
-          })}
-        </section>
-      )}
+            )}
+          </section>
+        )}
 
-      {tab === 'Industry primers' && (
-        <section className="space-y-3">
-          {primersFor(track).length > 0 ? primersFor(track).map((p: any) => (
-            <div key={p.sector} className="rounded border border-zinc-800 p-4">
-              <h3 className="font-medium text-emerald-300 mb-2">{p.sector}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-zinc-300">
-                <div><span className="text-zinc-500">Margins:</span> {p.typical_margin_range}</div>
-                <div><span className="text-zinc-500">Cycle / KPI:</span> {p.cycle_or_kpi}</div>
-                <div><span className="text-zinc-500">Cost drivers:</span> {p.cost_drivers.join(', ')}</div>
-                <div><span className="text-zinc-500">Revenue drivers:</span> {p.revenue_drivers.join(', ')}</div>
+        {tab === 'Recovery' && (
+          <section>
+            <p style={{ ...proseStyle, color: 'var(--color-text-secondary)', marginBottom: 16 }}>
+              When you blank mid-case, default to one of these scripts:
+            </p>
+            {def.recovery_scripts.map((r, i) => (
+              <div
+                key={i}
+                style={{
+                  ...cardStyle,
+                  background: 'var(--hupr-cream)',
+                  fontFamily: 'var(--font-accent)',
+                  fontStyle: 'italic',
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                &ldquo;{r}&rdquo;
               </div>
-              <div className="text-xs text-zinc-400 mt-2"><span className="text-rose-300">Disruption:</span> {p.recent_disruption}</div>
-              <div className="text-xs text-violet-300 mt-1 italic">→ ask interviewer: &quot;{p.diagnostic_q_for_interviewer}&quot;</div>
-            </div>
-          )) : (
-            <div className="text-sm text-zinc-500">Industry primers not yet curated for this track.</div>
-          )}
-          {track === 'pm' && PM_APP_KPIS.length > 0 && (
-            <div className="rounded border border-zinc-800 p-4 mt-4">
-              <h3 className="font-medium text-emerald-300 mb-2">App-specific KPIs (memorize these)</h3>
-              <ul className="text-xs space-y-2">
-                {PM_APP_KPIS.map((a) => (
-                  <li key={a.app}>
-                    <span className="font-medium text-zinc-100">{a.app}</span>
-                    <span className="text-zinc-500"> · {a.sector}</span>
-                    <div className="text-zinc-400 mt-0.5">key: {a.key_metrics.join(', ')}</div>
-                    <div className="text-zinc-400">NSM: <span className="text-emerald-300">{a.north_star}</span> · counter: <span className="text-rose-300">{a.counter}</span></div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </section>
-      )}
+            ))}
+          </section>
+        )}
 
-      {tab === 'Recovery' && (
-        <section className="space-y-3">
-          <p className="text-sm text-zinc-400">When you blank mid-case, default to one of these scripts:</p>
-          {def.recovery_scripts.map((r, i) => (
-            <div key={i} className="rounded border border-zinc-800 p-4 text-sm italic text-zinc-200">
-              &quot;{r}&quot;
-            </div>
-          ))}
-        </section>
-      )}
+        {tab === 'Spike Phrases' && (
+          <section>
+            <p style={{ ...proseStyle, color: 'var(--color-text-secondary)', marginBottom: 16 }}>
+              L4 moves that elevate 3 → 4 in interviewer&apos;s mind:
+            </p>
+            {def.killer_phrases.map((p, i) => (
+              <div
+                key={i}
+                style={{
+                  ...cardStyle,
+                  background: 'var(--hupr-slate)',
+                  border: '1px solid var(--hupr-slate)',
+                  fontFamily: 'var(--font-accent)',
+                  fontStyle: 'italic',
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  color: '#FFFFFF',
+                }}
+              >
+                &ldquo;{p}&rdquo;
+              </div>
+            ))}
+          </section>
+        )}
 
-      {tab === 'Spike Phrases' && (
-        <section className="space-y-3">
-          <p className="text-sm text-zinc-400">L4 moves that elevate 3 → 4 in interviewer&apos;s mind:</p>
-          {def.killer_phrases.map((p, i) => (
-            <div key={i} className="rounded border border-violet-900 p-4 text-sm italic text-violet-200">
-              &quot;{p}&quot;
-            </div>
-          ))}
-        </section>
-      )}
+        {tab === 'Ask anything' && <AskTheCheatSheet track={track} weakestDims={weakestDims} />}
 
-      {tab === 'Ask anything' && <AskTheCheatSheet track={track} weakestDims={weakestDims} />}
-
-      {tab === '30 behavioral Qs' && <BehavioralThirty />}
+        {tab === '30 behavioral Qs' && <BehavioralThirty />}
+      </div>
     </div>
   );
 }
@@ -229,22 +459,60 @@ function AskTheCheatSheet({ track, weakestDims }: { track: Track; weakestDims: s
 
   return (
     <section>
-      <p className="text-sm text-zinc-400 mb-3">Ask a question — answered using your track&apos;s frameworks/math + your weak areas.</p>
+      <p style={{ ...proseStyle, color: 'var(--color-text-secondary)', marginBottom: 16 }}>
+        Ask a question — answered using your track&apos;s frameworks/math + your weak areas.
+      </p>
       <textarea
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="e.g. 'What's a clean way to structure a market entry case for a B2B SaaS in India?'"
-        className="w-full h-24 rounded-md bg-zinc-900 border border-zinc-800 p-3 text-sm focus:outline-none focus:border-zinc-600"
+        style={{
+          width: '100%',
+          minHeight: 100,
+          padding: 14,
+          background: 'var(--color-bg-sunken)',
+          border: '1px solid var(--color-border)',
+          color: 'var(--color-text-primary)',
+          fontFamily: 'var(--font-body)',
+          fontSize: 14,
+          borderRadius: 4,
+          outline: 'none',
+          resize: 'vertical',
+        }}
       />
       <button
         onClick={ask}
         disabled={loading || !q.trim()}
-        className="mt-2 rounded-md bg-white text-zinc-900 px-3 py-1.5 text-sm font-medium disabled:opacity-50"
+        className="hupr-anim-btn mt-3"
+        style={{
+          background: 'var(--color-text-primary)',
+          color: 'var(--color-bg-canvas)',
+          padding: '12px 20px',
+          borderRadius: 6,
+          border: 0,
+          cursor: 'pointer',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 12,
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          opacity: loading || !q.trim() ? 0.5 : 1,
+          display: 'inline-block',
+        }}
       >
-        {loading ? 'Thinking…' : 'Ask'}
+        <span className="top">{loading ? 'Thinking…' : 'Ask'}</span>
+        <span className="btm">{loading ? 'Thinking…' : 'Ask'}</span>
       </button>
       {a && (
-        <div className="mt-4 rounded border border-zinc-800 p-4 text-sm text-zinc-200 whitespace-pre-wrap">{a}</div>
+        <div
+          style={{
+            ...cardStyle,
+            marginTop: 16,
+            ...proseStyle,
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {a}
+        </div>
       )}
     </section>
   );
@@ -279,19 +547,75 @@ function CohortNotes({ scope, scope_id }: { scope: string; scope_id: string }) {
   };
 
   return (
-    <div className="mt-3 pt-3 border-t border-zinc-900">
-      <button onClick={() => { setOpen(!open); load(); }} className="text-xs text-zinc-500 hover:text-zinc-300">
+    <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--color-border)' }}>
+      <button
+        onClick={() => { setOpen(!open); load(); }}
+        className="hupr-mono-eyebrow underline"
+        style={{
+          color: 'var(--color-text-secondary)',
+          background: 'transparent',
+          border: 0,
+          cursor: 'pointer',
+        }}
+      >
         {open ? '▾' : '▸'} Cohort spike notes ({loaded ? notes.length : '…'})
       </button>
       {open && (
-        <div className="mt-2 space-y-2">
+        <div className="mt-3 space-y-2">
           {notes.map((n) => (
-            <div key={n.id} className="text-xs text-zinc-300 bg-zinc-900 rounded p-2">{n.body}</div>
+            <div
+              key={n.id}
+              style={{
+                background: 'var(--color-bg-sunken)',
+                padding: 10,
+                fontFamily: 'var(--font-accent)',
+                fontSize: 13,
+                color: 'var(--color-text-primary)',
+                borderRadius: 3,
+              }}
+            >
+              {n.body}
+            </div>
           ))}
-          {notes.length === 0 && loaded && <div className="text-xs text-zinc-600 italic">No notes yet — be the first.</div>}
-          <div className="flex gap-1">
-            <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Add a spike note (max 1000 chars)" className="flex-1 text-xs rounded bg-zinc-900 border border-zinc-800 px-2 py-1" />
-            <button onClick={submit} className="text-xs px-2 py-1 bg-zinc-800 rounded hover:bg-zinc-700">Add</button>
+          {notes.length === 0 && loaded && (
+            <div style={{ ...metaStyle, fontStyle: 'italic', textTransform: 'none', letterSpacing: 0 }}>
+              No notes yet — be the first.
+            </div>
+          )}
+          <div className="flex gap-2 mt-2">
+            <input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="Add a spike note (max 1000 chars)"
+              style={{
+                flex: 1,
+                padding: '8px 12px',
+                background: 'var(--color-bg-sunken)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-text-primary)',
+                fontFamily: 'var(--font-body)',
+                fontSize: 12,
+                borderRadius: 3,
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={submit}
+              style={{
+                padding: '8px 14px',
+                background: 'var(--color-text-primary)',
+                color: 'var(--color-bg-canvas)',
+                border: 0,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                borderRadius: 3,
+              }}
+            >
+              Add
+            </button>
           </div>
         </div>
       )}
@@ -305,29 +629,63 @@ function BehavioralThirty() {
   const filtered = filter === 'all' ? BEHAVIORAL_30 : BEHAVIORAL_30.filter((q) => q.dimension === filter);
 
   return (
-    <section className="space-y-4">
-      <p className="text-sm text-zinc-400">The 30 most-asked behavioral questions across MBA tracks. Each has a STAR scaffold + spike move + common mistake.</p>
-      <div className="flex flex-wrap gap-1 mb-2">
+    <section>
+      <p style={{ ...proseStyle, color: 'var(--color-text-secondary)', marginBottom: 16 }}>
+        The 30 most-asked behavioral questions across MBA tracks. Each has a STAR scaffold + spike move + common mistake.
+      </p>
+      <div className="flex flex-wrap gap-2 mb-4">
         {dims.map((d) => (
           <button
             key={d}
             onClick={() => setFilter(d)}
-            className={`text-xs px-2 py-1 rounded ${filter === d ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200'}`}
+            style={{
+              background: filter === d ? 'var(--color-text-primary)' : 'transparent',
+              color: filter === d ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
+              border: '1px solid',
+              borderColor: filter === d ? 'var(--color-text-primary)' : 'var(--color-border)',
+              padding: '6px 12px',
+              borderRadius: 3,
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              cursor: 'pointer',
+              fontWeight: filter === d ? 700 : 400,
+            }}
           >
             {d}
           </button>
         ))}
       </div>
-      <ul className="space-y-3">
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {filtered.map((q, i) => (
-          <li key={i} className="rounded border border-zinc-800 p-4">
-            <div className="flex items-baseline justify-between mb-2">
-              <span className="font-medium text-zinc-100 text-sm">{q.prompt}</span>
-              <span className="text-xs px-2 py-0.5 rounded bg-zinc-800 text-emerald-300 capitalize">{q.dimension}</span>
+          <li key={i} style={cardStyle}>
+            <div className="flex items-baseline justify-between gap-3 flex-wrap mb-2">
+              <span style={titleStyle}>{q.prompt}</span>
+              <span
+                style={{
+                  ...metaStyle,
+                  background: 'var(--hupr-sage)',
+                  color: '#FFFFFF',
+                  padding: '3px 10px',
+                  borderRadius: 3,
+                }}
+              >
+                {q.dimension}
+              </span>
             </div>
-            <div className="text-xs text-zinc-400 mb-2"><span className="text-emerald-400">STAR:</span> {q.star_scaffold}</div>
-            <div className="text-xs text-violet-300 mb-1"><span className="text-violet-400">Spike:</span> {q.spike_move}</div>
-            <div className="text-xs text-rose-300"><span className="text-rose-400">Common mistake:</span> {q.common_mistake}</div>
+            <div style={{ ...proseStyle, marginTop: 8 }}>
+              <span style={{ ...metaStyle, color: '#7a8f92' }}>STAR:</span>{' '}
+              {q.star_scaffold}
+            </div>
+            <div style={{ ...proseStyle, marginTop: 4 }}>
+              <span style={{ ...metaStyle, color: '#3d5a6c' }}>Spike:</span>{' '}
+              {q.spike_move}
+            </div>
+            <div style={{ ...proseStyle, marginTop: 4 }}>
+              <span style={{ ...metaStyle, color: '#a64b52' }}>Common mistake:</span>{' '}
+              {q.common_mistake}
+            </div>
           </li>
         ))}
       </ul>
