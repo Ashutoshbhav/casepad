@@ -89,7 +89,11 @@ export default async function SolveV2Page() {
               opacity: 0.55,
             }}
           >
-            <SketchyMarginRule height={1400} stroke="#A0394A" />
+            {/* refero: cursor — Onyx Outline #f54e00 as the margin rule.
+                Tightens the palette to one accent family (was oxblood
+                #A0394A); reads as "you are working live, this is the
+                active line." */}
+            <SketchyMarginRule height={1400} stroke="#f54e00" />
           </div>
           <h1
             style={{
@@ -272,7 +276,13 @@ export default async function SolveV2Page() {
             background: '#FFFFFF',
             padding: '24px 24px 28px',
             height: 'fit-content',
-            boxShadow: '0 12px 40px -16px rgba(50,50,52,0.18)',
+            // refero: cursor — heavy multi-layer shadow on elevated
+            // right-rail card. Visible weight; the issue tree feels
+            // like a real working surface lifted off the page.
+            boxShadow:
+              '0 24px 60px -12px rgba(0,0,0,0.25), ' +
+              '0 12px 24px -8px rgba(0,0,0,0.15), ' +
+              '0 0 0 1px rgba(0,0,0,0.06)',
           }}
         >
           <div

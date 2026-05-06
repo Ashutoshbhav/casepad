@@ -79,7 +79,16 @@ export default async function DebriefV2Page() {
             margin: '4px auto 0',
           }}
         >
-          <SketchyUnderline strokeWidth={6} roughness={2.6} bowing={5} />
+          {/* refero: delphi — Fire Opal #f65726 sketchy underline
+              beneath the score. Score reveal IS the headline-emphasis
+              moment Delphi reserves Fire Opal for. The single chromatic
+              punctuation on this whole surface. */}
+          <SketchyUnderline
+            strokeWidth={6}
+            roughness={2.6}
+            bowing={5}
+            stroke="#f65726"
+          />
         </div>
         <p
           style={{
@@ -163,11 +172,15 @@ export default async function DebriefV2Page() {
               {/* Sketchy hand-drawn progress bar — Rough.js stroked
                   rectangle with hachure fill at percentage width */}
               <div style={{ marginTop: 16 }}>
+                {/* refero: cursor — Onyx Outline #f54e00 hachure fill
+                    on sub-score progress bars. Ties the bars to the
+                    same live-action color used on CTAs and today's
+                    streak marker. Stroke stays ink. */}
                 <SketchyProgressBar
                   pct={(s.value / s.max) * 100}
                   height={24}
                   stroke="rgb(50,50,52)"
-                  fillColor="rgb(50,50,52)"
+                  fillColor="#f54e00"
                   roughness={1.5}
                 />
               </div>
@@ -290,6 +303,12 @@ export default async function DebriefV2Page() {
             background: '#FFFFFF',
             padding: 24,
             height: 'fit-content',
+            // refero: cursor — same heavy multi-layer shadow as the
+            // /solve right-rail. Visible weight on tomorrow's case.
+            boxShadow:
+              '0 24px 60px -12px rgba(0,0,0,0.25), ' +
+              '0 12px 24px -8px rgba(0,0,0,0.15), ' +
+              '0 0 0 1px rgba(0,0,0,0.06)',
           }}
         >
           <div

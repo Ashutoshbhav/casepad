@@ -203,6 +203,9 @@ export default async function DashboardV2Page() {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 color: '#F5F0E8',
+                // refero: elevenlabs — hairline inset border on
+                // dark cards. Same treatment as /cases.
+                boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
               }}
             >
               {/* Sketchy corner tick — top-right of each card */}

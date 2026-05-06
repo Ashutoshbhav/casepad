@@ -184,6 +184,10 @@ export default async function CasesV2Page() {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     color: '#FFFFFF',
+                    // refero: elevenlabs — hairline inset border on
+                    // dark cards. Reads as "this surface is lifted /
+                    // clickable" without breaking flat aesthetic.
+                    boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
                   }}
                 >
                   {/* Sketchy corner tick — every case card carries the
