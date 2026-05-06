@@ -37,9 +37,16 @@
   /* Font CSS variables — wired from src/app/layout.tsx via next/font.
      Names preserved (--font-headline / --font-body / --font-mono) so
      existing class hooks keep working. */
-  --font-headline: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-body:     'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:     'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  /* HUPR-flavor typography (Wave C — 2026-05-06).
+     headline = Montserrat (caps billboards)
+     body     = IBM Plex Mono
+     mono     = IBM Plex Mono (same face)
+     serif    = Instrument Serif italic (opt-in editorial moments)
+     CSS var names preserved so legacy class hooks keep working. */
+  --font-headline: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-body:     'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-mono:     'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-serif:    'Instrument Serif', ui-serif, Georgia, serif;
 }
 
 /* =========================================================================
@@ -185,7 +192,7 @@
   --font-body:     var(--font-body);
   --font-mono:     var(--font-mono);
   --font-sans:     var(--font-body);
-  --font-serif:    var(--font-headline);
+  --font-serif:    var(--font-serif);
 }
 
 html, body {
