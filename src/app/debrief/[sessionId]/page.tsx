@@ -13,6 +13,7 @@ import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
 import { DebriefScoreUnderline } from '@/components/debrief-score-underline';
+import { DebriefSketchyScores } from '@/components/debrief-sketchy-scores';
 import { HuprMarquee } from '@/components/hupr-marquee';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
@@ -220,27 +221,14 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       )}
 
       <section className="grid md:grid-cols-2 gap-6 mb-8 mt-8">
-        <div className="space-y-3">
-          <ScoreBar
-            label="Structure"
-            value={b.structure ?? 0}
-            max={40}
-            staggerIndex={0}
-            startDelay={1.2}
-          />
-          <ScoreBar
-            label="Insight"
-            value={b.insight ?? 0}
-            max={40}
-            staggerIndex={1}
-            startDelay={1.2}
-          />
-          <ScoreBar
-            label="Speed"
-            value={b.speed ?? 0}
-            max={20}
-            staggerIndex={2}
-            startDelay={1.2}
+        <div>
+          {/* Wave C: linear ScoreBars replaced by v2 SketchyProgressBar
+              with meaning-colour hachure fills. Structure=orange,
+              Insight=Aether Blue, Speed=Fire Opal. */}
+          <DebriefSketchyScores
+            structure={b.structure ?? 0}
+            insight={b.insight ?? 0}
+            speed={b.speed ?? 0}
           />
         </div>
         <div className="space-y-4">

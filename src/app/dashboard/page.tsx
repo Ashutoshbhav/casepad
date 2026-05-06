@@ -9,6 +9,7 @@ import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
 import { AsteriskHotspot } from '@/components/asterisk-hotspot';
 import { DashboardWeekStreak } from '@/components/dashboard-week-streak';
 import { HuprMarquee } from '@/components/hupr-marquee';
+import { DashboardHeroUnderline } from '@/components/dashboard-hero-underline';
 
 export const dynamic = 'force-dynamic';
 
@@ -316,6 +317,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         >
           {greeting}
         </h1>
+        <DashboardHeroUnderline />
         <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4 flex-wrap">
             <StreakFlame streak={streak} />
