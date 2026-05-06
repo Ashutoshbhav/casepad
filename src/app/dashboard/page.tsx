@@ -745,11 +745,22 @@ function TodaysCaseCard({
       </div>
 
       <h2
-        className="font-headline italic text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.0] tracking-tight mb-6 sm:mb-8 max-w-[18ch]"
-        style={{ color: 'var(--color-text-primary)' }}
+        className="font-headline italic mb-3 max-w-[18ch]"
+        style={{
+          color: 'var(--color-text-primary)',
+          fontSize: 'clamp(40px, 6vw, 72px)',
+          lineHeight: 1.0,
+          letterSpacing: '-0.025em',
+        }}
       >
         {assignment.caseTitle}
       </h2>
+      {/* Wave C: sketchy ink underline beneath the case-title hero —
+          same Rough.js mark as the dashboard greeting + debrief
+          score reveal. Visual through-line across the journey. */}
+      <div className="mb-6 sm:mb-8" style={{ width: 'min(220px, 30vw)' }}>
+        <DashboardHeroUnderline />
+      </div>
 
       <p
         className="font-headline italic text-[19px] sm:text-[22px] leading-[1.4] mb-10 sm:mb-12 max-w-[44ch]"

@@ -247,15 +247,68 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         </div>
       </section>
 
-      <section className="rounded border border-zinc-800 p-5 mb-8">
-        <h3 className="text-sm font-semibold text-zinc-300 mb-3">Ideal structure</h3>
+      <section
+        className="p-6 mb-8"
+        style={{
+          background: '#1a1817',
+          color: '#faf9f5',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+        }}
+      >
+        <div
+          className="font-mono uppercase mb-4"
+          style={{
+            color: 'rgba(250,249,245,0.55)',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+          }}
+        >
+          IDEAL STRUCTURE
+        </div>
         <IdealStructureTree s={(caseRow?.ideal_structure ?? {}) as any} />
       </section>
 
       {walkthrough && (
-        <section className="rounded border border-zinc-800 p-5 mb-8">
-          <h2 className="text-lg font-semibold text-zinc-100 mb-1">How a top candidate would solve this</h2>
-          <p className="text-xs text-zinc-500 mb-5">Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.</p>
+        <section
+          className="p-6 mb-8"
+          style={{
+            background: '#1a1817',
+            color: '#faf9f5',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+          }}
+        >
+          <div
+            className="font-mono uppercase mb-2"
+            style={{
+              color: 'rgba(250,249,245,0.55)',
+              fontSize: 11,
+              letterSpacing: '0.22em',
+            }}
+          >
+            IDEAL WALKTHROUGH
+          </div>
+          <h2
+            className="font-headline italic mb-2"
+            style={{
+              color: '#faf9f5',
+              fontSize: 'clamp(22px, 3vw, 36px)',
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            How a top candidate would solve this.
+          </h2>
+          <p
+            className="font-mono mb-5"
+            style={{
+              color: 'rgba(250,249,245,0.55)',
+              fontSize: 11,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Issue tree · hypothesis tree · L0–L4 thinking depth
+          </p>
           <IdealWalkthroughView w={walkthrough} />
         </section>
       )}
