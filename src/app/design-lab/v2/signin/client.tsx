@@ -108,7 +108,11 @@ export function SigninCarouselClient() {
         </span>
       </div>
 
-      {/* LAYER 3b — MENU pill top-right */}
+      {/* LAYER 3b — MENU pill top-right.
+          refero: anthropic — asymmetric 0 0 8px 8px radius (flat top,
+          rounded bottom). Library-card / index-tab shape. Reads as
+          "this is a navigation index, not a primary action" — the
+          real CTA is the orange Enter-the-room below. */}
       <button
         type="button"
         style={{
@@ -119,6 +123,7 @@ export function SigninCarouselClient() {
           width: 'min(360px, 28vw)',
           background: '#E8E8E5',
           border: 'none',
+          borderRadius: '0 0 8px 8px',
           padding: '14px 22px',
           display: 'flex',
           justifyContent: 'space-between',
@@ -195,12 +200,16 @@ export function SigninCarouselClient() {
         <input
           type="email"
           placeholder="you@school.edu"
+          className="v2-pill-input"
           style={{
+            // refero: vanta — 999px fully-pill input with hairline
+            // border. Distinct from production's bottom-line-only
+            // input; signals "command, not form."
             width: '100%',
-            padding: '12px 0',
+            padding: '12px 16px',
             background: 'transparent',
-            border: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
+            border: '1px solid rgba(50,50,52,0.30)',
+            borderRadius: 999,
             fontFamily: 'var(--font-v2-mono)',
             fontSize: 14,
             color: 'rgb(50,50,52)',
@@ -416,6 +425,15 @@ export function SigninCarouselClient() {
         @media (prefers-reduced-motion: reduce) {
           .v2-marquee { animation: none !important; }
           .v2-signin-scope [aria-label="Live"] { animation: none !important; }
+        }
+        /* refero: zed — inset bottom-line + halo on focused input.
+           Mechanical-keyboard "key-pressed" focus state, sharper
+           than ring-glow. Uses orange to tie to live-action color. */
+        .v2-pill-input:focus {
+          border-color: #f54e00;
+          box-shadow:
+            #f54e00 0 -2px 0 inset,
+            rgba(245, 78, 0, 0.18) 0 1px 6px 0;
         }
       `}</style>
     </>

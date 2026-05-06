@@ -89,9 +89,12 @@ export default async function DashboardV2Page() {
         >
           <span
             style={{
+              // refero: anthropic — wider 0.22em positive tracking on
+              // uppercase mono metadata eyebrow (library-card field-
+              // label convention, matched across /cases case cards).
               fontFamily: 'var(--font-v2-mono)',
               fontSize: 12,
-              letterSpacing: '0.16em',
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: 'rgba(50,50,52,0.65)',
             }}

@@ -5,7 +5,7 @@
 // paragraphs with Montserrat 700 subheads, tomorrow's case card
 // on the right.
 
-import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
+import { IBM_Plex_Mono, Montserrat, Fraunces } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
 import { Masthead, SectionEyebrow, Marquee } from '../_components/masthead';
 import { SketchyUnderline, SketchyProgressBar, SketchyLine } from '../_components/sketchy';
@@ -22,6 +22,18 @@ const montserrat = Montserrat({
   variable: '--font-v2-display',
   weight: ['400', '500', '700', '800'],
 });
+// refero: mercury / legora / public — light-weight serif at huge
+// size for tabular display moments. Free Google substitute for
+// Mercury arcadiaDisplay 360 / Legora Rhymes Display Light /
+// Public Denton 300. Used on the score numeral, sub-score values,
+// and tomorrow's case headline.
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-v2-serif',
+  weight: ['300', '400'],
+  style: ['normal', 'italic'],
+});
 
 export const metadata = {
   title: 'Design Lab v2 — Debrief',
@@ -34,7 +46,7 @@ export default async function DebriefV2Page() {
 
   return (
     <main
-      className={`v2-debrief-scope ${plexMono.variable} ${montserrat.variable}`}
+      className={`v2-debrief-scope ${plexMono.variable} ${montserrat.variable} ${fraunces.variable}`}
       style={{
         minHeight: '100vh',
         background: '#F5F0E8',
@@ -61,8 +73,11 @@ export default async function DebriefV2Page() {
         </p>
         <div
           style={{
-            fontFamily: 'var(--font-v2-display)',
-            fontWeight: 700,
+            // refero: mercury / legora — light-weight serif at huge
+            // size on the score numeral. Replaces Montserrat 700.
+            // Whisper-confidence instead of shout-confidence.
+            fontFamily: 'var(--font-v2-serif)',
+            fontWeight: 300,
             fontSize: 'clamp(160px, 32vw, 480px)',
             lineHeight: 0.85,
             letterSpacing: '-0.04em',
@@ -149,8 +164,11 @@ export default async function DebriefV2Page() {
                   display: 'flex',
                   alignItems: 'baseline',
                   gap: 12,
-                  fontFamily: 'var(--font-v2-display)',
-                  fontWeight: 700,
+                  // refero: public — Denton serif weight 300 for
+                  // financial-journal stat presentation. Same family
+                  // as the score numeral, smaller scale.
+                  fontFamily: 'var(--font-v2-serif)',
+                  fontWeight: 300,
                   fontSize: 'clamp(64px, 8vw, 116px)',
                   lineHeight: 0.95,
                   letterSpacing: '-0.03em',
@@ -253,7 +271,7 @@ export default async function DebriefV2Page() {
             },
             {
               h: 'WHERE YOU EARNED THE SCORE',
-              p: 'Turn 5: you took the partner’s pushback on the assumption and revised. That’s the move. Most candidates double down. You didn’t — and the recovery is what moved you from 71 to 78.',
+              p: 'Turn 5: you took the partner’s pushback on the assumption and revised. <u class="v2-emph">That’s the move</u>. Most candidates double down. You didn’t — and the recovery is what moved you from 71 to 78.',
             },
             {
               h: 'TOMORROW',
@@ -287,9 +305,12 @@ export default async function DebriefV2Page() {
                   margin: 0,
                   letterSpacing: '0.005em',
                 }}
-              >
-                {s.p}
-              </p>
+                // refero: anthropic — `.v2-emph` lets us mark key
+                // phrases inline with thick double-underline as
+                // emphasis (replaces bold / color highlight). See
+                // global style block at end of return.
+                dangerouslySetInnerHTML={{ __html: s.p }}
+              />
             </div>
           ))}
         </article>
@@ -303,12 +324,13 @@ export default async function DebriefV2Page() {
             background: '#FFFFFF',
             padding: 24,
             height: 'fit-content',
-            // refero: cursor — same heavy multi-layer shadow as the
-            // /solve right-rail. Visible weight on tomorrow's case.
-            boxShadow:
-              '0 24px 60px -12px rgba(0,0,0,0.25), ' +
-              '0 12px 24px -8px rgba(0,0,0,0.15), ' +
-              '0 0 0 1px rgba(0,0,0,0.06)',
+            // refero: family — inset warm-stone border instead of
+            // drop-shadow elevation. "Tomorrow's case" is a passive
+            // next-up surface, not an active working pad. Paper-on-
+            // paper definition without the elevation lie. /solve
+            // right-rail keeps Cursor multi-layer because that one
+            // IS the active working surface.
+            boxShadow: 'inset 0 0 0 1px #e8e4dd',
           }}
         >
           <div
@@ -328,11 +350,15 @@ export default async function DebriefV2Page() {
           </div>
           <h3
             style={{
-              fontFamily: 'var(--font-v2-display)',
-              fontWeight: 700,
-              fontSize: 28,
+              // refero: wise / mercury — serif italic for next-case
+              // reveal headline. Editorial-newspaper feel rather than
+              // sans caps shout.
+              fontFamily: 'var(--font-v2-serif)',
+              fontWeight: 400,
+              fontStyle: 'italic',
+              fontSize: 32,
               lineHeight: 1.05,
-              letterSpacing: '-0.01em',
+              letterSpacing: '-0.02em',
               color: 'rgb(50,50,52)',
               margin: 0,
               marginBottom: 14,
@@ -414,6 +440,19 @@ export default async function DebriefV2Page() {
       >
         ← Design Lab v2 · Debrief
       </a>
+
+      {/* refero: anthropic — `.v2-emph` thick double-underline for
+          key phrase emphasis inside reflection paragraphs. Two stacked
+          1.5px lines via text-decoration; reads as academic-journal
+          emphasis without color or bold. */}
+      <style>{`
+        .v2-emph {
+          text-decoration: underline double rgb(50,50,52);
+          text-decoration-thickness: 1.5px;
+          text-underline-offset: 4px;
+          text-decoration-skip-ink: none;
+        }
+      `}</style>
     </main>
   );
 }

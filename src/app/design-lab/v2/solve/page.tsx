@@ -75,8 +75,11 @@ export default async function SolveV2Page() {
           position: 'relative',
         }}
       >
-        {/* CASE TITLE + TRANSCRIPT — left column with notebook margin */}
-        <div style={{ position: 'relative', paddingLeft: 36 }}>
+        {/* CASE TITLE + TRANSCRIPT — left column with notebook margin.
+            refero: mike matas — max-width 900px content cap on
+            read-heavy transcripts. Stops long lines from sprawling
+            the full grid column; preserves academic-paper rhythm. */}
+        <div style={{ position: 'relative', paddingLeft: 36, maxWidth: 900 }}>
           {/* NOTEBOOK MARGIN — vertical sketchy red rule running the
               full length of the column, like a real consultant's pad */}
           <div
