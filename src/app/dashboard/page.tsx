@@ -570,16 +570,23 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <Link
                 key={s.id}
                 href={`/solve/${s.case_id}?session=${s.id}`}
-                className="text-xs px-3 py-1.5 rounded-md transition-colors"
+                // Wave C: warm-dark resume chip with Onyx Outline play
+                // glyph. Reads as "this rep is paused, click to resume."
+                className="px-4 py-2 transition-opacity hover:opacity-90 inline-flex items-center gap-2"
                 style={{
-                  background: 'color-mix(in oklab, var(--color-accent) 14%, transparent)',
-                  color: 'var(--color-accent-bright)',
-                  border: '1px solid color-mix(in oklab, var(--color-accent) 35%, transparent)',
+                  background: '#1a1817',
+                  color: '#faf9f5',
+                  borderRadius: 999,
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  letterSpacing: '0.04em',
                 }}
               >
-                ▶ {(s.cases?.title || 'Case').slice(0, 40)}{' '}
-                <span style={{ color: 'var(--color-text-muted)' }}>
-                  ({new Date(s.started_at).toLocaleDateString()})
+                <span style={{ color: '#f54e00' }} aria-hidden="true">▶</span>
+                <span>{(s.cases?.title || 'Case').slice(0, 40)}</span>
+                <span style={{ color: 'rgba(250,249,245,0.55)', fontSize: 10 }}>
+                  {new Date(s.started_at).toLocaleDateString()}
                 </span>
               </Link>
             ))}
@@ -686,19 +693,33 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* F. LIBRARY ESCAPE HATCH */}
       <footer
-        className="pt-8 mt-4 border-t flex items-center justify-between"
-        style={{ borderColor: 'var(--color-border)' }}
+        className="pt-12 mt-4 flex items-baseline justify-between gap-4 flex-wrap"
+        style={{ borderTop: '1px solid var(--color-border)' }}
       >
         <Link
           href="/cases"
-          className="meta-label hover:opacity-80"
+          // Wave C: footer wander-the-library upgraded from a meta-
+          // label one-liner to a real italic editorial closer. The
+          // marquee just above this is decorative; this link is the
+          // actual call to action for "I'm not done."
+          className="font-headline italic hover:opacity-80"
+          style={{
+            color: 'var(--color-text-primary)',
+            fontSize: 'clamp(20px, 2.4vw, 28px)',
+            lineHeight: 1.1,
+            letterSpacing: '-0.015em',
+          }}
         >
           Wander the library — 1,165 cases →
         </Link>
         <Link
           href="/how-it-works"
-          className="meta-label hover:opacity-80"
-          style={{ color: 'var(--color-text-muted)' }}
+          className="font-mono uppercase hover:opacity-80"
+          style={{
+            color: 'var(--color-text-muted)',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+          }}
         >
           How it works
         </Link>
