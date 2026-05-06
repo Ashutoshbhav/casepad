@@ -506,11 +506,19 @@ code, pre, kbd, samp {
   color: var(--color-text-secondary);
 }
 
-/* CTA hover — opacity-only fade, no shadow / transform shift. */
+/* Hero CTA — Wave C: HUPR pill + Ed Hinrichsen stamped shadow.
+   Tactile rubber-stamp / typewriter-key affordance; the active-state
+   press translates the button into its own shadow. */
 .hero-cta {
-  transition: opacity var(--dur-micro) var(--ease-snap);
+  border-radius: 999px !important;
+  box-shadow: rgba(50,50,52,0.45) 4px 4px 0px 0px;
+  transition: box-shadow 120ms ease, transform 120ms ease, opacity var(--dur-micro) var(--ease-snap);
 }
 .hero-cta:hover { opacity: 0.9; }
+.hero-cta:active {
+  box-shadow: rgba(50,50,52,0.45) 2px 2px 0px 0px;
+  transform: translate(2px, 2px);
+}
 
 /* List rows on /cases — slide-in coral left-bar on hover (Linear / NYT
    Cooking pattern). Replaces the previous full-row bg tint which made

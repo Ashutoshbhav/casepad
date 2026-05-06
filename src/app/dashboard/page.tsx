@@ -760,10 +760,14 @@ function TodaysCaseCard({
         {cta && (
           <Link
             href={cta.href}
-            className="ml-auto px-7 py-3.5 rounded-md text-base sm:text-lg font-medium transition-opacity hover:opacity-90"
+            // refero: cursor (Onyx Outline color via token) + ed
+            // hinrichsen (stamped offset shadow) + elevenlabs (pill).
+            className="ml-auto px-8 py-3.5 text-sm sm:text-base font-medium uppercase tracking-[0.18em] transition-transform active:translate-x-[2px] active:translate-y-[2px]"
             style={{
               background: 'var(--color-accent)',
               color: 'var(--color-accent-fg)',
+              borderRadius: 999,
+              boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
             }}
           >
             {cta.label}
