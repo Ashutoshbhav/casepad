@@ -21,7 +21,7 @@ export function HuprMarquee({
     fontFamily: 'var(--font-headline, ui-serif)',
     fontStyle: 'italic',
     fontWeight: 400,
-    fontSize: 'clamp(48px, 6vw, 88px)',
+    fontSize: 'clamp(40px, 7vw, 88px)',
     lineHeight: 0.9,
     color,
     letterSpacing: '-0.012em',

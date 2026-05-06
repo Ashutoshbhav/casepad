@@ -65,6 +65,7 @@ export function SigninClient({
 
       {/* LAYER 3a — wordmark masthead top-left */}
       <div
+        className="signin-wordmark"
         style={{
           position: 'absolute',
           top: 32,
@@ -120,6 +121,7 @@ export function SigninClient({
       {/* LAYER 3b — MENU pill top-right (Anthropic asymmetric tab radius) */}
       <button
         type="button"
+        className="signin-menu-pill"
         style={{
           position: 'absolute',
           top: 32,
@@ -158,6 +160,7 @@ export function SigninClient({
 
       {/* LAYER 3c — Cohort sign-in card. Real form wired to directSignIn. */}
       <div
+        className="signin-cohort-card"
         style={{
           position: 'absolute',
           top: 116,
@@ -423,6 +426,49 @@ export function SigninClient({
           box-shadow:
             #f54e00 0 -2px 0 inset,
             rgba(245, 78, 0, 0.18) 0 1px 6px 0;
+        }
+
+        /* MOBILE / TABLET — stack the form below the wordmark instead
+           of right-floating it. Photo carousel + decision tree become
+           decorative background only; form takes the foreground. */
+        @media (max-width: 900px) {
+          .signin-wordmark {
+            top: 20px !important;
+            left: 20px !important;
+            gap: 10px !important;
+          }
+          .signin-menu-pill {
+            top: 20px !important;
+            right: 20px !important;
+            width: auto !important;
+            min-width: 120px !important;
+            padding: 10px 16px !important;
+          }
+          .signin-cohort-card {
+            top: auto !important;
+            bottom: 24px !important;
+            right: 16px !important;
+            left: 16px !important;
+            width: auto !important;
+            max-width: 480px !important;
+            margin: 0 auto !important;
+          }
+          .v2-marquee {
+            font-size: clamp(40px, 10vw, 64px) !important;
+            animation-duration: 12s !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .signin-wordmark span:first-child {
+            font-size: 22px !important;
+          }
+          .signin-wordmark span:nth-child(2) {
+            font-size: 20px !important;
+          }
+          .signin-wordmark span:nth-child(3) {
+            display: none !important;
+          }
         }
       `}</style>
     </>
