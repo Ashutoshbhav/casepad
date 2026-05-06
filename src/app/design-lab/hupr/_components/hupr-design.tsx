@@ -27,7 +27,7 @@
 // Note: HUPR's WP theme name is "Wolfpack" — this is mostly a recreation of
 // that template's behavioral layer.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { IBM_Plex_Mono, Montserrat, Moderustic } from 'next/font/google';
 
 // Fonts — exact families HUPR ships.
@@ -163,7 +163,19 @@ const NEWS = [
   },
 ];
 
-export function HuprDesign() {
+// Optional slots that let consumers (auth/signin, design-lab/hupr) drop in
+// their own content into HUPR's signature locations:
+//   - heroRightCard  : the floating white card on the hero (default: "What we
+//                       do" + Learn more CTA → for signin, gets the email form)
+//   - eyebrow        : top-left tagline next to the wordmark in the header
+//   - menuLinks      : nav drawer items
+export interface HuprDesignProps {
+  heroRightCard?: ReactNode;
+  eyebrow?: string;
+  menuLinks?: { label: string; href: string }[];
+}
+
+export function HuprDesign({ heroRightCard, eyebrow, menuLinks }: HuprDesignProps = {}) {
   // Single IntersectionObserver wires HUPR's two reveal classes:
   //   .hupr-image-zoom — scale(1.3) blur(4px) → scale(1) blur(0)
   //   .hupr-fade-up    — opacity 0 + translateY(24px) → 1 + 0
@@ -213,8 +225,8 @@ export function HuprDesign() {
       }}
     >
       <HuprStyles />
-      <Header />
-      <Hero />
+      <Header eyebrow={eyebrow} menuLinks={menuLinks} />
+      <Hero rightCard={heroRightCard} />
       <StatsBillboard />
       <ServiceStack />
       <Spheres />
@@ -415,8 +427,23 @@ function HuprStyles() {
 
 /* ───────────────── 1. Header + slide-in menu drawer ─────────────────── */
 
-function Header() {
+const DEFAULT_MENU_LINKS = [
+  { label: 'Home', href: '#home' },
+  { label: 'Tracks', href: '#tracks' },
+  { label: 'Cohort', href: '#spheres' },
+  { label: 'News', href: '#news' },
+];
+
+function Header({
+  eyebrow,
+  menuLinks,
+}: {
+  eyebrow?: string;
+  menuLinks?: { label: string; href: string }[];
+}) {
   const [open, setOpen] = useState(false);
+  const links = menuLinks ?? DEFAULT_MENU_LINKS;
+  const tagline = eyebrow ?? 'Case-prep cohort for B-school candidates';
 
   return (
     <>
@@ -448,7 +475,7 @@ function Header() {
                   marginLeft: 24,
                 }}
               >
-                Case-prep cohort for B-school candidates
+                {tagline}
               </p>
             </div>
           </div>
@@ -544,12 +571,7 @@ function Header() {
             listStyle: 'none',
           }}
         >
-          {[
-            { label: 'Home', href: '#home' },
-            { label: 'Tracks', href: '#tracks' },
-            { label: 'Cohort', href: '#spheres' },
-            { label: 'News', href: '#news' },
-          ].map((m) => (
+          {links.map((m) => (
             <li
               key={m.label}
               className="hupr-menu-link-row"
@@ -601,7 +623,7 @@ function Header() {
 
 /* ───────────────── 2. Hero — fullscreen photo + marquee ─────────────── */
 
-function Hero() {
+function Hero({ rightCard }: { rightCard?: ReactNode }) {
   // Cycle through 3 background photos every 4s.
   const [active, setActive] = useState(0);
   useEffect(() => {
@@ -683,71 +705,74 @@ function Hero() {
         </div>
       </div>
 
-      {/* Floating service-offer card on right */}
+      {/* Floating right-card slot — defaults to "What we do / Learn more"
+          on /design-lab/hupr; signin overrides with the email form. */}
       <div
         className="absolute px-5 lg:px-0"
         style={{
           top: '50%',
           right: '2rem',
-          width: 'min(380px, 90vw)',
+          width: 'min(420px, 92vw)',
           transform: 'translateY(-50%)',
         }}
       >
-        <div
-          style={{
-            background: '#FFFFFF',
-            padding: '2rem',
-            borderRadius: 4,
-          }}
-        >
-          <h2
-            className="hupr-mono-eyebrow"
-            style={{ marginBottom: 8 }}
-          >
-            What we do
-          </h2>
-          <hr
+        {rightCard ?? (
+          <div
             style={{
-              border: 0,
-              borderTop: '1px solid #323234',
-              margin: '8px 0 24px',
-            }}
-          />
-          <p
-            style={{
-              fontFamily: 'var(--font-hupr-body)',
-              fontSize: 16,
-              lineHeight: 1.55,
-              color: '#323234',
-              margin: 0,
+              background: '#FFFFFF',
+              padding: '2rem',
+              borderRadius: 4,
             }}
           >
-            CasePad runs cohort case-prep for B-school candidates — daily live
-            cases with Ash, your AI engagement manager, plus drill loops and
-            written debriefs.
-          </p>
-          <div className="pt-8">
-            <a
-              href="#tracks"
-              className="hupr-anim-btn"
+            <h2
+              className="hupr-mono-eyebrow"
+              style={{ marginBottom: 8 }}
+            >
+              What we do
+            </h2>
+            <hr
               style={{
-                display: 'inline-block',
-                background: '#323234',
-                color: '#FFFFFF',
-                padding: '10px 18px',
-                borderRadius: 6,
+                border: 0,
+                borderTop: '1px solid #323234',
+                margin: '8px 0 24px',
+              }}
+            />
+            <p
+              style={{
                 fontFamily: 'var(--font-hupr-body)',
-                fontSize: 12,
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
-                textDecoration: 'none',
+                fontSize: 16,
+                lineHeight: 1.55,
+                color: '#323234',
+                margin: 0,
               }}
             >
-              <span className="top">Learn more</span>
-              <span className="btm">Learn more</span>
-            </a>
+              CasePad runs cohort case-prep for B-school candidates — daily live
+              cases with Ash, your AI engagement manager, plus drill loops and
+              written debriefs.
+            </p>
+            <div className="pt-8">
+              <a
+                href="#tracks"
+                className="hupr-anim-btn"
+                style={{
+                  display: 'inline-block',
+                  background: '#323234',
+                  color: '#FFFFFF',
+                  padding: '10px 18px',
+                  borderRadius: 6,
+                  fontFamily: 'var(--font-hupr-body)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  textDecoration: 'none',
+                }}
+              >
+                <span className="top">Learn more</span>
+                <span className="btm">Learn more</span>
+              </a>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
