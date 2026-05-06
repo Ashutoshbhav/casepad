@@ -794,20 +794,41 @@ function TodaysCaseCard({
 
       <div className="flex flex-wrap items-center gap-3">
         <span
-          className="meta-label px-3 py-1.5 rounded-full"
-          style={{ border: '1px solid var(--color-border)' }}
+          className="font-mono uppercase px-4 py-2"
+          style={{
+            background: '#1a1817',
+            color: '#faf9f5',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+            borderRadius: 999,
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+          }}
         >
-          ≈ {minutes} min
+          ≈ {minutes} MIN
         </span>
         <span
-          className="meta-label px-3 py-1.5 rounded-full"
-          style={{ border: '1px solid var(--color-border)' }}
+          className="font-mono uppercase px-4 py-2"
+          style={{
+            background: '#1a1817',
+            color: '#faf9f5',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+            borderRadius: 999,
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+          }}
         >
           {assignment.caseDifficulty}
         </span>
         <span
-          className="meta-label px-3 py-1.5 rounded-full"
-          style={{ border: '1px solid var(--color-border)' }}
+          className="font-mono uppercase px-4 py-2"
+          style={{
+            background: '#1a1817',
+            color: '#faf9f5',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+            borderRadius: 999,
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+          }}
         >
           {assignment.caseType.replace(/_/g, ' ')}
         </span>

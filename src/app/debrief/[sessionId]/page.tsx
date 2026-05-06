@@ -231,17 +231,56 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
             speed={b.speed ?? 0}
           />
         </div>
-        <div className="space-y-4">
+        <div
+          className="p-5 space-y-5"
+          style={{
+            background: '#1a1817',
+            color: '#faf9f5',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset',
+          }}
+        >
           <div>
-            <h3 className="text-sm font-semibold text-zinc-300 mb-2">Strengths</h3>
-            <ul className="text-sm text-zinc-400 space-y-1">
-              {(b.strengths ?? []).map((s: string, i: number) => <li key={i}>• {s}</li>)}
+            <div
+              className="font-mono uppercase mb-3"
+              style={{
+                color: '#5e6ad2', // Aether Blue — wisdom signal
+                fontSize: 11,
+                letterSpacing: '0.22em',
+                fontWeight: 500,
+              }}
+            >
+              STRENGTHS
+            </div>
+            <ul className="text-sm space-y-2" style={{ color: 'rgba(250,249,245,0.92)' }}>
+              {(b.strengths ?? []).map((s: string, i: number) => (
+                <li key={i} className="flex gap-2">
+                  <span style={{ color: '#5e6ad2' }} aria-hidden="true">+</span>
+                  <span>{s}</span>
+                </li>
+              ))}
             </ul>
           </div>
-          <div>
-            <h3 className="text-sm font-semibold text-zinc-300 mb-2">Gaps</h3>
-            <ul className="text-sm text-zinc-400 space-y-1">
-              {(b.gaps ?? []).map((g: string, i: number) => <li key={i}>• {g}</li>)}
+          <div
+            style={{ borderTop: '1px solid rgba(250,249,245,0.10)', paddingTop: 16 }}
+          >
+            <div
+              className="font-mono uppercase mb-3"
+              style={{
+                color: '#f54e00', // Onyx Outline — action signal (gaps are where you act)
+                fontSize: 11,
+                letterSpacing: '0.22em',
+                fontWeight: 500,
+              }}
+            >
+              GAPS
+            </div>
+            <ul className="text-sm space-y-2" style={{ color: 'rgba(250,249,245,0.92)' }}>
+              {(b.gaps ?? []).map((g: string, i: number) => (
+                <li key={i} className="flex gap-2">
+                  <span style={{ color: '#f54e00' }} aria-hidden="true">−</span>
+                  <span>{g}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
