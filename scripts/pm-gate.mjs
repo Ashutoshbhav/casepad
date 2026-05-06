@@ -20,6 +20,25 @@ process.chdir(ROOT);
 const diff = execSync('git diff --cached --diff-filter=A --name-only', { encoding: 'utf8' }).trim();
 const addedFiles = diff.split('\n').filter(Boolean);
 
+// 1a. RLS lint — runs first if any supabase/migrations/ file is staged
+//     (added OR modified). Catches the 0008_tavily_quota class of bug
+//     where a new table was created without RLS. Fails the commit on
+//     any RLS-disabled table.
+const allStagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' })
+  .trim()
+  .split('\n')
+  .filter(Boolean);
+const touchesMigrations = allStagedFiles.some((f) => f.startsWith('supabase/migrations/'));
+if (touchesMigrations) {
+  console.log('[pm-gate] supabase migration touched — running RLS lint…');
+  try {
+    execSync('node scripts/lint-rls.mjs', { stdio: 'inherit', cwd: ROOT });
+  } catch {
+    console.error('[pm-gate] RLS lint FAILED — block commit.');
+    process.exit(1);
+  }
+}
+
 // Detect feature additions
 const FEATURE_PATTERNS = [
   /^src\/app\/.+\/page\.tsx$/,
