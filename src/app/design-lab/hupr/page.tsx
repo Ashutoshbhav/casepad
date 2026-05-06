@@ -173,10 +173,13 @@ export default async function HuprPage() {
       >
         <div
           style={{
-            fontFamily: FONTS.accent,
-            fontWeight: 400,
-            fontSize: 13,
-            letterSpacing: '0.04em',
+            // Real HUPR h4/h5 spec — Montserrat weight 900, 15px line 20,
+            // uppercase. Eyebrows shout, headings whisper.
+            fontFamily: FONTS.display,
+            fontWeight: 900,
+            fontSize: 15,
+            lineHeight: '20px',
+            textTransform: 'uppercase',
             color: COLORS.textMuted,
           }}
         >
@@ -185,15 +188,17 @@ export default async function HuprPage() {
         <div>
           <h1
             style={{
+              // Real HUPR h1 spec — 40px mobile / 90px desktop line 85,
+              // Montserrat 700. Bigger AND heavier than my first take.
               fontFamily: FONTS.display,
-              fontWeight: 500,
-              fontSize: 'clamp(36px, 4.5vw, 64px)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              fontSize: 40,
+              lineHeight: '49px',
               color: COLORS.text,
               margin: 0,
-              maxWidth: '22ch',
+              maxWidth: '20ch',
             }}
+            className="hupr-h1"
           >
             The room before the room.
           </h1>
@@ -244,16 +249,17 @@ export default async function HuprPage() {
           </div>
           <h2
             style={{
+              // Real HUPR h2 spec — Montserrat 700, 30px mobile.
               fontFamily: FONTS.display,
-              fontWeight: 500,
-              fontSize: 'clamp(28px, 3.2vw, 44px)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              fontSize: 30,
+              lineHeight: '38px',
               color: COLORS.text,
               margin: 0,
               marginBottom: 56,
               maxWidth: '20ch',
             }}
+            className="hupr-h2"
           >
             Solve a case. Drill the gap. Debrief in the open.
           </h2>
@@ -490,6 +496,14 @@ export default async function HuprPage() {
           </a>
         </div>
       </section>
+
+      {/* Real HUPR responsive jumps — match their exact breakpoints. */}
+      <style>{`
+        @media (min-width: 1024px) {
+          .hupr-h1 { font-size: 90px !important; line-height: 85px !important; }
+          .hupr-h2 { font-size: 60px !important; line-height: 65px !important; }
+        }
+      `}</style>
 
       {/* ── 7. FOOTER — dark #323234 with white text, HUPR's exact pattern ── */}
       <footer
