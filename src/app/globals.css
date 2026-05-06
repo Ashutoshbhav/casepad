@@ -1,109 +1,119 @@
 @import 'tailwindcss';
 
 /* =========================================================================
-   Liquid Tutor — Claude Dark palette. Anthropic's verified tokens applied
-   site-wide. Coral accent (#d97757) replaces brass. Canvas warmed up from
-   the original coffin-black #141413 to a warmer #1a1817 — the dark feels
-   lived-in, not sterile.
-   Contrast on body text against bg.canvas (#1a1817):
-   - text.primary  #faf9f5 vs #1a1817  → ~15.4:1 (AAA)
-   - text.secondary #b0aea5 vs #1a1817 →  ~7.5:1 (AAA)
-   - accent #d97757 vs #1a1817         →  ~4.6:1 (AA)
+   HUPR PALETTE — full app makeover 2026-05-06.
+   Replaces the Anthropic Liquid-Tutor coral-on-dark palette with HUPR's
+   monochromatic system: white canvas (#FFFFFF) + warm-dark ink (#323234) +
+   IBM Plex Mono body / Montserrat display / Moderustic prose.
+
+   No accent color. Primary CTAs are #323234 dark-fill rectangles on white.
+   Hairline dividers everywhere. Eyebrows are uppercase Plex Mono.
+
+   Variable NAMES preserved (--color-text-primary, --color-accent, etc.)
+   so existing class hooks across cases/dashboard/solve/debrief auto-pick
+   up the new palette without per-file rewrites.
+   --------------------------------------------------------------------------
+   Light is the canonical HUPR mode (the live site is light-only). Dark is
+   the inverted #323234 canvas + white ink + lighter borders.
+
+   Contrast vs canvas:
+   light  text.primary  #323234 vs #FFFFFF → 12.6:1 (AAA)
+   light  text.muted    rgba(50,50,52,.65) → 8.0:1   (AAA)
+   dark   text.primary  #FFFFFF vs #323234 → 12.6:1 (AAA)
    ========================================================================= */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* Surfaces — pitch black canvas so the WebGL asterisk reads as space.
-     Elevated/sunken kept warm-dark for cards & panels (contrast against
-     the black canvas, not against each other). */
-  --color-bg-canvas:   #000000;
-  --color-bg-elevated: #1a1817;
-  --color-bg-sunken:   #0a0908;
+  /* Surfaces — canonical HUPR is light-canvas. */
+  --color-bg-canvas:   #FFFFFF;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-sunken:   #f4f4f4;
 
-  /* Text — Anthropic Light / Mid Gray / muted. */
-  --color-text-primary:   #faf9f5;
-  --color-text-secondary: #b0aea5;
-  --color-text-muted:     #7a7873;
+  /* Ink — #323234 (HUPR's "black-hupr"; NOT pure black). */
+  --color-text-primary:   #323234;
+  --color-text-secondary: rgba(50, 50, 52, 0.72);
+  --color-text-muted:     rgba(50, 50, 52, 0.50);
 
-  /* Accents / signals — Anthropic Orange (coral). */
-  --color-accent:        #d97757;
-  --color-accent-fg:     #1a1817;
-  --color-accent-bright: #e58c6f;
-  --color-border:        #2f2c29;
-  --color-signal-danger: #D94B4B;
+  /* Accent — HUPR has no accent colour. Map "accent" to the same dark ink
+     so legacy code that paints buttons / chips with var(--color-accent)
+     still produces the HUPR primary CTA (#323234 fill). */
+  --color-accent:        #323234;
+  --color-accent-fg:     #FFFFFF;
+  --color-accent-bright: #1c1c1c;
 
-  /* Font CSS variables — wired from src/app/layout.tsx via next/font.
-     Names preserved (--font-headline / --font-body / --font-mono) so
-     existing class hooks keep working. */
-  --font-headline: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-body:     'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:     'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  /* Borders — HUPR uses hairline dividers in #e8e8e8. */
+  --color-border:        #e8e8e8;
+  --color-signal-danger: #b33c3c;
+
+  /* Font CSS variables — wired in src/app/layout.tsx via next/font.
+     The actual font-family hash is set by next/font via the className
+     on <html>; these are the system fallbacks only. --font-mono
+     intentionally points at the same family as --font-body since HUPR
+     uses IBM Plex Mono everywhere — body and code share one family. */
+  --font-headline: ui-sans-serif, system-ui, sans-serif;
+  --font-body:     ui-monospace, 'SF Mono', Menlo, Monaco, monospace;
+  --font-mono:     ui-monospace, 'SF Mono', Menlo, Monaco, monospace;
+  --font-accent:   ui-monospace, 'SF Mono', Menlo, Monaco, monospace;
 }
 
 /* =========================================================================
-   Light theme — activated by `<html data-theme="light">`. Re-tuned
-   2026-05-05 after the visual audit flagged the original port as
-   half-finished. Tuning notes:
-   - Canvas warmed (#faf9f5 paper, not stark white) — Linear / Stripe
-     pattern. Stark white reads "bleached" with editorial italic type.
-   - Coral DEEPENED for paper (#c4623a vs #d97757 dark). Paper needs
-     more saturation; the lighter coral was getting washed out.
-   - accent-bright DARKENED (#a85128) so hover state has visible delta.
-   - Secondary text uses warm-charcoal (#5a5853) — pure black is too
-     harsh for body, pure gray reads "wireframe".
-   - Borders soft (#e8e4dd) — paper hairlines should whisper, not
-     ship-tape.
-   - The persistent asterisk reads themeMode from the Zustand store and
-     drops emissiveIntensity to 0 in light mode (no glow on paper) +
-     uses a deeper coral so it reads as a solid mark, not a smudge.
-
-   Contrast on body text against bg.canvas (#faf9f5):
-   - text.primary  #1a1817 vs #faf9f5  → ~16.0:1 (AAA)
-   - text.secondary #5a5853 vs #faf9f5 →  ~8.4:1 (AAA)
-   - accent #c4623a vs #faf9f5         →  ~4.7:1 (AA)
-
+   Dark theme — activated by `<html data-theme="dark">`. HUPR-style inversion:
+   #323234 canvas + white ink + #1c1c1c sunken + soft white borders.
    Pre-paint script in layout.tsx sets data-theme before React mounts.
    ========================================================================= */
-:root[data-theme="light"] {
-  color-scheme: light;
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-  --color-bg-canvas:   #faf9f5;
-  --color-bg-elevated: #ffffff;
-  --color-bg-sunken:   #f3f0e8;
+  --color-bg-canvas:   #323234;
+  --color-bg-elevated: #3a3a3c;
+  --color-bg-sunken:   #1c1c1e;
 
-  --color-text-primary:   #1a1817;
-  --color-text-secondary: #5a5853;
-  --color-text-muted:     #9a9893;
+  --color-text-primary:   #FFFFFF;
+  --color-text-secondary: rgba(255, 255, 255, 0.72);
+  --color-text-muted:     rgba(255, 255, 255, 0.45);
 
-  --color-accent:        #c4623a;
-  --color-accent-fg:     #ffffff;
-  --color-accent-bright: #a85128;
-  --color-border:        #e8e4dd;
-  --color-signal-danger: #b33c3c;
+  --color-accent:        #FFFFFF;
+  --color-accent-fg:     #323234;
+  --color-accent-bright: #f4f4f4;
+
+  --color-border:        rgba(255, 255, 255, 0.16);
+  --color-signal-danger: #ff8a8a;
 }
-@theme inline {
-  /* Re-apply light overrides for backward-compat tokens used across
-     the legacy admin/drills/dashboard pages. */
+
+/* Backwards-compat zinc/emerald/rose/amber overrides — pages still using
+   these legacy Tailwind utility classes (admin/drills/dashboard/cheatsheet)
+   inherit the HUPR mono palette automatically. Names stay; values flip.
+   Goal: every visible colour collapses toward the HUPR ink/canvas/sunken
+   triad so no Anthropic coral leaks through. */
+:root {
+  --color-zinc-50:   #FFFFFF;
+  --color-zinc-100:  #f4f4f4;
+  --color-zinc-200:  #e8e8e8;
+  --color-zinc-300:  #d4d4d4;
+  --color-zinc-400:  #a8a8a8;
+  --color-zinc-500:  #6b6b6c;
+  --color-zinc-600:  #4a4a4c;
+  --color-zinc-700:  #323234;
+  --color-zinc-800:  #1c1c1e;
+  --color-zinc-900:  #141415;
+  --color-zinc-950:  #0a0a0b;
 }
-:root[data-theme="light"] {
-  /* Backwards-compat zinc/emerald/rose/amber overrides for light mode.
-     Names preserved; values flipped so hover/border classes feel right. */
-  --color-zinc-50:   #1a1817;
-  --color-zinc-100:  #1a1817;
-  --color-zinc-200:  #2f2c29;
-  --color-zinc-300:  #4a4845;
-  --color-zinc-400:  #8a8780;
-  --color-zinc-500:  #b0aea5;
-  --color-zinc-600:  #c7c4b8;
-  --color-zinc-700:  #dcd9d0;
-  --color-zinc-800:  #ece9de;
-  --color-zinc-900:  #f0ede4;
-  --color-zinc-950:  #faf9f5;
+:root[data-theme="dark"] {
+  --color-zinc-50:   #323234;
+  --color-zinc-100:  #3a3a3c;
+  --color-zinc-200:  #4a4a4c;
+  --color-zinc-300:  #6b6b6c;
+  --color-zinc-400:  #a8a8a8;
+  --color-zinc-500:  #d4d4d4;
+  --color-zinc-600:  #e8e8e8;
+  --color-zinc-700:  #f4f4f4;
+  --color-zinc-800:  #FFFFFF;
+  --color-zinc-900:  #FFFFFF;
+  --color-zinc-950:  #FFFFFF;
 }
 
 /* Tailwind v4 theme — extend tokens so utilities resolve correctly. */
 @theme inline {
-  /* Custom palette tokens — bg-canvas, text-primary, border-border, etc. */
   --color-canvas:   var(--color-bg-canvas);
   --color-elevated: var(--color-bg-elevated);
   --color-sunken:   var(--color-bg-sunken);
@@ -118,66 +128,49 @@
   --color-border:        var(--color-border);
   --color-danger:        var(--color-signal-danger);
 
-  /* Backwards-compat overrides — pages still using zinc/emerald/rose/amber
-     classes inherit the Claude Dark palette automatically (admin, drills,
-     cheatsheet, dashboard). Only the values change; classnames stay.
-     Re-tuned 2026-05-04 to the warmer-dark palette (#1a1817 base). */
-  --color-zinc-50:   #faf9f5;
-  --color-zinc-100:  #faf9f5;
-  --color-zinc-200:  #ece9de;
-  --color-zinc-300:  #c7c4b8;
-  --color-zinc-400:  #b0aea5;
-  --color-zinc-500:  #918f87;
-  --color-zinc-600:  #7a7873;
-  --color-zinc-700:  #3f3c39;
-  --color-zinc-800:  #2f2c29;
-  --color-zinc-900:  #252220;
-  --color-zinc-950:  #000000;
+  /* Map every legacy semantic colour to the HUPR mono palette. Coral,
+     emerald, rose, amber, indigo, sky, violet, fuchsia all collapse —
+     the only chromatic moment in the app is now white/dark/sunken. */
+  --color-emerald-200: #e8e8e8;
+  --color-emerald-300: #d4d4d4;
+  --color-emerald-400: #323234;
+  --color-emerald-500: #323234;
+  --color-emerald-600: #1c1c1e;
+  --color-emerald-700: #141415;
+  --color-emerald-800: #0a0a0b;
+  --color-emerald-900: #0a0a0b;
+  --color-emerald-950: #0a0a0b;
 
-  /* Map emerald (the previous brand accent) to coral — buttons/badges/CTAs. */
-  --color-emerald-200: #f0b8a4;
-  --color-emerald-300: #e58c6f;
-  --color-emerald-400: #d97757;
-  --color-emerald-500: #d97757;
-  --color-emerald-600: #c2664a;
-  --color-emerald-700: #9a4f38;
-  --color-emerald-800: #6b3727;
-  --color-emerald-900: #432217;
-  --color-emerald-950: #25130d;
+  --color-rose-300: #e89b9b;
+  --color-rose-400: #b33c3c;
+  --color-rose-500: #b33c3c;
+  --color-rose-700: #7a2828;
+  --color-rose-900: #4a1818;
+  --color-rose-950: #2a0d0d;
 
-  /* Rose (destructive) — keep readable. */
-  --color-rose-300: #E89B9B;
-  --color-rose-400: #D94B4B;
-  --color-rose-500: #D94B4B;
-  --color-rose-700: #8C2E2E;
-  --color-rose-900: #4A1A1A;
-  --color-rose-950: #2A0F0F;
+  --color-amber-200: #f4f4f4;
+  --color-amber-300: #e8e8e8;
+  --color-amber-400: #323234;
+  --color-amber-500: #323234;
+  --color-amber-600: #1c1c1e;
+  --color-amber-700: #141415;
+  --color-amber-900: #0a0a0b;
+  --color-amber-950: #0a0a0b;
 
-  /* Amber — used on warnings / starter chips. Tune toward coral. */
-  --color-amber-200: #f0b8a4;
-  --color-amber-300: #e58c6f;
-  --color-amber-400: #d97757;
-  --color-amber-500: #d97757;
-  --color-amber-600: #c2664a;
-  --color-amber-700: #9a4f38;
-  --color-amber-900: #432217;
-  --color-amber-950: #25130d;
-
-  /* Indigo / sky / violet / fuchsia — soften to neutrals so old badges
-     don't clash with the editorial palette. */
-  --color-indigo-200: #c7c4b8;
-  --color-indigo-800: #3f3c39;
-  --color-indigo-950: #252220;
-  --color-sky-700: #3f3c39;
-  --color-violet-200: #ece9de;
-  --color-violet-300: #e58c6f;
-  --color-violet-400: #d97757;
-  --color-fuchsia-300: #e58c6f;
+  --color-indigo-200: #e8e8e8;
+  --color-indigo-800: #323234;
+  --color-indigo-950: #141415;
+  --color-sky-700:    #323234;
+  --color-violet-200: #e8e8e8;
+  --color-violet-300: #d4d4d4;
+  --color-violet-400: #323234;
+  --color-fuchsia-300: #d4d4d4;
 
   /* Font family tokens for Tailwind utilities. */
   --font-headline: var(--font-headline);
   --font-body:     var(--font-body);
   --font-mono:     var(--font-mono);
+  --font-accent:   var(--font-accent);
   --font-sans:     var(--font-body);
   --font-serif:    var(--font-headline);
 }
@@ -186,38 +179,126 @@ html, body {
   background: var(--color-bg-canvas);
   color: var(--color-text-primary);
   font-family: var(--font-body);
-  letter-spacing: -0.005em;
+  font-weight: 500;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* IBM Plex Mono powers both body and code — alias --font-mono to body
+     so the next/font hash family is reused (we don't load Plex Mono
+     twice). */
+  --font-mono: var(--font-body);
 }
 
-/* (Signin override removed — body bg is now pitch black globally via the
-   --color-bg-canvas token. Kept as a no-op anchor in case future routes
-   want a different canvas tint.) */
-
-/* Editorial typographic defaults — restraint > flourish. */
-h1, h2, h3, h4 {
+/* HUPR typographic defaults — Montserrat 700 headings, no italic flourish. */
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-headline);
-  font-weight: 400;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--color-text-primary);
 }
 
 code, pre, kbd, samp {
   font-family: var(--font-mono);
 }
 
-/* Coral milestone pulse — kept for any legacy mounts that still call it,
-   but the brass progress bar itself has been retired. */
-@keyframes brassPulse {
-  0%   { filter: brightness(1);   box-shadow: 0 0 0 rgba(217, 119, 87, 0); }
-  35%  { filter: brightness(1.6); box-shadow: 0 0 12px rgba(217, 119, 87, 0.55); }
-  100% { filter: brightness(1);   box-shadow: 0 0 0 rgba(217, 119, 87, 0); }
-}
-.brass-pulse {
-  animation: brassPulse 600ms ease-out;
+/* =========================================================================
+   HUPR keyframes — global (was previously scoped per design-lab page).
+   Used by the design-lab/hupr sample and any per-page HUPR composition.
+   ========================================================================= */
+@keyframes hupr-scrolling {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% / 3)); }
 }
 
-/* Blinking caret used by the typewriter component. */
+.hupr-marquee {
+  display: flex;
+  animation: hupr-scrolling 25s linear infinite;
+  will-change: transform;
+}
+
+.hupr-image-zoom {
+  transform: scale(1.3);
+  filter: blur(4px);
+  transition: transform 1.2s cubic-bezier(0.3, 0.86, 0.36, 0.95),
+              filter 1.2s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+}
+.hupr-image-zoom.is-in {
+  transform: scale(1);
+  filter: blur(0);
+}
+
+.hupr-fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .9s cubic-bezier(.3,.86,.36,.95),
+              transform .9s cubic-bezier(.3,.86,.36,.95);
+}
+.hupr-fade-up.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hupr-anim-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.hupr-anim-btn .top,
+.hupr-anim-btn .btm {
+  display: block;
+  transition: transform .3s cubic-bezier(.34,.7,.27,1);
+}
+.hupr-anim-btn .btm {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+.hupr-anim-btn:hover .top { transform: translateY(-100%); }
+.hupr-anim-btn:hover .btm { transform: translateY(0); }
+
+.hupr-eyebrow {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-size: 13px;
+  line-height: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+}
+
+.hupr-mono-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+}
+
+.hupr-h1 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 49px;
+  color: var(--color-text-primary);
+}
+@media (min-width: 1024px) {
+  .hupr-h1 { font-size: 80px; line-height: 80px; }
+}
+
+.hupr-hairline {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 8px 0;
+  width: 100%;
+}
+
+/* Remove the brass-coral milestone pulse — kept as no-op so any legacy
+   mounts that reference it don't crash. Animation is suppressed. */
+@keyframes brassPulse { 0%, 100% { filter: brightness(1); } }
+.brass-pulse { animation: none; }
+
 @keyframes brassCaret {
   0%, 49%   { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -247,11 +328,6 @@ code, pre, kbd, samp {
 /* =========================================================================
    Vertical family-hierarchy / org-chart layout for the issue tree.
    Pure-CSS connectors via ::before/::after — no JS measurement.
-   Each level renders as a horizontal row of sibling cards. Children
-   appear directly beneath their parent, joined by a vertical drop line
-   into a horizontal bus that fans out to each child. L0..L5 are
-   visually distinct via the level badge inside each card, not via row
-   gutters (which break when subtrees have uneven depths).
    ========================================================================= */
 .org-tree {
   width: 100%;
@@ -266,16 +342,11 @@ code, pre, kbd, samp {
   display: inline-block;
   text-align: center;
 }
-/* Children of a node sit in a row beneath it. The 24px top padding leaves
-   room for the connector lines drawn via pseudo-elements below. */
 .org-tree ul.org-children {
   padding-top: 24px;
   position: relative;
   white-space: nowrap;
 }
-/* Each <li> in a children-row: vertical column (card on top, its own
-   children below), with connectors drawn from its top edge up to the
-   horizontal bus shared with its siblings. */
 .org-tree li.org-li {
   display: inline-block;
   vertical-align: top;
@@ -284,7 +355,6 @@ code, pre, kbd, samp {
   list-style: none;
   white-space: normal;
 }
-/* Vertical drop from parent's bottom to the bus above each row of kids. */
 .org-tree ul.org-children::before {
   content: '';
   position: absolute;
@@ -294,7 +364,6 @@ code, pre, kbd, samp {
   height: 24px;
   border-left: 1px solid var(--color-border);
 }
-/* Horizontal bus — connectors above each child connecting siblings. */
 .org-tree li.org-li::before,
 .org-tree li.org-li::after {
   content: '';
@@ -306,34 +375,25 @@ code, pre, kbd, samp {
 }
 .org-tree li.org-li::before { right: 50%; }
 .org-tree li.org-li::after { left: 50%; border-left: 1px solid var(--color-border); }
-/* Hide outer half-connectors on first / last children so the bus reads clean. */
 .org-tree li.org-li:first-child::before,
 .org-tree li.org-li:last-child::after { border-color: transparent; }
 .org-tree li.org-li:last-child::before { border-right: 1px solid var(--color-border); }
-/* Single-child case: just a straight drop, no bus. */
 .org-tree li.org-li:only-child {
   padding-top: 24px;
 }
 .org-tree li.org-li:only-child::before,
 .org-tree li.org-li:only-child::after { display: none; }
-
-/* Top-level roots row — no connectors above (no parent). */
 .org-tree > ul > li.org-li {
   padding-top: 0;
 }
 .org-tree > ul > li.org-li::before,
 .org-tree > ul > li.org-li::after { display: none; }
-
 .org-card {
   white-space: normal;
   text-align: left;
 }
 
-/* =========================================================================
-   Motion tokens — single source of truth for the "buttery" feel.
-   ease-snap   — custom expo, perfect for micro-interactions
-   ease-soft   — gentle ease-out for fades
-   ========================================================================= */
+/* Motion tokens — single source of truth. */
 :root {
   --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
@@ -341,11 +401,7 @@ code, pre, kbd, samp {
   --dur-soft:  240ms;
 }
 
-/* Ghost button — transparent border that lights up on hover. Replaces
-   inline JS-driven onMouseEnter/Leave style mutation across the app.
-   Animating border-color + color only (both cheap), no transform on
-   hover so the button never visually shifts adjacent layout.
-   Variants: --accent (coral), --danger (rose). */
+/* Ghost button — transparent border that lights up on hover. */
 .ghost-btn {
   background: transparent;
   border: 1px solid transparent;
@@ -358,10 +414,10 @@ code, pre, kbd, samp {
   color: var(--color-text-primary);
   border-color: var(--color-border);
 }
-.ghost-btn--accent { color: var(--color-accent); }
+.ghost-btn--accent { color: var(--color-text-primary); }
 .ghost-btn--accent:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
 }
 .ghost-btn--danger { color: var(--color-signal-danger); }
 .ghost-btn--danger:hover {
@@ -369,45 +425,32 @@ code, pre, kbd, samp {
   border-color: var(--color-signal-danger);
 }
 
-/* =========================================================================
-   Visual baseline reset — typography utilities (added 2026-05-05).
-   Visual audit found 80+ uses of font-mono uppercase tracked eyebrows
-   across 21 files, making every surface read in the same whisper key.
-   Per the audit: keep .eyebrow ONLY for true section dividers. Use
-   .meta-label everywhere else for ambient status / metadata.
-   .meta-label is Geist 12-13px medium, sentence case, normal tracking
-   — Linear / Notion pattern.
-   ========================================================================= */
+/* Eyebrow / meta-label — reskinned to HUPR. */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--color-text-muted);
-  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-text-primary);
+  font-weight: 400;
 }
 .meta-label {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  font-weight: 400;
+  letter-spacing: 0;
   color: var(--color-text-secondary);
+  text-transform: uppercase;
 }
 
-/* CTA hover — opacity-only fade, no shadow / transform shift. */
+/* CTA hover — opacity-only fade. */
 .hero-cta {
   transition: opacity var(--dur-micro) var(--ease-snap);
 }
 .hero-cta:hover { opacity: 0.9; }
 
-/* List rows on /cases — slide-in coral left-bar on hover (Linear / NYT
-   Cooking pattern). Replaces the previous full-row bg tint which made
-   scanning feel like dragging through molasses. The bar is a 2px-wide
-   pseudo-element that grows from height: 0 to height: 100% on hover.
-   No background shift → adjacent rows never reflow, the eye can scan
-   freely.
-   Position relative needed because the ::before is absolutely-positioned
-   to the left edge. */
+/* Case row hover — HUPR slides a 2px dark bar in from the left, replaces
+   the previous coral version. */
 .case-row {
   position: relative;
   transition: opacity var(--dur-micro) var(--ease-snap);
@@ -419,7 +462,7 @@ code, pre, kbd, samp {
   top: 50%;
   width: 2px;
   height: 0;
-  background: var(--color-accent);
+  background: var(--color-text-primary);
   transform: translateY(-50%);
   transition: height var(--dur-micro) var(--ease-snap);
   pointer-events: none;
@@ -431,9 +474,6 @@ code, pre, kbd, samp {
   opacity: 0.92;
 }
 
-/* Section divider on /cases — thin hairline + small "every 5-7 rows"
-   rest beat so the eye gets visual chunking instead of a relentless
-   wall of identical rows. Used in the list-mode loop. */
 .case-section-rest {
   height: 1px;
   background: var(--color-border);
@@ -446,18 +486,11 @@ code, pre, kbd, samp {
   .brass-caret {
     animation: none;
   }
+  .hupr-image-zoom { transform: scale(1); filter: blur(0); }
+  .hupr-fade-up    { opacity: 1; transform: none; }
 }
 
-/* =========================================================================
-   View Transitions — atmospheric page nav cross-fade.
-   Cut from 480ms → 220ms 2026-05-04: half-second cross-fade was reading as
-   nav lag on every click. 220ms is the threshold below which a transition
-   feels "instant" while still being visibly atmospheric.
-   Sequencing: old/new are pure cross-fade with a light blur — no fancy
-   sequenced overlap because at 220ms the human eye reads it as a single
-   beat regardless of timing curve.
-   Reduced-motion users skip animation entirely.
-   ========================================================================= */
+/* View Transitions — atmospheric page nav cross-fade. */
 @keyframes vt-fade-out {
   0%   { opacity: 1; filter: blur(0); }
   100% { opacity: 0; filter: blur(2px); }
@@ -480,11 +513,3 @@ code, pre, kbd, samp {
     animation-delay: 0s !important;
   }
 }
-
-/* Note: previously this section assigned `view-transition-name: persistent-canvas`
-   to the WebGL canvas wrapper. Removed 2026-05-04 because browsers throw or
-   fail when trying to snapshot a WebGL canvas (the drawing buffer isn't
-   capturable cleanly), which propagates to the React error boundary on every
-   route navigation. The canvas is `position: fixed` so it visually persists
-   across navigations regardless. Brief snapshot stutter during 220ms
-   cross-fade is acceptable in exchange for not throwing. */

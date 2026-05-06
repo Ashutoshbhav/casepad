@@ -1,53 +1,15 @@
 import { directSignIn } from '@/server-actions/direct-signin';
-import {
-  SignInSceneRegister,
-  SignInScrollProgressMount,
-  SignInEditorialReveal2,
-  SignInEditorialReveal3,
-  SignInHeroTagline,
-} from '@/components/signin-hero';
-import {
-  SceneStateDividers,
-  WhatIsCasePadSection,
-  CasesPreviewSection,
-  HowItWorksSection,
-  FounderNoteSection,
-  FaqSection,
-  SignInFooter,
-} from '@/components/signin-landing-sections';
 import { HeroTicker } from '@/components/hero-ticker';
 
-// Cohort access — pure email-only sign-in. If the email is on the allowlist,
-// the server action mints a session immediately and redirects to /cases.
-// No inbox round-trip, no magic link, no password.
+// Cohort access — pure email-only sign-in. Server action mints a session
+// immediately if the email is on the allowlist; otherwise redirects with
+// ?error= so the form re-renders with a message.
 //
-// Trade-off (explicit): anyone who knows an allowlisted email can sign in
-// as that person. Acceptable for a private 5-30 cohort with low-stakes
-// content (case-solve transcripts only).
-//
-// Visual (revised 2026-05-04 — landing pass):
-//   The form is at the TOP of the page, visible from scroll=0. Users who
-//   came to sign in see it immediately — type email, click button, done.
-//
-//   Below the form, a content-rich landing flow tells the story of the
-//   product across ~9 viewports. Three editorial reveal lines (Lusion-grade
-//   one-way SplitText) interleave with six content sections:
-//
-//     1. Hero form (top viewport)
-//     2. Reveal: "the room before the room."
-//     3. What is CasePad — editorial paragraph + sample chat snippet
-//     4. Reveal: "rehearse like it's real."
-//     5. From the library — 3 real-case preview cards
-//     6. Reveal: "ASH listens."
-//     7. How it works — 3-step walkthrough
-//     8. Founder note
-//     9. FAQ — semantic <details> accordion
-//    10. Footer — compact grounding strip
-//
-//   The persistent layout-level WebGL asterisk does its scroll-driven
-//   choreography in the background. As scrollProgress crosses section
-//   boundaries, <SceneStateDividers /> briefly pulses aiState so the
-//   asterisk reacts (thinking → listening → thinking → celebrating).
+// Visual (rebuilt 2026-05-06 — HUPR makeover):
+//   The page is one editorial landing — full-bleed photo header with a
+//   marquee tagline crossing it, a floating white sign-in panel on the
+//   right, hairline-divided info sections below. No WebGL, no 3D type,
+//   no editorial italic — pure HUPR design language.
 
 const ERROR_MESSAGES: Record<string, string> = {
   'missing-email': 'Please enter your email.',
@@ -60,7 +22,14 @@ const ERROR_MESSAGES: Record<string, string> = {
   'rate-limited': 'Too many sign-in attempts. Please wait a minute and try again.',
 };
 
-export default async function SignInPage({ searchParams }: { searchParams: Promise<{ error?: string; return_to?: string }> }) {
+const HERO_PHOTO =
+  'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=2400&q=80';
+
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; return_to?: string }>;
+}) {
   const sp = await searchParams;
   const errMsg = sp.error ? ERROR_MESSAGES[sp.error] : null;
   const returnTo = sp.return_to;
@@ -68,139 +37,226 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
 
   return (
     <main
-      // ~900vh tall — first viewport hosts the form, the next 8 viewports
-      // are the editorial reveals + content sections, and a compact footer
-      // closes things out. overflow-x hidden because the WebGL canvas is
-      // full-bleed fixed; vertical scroll is the intended axis.
-      // Black space — body gets `data-route="signin"` so globals.css can
-      // paint the body black on this route only. Main itself is transparent
-      // so the persistent WebGL canvas (z-index 0, fixed) shows through.
-      className="relative w-full overflow-x-hidden"
       data-signin-page="true"
+      className="relative w-full overflow-x-hidden"
       style={{
-        background: 'transparent',
+        background: 'var(--color-bg-canvas)',
         color: 'var(--color-text-primary)',
+        minHeight: '100vh',
       }}
     >
-      {/* Tiny client islands — register the 'signin' preset, mount the
-          scroll-progress observer once, and watch for section-boundary
-          aiState bursts. All render nothing. */}
-      <SignInSceneRegister />
-      <SignInScrollProgressMount />
-      <SceneStateDividers />
+      {/* ── HERO ───────────────────────────────────────────────────────
+          Full-bleed photo + scrolling marquee headline + floating white
+          sign-in panel on the right. */}
+      <section
+        className="relative w-full overflow-hidden"
+        style={{ height: '100vh', minHeight: 760 }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${HERO_PHOTO})`,
+            backgroundSize: 'cover',
+            backgroundPosition: '50% 50%',
+            filter: 'brightness(0.78) saturate(0.92)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(50,50,52,0.35) 0%, rgba(50,50,52,0.10) 35%, rgba(50,50,52,0.0) 65%, rgba(50,50,52,0.55) 100%)',
+          }}
+        />
 
-      {/* Top viewport — header bar + sign-in form panel.
-          min-h-screen so this block alone fills the first viewport; the
-          form is reachable WITHOUT scrolling. The persistent WebGL canvas
-          shows through behind the panel (z=0); panel sits at z=10 with
-          backdrop-blur for legibility. */}
-      <section className="relative z-10 flex min-h-screen flex-col px-6 sm:px-12 md:px-16 py-10">
-        <header className="flex items-baseline justify-between">
-          <span className="meta-label">
-            Cohort · May 2026
+        {/* Header band */}
+        <header
+          className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-6 sm:px-12 py-6"
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 24,
+              color: '#FFFFFF',
+              letterSpacing: '-0.005em',
+            }}
+          >
+            CasePad
           </span>
-          <span className="meta-label">
-            casepad
+          <span
+            className="hidden sm:inline-block"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: '#FFFFFF',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              opacity: 0.85,
+            }}
+          >
+            Cohort · May 2026
           </span>
         </header>
 
-        {/* Hero body — split layout: editorial tagline left, form panel right.
-            Both visible from scroll=0 so the top viewport is content-rich
-            even before the user scrolls. On mobile, stacks: tagline above form. */}
-        <div className="mt-8 flex flex-1 flex-col items-center justify-center gap-12 md:mt-0 md:flex-row md:items-center md:justify-between md:gap-16">
-          {/* Editorial tagline — the visual headline now renders inside
-              the persistent WebGL scene as 3D extruded type (troika).
-              For accessibility we keep an sr-only <h1> in the DOM so
-              screen-readers + SEO still see the heading. On mobile + the
-              no-3D fallback path, <SignInHeroTagline /> renders the
-              full-size visible <h1> instead (delegated to a client
-              component that gates on WebGL2 / reduced-motion / viewport). */}
-          <div className="max-w-md flex-1 space-y-6 md:max-w-xl">
-            <h1 className="sr-only">the room before the room.</h1>
-            <SignInHeroTagline />
-            <p
-              className="font-headline text-base leading-relaxed sm:text-lg"
-              style={{
-                color: 'var(--color-text-secondary)',
-                maxWidth: '36ch',
-              }}
-            >
-              Live case interview practice with Ash — your AI engagement manager. Not a casebook. Not a chatbot. A rehearsal room.
-            </p>
+        {/* Auto-scrolling marquee headline */}
+        <div
+          className="absolute z-10 whitespace-nowrap overflow-hidden"
+          style={{ top: 'calc(64vh - 8vw)', left: 0, right: 0 }}
+        >
+          <div className="hupr-marquee items-center">
+            {[0, 1, 2].map((k) => (
+              <div
+                key={k}
+                className="flex items-center"
+                style={{ marginRight: '4vw' }}
+              >
+                <h1
+                  className="flex items-center"
+                  style={{
+                    fontFamily: 'var(--font-headline)',
+                    fontWeight: 700,
+                    fontSize: '13vw',
+                    lineHeight: 1,
+                    textTransform: 'uppercase',
+                    color: '#FFFFFF',
+                    margin: 0,
+                    whiteSpace: 'nowrap',
+                    letterSpacing: '-0.01em',
+                    gap: '3vw',
+                  }}
+                >
+                  The Room Before The Room
+                </h1>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Form panel — floats in the right column on desktop, full-width
-              on mobile. Semi-transparent backdrop so the asterisk reads through. */}
+        {/* Floating sign-in panel */}
+        <div
+          className="absolute px-6 sm:px-0"
+          style={{
+            top: '50%',
+            right: '2rem',
+            width: 'min(420px, 92vw)',
+            transform: 'translateY(-50%)',
+          }}
+        >
           <div
-            className="w-full max-w-sm space-y-5 rounded-lg p-6 backdrop-blur-md"
             style={{
-              background: 'color-mix(in oklab, var(--color-bg-elevated) 70%, transparent)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'color-mix(in oklab, var(--color-border) 60%, transparent)',
+              background: '#FFFFFF',
+              padding: '2rem',
+              borderRadius: 4,
+              color: '#323234',
             }}
           >
-            <div className="space-y-2">
-              <h1
-                className="font-headline text-xl"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Sign in
-              </h1>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                Cohort access. Enter the email on the allowlist — we&apos;ll sign you in immediately.
-              </p>
-            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 400,
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                color: '#323234',
+                margin: 0,
+              }}
+            >
+              Sign in
+            </h2>
+            <hr
+              style={{
+                border: 0,
+                borderTop: '1px solid #323234',
+                margin: '8px 0 24px',
+                width: '100%',
+              }}
+            />
+            <p
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 14,
+                lineHeight: 1.55,
+                color: '#323234',
+                margin: 0,
+              }}
+            >
+              Cohort access — enter the email on the allowlist and we’ll
+              sign you in immediately. No magic link. No password.
+            </p>
 
             {showSessionExpired && (
               <div
-                className="rounded-md border p-3 text-xs"
                 style={{
-                  borderColor: 'var(--color-accent)',
-                  color: 'var(--color-accent-bright)',
-                  background: 'transparent',
+                  marginTop: 16,
+                  padding: 12,
+                  border: '1px solid #323234',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  color: '#323234',
+                  borderRadius: 3,
                 }}
               >
-                Your session expired. Sign in again to pick up where you left off.
+                Your session expired. Sign in again to continue.
               </div>
             )}
 
-            <form action={directSignIn} className="space-y-3">
+            <form action={directSignIn} className="mt-6 space-y-3">
               <input
                 name="email"
                 type="email"
                 placeholder="you@school.edu"
                 required
                 autoFocus
-                className="w-full rounded-md px-3 py-2.5 text-sm transition-colors focus:outline-none"
+                className="w-full"
                 style={{
-                  background: 'color-mix(in oklab, var(--color-bg-sunken) 80%, transparent)',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--color-border)',
-                  color: 'var(--color-text-primary)',
+                  background: '#f4f4f4',
+                  border: '1px solid #e8e8e8',
+                  padding: '12px 14px',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 13,
+                  color: '#323234',
+                  borderRadius: 3,
+                  outline: 'none',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.02em',
                 }}
               />
-              {returnTo && <input type="hidden" name="return_to" value={returnTo} />}
+              {returnTo && (
+                <input type="hidden" name="return_to" value={returnTo} />
+              )}
               <button
                 type="submit"
-                className="w-full rounded-md py-2.5 text-sm font-medium transition-opacity hover:opacity-90"
+                className="hupr-anim-btn w-full"
                 style={{
-                  background: 'var(--color-accent)',
-                  color: 'var(--color-accent-fg)',
+                  background: '#323234',
+                  color: '#FFFFFF',
+                  padding: '12px 16px',
+                  borderRadius: 6,
+                  border: 0,
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
                 }}
               >
-                Sign in
+                <span className="top">Sign in</span>
+                <span className="btm">Sign in</span>
               </button>
               {errMsg && (
                 <div
-                  className="rounded-md border p-2.5 text-left text-xs"
                   style={{
-                    borderColor: 'var(--color-accent)',
-                    color: 'var(--color-accent-bright)',
+                    padding: 10,
+                    border: '1px solid #b33c3c',
+                    color: '#b33c3c',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    borderRadius: 3,
                   }}
                 >
                   {errMsg}
@@ -209,73 +265,226 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
             </form>
 
             <div
-              className="text-[11px] leading-relaxed"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{
+                marginTop: 20,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                lineHeight: 1.6,
+                color: 'rgba(50,50,52,0.65)',
+              }}
             >
-              Not on the allowlist? Ask the admin (your cohort lead) to add your email at{' '}
-              <span className="font-mono">/admin/allowlist</span>.
+              Not on the allowlist? Ask the admin (your cohort lead) to add
+              your email at{' '}
+              <span style={{ color: '#323234' }}>/admin/allowlist</span>.
             </div>
 
             <div
-              className="text-[10px] leading-relaxed"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{
+                marginTop: 12,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                lineHeight: 1.6,
+                color: 'rgba(50,50,52,0.55)',
+              }}
             >
               By signing in, you agree to the{' '}
               <a
                 href="/terms"
-                className="underline"
-                style={{ color: 'var(--color-text-secondary)' }}
+                style={{
+                  color: '#323234',
+                  textDecoration: 'underline',
+                }}
               >
                 Terms of Use
               </a>{' '}
-              (allowlist-only · no copying · no scraping · personal use).
+              — allowlist-only, no copying, no scraping, personal use.
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Library content density — horizontal infinite-scroll ticker
-            running real case titles. Sits just above the scroll affordance
-            so the first viewport carries proof of the library without
-            forcing a scroll. */}
-        <div className="mt-8">
-          <HeroTicker />
+      {/* ── LIBRARY TICKER ─────────────────────────────────────────────
+          Real case titles scroll through to demonstrate library density. */}
+      <section
+        style={{
+          background: 'var(--color-bg-canvas)',
+          padding: '40px 0',
+          borderBottom: '1px solid var(--color-border)',
+        }}
+      >
+        <div className="px-6 sm:px-12 mb-6">
+          <span className="hupr-mono-eyebrow">From the library</span>
+          <hr className="hupr-hairline" />
         </div>
+        <HeroTicker />
+      </section>
 
-        {/* Scroll affordance — small hint at the bottom of viewport 1
-            so users know there's more below. */}
-        <div
-          className="meta-label mt-4 flex justify-center"
-          aria-hidden="true"
-        >
-          ↓ scroll
+      {/* ── ABOUT ──────────────────────────────────────────────────────
+          Eyebrow + Montserrat 700 billboard explaining what CasePad is. */}
+      <section
+        className="px-6 sm:px-12 py-16 sm:py-24"
+        style={{
+          background: 'var(--color-bg-canvas)',
+        }}
+      >
+        <div className="lg:flex gap-16">
+          <div className="w-full lg:w-4/12">
+            <span className="hupr-mono-eyebrow">About CasePad</span>
+            <hr className="hupr-hairline" />
+          </div>
+          <div className="w-full lg:w-8/12 mt-6 lg:mt-0">
+            <h1
+              className="hupr-h1 uppercase"
+              style={{ margin: 0 }}
+            >
+              When Cases Build Conviction
+            </h1>
+            <p
+              className="hupr-fade-up"
+              style={{
+                fontFamily: 'var(--font-accent)',
+                fontSize: 17,
+                lineHeight: 1.55,
+                color: 'var(--color-text-primary)',
+                marginTop: 32,
+                maxWidth: '60ch',
+              }}
+            >
+              Live case interview practice with Ash — your AI engagement
+              manager. Trained on 1,165 real cases across consulting, IB, PM,
+              marketing, and strategy tracks. Not a casebook. Not a chatbot.
+              A rehearsal room.
+            </p>
+            <p
+              className="hupr-fade-up"
+              style={{
+                fontFamily: 'var(--font-accent)',
+                fontSize: 17,
+                lineHeight: 1.55,
+                color: 'var(--color-text-primary)',
+                marginTop: 16,
+                maxWidth: '60ch',
+              }}
+            >
+              Show up daily. Solve a case. Drill the gap. Debrief in the open.
+              The cohort sees the lessons that helped them. The lesson lands
+              before the next case starts.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Section 3 — What is CasePad + sample chat snippet
-          (Reveal 1 was deduped — "the room before the room." now lives
-          always-visible inside the hero, not as a scroll-gated section.) */}
-      <WhatIsCasePadSection />
+      {/* ── HOW IT WORKS ──────────────────────────────────────────────
+          Three steps as hairline-divided rows — HUPR's news pattern. */}
+      <section
+        className="px-6 sm:px-12 py-16 sm:py-24"
+        style={{
+          background: 'var(--color-bg-sunken)',
+        }}
+      >
+        <span className="hupr-mono-eyebrow">How it works</span>
+        <hr className="hupr-hairline" />
+        {[
+          {
+            n: '01',
+            t: 'Solve',
+            b: 'Pick a track. Pick a case from a real school. Hit start. Ash holds the room — pushes when you stall, calls when the math drifts, asks the follow-ups that come up in the actual interview.',
+          },
+          {
+            n: '02',
+            t: 'Drill',
+            b: 'Your scoring breakdown surfaces the muscle that gave way — math speed, framework branches, behavioural STAR. Reps are short, sharp, scored. The drill pool grows from your own gaps.',
+          },
+          {
+            n: '03',
+            t: 'Debrief',
+            b: 'Every rep ends with a written take. Score, rubric breakdown, ideal structure tree, two specific lessons. Published privately to your debrief feed. Cohort sees the lessons that helped them.',
+          },
+        ].map((s) => (
+          <div
+            key={s.n}
+            className="lg:flex gap-12 py-10"
+            style={{ borderBottom: '1px solid var(--color-border)' }}
+          >
+            <div className="w-full lg:w-3/12">
+              <span
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 'clamp(48px, 6vw, 96px)',
+                  lineHeight: 1,
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                {s.n}
+              </span>
+            </div>
+            <div className="w-full lg:w-3/12 mt-4 lg:mt-0">
+              <h2
+                className="uppercase"
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 'clamp(28px, 3vw, 48px)',
+                  lineHeight: 1,
+                  color: 'var(--color-text-primary)',
+                  margin: 0,
+                }}
+              >
+                {s.t}
+              </h2>
+            </div>
+            <div className="w-full lg:w-6/12 mt-4 lg:mt-0">
+              <p
+                className="hupr-fade-up"
+                style={{
+                  fontFamily: 'var(--font-accent)',
+                  fontSize: 16,
+                  lineHeight: 1.55,
+                  color: 'var(--color-text-primary)',
+                  margin: 0,
+                }}
+              >
+                {s.b}
+              </p>
+            </div>
+          </div>
+        ))}
+      </section>
 
-      {/* Editorial reveal 2 — "rehearse like it's real." */}
-      <SignInEditorialReveal2 />
-
-      {/* Section 4 — Cases preview (3 real cases) */}
-      <CasesPreviewSection />
-
-      {/* Editorial reveal 3 — "ASH listens." */}
-      <SignInEditorialReveal3 />
-
-      {/* Section 5 — How it works (3 steps) */}
-      <HowItWorksSection />
-
-      {/* Section 6 — Founder note */}
-      <FounderNoteSection />
-
-      {/* Section 7 — FAQ accordion */}
-      <FaqSection />
-
-      {/* Section 8 — Footer */}
-      <SignInFooter />
+      {/* ── FOOTER ─────────────────────────────────────────────────── */}
+      <footer
+        className="px-6 sm:px-12 py-12"
+        style={{
+          background: 'var(--color-bg-canvas)',
+          borderTop: '1px solid var(--color-border)',
+        }}
+      >
+        <div className="lg:flex justify-between items-center">
+          <div
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 24,
+              color: 'var(--color-text-primary)',
+            }}
+          >
+            CasePad
+          </div>
+          <div
+            className="mt-4 lg:mt-0"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: 'var(--color-text-secondary)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+            }}
+          >
+            © 2026 CasePad — cohort case-prep
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

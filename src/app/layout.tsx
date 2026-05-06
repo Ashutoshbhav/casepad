@@ -1,40 +1,40 @@
 import type { Metadata } from 'next';
-import { Instrument_Serif, Geist, Geist_Mono } from 'next/font/google';
+import { Montserrat, IBM_Plex_Mono, Moderustic } from 'next/font/google';
 import './globals.css';
 import { ConnectionBanner } from '@/components/connection-banner';
 import { AuthWatchdog } from '@/components/auth-watchdog';
 import { TopNavMount } from '@/components/top-nav-mount';
 import { ThemeToggle } from '@/components/theme-toggle';
-import PersistentAsterisk from './_components/persistent-asterisk';
 
 // Pre-paint script — sets `data-theme` on <html> before React hydrates.
-// Reads localStorage first (user's saved choice), falls back to system
-// `prefers-color-scheme`, defaults to 'dark'. Runs synchronously inside
-// <head> so the page is already styled correctly before paint — no flash.
-const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('casepad-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(_){document.documentElement.setAttribute('data-theme','dark');}})();`;
+// Defaults to LIGHT now (HUPR is light-canvas first). Reads localStorage
+// override if the user explicitly chose dark.
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('casepad-theme');if(t!=='light'&&t!=='dark'){t='light';}document.documentElement.setAttribute('data-theme',t);}catch(_){document.documentElement.setAttribute('data-theme','light');}})();`;
 
-// Liquid Tutor typography — Instrument Serif (headline, italic-capable),
-// Geist (body / UI), Geist Mono (mono / telemetry). All free Google Fonts,
-// self-hosted via next/font. CSS var names preserved (--font-headline /
-// --font-body / --font-mono) so existing class hooks keep working.
-const instrumentSerif = Instrument_Serif({
+// HUPR typography — Montserrat (display, 700 / 900 weights for headings
+// and uppercase eyebrows), IBM Plex Mono (body / UI / metadata, the
+// dominant text family on the live HUPR site), Moderustic (long-form
+// prose). CSS var names preserved (--font-headline / --font-body /
+// --font-mono) so existing class hooks keep working.
+const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-headline',
-  weight: '400',
-  style: ['normal', 'italic'],
+  weight: ['400', '500', '600', '700', '900'],
 });
 
-const geist = Geist({
+const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-body',
+  weight: ['400', '500', '700'],
 });
 
-const geistMono = Geist_Mono({
+const moderustic = Moderustic({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-mono',
+  variable: '--font-accent',
+  weight: ['400', '500'],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://casepad.vercel.app';
@@ -92,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       data-app="casepad"
       data-author="ashutosh-bhavale"
-      className={`${instrumentSerif.variable} ${geist.variable} ${geistMono.variable}`}
+      className={`${montserrat.variable} ${plexMono.variable} ${moderustic.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -101,25 +101,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="font-body" suppressHydrationWarning>
-        {/* Persistent layout-level WebGL canvas — the 3D coral asterisk
-            lives here, mounted once and shared across all routes. Each
-            route declares its preset via `useAsteriskScene`; the canvas
-            lerps current state toward target every frame, so navigation
-            transitions ARE the lerp (no remount). Skips itself on mobile,
-            no-WebGL2, and reduced-motion. zIndex 0, pointer-events-none. */}
-        <PersistentAsterisk />
+        {/* PersistentAsterisk (the WebGL coral 3D mark — Anthropic Liquid-
+            Tutor signature) was removed 2026-05-06 as part of the HUPR
+            makeover. The canvas, scene presets, and per-route registers
+            are no longer mounted; pages that called useAsteriskScene /
+            <AsteriskSceneRegister /> render no-ops since their components
+            still exist but no consumer is mounted. */}
         <ConnectionBanner />
         <AuthWatchdog />
         <TopNavMount />
         <ThemeToggle />
-        {/* Note: previously wrapped in `<ViewTransition>{children}</ViewTransition>`
-            from React. That symbol is experimental-channel-only — it does NOT
-            exist in react@19.2.4 stable, so the import resolved to `undefined`
-            and JSX rendered `<undefined>`, which SSR tolerates but client
-            hydration throws on ("Element type is invalid"). Hydration aborts
-            mid-tree → no event listeners bind → every page becomes static text.
-            CSS view-transition rules in globals.css continue to drive the
-            cross-fade via the browser's native API; no wrapper needed. */}
         {children}
         {/* Watermark — present in DOM, not painted */}
         <div aria-hidden="true" style={{ display: 'none' }} data-watermark={WATERMARK} />
