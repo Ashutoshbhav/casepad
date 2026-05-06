@@ -375,11 +375,13 @@ export default async function DebriefV2Page() {
             type="button"
             style={{
               // refero: cursor — Onyx Outline #f54e00 primary CTA.
+              // refero: ed hinrichsen — hard-offset stamped shadow.
               background: '#f54e00',
               color: '#FFFFFF',
               border: 'none',
               borderRadius: 999,
               padding: '12px 22px',
+              boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
               fontFamily: 'var(--font-v2-mono)',
               fontSize: 11,
               fontWeight: 500,

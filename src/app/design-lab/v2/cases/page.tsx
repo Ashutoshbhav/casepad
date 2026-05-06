@@ -31,7 +31,9 @@ export const metadata = {
 const TRACKS = [
   {
     label: 'Strategy',
-    bg: '#B7A28A',
+    // refero: coda — Aura Green pastel from Coda's track-color
+    // quartet. Soft mint, distinguishable but unaggressive on cream.
+    bg: '#aafdc0',
     cases: [
       { title: 'Airline Network', source: 'BAIN' },
       { title: 'Telco Repositioning', source: 'MCK' },
@@ -45,7 +47,8 @@ const TRACKS = [
   },
   {
     label: 'Profitability',
-    bg: '#A0394A',
+    // refero: coda — Soft Teal pastel.
+    bg: '#b0f4ff',
     cases: [
       { title: 'Coffee Chain', source: 'BCG' },
       { title: 'Pharma Profit', source: 'MCK' },
@@ -59,7 +62,8 @@ const TRACKS = [
   },
   {
     label: 'Market Entry',
-    bg: '#6F8694',
+    // refero: coda — Lavender Mist pastel.
+    bg: '#d3beff',
     cases: [
       { title: 'EV in India', source: 'MCK' },
       { title: 'D2C Brand', source: 'BAIN' },
@@ -136,7 +140,9 @@ export default async function CasesV2Page() {
                 justifyContent: 'space-between',
                 alignItems: 'baseline',
                 paddingBottom: 16,
-                borderBottom: '1px solid rgba(255,255,255,0.35)',
+                // Pastel bgs (Coda quartet) need ink-on-pastel rule,
+                // not white-on-color. Switching divider + text colors.
+                borderBottom: '1px solid rgba(50,50,52,0.30)',
                 marginBottom: 32,
               }}
             >
@@ -147,7 +153,7 @@ export default async function CasesV2Page() {
                   fontSize: 'clamp(48px, 7vw, 92px)',
                   lineHeight: 0.95,
                   letterSpacing: '-0.02em',
-                  color: '#FFFFFF',
+                  color: 'rgb(50,50,52)',
                   margin: 0,
                 }}
               >
@@ -159,7 +165,7 @@ export default async function CasesV2Page() {
                   fontSize: 12,
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.78)',
+                  color: 'rgba(50,50,52,0.72)',
                 }}
               >
                 {String(track.cases.length).padStart(2, '0')} cases
@@ -199,9 +205,12 @@ export default async function CasesV2Page() {
                     style={{
                       fontFamily: 'var(--font-v2-mono)',
                       fontSize: 10,
-                      letterSpacing: '0.18em',
+                      // refero: anthropic — wide positive tracking
+                      // on uppercase mono metadata (library-card /
+                      // journal field-label convention).
+                      letterSpacing: '0.22em',
                       textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.55)',
+                      color: 'rgba(255,255,255,0.62)',
                     }}
                   >
                     {c.source}

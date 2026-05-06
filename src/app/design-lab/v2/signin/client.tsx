@@ -156,6 +156,15 @@ export function SigninCarouselClient() {
           width: 'min(360px, 28vw)',
           background: '#FFFFFF',
           padding: 24,
+          // refero: notion — 5-stop diffused soft shadow stack.
+          // Paper-on-photo elevation; cohort card now visibly lifts
+          // off the boardroom photo without feeling like a modal.
+          boxShadow:
+            'rgba(0,0,0,0.01) 0 1px 3px 0px, ' +
+            'rgba(0,0,0,0.02) 0 3px 7px 0px, ' +
+            'rgba(0,0,0,0.02) 0 7px 15px 0px, ' +
+            'rgba(0,0,0,0.04) 0 14px 28px 0px, ' +
+            'rgba(0,0,0,0.05) 0 23px 52px 0px',
         }}
       >
         <div
@@ -202,16 +211,17 @@ export function SigninCarouselClient() {
         <button
           type="button"
           style={{
-            // refero: cursor — Onyx Outline #f54e00 as the primary
-            // action color. Replaces flat black #0E0E0E across all v2
-            // CTAs. Hot orange on cream parchment is the single
-            // chromatic accent v2 uses, and it's visibly different from
-            // production's muted earth-coral.
+            // refero: cursor — Onyx Outline #f54e00 primary CTA.
+            // refero: ed hinrichsen — hard-offset stamped shadow
+            // (no blur). Gives the orange button a tactile rubber-
+            // stamp / typewriter-key feel that rhymes with v2's
+            // Rough.js notebook DNA.
             background: '#f54e00',
             color: '#FFFFFF',
             border: 'none',
             borderRadius: 999,
             padding: '12px 22px',
+            boxShadow: 'rgba(50,50,52,0.45) 4px 4px 0px 0px',
             fontFamily: 'var(--font-v2-mono)',
             fontSize: 11,
             fontWeight: 500,
