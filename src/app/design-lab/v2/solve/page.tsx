@@ -241,7 +241,8 @@ export default async function SolveV2Page() {
             <button
               type="button"
               style={{
-                background: '#0E0E0E',
+                // refero: cursor — Onyx Outline #f54e00 primary CTA.
+                background: '#f54e00',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: 999,

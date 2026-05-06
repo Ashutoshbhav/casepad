@@ -102,7 +102,8 @@ export default async function DashboardV2Page() {
             type="button"
             style={{
               marginLeft: 'auto',
-              background: '#0E0E0E',
+              // refero: cursor — Onyx Outline #f54e00 primary CTA.
+              background: '#f54e00',
               color: '#FFFFFF',
               border: 'none',
               borderRadius: 999,
@@ -140,8 +141,11 @@ export default async function DashboardV2Page() {
               <SketchyCircle
                 size={72}
                 filled={d.active}
-                stroke={d.today ? 'rgb(50,50,52)' : d.active ? 'rgb(50,50,52)' : 'rgba(50,50,52,0.45)'}
-                fillColor="rgb(50,50,52)"
+                // refero: cursor — today's streak marker glows in
+                // Onyx Outline #f54e00 (the live-action color),
+                // earlier days stay in flat ink.
+                stroke={d.today ? '#f54e00' : d.active ? 'rgb(50,50,52)' : 'rgba(50,50,52,0.45)'}
+                fillColor={d.today ? '#f54e00' : 'rgb(50,50,52)'}
                 roughness={d.today ? 0.8 : 1.4}
               >
                 <span

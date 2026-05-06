@@ -202,7 +202,12 @@ export function SigninCarouselClient() {
         <button
           type="button"
           style={{
-            background: '#0E0E0E',
+            // refero: cursor — Onyx Outline #f54e00 as the primary
+            // action color. Replaces flat black #0E0E0E across all v2
+            // CTAs. Hot orange on cream parchment is the single
+            // chromatic accent v2 uses, and it's visibly different from
+            // production's muted earth-coral.
+            background: '#f54e00',
             color: '#FFFFFF',
             border: 'none',
             borderRadius: 999,
