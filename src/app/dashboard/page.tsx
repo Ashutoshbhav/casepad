@@ -335,21 +335,48 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </div>
       </section>
 
-      <div className="px-4 sm:px-8 py-12 max-w-5xl mx-auto">
+      {/* STICKY CARD 1 — Today's case. Sand band. The single most important
+          surface on dashboard, gets pole position. */}
+      <article
+        className="sticky px-4 sm:px-8 py-12 lg:py-16"
+        style={{
+          background: 'var(--hupr-sand)',
+          color: '#FFFFFF',
+          top: 0,
+          zIndex: 1,
+          minHeight: '70vh',
+        }}
+        data-tour="todays-case"
+      >
+        <div className="max-w-5xl mx-auto">
+          <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF', opacity: 0.85 }}>01</span>
+          <h2
+            className="uppercase mt-3 mb-8"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(48px, 9vw, 120px)',
+              lineHeight: 0.95,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '70%',
+            }}
+          >
+            Today
+          </h2>
+          {dailyAssignment ? (
+            <TodaysCaseCard
+              assignment={dailyAssignment}
+              inProgressSessionId={assignmentInProgress?.id ?? null}
+              completed={assignmentCompleted}
+            />
+          ) : (
+            <EmptyTodaysCaseCard />
+          )}
+        </div>
+      </article>
 
-      {/* B. TODAY'S CASE CARD — data-tour="todays-case" anchors the
-          asterisk-hotspot click action. Hotspot smooth-scrolls here. */}
-      <section className="mb-12 sm:mb-16" data-tour="todays-case">
-        {dailyAssignment ? (
-          <TodaysCaseCard
-            assignment={dailyAssignment}
-            inProgressSessionId={assignmentInProgress?.id ?? null}
-            completed={assignmentCompleted}
-          />
-        ) : (
-          <EmptyTodaysCaseCard />
-        )}
-      </section>
+      <div className="px-4 sm:px-8 py-12 max-w-5xl mx-auto">
 
       {/* B.2 COHORT LEADERBOARD */}
       <section className="mb-12 sm:mb-16">
@@ -434,11 +461,33 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </div>
       </section>
 
-      {/* C. THE WEEK — cream band so the page isn't a wall of white. */}
-      <section
-        className="mb-12 sm:mb-16 -mx-4 sm:-mx-8 px-4 sm:px-8 py-10"
-        style={{ background: 'var(--hupr-cream)' }}
+      {/* STICKY CARD 2 — This Week. Sage band. */}
+      <article
+        className="sticky -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 mb-0"
+        style={{
+          background: 'var(--hupr-sage)',
+          color: '#FFFFFF',
+          top: 60,
+          zIndex: 2,
+          minHeight: '60vh',
+        }}
       >
+        <div className="max-w-5xl mx-auto">
+          <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF', opacity: 0.85 }}>02</span>
+          <h2
+            className="uppercase mt-3 mb-8"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(48px, 9vw, 120px)',
+              lineHeight: 0.95,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '70%',
+            }}
+          >
+            The Week
+          </h2>
         <div className="flex items-baseline justify-between mb-4">
           <span
             className="hupr-mono-eyebrow"
@@ -484,19 +533,42 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </div>
           ))}
         </div>
-      </section>
+        </div>
+      </article>
 
-      {/* D. RECENT DEBRIEFS — slate band, white text. */}
-      <section
-        className="mb-12 sm:mb-16 -mx-4 sm:-mx-8 px-4 sm:px-8 py-10"
-        style={{ background: 'var(--hupr-slate)', color: '#FFFFFF' }}
+      {/* STICKY CARD 3 — Recent reps. Slate band. */}
+      <article
+        className="sticky -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 mb-0"
+        style={{
+          background: 'var(--hupr-slate)',
+          color: '#FFFFFF',
+          top: 120,
+          zIndex: 3,
+          minHeight: '60vh',
+        }}
       >
+        <div className="max-w-5xl mx-auto">
+          <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF', opacity: 0.85 }}>03</span>
+          <h2
+            className="uppercase mt-3 mb-8"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(48px, 9vw, 120px)',
+              lineHeight: 0.95,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '70%',
+            }}
+          >
+            Recent reps
+          </h2>
         <div className="mb-4">
           <span
             className="hupr-mono-eyebrow"
-            style={{ color: '#FFFFFF' }}
+            style={{ color: '#FFFFFF', opacity: 0.85 }}
           >
-            RECENT REPS
+            Last 3 sessions
           </span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -583,7 +655,72 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </div>
           ))}
         </div>
-      </section>
+        </div>
+      </article>
+
+      {/* STICKY CARD 4 — Library. Terra band. CTA-only. */}
+      <a
+        href="/cases"
+        className="sticky block -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 transition-opacity hover:opacity-95 mb-12"
+        style={{
+          background: 'var(--hupr-terra)',
+          color: '#FFFFFF',
+          top: 180,
+          zIndex: 4,
+          minHeight: '50vh',
+          textDecoration: 'none',
+        }}
+      >
+        <div className="max-w-5xl mx-auto">
+          <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF', opacity: 0.85 }}>04</span>
+          <h2
+            className="uppercase mt-3 mb-6"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(48px, 9vw, 120px)',
+              lineHeight: 0.95,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '70%',
+            }}
+          >
+            The Library
+          </h2>
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 17,
+              lineHeight: 1.55,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '50ch',
+            }}
+          >
+            Browse 1,165 real cases across 5 tracks. Pick what calls you, or
+            let Ash assign tomorrow&apos;s case.
+          </p>
+          <div className="mt-8">
+            <span
+              className="hupr-anim-btn"
+              style={{
+                background: '#FFFFFF',
+                color: 'var(--hupr-terra)',
+                padding: '14px 22px',
+                borderRadius: 6,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 13,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                display: 'inline-block',
+              }}
+            >
+              <span className="top">Wander the library →</span>
+              <span className="btm">Wander the library →</span>
+            </span>
+          </div>
+        </div>
+      </a>
 
       {/* E. RESUME IN-PROGRESS (above weak spots) */}
       {inProgress.length > 0 && (

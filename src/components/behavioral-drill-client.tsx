@@ -46,126 +46,406 @@ export function BehavioralDrillClient() {
     }
   };
 
+  const ebInputStyle: React.CSSProperties = {
+    background: 'var(--color-bg-sunken)',
+    border: '1px solid var(--color-border)',
+    color: 'var(--color-text-primary)',
+    padding: '14px',
+    borderRadius: 4,
+    fontFamily: 'var(--font-body)',
+    fontSize: 14,
+    width: '100%',
+    outline: 'none',
+    resize: 'vertical' as const,
+  };
+
+  const ebButtonPrimary: React.CSSProperties = {
+    background: 'var(--color-text-primary)',
+    color: 'var(--color-bg-canvas)',
+    padding: '12px 20px',
+    borderRadius: 6,
+    border: 0,
+    cursor: 'pointer',
+    fontFamily: 'var(--font-mono)',
+    fontSize: 12,
+    textTransform: 'uppercase',
+    letterSpacing: '0.06em',
+  };
+
   return (
-    <main className="min-h-screen p-4 sm:p-6 max-w-4xl mx-auto">
-      <header className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Behavioral drill</h1>
-          <p className="text-xs text-zinc-500">Pick a question, type your STAR response, get rubric-aligned feedback.</p>
-        </div>
-        <a href="/cheatsheet" className="text-sm text-zinc-400 hover:text-zinc-200">← cheat sheet</a>
-      </header>
-
-      {!current && (
-        <div>
-          <div className="flex flex-wrap gap-1 mb-4">
-            {dims.map((d) => (
-              <button key={d} onClick={() => setFilter(d)} className={`text-xs px-2 py-1 rounded ${filter === d ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400'}`}>
-                {d}
-              </button>
-            ))}
+    <main className="min-h-screen" style={{ background: 'var(--color-bg-canvas)' }}>
+      {/* HERO BAND — terra to match the behavioral card on /drills index */}
+      <section
+        className="px-6 sm:px-12 py-12"
+        style={{ background: '#a64b52', color: '#FFFFFF' }}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
+              Drill 02 · Behavioral
+            </span>
+            <a
+              href="/drills"
+              className="hupr-mono-eyebrow underline"
+              style={{ color: '#FFFFFF' }}
+            >
+              ← back to drills
+            </a>
           </div>
-          <ul className="space-y-2">
-            {filtered.map((q) => {
-              const originalIdx = BEHAVIORAL_30.indexOf(q);
-              return (
-                <li key={originalIdx}>
-                  <button onClick={() => pick(q, originalIdx)} className="w-full text-left rounded border border-zinc-800 hover:border-zinc-600 p-3">
-                    <span className="text-zinc-100 text-sm">{q.prompt}</span>
-                    <span className="text-xs text-zinc-500 ml-2">[{q.dimension}]</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0' }} />
+          <h1
+            className="uppercase mt-6"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(40px, 6vw, 72px)',
+              lineHeight: 1,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '24ch',
+            }}
+          >
+            Tell me about a time
+          </h1>
+          <p
+            className="mt-6"
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 16,
+              lineHeight: 1.55,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '60ch',
+            }}
+          >
+            Pick a question, type your STAR response, get rubric-aligned
+            feedback across 6 dimensions plus an ideal-answer reference.
+          </p>
         </div>
-      )}
+      </section>
 
-      {current && (
-        <div>
-          <button onClick={() => setCurrent(null)} className="text-xs text-zinc-500 mb-3 hover:text-zinc-300">← pick another</button>
-          <div className="rounded border border-zinc-800 p-5 mb-4">
-            <div className="text-xs uppercase text-emerald-300 mb-1">{current.dimension}</div>
-            <h2 className="text-lg text-zinc-100 mb-2">{current.prompt}</h2>
-            <div className="flex gap-3 items-center">
-              <button onClick={() => setShowScaffold(!showScaffold)} className="text-xs text-zinc-500 hover:text-zinc-300">
-                {showScaffold ? '▾' : '▸'} STAR scaffold
-              </button>
-              {ideal && (
-                <button onClick={() => setShowIdeal(!showIdeal)} className="text-xs text-emerald-400 hover:text-emerald-300">
-                  {showIdeal ? '▾' : '▸'} See ideal answer (90+ score)
-                </button>
-              )}
-            </div>
-            {showScaffold && (
-              <div className="mt-2 text-xs text-zinc-400 space-y-1">
-                <div>• {current.star_scaffold}</div>
-                <div className="text-violet-300">spike: {current.spike_move}</div>
-                <div className="text-rose-300">avoid: {current.common_mistake}</div>
+      <div className="px-6 sm:px-12 py-12 max-w-4xl mx-auto">
+        {!current && (
+          <>
+            <div className="mb-6">
+              <span className="hupr-mono-eyebrow">Filter by dimension</span>
+              <hr className="hupr-hairline mb-3" />
+              <div className="flex flex-wrap gap-2">
+                {dims.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setFilter(d)}
+                    style={{
+                      background: filter === d ? 'var(--color-text-primary)' : 'transparent',
+                      color: filter === d ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
+                      border: '1px solid',
+                      borderColor: filter === d ? 'var(--color-text-primary)' : 'var(--color-border)',
+                      padding: '8px 14px',
+                      borderRadius: 4,
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 12,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                      cursor: 'pointer',
+                      fontWeight: filter === d ? 700 : 400,
+                    }}
+                  >
+                    {d}
+                  </button>
+                ))}
               </div>
-            )}
-            {showIdeal && ideal && (
-              <div className="mt-3 rounded border border-emerald-800 bg-emerald-950/20 p-3 text-xs">
-                <div className="text-emerald-300 font-semibold mb-2">Ideal answer (~150 words, would score 90+)</div>
-                <div className="text-zinc-200 whitespace-pre-wrap mb-3 leading-relaxed">{ideal.ideal_answer}</div>
-                <div className="text-zinc-400 text-[11px]">
-                  <span className="text-emerald-400">Why it scores 90+:</span>
-                  <ul className="ml-3 mt-1 space-y-0.5">
-                    {ideal.why_it_scores_90.map((r, i) => <li key={i}>· {r}</li>)}
+            </div>
+            <div>
+              <span className="hupr-mono-eyebrow">Questions ({filtered.length})</span>
+              <hr className="hupr-hairline mb-3" />
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {filtered.map((q) => {
+                  const originalIdx = BEHAVIORAL_30.indexOf(q);
+                  return (
+                    <li key={originalIdx}>
+                      <button
+                        onClick={() => pick(q, originalIdx)}
+                        className="w-full text-left transition-opacity hover:opacity-90"
+                        style={{
+                          background: 'transparent',
+                          border: 0,
+                          borderBottom: '1px solid var(--color-border)',
+                          padding: '16px 0',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontFamily: 'var(--font-headline)',
+                            fontWeight: 700,
+                            fontSize: 16,
+                            color: 'var(--color-text-primary)',
+                            marginBottom: 4,
+                          }}
+                        >
+                          {q.prompt}
+                        </div>
+                        <div
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: 11,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.06em',
+                            color: 'var(--color-text-muted)',
+                          }}
+                        >
+                          {q.dimension}
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </>
+        )}
+
+        {current && (
+          <div>
+            <button
+              onClick={() => setCurrent(null)}
+              className="hupr-mono-eyebrow underline"
+              style={{
+                color: 'var(--color-text-secondary)',
+                background: 'transparent',
+                border: 0,
+                cursor: 'pointer',
+                marginBottom: 16,
+              }}
+            >
+              ← pick another
+            </button>
+            <div className="p-6 mb-6" style={{ border: '1px solid var(--color-border)' }}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: 'var(--color-text-muted)',
+                  marginBottom: 8,
+                }}
+              >
+                {current.dimension}
+              </div>
+              <h2
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 22,
+                  lineHeight: 1.2,
+                  color: 'var(--color-text-primary)',
+                  marginBottom: 16,
+                }}
+              >
+                {current.prompt}
+              </h2>
+              <div className="flex gap-4 items-center flex-wrap">
+                <button
+                  onClick={() => setShowScaffold(!showScaffold)}
+                  className="hupr-mono-eyebrow underline"
+                  style={{
+                    color: 'var(--color-text-secondary)',
+                    background: 'transparent',
+                    border: 0,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {showScaffold ? '▾' : '▸'} STAR scaffold
+                </button>
+                {ideal && (
+                  <button
+                    onClick={() => setShowIdeal(!showIdeal)}
+                    className="hupr-mono-eyebrow underline"
+                    style={{
+                      color: 'var(--color-text-primary)',
+                      background: 'transparent',
+                      border: 0,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {showIdeal ? '▾' : '▸'} See ideal answer (90+)
+                  </button>
+                )}
+              </div>
+              {showScaffold && (
+                <div className="mt-3" style={{ fontFamily: 'var(--font-accent)', fontSize: 14, lineHeight: 1.6 }}>
+                  <div style={{ color: 'var(--color-text-primary)' }}>· {current.star_scaffold}</div>
+                  <div style={{ color: '#7a8f92', marginTop: 4 }}>spike: {current.spike_move}</div>
+                  <div style={{ color: '#a64b52', marginTop: 4 }}>avoid: {current.common_mistake}</div>
+                </div>
+              )}
+              {showIdeal && ideal && (
+                <div
+                  className="mt-4 p-4"
+                  style={{ background: 'var(--color-bg-sunken)', border: '1px solid var(--color-border)' }}
+                >
+                  <div className="hupr-mono-eyebrow mb-2">Ideal answer (~150 words, scores 90+)</div>
+                  <hr className="hupr-hairline mb-3" />
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      color: 'var(--color-text-primary)',
+                      whiteSpace: 'pre-wrap',
+                      marginBottom: 12,
+                    }}
+                  >
+                    {ideal.ideal_answer}
+                  </div>
+                  <div className="hupr-mono-eyebrow mb-2">Why it scores 90+</div>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {ideal.why_it_scores_90.map((r, i) => (
+                      <li
+                        key={i}
+                        style={{
+                          fontFamily: 'var(--font-accent)',
+                          fontSize: 13,
+                          color: 'var(--color-text-primary)',
+                          padding: '3px 0',
+                        }}
+                      >
+                        · {r}
+                      </li>
+                    ))}
                   </ul>
                 </div>
+              )}
+            </div>
+
+            <textarea
+              value={response}
+              onChange={(e) => setResponse(e.target.value)}
+              placeholder="Type your STAR response... aim for 150-300 words, with specific details (numbers, names, outcomes)."
+              style={{ ...ebInputStyle, minHeight: 200 }}
+            />
+            <div className="flex items-center gap-3 mt-3 flex-wrap">
+              <button
+                onClick={submit}
+                disabled={loading || response.trim().length < 50}
+                className="hupr-anim-btn"
+                style={{
+                  ...ebButtonPrimary,
+                  opacity: loading || response.trim().length < 50 ? 0.5 : 1,
+                }}
+              >
+                <span className="top">{loading ? 'Scoring…' : 'Get feedback'}</span>
+                <span className="btm">{loading ? 'Scoring…' : 'Get feedback'}</span>
+              </button>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  color: 'var(--color-text-muted)',
+                }}
+              >
+                {response.trim().length} chars (min 50)
+              </span>
+            </div>
+
+            {feedback && (
+              <div className="mt-8 space-y-6">
+                <div className="p-5" style={{ background: 'var(--hupr-cream)', border: '1px solid var(--color-border)' }}>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-headline)',
+                      fontWeight: 700,
+                      fontSize: 36,
+                      color: 'var(--color-text-primary)',
+                      marginBottom: 8,
+                    }}
+                  >
+                    {feedback.total_score} / 100
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
+                    {Object.entries(feedback.dimensions || {}).map(([k, v]: any) => (
+                      <div
+                        key={k}
+                        className="flex justify-between"
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: 12,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          color: 'var(--color-text-secondary)',
+                        }}
+                      >
+                        <span>{k.replace(/_/g, ' ')}</span>
+                        <span style={{ color: 'var(--color-text-primary)', fontWeight: 700 }}>{v}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-5" style={{ border: '1px solid var(--color-border)' }}>
+                  <span className="hupr-mono-eyebrow">Strengths</span>
+                  <hr className="hupr-hairline mb-3" />
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {(feedback.strengths || []).map((s: string, i: number) => (
+                      <li
+                        key={i}
+                        style={{
+                          fontFamily: 'var(--font-accent)',
+                          fontSize: 14,
+                          lineHeight: 1.55,
+                          color: 'var(--color-text-primary)',
+                          padding: '4px 0',
+                        }}
+                      >
+                        · {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="p-5" style={{ border: '1px solid var(--color-border)' }}>
+                  <span className="hupr-mono-eyebrow">Gaps</span>
+                  <hr className="hupr-hairline mb-3" />
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {(feedback.gaps || []).map((g: string, i: number) => (
+                      <li
+                        key={i}
+                        style={{
+                          fontFamily: 'var(--font-accent)',
+                          fontSize: 14,
+                          lineHeight: 1.55,
+                          color: '#a64b52',
+                          padding: '4px 0',
+                        }}
+                      >
+                        · {g}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {feedback.rewritten_excerpt && (
+                  <div className="p-5" style={{ background: 'var(--color-bg-sunken)', border: '1px solid var(--color-border)' }}>
+                    <span className="hupr-mono-eyebrow">Suggested rewrite of weakest section</span>
+                    <hr className="hupr-hairline mb-3" />
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-accent)',
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        color: 'var(--color-text-primary)',
+                        whiteSpace: 'pre-wrap',
+                      }}
+                    >
+                      {feedback.rewritten_excerpt}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
-
-          <textarea
-            value={response}
-            onChange={(e) => setResponse(e.target.value)}
-            placeholder="Type your STAR response... aim for 150-300 words, with specific details (numbers, names, outcomes)."
-            className="w-full h-48 rounded bg-zinc-900 border border-zinc-800 p-3 text-sm focus:outline-none focus:border-zinc-600"
-          />
-          <div className="flex items-center gap-3 mt-2">
-            <button onClick={submit} disabled={loading || response.trim().length < 50} className="rounded bg-white text-zinc-900 px-4 py-2 text-sm font-medium disabled:opacity-50">
-              {loading ? 'Scoring…' : 'Get feedback'}
-            </button>
-            <span className="text-xs text-zinc-500">{response.trim().length} chars (min 50)</span>
-          </div>
-
-          {feedback && (
-            <div className="mt-6 space-y-4">
-              <div className="rounded border border-emerald-800 bg-emerald-950/20 p-4">
-                <div className="text-emerald-300 text-sm font-semibold mb-2">Score: {feedback.total_score} / 100</div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-                  {Object.entries(feedback.dimensions || {}).map(([k, v]: any) => (
-                    <div key={k} className="flex justify-between">
-                      <span className="text-zinc-400 capitalize">{k.replace(/_/g, ' ')}</span>
-                      <span className="text-emerald-300">{v}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded border border-zinc-800 p-4">
-                <div className="text-sm font-semibold text-zinc-300 mb-2">Strengths</div>
-                <ul className="text-xs text-zinc-300 space-y-0.5">
-                  {(feedback.strengths || []).map((s: string, i: number) => <li key={i}>· {s}</li>)}
-                </ul>
-              </div>
-              <div className="rounded border border-zinc-800 p-4">
-                <div className="text-sm font-semibold text-zinc-300 mb-2">Gaps</div>
-                <ul className="text-xs text-rose-300 space-y-0.5">
-                  {(feedback.gaps || []).map((g: string, i: number) => <li key={i}>· {g}</li>)}
-                </ul>
-              </div>
-              {feedback.rewritten_excerpt && (
-                <div className="rounded border border-violet-800 bg-violet-950/20 p-4">
-                  <div className="text-sm font-semibold text-violet-300 mb-2">Suggested rewrite of weakest section</div>
-                  <div className="text-xs text-zinc-300 whitespace-pre-wrap">{feedback.rewritten_excerpt}</div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </main>
   );
 }

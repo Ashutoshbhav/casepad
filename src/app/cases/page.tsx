@@ -9,6 +9,7 @@ import { TRACKS, type Track } from '@/lib/tracks';
 import { STARTER_CASE_IDS } from '@/lib/starter-cases';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 import { HuprCaseRow, type HuprCaseRowData } from '@/components/hupr/hupr-case-row';
+import { HuprStickyCard, HuprStickyCardStack } from '@/components/hupr/hupr-sticky-card';
 
 export const dynamic = 'force-dynamic';
 
@@ -339,6 +340,32 @@ export default async function CasesPage({
           })}
         </div>
       </nav>
+
+      {/* BROWSE BY CASE TYPE — 6 sticky stacking cards. Click any card to
+          filter the library to that case_type. Each card colored. */}
+      <HuprStickyCardStack>
+        {[
+          { type: 'profitability', label: 'Profitability', body: 'Why is profit dropping? Revenue vs cost decomposition. The classic root-cause case — most consulting first-rounds open here.', bg: 'var(--hupr-sand)', photo: '/case-photos/case-005.jpg' },
+          { type: 'market_entry', label: 'Market entry', body: 'Should we enter this market? Sizing the opportunity, competitive read, go-to-market plan. Tests structure under ambiguity.', bg: 'var(--hupr-terra)', photo: '/case-photos/case-022.jpg' },
+          { type: 'ma', label: 'M & A', body: 'Should we acquire? Strategic fit, valuation, integration risk, deal-breakers. Quant-heavy with judgment calls.', bg: 'var(--hupr-sage)', photo: '/case-photos/case-064.jpg' },
+          { type: 'pricing', label: 'Pricing', body: 'What should the price be? Cost-plus, value-based, competitive. Segmentation + WTP estimation under time pressure.', bg: 'var(--hupr-slate)', photo: '/case-photos/case-095.jpg' },
+          { type: 'growth', label: 'Growth', body: 'How do we double revenue in 3 years? Channel economics, retention loops, expansion paths. Tests creative breadth.', bg: 'var(--hupr-cognac)', photo: '/case-photos/case-115.jpg' },
+          { type: 'operations', label: 'Operations', body: 'The plant is bleeding margin. Cycle time, throughput, defect rate. Quant under operational complexity.', bg: 'var(--hupr-cream)', fg: '#323234', photo: '/case-photos/case-038.jpg' },
+        ].map((c, idx) => (
+          <HuprStickyCard
+            key={c.type}
+            index={idx}
+            bg={c.bg}
+            fg={c.fg}
+            eyebrow={`0${idx + 1}`}
+            title={c.label}
+            body={c.body}
+            photo={c.photo}
+            href={`/cases?type=${c.type}${activeTrack !== userTrack ? `&track=${activeTrack}` : ''}`}
+            cta={{ label: 'Browse →', href: '#' }}
+          />
+        ))}
+      </HuprStickyCardStack>
 
       <div className="px-6 sm:px-12 pt-10 pb-20 max-w-6xl mx-auto">
         {/* COLLAPSED FILTER — single line until expanded. Reduces clutter. */}

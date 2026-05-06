@@ -61,77 +61,389 @@ export function MathDrillClient() {
     setHistory((h) => [{ q: current, user: userVal, correct: ok }, ...h.slice(0, 9)]);
   };
 
+  const accuracyPct =
+    score.total > 0 ? Math.round((100 * score.correct) / score.total) : null;
+
   return (
-    <main className="min-h-screen p-4 sm:p-6 max-w-3xl mx-auto">
-      <header className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Math drill engine</h1>
-          <p className="text-xs text-zinc-500">Practice mental math under interview pressure. Score: {score.correct}/{score.total} {score.total > 0 && `(${Math.round(100*score.correct/score.total)}%)`}</p>
-        </div>
-        <a href="/cheatsheet" className="text-sm text-zinc-400 hover:text-zinc-200">← cheat sheet</a>
-      </header>
-
-      <div className="mb-4 flex gap-2 items-center flex-wrap">
-        <span className="text-xs text-zinc-500">Track:</span>
-        <select value={track} onChange={(e) => setTrack(e.target.value as Track)} className="text-xs bg-zinc-900 border border-zinc-800 rounded px-2 py-1">
-          {TRACK_LIST.filter(t => t !== 'behavioral').map(t => <option key={t} value={t}>{TRACKS[t].short}</option>)}
-        </select>
-        <span className="text-xs text-zinc-500 ml-3">Level:</span>
-        {[1,2,3,4].map(l => (
-          <button key={l} onClick={() => { setLevel(l as 1|2|3|4); setCurrent(null); }} className={`text-xs px-2 py-1 rounded ${level === l ? 'bg-emerald-700 text-white' : 'bg-zinc-800 text-zinc-400'}`}>
-            L{l}
-          </button>
-        ))}
-      </div>
-
-      {!current && (
-        <button onClick={next} className="rounded bg-white text-zinc-900 px-4 py-2 text-sm font-medium">Start drilling →</button>
-      )}
-
-      {current && (
-        <div className="rounded border border-zinc-800 p-6">
-          <div className="text-xs uppercase text-zinc-500 mb-2">{current.topic} · Level {current.level}</div>
-          <div className="text-lg text-zinc-100 mb-4">{current.question}</div>
-          {!result && (
-            <>
-              <input type="number" step="0.01" value={answer} onChange={(e) => setAnswer(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && submit()} placeholder="your answer" autoFocus
-                className="w-32 rounded bg-zinc-900 border border-zinc-800 px-3 py-2 text-sm focus:outline-none focus:border-zinc-600" />
-              <button onClick={submit} className="ml-2 rounded bg-emerald-700 text-white px-4 py-2 text-sm">Check</button>
-            </>
-          )}
-          {result === 'correct' && (
-            <div>
-              <div className="text-emerald-300 font-medium mb-2">✓ Correct</div>
-              {current.explanation && <div className="text-xs text-zinc-400 mb-3 italic">↳ {current.explanation}</div>}
-              <button onClick={next} className="rounded bg-white text-zinc-900 px-3 py-1.5 text-sm">Next →</button>
+    <main
+      className="min-h-screen"
+      style={{ background: 'var(--color-bg-canvas)' }}
+    >
+      {/* HERO BAND — sand to match the math card on /drills index */}
+      <section
+        className="px-6 sm:px-12 py-12"
+        style={{ background: '#a69385', color: '#FFFFFF' }}
+      >
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
+              Drill 01 · Math
+            </span>
+            <a
+              href="/drills"
+              className="hupr-mono-eyebrow underline"
+              style={{ color: '#FFFFFF' }}
+            >
+              ← back to drills
+            </a>
+          </div>
+          <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0' }} />
+          <h1
+            className="uppercase mt-6"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(40px, 6vw, 72px)',
+              lineHeight: 1,
+              color: '#FFFFFF',
+              margin: 0,
+              maxWidth: '20ch',
+            }}
+          >
+            Math under pressure
+          </h1>
+          {score.total > 0 && (
+            <div
+              className="mt-6 flex items-baseline gap-4"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 13,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: '#FFFFFF',
+              }}
+            >
+              <span style={{ fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-headline)' }}>
+                {score.correct}/{score.total}
+              </span>
+              {accuracyPct !== null && (
+                <span style={{ opacity: 0.9 }}>{accuracyPct}% accuracy</span>
+              )}
             </div>
           )}
-          {result === 'wrong' && (
-            <div>
-              <div className="text-rose-300 font-medium mb-2">✗ Answer was {current.answer}</div>
-              <div className="text-xs text-zinc-400 mb-1">Within tolerance ±{current.tolerance}</div>
-              {current.explanation && <div className="text-xs text-emerald-300 mt-2"><span className="text-zinc-500">shortcut: </span>{current.explanation}</div>}
-              {current.common_trap && <div className="text-xs text-amber-300 mt-1"><span className="text-zinc-500">common trap: </span>{current.common_trap}</div>}
-              <button onClick={next} className="rounded bg-white text-zinc-900 px-3 py-1.5 text-sm mt-3">Next →</button>
-            </div>
-          )}
         </div>
-      )}
+      </section>
 
-      {history.length > 0 && (
-        <section className="mt-8">
-          <h3 className="text-sm font-semibold text-zinc-300 mb-2">Last 10</h3>
-          <ul className="space-y-1 text-xs">
-            {history.map((h, i) => (
-              <li key={i} className="flex justify-between border-b border-zinc-900 py-1">
-                <span className="text-zinc-400">{h.q.topic} L{h.q.level}: {h.q.question.slice(0, 50)}</span>
-                <span className={h.correct ? 'text-emerald-300' : 'text-rose-300'}>{h.correct ? '✓' : '✗'} ({h.user})</span>
-              </li>
+      {/* CONTROLS + DRILL PANEL */}
+      <div className="px-6 sm:px-12 py-12 max-w-3xl mx-auto">
+        {/* Track + Level controls */}
+        <div className="mb-8">
+          <span className="hupr-mono-eyebrow">Setup</span>
+          <hr className="hupr-hairline mb-4" />
+          <div className="flex gap-3 items-center flex-wrap">
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              Track:
+            </span>
+            <select
+              value={track}
+              onChange={(e) => setTrack(e.target.value as Track)}
+              style={{
+                background: 'var(--color-bg-sunken)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-text-primary)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                padding: '8px 12px',
+                borderRadius: 4,
+              }}
+            >
+              {TRACK_LIST.filter(t => t !== 'behavioral').map(t => (
+                <option key={t} value={t}>{TRACKS[t].short}</option>
+              ))}
+            </select>
+            <span
+              className="ml-2"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              Level:
+            </span>
+            {[1, 2, 3, 4].map((l) => (
+              <button
+                key={l}
+                onClick={() => { setLevel(l as 1|2|3|4); setCurrent(null); }}
+                style={{
+                  background: level === l ? 'var(--color-text-primary)' : 'transparent',
+                  color: level === l ? 'var(--color-bg-canvas)' : 'var(--color-text-secondary)',
+                  border: '1px solid',
+                  borderColor: level === l ? 'var(--color-text-primary)' : 'var(--color-border)',
+                  padding: '8px 14px',
+                  borderRadius: 4,
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  cursor: 'pointer',
+                  fontWeight: level === l ? 700 : 400,
+                }}
+              >
+                L{l}
+              </button>
             ))}
-          </ul>
-        </section>
-      )}
+          </div>
+        </div>
+
+        {!current && (
+          <button
+            onClick={next}
+            className="hupr-anim-btn"
+            style={{
+              background: 'var(--color-text-primary)',
+              color: 'var(--color-bg-canvas)',
+              padding: '14px 22px',
+              borderRadius: 6,
+              border: 0,
+              cursor: 'pointer',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 13,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              display: 'inline-block',
+            }}
+          >
+            <span className="top">Start drilling →</span>
+            <span className="btm">Start drilling →</span>
+          </button>
+        )}
+
+        {current && (
+          <div
+            className="p-8"
+            style={{
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-bg-canvas)',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--color-text-muted)',
+                marginBottom: 12,
+              }}
+            >
+              {current.topic} · Level {current.level}
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--font-headline)',
+                fontWeight: 700,
+                fontSize: 28,
+                lineHeight: 1.2,
+                color: 'var(--color-text-primary)',
+                marginBottom: 24,
+              }}
+            >
+              {current.question}
+            </div>
+            {!result && (
+              <div className="flex items-center gap-3 flex-wrap">
+                <input
+                  type="number"
+                  step="0.01"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && submit()}
+                  placeholder="your answer"
+                  autoFocus
+                  style={{
+                    background: 'var(--color-bg-sunken)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                    padding: '12px 14px',
+                    borderRadius: 4,
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 14,
+                    width: 140,
+                    outline: 'none',
+                  }}
+                />
+                <button
+                  onClick={submit}
+                  className="hupr-anim-btn"
+                  style={{
+                    background: 'var(--color-text-primary)',
+                    color: 'var(--color-bg-canvas)',
+                    padding: '12px 20px',
+                    borderRadius: 6,
+                    border: 0,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  <span className="top">Check</span>
+                  <span className="btm">Check</span>
+                </button>
+              </div>
+            )}
+            {result === 'correct' && (
+              <div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-headline)',
+                    fontWeight: 700,
+                    fontSize: 18,
+                    color: '#7a8f92',
+                    marginBottom: 12,
+                  }}
+                >
+                  ✓ Correct
+                </div>
+                {current.explanation && (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: 14,
+                      color: 'var(--color-text-secondary)',
+                      marginBottom: 16,
+                    }}
+                  >
+                    ↳ {current.explanation}
+                  </div>
+                )}
+                <button
+                  onClick={next}
+                  className="hupr-anim-btn"
+                  style={{
+                    background: 'var(--color-text-primary)',
+                    color: 'var(--color-bg-canvas)',
+                    padding: '10px 18px',
+                    borderRadius: 6,
+                    border: 0,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  <span className="top">Next →</span>
+                  <span className="btm">Next →</span>
+                </button>
+              </div>
+            )}
+            {result === 'wrong' && (
+              <div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-headline)',
+                    fontWeight: 700,
+                    fontSize: 18,
+                    color: '#a64b52',
+                    marginBottom: 12,
+                  }}
+                >
+                  ✗ Answer was {current.answer}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    color: 'var(--color-text-muted)',
+                    marginBottom: 8,
+                  }}
+                >
+                  Within tolerance ±{current.tolerance}
+                </div>
+                {current.explanation && (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: 14,
+                      color: 'var(--color-text-primary)',
+                      marginBottom: 6,
+                    }}
+                  >
+                    <span style={{ color: 'var(--color-text-muted)' }}>shortcut: </span>
+                    {current.explanation}
+                  </div>
+                )}
+                {current.common_trap && (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: 14,
+                      color: 'var(--color-text-primary)',
+                      marginBottom: 16,
+                    }}
+                  >
+                    <span style={{ color: 'var(--color-text-muted)' }}>common trap: </span>
+                    {current.common_trap}
+                  </div>
+                )}
+                <button
+                  onClick={next}
+                  className="hupr-anim-btn mt-3"
+                  style={{
+                    background: 'var(--color-text-primary)',
+                    color: 'var(--color-bg-canvas)',
+                    padding: '10px 18px',
+                    borderRadius: 6,
+                    border: 0,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  <span className="top">Next →</span>
+                  <span className="btm">Next →</span>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {history.length > 0 && (
+          <section className="mt-12">
+            <span className="hupr-mono-eyebrow">Last 10</span>
+            <hr className="hupr-hairline mb-3" />
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {history.map((h, i) => (
+                <li
+                  key={i}
+                  className="flex justify-between py-2"
+                  style={{
+                    borderBottom: '1px solid var(--color-border)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                  }}
+                >
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    {h.q.topic} L{h.q.level}: {h.q.question.slice(0, 50)}
+                  </span>
+                  <span style={{ color: h.correct ? '#7a8f92' : '#a64b52', fontWeight: 700 }}>
+                    {h.correct ? '✓' : '✗'} ({h.user})
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </main>
   );
 }
