@@ -49,7 +49,10 @@ function providers(): Provider[] {
       name: 'cerebras',
       url: 'https://api.cerebras.ai/v1/chat/completions',
       key: process.env.CEREBRAS_API_KEY,
-      model: 'llama-3.3-70b',
+      // EVAL-BUG-FIX 2026-05-08: was 'llama-3.3-70b' which 404s on Cerebras.
+      // Cerebras's stable free-tier large model is llama3.1-70b (no dash, 3.1 era).
+      // 3.3 may roll out later; until then llama3.1-70b is the reliable layer-3.
+      model: 'llama3.1-70b',
       supports_json_streaming: true,
     });
   }

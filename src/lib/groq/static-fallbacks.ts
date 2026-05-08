@@ -125,18 +125,48 @@ export function staticWalkthroughFallback(): any {
 // Ash probe that keeps the case interview moving instead of poisoning the
 // transcript with "[Service is busy...]" error text. Picks a probe matching
 // where the candidate is in the case (turn count heuristic). Always usable.
+//
+// 2026-05-08 update: rotates through 3 variants per range so consecutive
+// fallback firings don't repeat verbatim (the eval found this caused
+// phrase-repeat false positives when the fortress fully degraded). Variants
+// share the same intent so the candidate experience stays coherent.
+const FALLBACK_PROBES: Record<string, string[]> = {
+  open: [
+    "Walk me through how you'd structure this case.",
+    "Lay out your structure for me.",
+    "Talk me through your framework.",
+  ],
+  hypothesis: [
+    "What's your hypothesis so far — and why?",
+    "What do you think is actually broken here?",
+    "Give me your gut — where's the issue?",
+  ],
+  dig: [
+    "Where would you start digging — and what number would tell you you're right?",
+    "Pick one branch. Why that one first?",
+    "What's the first piece of data you want, and what would change your mind?",
+  ],
+  synth: [
+    "Pause — if you had to give the CEO your answer in 30 seconds, what would it be?",
+    "Time to wrap. What's your bottom line?",
+    "Synthesise. What would you tell the client?",
+  ],
+  final: [
+    "What's the one number that would change your recommendation?",
+    "Defend your answer in one sentence.",
+    "If you had to bet on this — yes or no, and why?",
+  ],
+};
+
+function rotateProbe(bucket: string, turnCount: number): string {
+  const variants = FALLBACK_PROBES[bucket] ?? FALLBACK_PROBES.synth;
+  return variants[turnCount % variants.length];
+}
+
 export function staticChatTurnFallback(turnCount: number): string {
-  if (turnCount <= 1) {
-    return "Walk me through how you'd structure this case.";
-  }
-  if (turnCount <= 3) {
-    return "What's your hypothesis so far — and why?";
-  }
-  if (turnCount <= 6) {
-    return "Where would you start digging — and what number would tell you you're right?";
-  }
-  if (turnCount <= 10) {
-    return "Pause — if you had to give the CEO your answer in 30 seconds, what would it be?";
-  }
-  return "What's the one number that would change your recommendation?";
+  if (turnCount <= 1) return rotateProbe('open', turnCount);
+  if (turnCount <= 3) return rotateProbe('hypothesis', turnCount);
+  if (turnCount <= 6) return rotateProbe('dig', turnCount);
+  if (turnCount <= 10) return rotateProbe('synth', turnCount);
+  return rotateProbe('final', turnCount);
 }

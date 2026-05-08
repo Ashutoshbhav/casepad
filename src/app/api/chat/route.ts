@@ -13,6 +13,8 @@ import { critiqueResponse, regenHintForCritic, shouldCritique } from '@/lib/groq
 import { staticChatTurnFallback } from '@/lib/groq/static-fallbacks';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { retrievePlaybookFindings, formatFindingsForPrompt, type RetrievedFinding } from '@/lib/groq/playbook-retriever';
+import { buildRegistry, toSystemPromptBlock as registryBlock, checkDraftAgainstRegistry } from '@/lib/case-state/number-registry';
+import { renderRecentTurnAwareness, findRepeatedPhrase, regenHintForPhraseRepeat } from '@/lib/groq/recent-turn-context';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -169,6 +171,30 @@ export async function POST(req: NextRequest) {
     turnFindings = [];
   }
 
+  // STREAM-2 + STREAM-3 (2026-05-08 post-research):
+  //   - Number Registry: re-inject committed numbers at END of system prompt
+  //     (highest-attention zone per Lost-in-the-Middle). Defeats math flip-flop.
+  //   - Recent-Turn Awareness: inject Ash's last 3 turns w/ anti-repeat clause.
+  //     Production case study (Tony Seah) cut repetition rate 15% → 0%.
+  // Both fail-open: any error here returns the system prompt unchanged.
+  const registry = (() => {
+    try { return buildRegistry(withUser); } catch { return null; }
+  })();
+  try {
+    if (messages.length > 0 && messages[0].role === 'system') {
+      const recentBlock = renderRecentTurnAwareness(withUser);
+      const regBlock = registry ? registryBlock(registry) : '';
+      if (recentBlock || regBlock) {
+        messages[0] = {
+          ...messages[0],
+          content: messages[0].content + recentBlock + regBlock,
+        };
+      }
+    }
+  } catch {
+    // fall through — registry/recent-turn injection is enhancement, never blocks
+  }
+
   const encoder = new TextEncoder();
   const guardrailMode = getGuardrailMode();
 
@@ -215,6 +241,57 @@ export async function POST(req: NextRequest) {
               }
             } catch (regenErr) {
               console.warn(`[guardrail] regen call errored: ${(regenErr as Error).message}; shipping original`);
+            }
+          }
+
+          // Gate 1.5 (NEW 2026-05-08): Number Registry + phrase-repeat checks.
+          // These are deterministic and address the two highest-frequency bugs
+          // from the eval baseline: math flip-flop (1 case in baseline) and
+          // phrase repeat (28 cases in baseline). One regen attempt, then ship.
+          const turnIdx = transcriptIn.length + 1; // turn index of THIS interviewer turn
+          if (registry) {
+            const regViolations = checkDraftAgainstRegistry(full, registry, turnIdx);
+            const repeatedPhrase = findRepeatedPhrase(full, withUser);
+            if (regViolations.length > 0 || repeatedPhrase) {
+              const hintParts: string[] = [];
+              if (regViolations.length > 0) {
+                console.warn(`[registry] draft contradicts ${regViolations.length} committed metrics`);
+                hintParts.push(
+                  '== REGISTRY CONTRADICTION ==\n' +
+                    regViolations
+                      .map((v) => `  - ${v.evidence}`)
+                      .join('\n') +
+                    '\nEither (a) honor the registered values, or (b) explicitly say "I was wrong earlier" and explain.'
+                );
+              }
+              if (repeatedPhrase) {
+                console.warn(`[phrase-cooldown] draft repeats: "${repeatedPhrase}"`);
+                hintParts.push(regenHintForPhraseRepeat(repeatedPhrase));
+              }
+              const hinted = [
+                ...messages,
+                { role: 'system' as const, content: hintParts.join('\n\n') },
+              ];
+              try {
+                let retry = '';
+                for await (const delta of streamChat({
+                  messages: hinted as any,
+                  max_tokens: 300,
+                  temperature: 0.4,
+                })) {
+                  retry += delta;
+                }
+                // Re-check both — only swap if retry passes BOTH plus the original guardrail
+                const retryReg = checkDraftAgainstRegistry(retry, registry, turnIdx);
+                const retryPhrase = findRepeatedPhrase(retry, withUser);
+                if (retry && retryReg.length === 0 && !retryPhrase && checkResponse(retry).ok) {
+                  full = retry;
+                } else {
+                  console.warn(`[registry/phrase] regen failed too; shipping original`);
+                }
+              } catch (regenErr) {
+                console.warn(`[registry/phrase] regen errored: ${(regenErr as Error).message}; shipping original`);
+              }
             }
           }
 

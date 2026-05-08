@@ -2,29 +2,40 @@ import { describe, it, expect } from 'vitest';
 import { staticChatTurnFallback, staticEvaluatorBreakdown } from '@/lib/groq/static-fallbacks';
 
 describe('staticChatTurnFallback', () => {
-  it('returns a structure-prompt for early turns (0-1)', () => {
-    expect(staticChatTurnFallback(0)).toMatch(/structure/i);
-    expect(staticChatTurnFallback(1)).toMatch(/structure/i);
+  it('returns a structure-prompt for early turns (0-1) [intent-matched]', () => {
+    // 3 rotation variants — all match intent: structure / framework / lay out
+    expect(staticChatTurnFallback(0)).toMatch(/structure|framework|lay out|talk me/i);
+    expect(staticChatTurnFallback(1)).toMatch(/structure|framework|lay out|talk me/i);
   });
 
-  it('returns a hypothesis-prompt for mid-early turns (2-3)', () => {
-    expect(staticChatTurnFallback(2)).toMatch(/hypothesis/i);
-    expect(staticChatTurnFallback(3)).toMatch(/hypothesis/i);
+  it('returns a hypothesis-prompt for mid-early turns (2-3) [intent-matched]', () => {
+    expect(staticChatTurnFallback(2)).toMatch(/hypothesis|broken|gut|issue/i);
+    expect(staticChatTurnFallback(3)).toMatch(/hypothesis|broken|gut|issue/i);
   });
 
-  it('returns a digging-prompt for mid turns (4-6)', () => {
-    expect(staticChatTurnFallback(4)).toMatch(/dig|number|right/i);
-    expect(staticChatTurnFallback(6)).toMatch(/dig|number|right/i);
+  it('returns a digging-prompt for mid turns (4-6) [intent-matched]', () => {
+    expect(staticChatTurnFallback(4)).toMatch(/dig|number|branch|data|change your mind/i);
+    expect(staticChatTurnFallback(6)).toMatch(/dig|number|branch|data|change your mind/i);
   });
 
-  it('returns a synthesis-prompt for late turns (7-10)', () => {
-    expect(staticChatTurnFallback(7)).toMatch(/CEO|30 seconds|synthesi/i);
-    expect(staticChatTurnFallback(10)).toMatch(/CEO|30 seconds|synthesi/i);
+  it('returns a synthesis-prompt for late turns (7-10) [intent-matched]', () => {
+    expect(staticChatTurnFallback(7)).toMatch(/CEO|wrap|bottom line|synthesi|client/i);
+    expect(staticChatTurnFallback(10)).toMatch(/CEO|wrap|bottom line|synthesi|client/i);
   });
 
-  it('returns a final-test prompt for very late turns (11+)', () => {
-    expect(staticChatTurnFallback(11)).toMatch(/recommendation|number/i);
-    expect(staticChatTurnFallback(20)).toMatch(/recommendation|number/i);
+  it('returns a final-test prompt for very late turns (11+) [intent-matched]', () => {
+    expect(staticChatTurnFallback(11)).toMatch(/recommendation|number|defend|bet/i);
+    expect(staticChatTurnFallback(20)).toMatch(/recommendation|number|defend|bet/i);
+  });
+
+  it('rotates through different variants on consecutive turns in same range', () => {
+    // Same bucket, different turn counts → different variants (anti-repeat)
+    const variants = new Set([
+      staticChatTurnFallback(11),
+      staticChatTurnFallback(12),
+      staticChatTurnFallback(13),
+    ]);
+    expect(variants.size).toBeGreaterThan(1); // at least 2 distinct variants
   });
 
   it('always returns non-empty plain-prose (no markdown, no error tokens)', () => {
