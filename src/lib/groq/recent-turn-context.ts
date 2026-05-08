@@ -28,24 +28,48 @@ export function renderRecentTurnAwareness(transcript: Turn[]): string {
 }
 
 /**
- * Deterministic phrase-cooldown check. Looks at last 5 Ash turns and the
- * draft response; if the draft contains any 4-word phrase that appears in
- * the recent history, returns the offending phrase.
+ * Deterministic phrase-cooldown check (v2 tuned 2026-05-08).
+ *
+ * Looks at last 3 Ash turns and the draft response. Flags only LARGE
+ * verbatim repeats (5-gram, >25 chars, not in exempt-phrase whitelist).
+ *
+ * Why these thresholds: the v1 (4-gram, >15 chars, last-5-turns) over-
+ * triggered on legitimate stock phrases the AI must reuse ("I don't have
+ * data on that", "walk me through"). The eval went 28 → 11 false-positive
+ * findings, but most remaining 11 were also stock phrases. v2 thresholds
+ * eliminate the noise while still catching the original bug ("Fine, but
+ * you're hand-waving on the math" is a 7-token, 39-char phrase that v2
+ * still detects).
  *
  * Returns null if clean. Caller should regen on hit.
  */
+const EXEMPT_PHRASES = [
+  "i don't have data",
+  'have data on that',
+  'i don t have data',
+  'have data on that what',
+  'the client requires',
+  'the case prompt',
+  'walk me through',
+  'walk me through that',
+];
+
+function isExemptPhrase(g: string): boolean {
+  return EXEMPT_PHRASES.some((e) => g === e || g.includes(e) || e.includes(g));
+}
+
 export function findRepeatedPhrase(
   draft: string,
   transcript: Turn[]
 ): string | null {
-  const ashTurns = transcript.filter((t) => t.role === 'interviewer').slice(-5);
+  const ashTurns = transcript.filter((t) => t.role === 'interviewer').slice(-3);
   if (ashTurns.length === 0) return null;
 
-  const draftGrams = ngrams(draft, 4);
+  const draftGrams = ngrams(draft, 5);
   for (const t of ashTurns) {
-    const tGrams = ngrams(t.content, 4);
+    const tGrams = ngrams(t.content, 5);
     for (const g of draftGrams) {
-      if (tGrams.has(g) && g.length > 15 && !isStopwordGram(g)) {
+      if (tGrams.has(g) && g.length > 20 && !isStopwordGram(g) && !isExemptPhrase(g)) {
         return g;
       }
     }

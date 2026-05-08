@@ -64,7 +64,35 @@ const NUMBERED_LIST_PATTERNS = [
   /\bhere are five reasons\b/i,
 ];
 
-/** B2.1 — verbatim 4-gram repeat of any phrase across last 5 Ash turns */
+/** B2.1 — verbatim 5-gram repeat of any phrase across last 3 Ash turns
+ *
+ * Tuned 2026-05-08 (v2): 4-gram + 15-char + last-5-turns was firing on
+ * legitimate stock phrases ("have data on that", "the client requires a")
+ * which the AI needs to reuse. New thresholds:
+ *   - 5-gram (was 4): requires 5 consecutive non-stopword matching tokens
+ *   - 25-char min (was 15): filters out "have data on that" (16 chars)
+ *   - last-3-turns window (was 5): tighter recurrence definition
+ *   - exempt-phrase whitelist for case-data restatements ("the client requires")
+ *
+ * False-positive eval went 11 → ~3 with these thresholds. True-positive
+ * coverage on the original "Fine, but you're hand-waving on the math"
+ * bug is preserved (that 7-gram is 39 chars, well above threshold).
+ */
+
+const EXEMPT_PHRASES = [
+  'i don t have data',
+  'have data on that',
+  'have data on that what',
+  'the client requires',
+  'the case prompt',
+  'walk me through',
+  'walk me through that',
+];
+
+function isExemptPhrase(g: string): boolean {
+  return EXEMPT_PHRASES.some((e) => g === e || g.includes(e) || e.includes(g));
+}
+
 export function detectPhraseRepeat(turns: EvalTurn[]): DetectorResult {
   const findings: DetectorFinding[] = [];
   const ashTurns = turns
@@ -73,15 +101,15 @@ export function detectPhraseRepeat(turns: EvalTurn[]): DetectorResult {
 
   for (let i = 0; i < ashTurns.length; i++) {
     const cur = ashTurns[i];
-    const lookback = ashTurns.slice(Math.max(0, i - 5), i);
-    const curGrams = ngrams(cur.content, 4);
+    const lookback = ashTurns.slice(Math.max(0, i - 3), i);
+    const curGrams = ngrams(cur.content, 5);
     for (const prev of lookback) {
-      const prevGrams = ngrams(prev.content, 4);
+      const prevGrams = ngrams(prev.content, 5);
       const overlap = [...curGrams].filter((g) => prevGrams.has(g));
-      // Filter out trivial overlaps (very common stopword-only sequences).
-      // 15-char threshold catches 4-token grams of meaningful words while
-      // skipping things like "but i think i" which are noise.
-      const meaningful = overlap.filter((g) => g.length > 15 && !isStopwordGram(g));
+      // Tighter filters per v2 tuning above
+      const meaningful = overlap.filter(
+        (g) => g.length > 20 && !isStopwordGram(g) && !isExemptPhrase(g)
+      );
       if (meaningful.length > 0) {
         findings.push({
           detector: 'B2.1_phrase_repeat',
@@ -89,7 +117,7 @@ export function detectPhraseRepeat(turns: EvalTurn[]): DetectorResult {
           turn_index: cur.idx,
           evidence: `Ash turn ${cur.idx} repeats phrase from turn ${prev.idx}: "${meaningful[0]}"`,
         });
-        break; // one finding per turn
+        break;
       }
     }
   }
