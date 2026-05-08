@@ -341,11 +341,15 @@ export default async function CasesPage({
         </div>
       </nav>
 
-      {/* BROWSE BY CASE TYPE — 6 sticky stacking cards. Click any card to
-          filter the library to that case_type. Slugs match DB case_type
+      {/* BROWSE BY CASE TYPE — 6 sticky stacking cards. Hidden once a
+          ?type= filter is active so the user lands clean on the
+          filtered library instead of seeing the same browse cards
+          stacking on top of their result. Slugs match DB case_type
           enum exactly: profitability / market_entry / operations /
-          estimation / pricing / mna. Photos dropped — the typographic
-          billboard IS the visual. Whole card is a single <a>. */}
+          estimation / pricing / mna. Whole card is a single <a> →
+          /cases?type=X#library, which both filters AND scrolls past
+          the cards to the library section. */}
+      {!sp.type && (
       <HuprStickyCardStack>
         {[
           { type: 'profitability', label: 'Profitability', body: 'Why is profit dropping? Revenue vs cost decomposition. The classic root-cause case — most consulting first-rounds open here.', bg: 'var(--hupr-sand)' },
@@ -367,6 +371,7 @@ export default async function CasesPage({
           />
         ))}
       </HuprStickyCardStack>
+      )}
 
       <div className="px-6 sm:px-12 pt-10 pb-20 max-w-6xl mx-auto">
         {/* COLLAPSED FILTER — single line until expanded. Reduces clutter. */}
@@ -416,8 +421,71 @@ export default async function CasesPage({
           </div>
         )}
 
-        {/* THE LIBRARY — news-pair rows. */}
-        <section className="mb-12">
+        {/* Active-filter chip — shows when ?type= is set so user can
+            clearly see what's filtered + clear it. Builds the clear
+            link by stripping `type` from the current querystring. */}
+        {sp.type && (
+          <div
+            className="mb-8 flex items-center gap-3 flex-wrap"
+            style={{
+              padding: '14px 18px',
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-bg-sunken)',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-muted)',
+              }}
+            >
+              Filter
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-headline)',
+                fontWeight: 700,
+                fontSize: 18,
+                textTransform: 'uppercase',
+                letterSpacing: '-0.005em',
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {sp.type.replace(/_/g, ' ')}
+            </span>
+            <span style={{ flex: 1 }} aria-hidden="true" />
+            <a
+              href={(() => {
+                const params = new URLSearchParams();
+                if (sp.industry) params.set('industry', sp.industry);
+                if (sp.difficulty) params.set('difficulty', sp.difficulty);
+                if (sp.q) params.set('q', sp.q);
+                if (sp.track) params.set('track', sp.track);
+                const qs = params.toString();
+                return qs ? `/cases?${qs}` : '/cases';
+              })()}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--color-text-primary)',
+                textDecoration: 'underline',
+              }}
+            >
+              Clear ×
+            </a>
+          </div>
+        )}
+
+        {/* THE LIBRARY — news-pair rows. id="library" is the scroll target
+            for sticky case-type card hrefs (e.g. /cases?type=profitability#library)
+            so clicking a card jumps the user past the cards directly
+            to the filtered list. */}
+        <section id="library" className="mb-12 scroll-mt-24">
           <div className="flex items-baseline gap-3 mb-6">
             <span className="hupr-mono-eyebrow">The Library</span>
             <span
@@ -434,7 +502,7 @@ export default async function CasesPage({
                 color: 'var(--color-text-muted)',
               }}
             >
-              {trackTotal.toLocaleString()} total
+              {(sp.type ? mainRows.length : trackTotal).toLocaleString()}{sp.type ? ` ${sp.type.replace(/_/g, ' ')}` : ' total'}
             </span>
           </div>
           <CasesLoadMore totalLibrarySize={trackTotal}>

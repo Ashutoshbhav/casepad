@@ -11,9 +11,11 @@ export default function HomePage() {
     <HuprDesign
       eyebrow="Cohort case prep · 2026"
       menuLinks={[
+        { label: 'Cases', href: '/cases' },
+        { label: 'Drills', href: '/drills' },
+        { label: 'Cheats', href: '/cheatsheet' },
+        { label: 'Dashboard', href: '/dashboard' },
         { label: 'How it works', href: '#tracks' },
-        { label: 'Cohort', href: '#spheres' },
-        { label: 'News', href: '#news' },
         { label: 'Sign in', href: '/auth/signin' },
       ]}
       customHero={<HomeHero />}

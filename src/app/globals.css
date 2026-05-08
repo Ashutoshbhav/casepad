@@ -249,23 +249,37 @@ code, pre, kbd, samp {
   transform: translateY(0);
 }
 
+/* hupr-anim-btn — the slide-up text effect produced visible "duplicate
+   text" on hover because the .top span couldn't clear the parent's
+   padding-top before .btm slid in (overflow:hidden clips at the padding
+   box, but a single line-height of translation didn't reach it on
+   buttons with vertical padding). Fix: render only .top, hide .btm
+   entirely, and apply a clean opacity + 1px lift hover on the parent.
+   No more visible duplicates anywhere in the app. */
 .hupr-anim-btn {
   position: relative;
-  overflow: hidden;
   display: inline-block;
+  transition: opacity 200ms cubic-bezier(.34,.7,.27,1),
+              transform 200ms cubic-bezier(.34,.7,.27,1);
+  will-change: opacity, transform;
 }
-.hupr-anim-btn .top,
-.hupr-anim-btn .btm {
+.hupr-anim-btn .top {
   display: block;
-  transition: transform .3s cubic-bezier(.34,.7,.27,1);
 }
 .hupr-anim-btn .btm {
-  position: absolute;
-  inset: 0;
-  transform: translateY(100%);
+  display: none;
 }
-.hupr-anim-btn:hover .top { transform: translateY(-100%); }
-.hupr-anim-btn:hover .btm { transform: translateY(0); }
+.hupr-anim-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hupr-anim-btn,
+  .hupr-anim-btn:hover {
+    transition: none;
+    transform: none;
+  }
+}
 
 .hupr-eyebrow {
   font-family: var(--font-headline);
