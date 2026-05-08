@@ -39,6 +39,33 @@ if (touchesMigrations) {
   }
 }
 
+// 1b. Eval-detector regression check — runs if anything in src/lib/eval/,
+// src/lib/groq/, src/lib/case-state/, or scripts/qa/eval-* is staged.
+// Catches obvious regressions in the bug-detector lib at zero LLM cost
+// (~2s vitest run on the detector unit-test suite).
+const touchesEvalCriticalPath = allStagedFiles.some(
+  (f) =>
+    f.startsWith('src/lib/eval/') ||
+    f.startsWith('src/lib/groq/guardrails') ||
+    f.startsWith('src/lib/groq/critic') ||
+    f.startsWith('src/lib/groq/recent-turn-context') ||
+    f.startsWith('src/lib/case-state/') ||
+    f.startsWith('scripts/qa/eval-')
+);
+if (touchesEvalCriticalPath) {
+  console.log('[pm-gate] eval-critical path touched — running detector unit tests…');
+  try {
+    execSync('npx vitest run tests/unit/eval/ tests/unit/case-state/', {
+      stdio: 'inherit',
+      cwd: ROOT,
+    });
+  } catch {
+    console.error('[pm-gate] detector unit tests FAILED — block commit.');
+    console.error('  Fix the failing detector tests, or commit with --no-verify if you know what you\'re doing.');
+    process.exit(1);
+  }
+}
+
 // Detect feature additions
 const FEATURE_PATTERNS = [
   /^src\/app\/.+\/page\.tsx$/,
