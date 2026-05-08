@@ -41,6 +41,7 @@ export default async function CasesPage({
   const hasFilters = Boolean(sp.industry || sp.type || sp.difficulty || sp.q);
 
   let cases: CaseListRow[] | null = null;
+  let usedStaticFallback = false;
   try {
     const r = await withRetry(() => {
       let query = supabase
@@ -58,6 +59,19 @@ export default async function CasesPage({
     cases = (r.data ?? null) as CaseListRow[] | null;
   } catch (e) {
     console.error('[cases] main query failed:', e);
+  }
+
+  // P1-10 from never-fail audit: if Supabase is fully down (cases is null AND
+  // no filters were active that would legitimately return zero results), fall
+  // back to the 4 starter cases hardcoded in src/lib/starter-cases. The user
+  // can still start a session — degraded library, but NSM works.
+  if ((cases === null || (cases.length === 0 && !hasFilters)) && !sp.q) {
+    const { STATIC_FALLBACK_CASES } = await import('@/lib/starter-cases');
+    if (cases === null) {
+      console.warn('[cases] using STATIC_FALLBACK_CASES — Supabase query path failed');
+      cases = STATIC_FALLBACK_CASES as unknown as CaseListRow[];
+      usedStaticFallback = true;
+    }
   }
 
   let completedCaseIds = new Set<string>();

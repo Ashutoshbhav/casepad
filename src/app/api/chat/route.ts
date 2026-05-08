@@ -52,10 +52,17 @@ export async function POST(req: NextRequest) {
   }
   const supabase = await createSupabaseServerClient();
 
+  // P1-13: verify the requester owns this session. RLS should already prevent
+  // cross-user reads, but a defense-in-depth check here makes the intent
+  // explicit and surfaces a clean 403 instead of a silent 404 if RLS drifts.
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+  if (!authUser) return new Response('unauthorized', { status: 401 });
+
   const { data: session, error: sErr } = await supabase
     .from('sessions')
     .select('id, transcript, case_id, user_id')
     .eq('id', sessionId)
+    .eq('user_id', authUser.id)
     .single();
   if (sErr || !session) return new Response('session not found', { status: 404 });
 

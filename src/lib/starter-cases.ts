@@ -40,6 +40,63 @@ export interface TutorialCase {
   one_liner: string;
 }
 
+// P1-10 from never-fail audit: emergency static fallback for /cases when
+// Supabase is fully down. Returns shape-compatible CaseListRow[]. Used only
+// when the main query fails after withRetry. Not the full library — just
+// enough to keep the user able to start a case in degraded mode.
+export interface StaticFallbackCase {
+  id: string;
+  title: string;
+  industry: string | null;
+  case_type: string;
+  difficulty: string;
+  source: string | null;
+  problem_statement: string;
+}
+
+export const STATIC_FALLBACK_CASES: StaticFallbackCase[] = [
+  {
+    id: '9af07340-c417-4d09-bb9d-9a88a01190f7',
+    title: 'Estimating Instagram Photo Uploads',
+    industry: 'tech',
+    case_type: 'estimation',
+    difficulty: 'easy',
+    source: 'CasePad starter',
+    problem_statement:
+      "How many photos are uploaded to Instagram every day worldwide? Walk me through your structured estimate — population segmentation, smartphone penetration, Instagram adoption, average upload frequency. Use round numbers.",
+  },
+  {
+    id: '6e018d7f-2440-47d8-8a92-c03c133bd386',
+    title: 'DigiBooks Inc.',
+    industry: 'media',
+    case_type: 'gtm',
+    difficulty: 'easy',
+    source: 'CasePad starter',
+    problem_statement:
+      "DigiBooks is a 2-year-old digital book startup that has built a strong content library but struggles with user acquisition. They have $5M to spend on go-to-market in the next 12 months. How would you allocate it across channels (paid social, content marketing, partnerships, B2B/library deals) and what would you test first?",
+  },
+  {
+    id: '00b44543-2b35-4f77-b6c2-a1fe3c2da09f',
+    title: 'InvestCo',
+    industry: 'finance',
+    case_type: 'profitability',
+    difficulty: 'medium',
+    source: 'CasePad starter',
+    problem_statement:
+      "InvestCo is a US-based investment firm with $2B AUM, currently focused on equities and bonds. The CEO is considering expanding into precious metals (gold, silver, platinum). Profits have been flat for 3 years. Should they enter? Walk me through how you'd evaluate this — market sizing, competitive intensity, capability fit, profitability impact.",
+  },
+  {
+    id: '122ddcb6-5843-4b97-b359-aa048c7e54a7',
+    title: 'Match My Doll Clothes Expansion',
+    industry: 'retail',
+    case_type: 'market_entry',
+    difficulty: 'medium',
+    source: 'CasePad starter',
+    problem_statement:
+      "Match My Doll Clothes (MMDC) makes premium clothing for collector dolls in the US, with $20M revenue and 12% growth. The CEO wants to expand the product line — adding accessories, dollhouse furniture, or themed playsets. Each requires different capability investments. Help her decide which line to enter first and why.",
+  },
+];
+
 export const TUTORIAL_MENU: TutorialCase[] = [
   {
     id: '9af07340-c417-4d09-bb9d-9a88a01190f7',
