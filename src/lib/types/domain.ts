@@ -43,10 +43,26 @@ export interface CaseRow {
   updated_at: string;
 }
 
+/**
+ * Per-turn playbook citations attached to interviewer turns.
+ * Populated by `/api/chat` when the playbook retriever returns matches.
+ *
+ * §7.1 Trust UX — surfaced under Ash's turns as a quiet "see why" row,
+ * grounding the AI's verdict in observed real-MBB practice. Optional and
+ * additive: legacy transcripts without this field continue to render
+ * unchanged.
+ */
+export interface InterviewerCitation {
+  section: string;
+  sourceUrl?: string;
+  text: string;
+}
+
 export interface ChatMessage {
   role: 'user' | 'interviewer';
   content: string;
   timestamp: string;
+  citations?: InterviewerCitation[];
 }
 
 export interface CheatSheetState {

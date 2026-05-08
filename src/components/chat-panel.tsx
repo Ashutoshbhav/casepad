@@ -12,7 +12,15 @@ import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
 // for original thinking; both ends MUST read from the same source.
 import { FIRST_TURN_SUGGESTIONS } from '@/lib/canned-templates';
 
-type Msg = { role: 'user' | 'interviewer'; content: string };
+// §7.1 Trust UX — interviewer turns may carry optional `citations` from the
+// playbook RAG retriever. Field is OPTIONAL and additive: legacy transcripts
+// (no field) and user turns continue to render exactly as before.
+type Citation = { section: string; sourceUrl?: string; text: string };
+type Msg = {
+  role: 'user' | 'interviewer';
+  content: string;
+  citations?: Citation[];
+};
 
 export function ChatPanel({
   sessionId,
@@ -127,6 +135,57 @@ export function ChatPanel({
       console.warn('[chat-panel] setAiState(anticipating) failed:', e);
     }
   }, [input, streaming]);
+
+  // §7.1 Trust UX — quiet "see why" footnote rendered under interviewer
+  // turns that carry playbook citations. Caps at 3 entries; missing sourceUrl
+  // renders the section label as plain text (no link). Whisper-quiet styling
+  // (~11px, muted, hairline top rule) so it never dominates the message.
+  const CitationsRow = ({ citations }: { citations: Citation[] }) => {
+    if (!citations || citations.length === 0) return null;
+    const shown = citations.slice(0, 3);
+    return (
+      <div
+        className="mt-1.5 pt-1.5 text-[11px] leading-[1.4] flex flex-wrap items-center gap-x-1.5 gap-y-1"
+        style={{
+          borderTop: '1px solid var(--color-border)',
+          color: 'var(--color-text-muted)',
+        }}
+      >
+        <span
+          className="font-mono uppercase tracking-[0.14em] text-[10px]"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          Real EMs probe like this
+        </span>
+        {shown.map((c, idx) => {
+          const sep = idx > 0 ? <span aria-hidden="true">·</span> : <span aria-hidden="true">·</span>;
+          const label = c.section || 'source';
+          return (
+            <span key={`${label}-${idx}`} className="inline-flex items-center gap-1">
+              {sep}
+              {c.sourceUrl ? (
+                <a
+                  href={c.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Source: ${label} (opens in new tab)`}
+                  title={c.text}
+                  className="underline decoration-dotted underline-offset-2 hover:opacity-90"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  §{label} <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <span title={c.text} style={{ color: 'var(--color-text-secondary)' }}>
+                  §{label}
+                </span>
+              )}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
 
   const lastMsg = messages[messages.length - 1];
   const hasHangingUserTurn =
@@ -386,6 +445,9 @@ export function ChatPanel({
                   ) : (
                     <span style={{ color: 'var(--color-text-muted)' }}>…</span>
                   )}
+                  {m.citations && m.citations.length > 0 && (
+                    <CitationsRow citations={m.citations} />
+                  )}
                 </div>
               </div>
             );
@@ -410,6 +472,9 @@ export function ChatPanel({
                   )
                 ) : (
                   <span style={{ color: 'var(--color-text-muted)' }}>…</span>
+                )}
+                {m.citations && m.citations.length > 0 && (
+                  <CitationsRow citations={m.citations} />
                 )}
               </div>
             </div>

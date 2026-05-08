@@ -64,7 +64,14 @@ export default async function SolvePage({
   if (!session || !caseRow) redirect('/cases');
 
   const initialMessages = ((session.transcript as any[]) ?? []).map((t) => ({
-    role: t.role, content: t.content,
+    role: t.role,
+    content: t.content,
+    // §7.1 Trust UX — forward optional citations so chat-panel can render
+    // the "see why" footnote on Ash's resumed turns. Drops cleanly for
+    // user turns and for legacy assistant turns that pre-date this field.
+    ...(Array.isArray(t.citations) && t.citations.length > 0
+      ? { citations: t.citations }
+      : {}),
   }));
   const initialCs = cs ?? {
     framework: null, hypothesis: null, key_numbers: [],

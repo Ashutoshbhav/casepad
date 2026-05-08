@@ -12,7 +12,7 @@ import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '
 import { critiqueResponse, regenHintForCritic, shouldCritique } from '@/lib/groq/critic';
 import { staticChatTurnFallback } from '@/lib/groq/static-fallbacks';
 import { withRetry } from '@/lib/supabase/with-retry';
-import { retrievePlaybookFindings, formatFindingsForPrompt } from '@/lib/groq/playbook-retriever';
+import { retrievePlaybookFindings, formatFindingsForPrompt, type RetrievedFinding } from '@/lib/groq/playbook-retriever';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -132,6 +132,12 @@ export async function POST(req: NextRequest) {
   // the system prompt so Ash's response is grounded in observed real-MBB
   // interviewer practice. retrievePlaybookFindings is FAIL-OPEN — returns []
   // on any internal error, so a retriever bug can never block the chat call.
+  //
+  // §7.1 Trust UX: ALSO capture findings here so we can persist them as
+  // `citations` on the interviewer turn. The wire stream stays plain text
+  // (no breaking change to the streaming contract) — citations live in
+  // Postgres only and are read on the next /solve render.
+  let turnFindings: RetrievedFinding[] = [];
   try {
     const recentText = withUser
       .slice(-4)
@@ -139,6 +145,7 @@ export async function POST(req: NextRequest) {
       .join(' ');
     const queryText = `${safeUserTurn} ${recentText}`.slice(-1200);
     const findings = retrievePlaybookFindings(queryText, 3);
+    turnFindings = findings;
     if (findings.length > 0 && messages.length > 0 && messages[0].role === 'system') {
       const block = formatFindingsForPrompt(findings);
       if (block) {
@@ -150,6 +157,7 @@ export async function POST(req: NextRequest) {
     }
   } catch {
     // fall through — playbook retrieval is an enhancement, not a requirement
+    turnFindings = [];
   }
 
   const encoder = new TextEncoder();
@@ -293,10 +301,27 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const finalTranscript = [
-        ...withUser,
-        { role: 'interviewer', content: full, timestamp: new Date().toISOString() },
-      ];
+      // §7.1 Trust UX — surface the playbook findings that grounded Ash's
+      // turn as `citations`. Trim text to 200 chars (display preview only;
+      // sourceUrl carries the full link). Field is optional, so legacy
+      // transcripts without it round-trip cleanly.
+      const turnCitations = turnFindings.map((f) => ({
+        section: f.section,
+        sourceUrl: f.sourceUrl,
+        text: f.text.slice(0, 200),
+      }));
+      const interviewerTurn: {
+        role: 'interviewer';
+        content: string;
+        timestamp: string;
+        citations?: { section: string; sourceUrl?: string; text: string }[];
+      } = {
+        role: 'interviewer',
+        content: full,
+        timestamp: new Date().toISOString(),
+      };
+      if (turnCitations.length > 0) interviewerTurn.citations = turnCitations;
+      const finalTranscript = [...withUser, interviewerTurn];
 
       // P0-2: retry transcript save with exponential backoff; on residual
       // failure log loudly so we have telemetry. Never throw — controller
