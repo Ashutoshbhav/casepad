@@ -1,3 +1,14 @@
 {
-  "regions": ["bom1"]
+  "regions": ["bom1"],
+  "functions": {
+    "src/app/api/chat/route.ts": { "maxDuration": 60 },
+    "src/app/api/evaluate/route.ts": { "maxDuration": 60 },
+    "src/app/api/cheatsheet/route.ts": { "maxDuration": 30 },
+    "src/app/api/crammer/route.ts": { "maxDuration": 60 },
+    "src/app/api/ask-cheatsheet/route.ts": { "maxDuration": 60 },
+    "src/app/api/issue-tree/route.ts": { "maxDuration": 30 },
+    "src/app/api/voice/transcribe/route.ts": { "maxDuration": 30 },
+    "src/app/api/company-pack/route.ts": { "maxDuration": 60 },
+    "src/app/api/behavioral-feedback/route.ts": { "maxDuration": 30 }
+  }
 }

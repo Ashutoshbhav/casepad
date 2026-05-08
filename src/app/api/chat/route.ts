@@ -10,6 +10,8 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isCannedTemplate } from '@/lib/canned-templates';
 import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '@/lib/groq/guardrails';
 import { critiqueResponse, regenHintForCritic, shouldCritique } from '@/lib/groq/critic';
+import { staticChatTurnFallback } from '@/lib/groq/static-fallbacks';
+import { withRetry } from '@/lib/supabase/with-retry';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -64,6 +66,33 @@ export async function POST(req: NextRequest) {
   if (cErr || !caseRow) return new Response('case not found', { status: 404 });
 
   const transcriptIn = (session.transcript as { role: string; content: string; timestamp: string }[]) ?? [];
+
+  // P0-4: idempotency guard. If the most recent user turn has the SAME content
+  // as the incoming turn AND there's already an interviewer response after it,
+  // this is a flaky-network retry (common on mobile). Replay the prior
+  // interviewer response instead of re-calling the LLM + duplicating the turn.
+  // Window: only the most-recent user turn — if user genuinely repeats themselves
+  // 5 turns later, that's a real turn.
+  const lastTwoTurns = transcriptIn.slice(-2);
+  const isDuplicateRetry =
+    lastTwoTurns.length === 2 &&
+    lastTwoTurns[0].role === 'user' &&
+    lastTwoTurns[0].content === safeUserTurn &&
+    lastTwoTurns[1].role === 'interviewer';
+  if (isDuplicateRetry) {
+    const replayContent = lastTwoTurns[1].content;
+    const encoderReplay = new TextEncoder();
+    const replayStream = new ReadableStream({
+      start(c) {
+        c.enqueue(encoderReplay.encode(replayContent));
+        c.close();
+      },
+    });
+    return new Response(replayStream, {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8', 'X-CasePad-Replay': '1' },
+    });
+  }
+
   const withUser = [
     ...transcriptIn,
     { role: 'user', content: safeUserTurn, timestamp: new Date().toISOString() },
@@ -181,8 +210,14 @@ export async function POST(req: NextRequest) {
 
           controller.enqueue(encoder.encode(full));
         } catch (err) {
+          // P0-3: Never poison the transcript with "[Service is busy...]" text.
+          // When all 4 LLM providers fail, ship a static-fallback Ash probe
+          // that keeps the conversation valid. The candidate sees a real probe
+          // and the next turn's LLM context is clean — not corrupted by an
+          // error string masquerading as the prior interviewer turn.
           errored = true;
-          full = `\n\n[Service is busy — please retry in a few seconds. ${(err as Error).message.slice(0, 80)}]`;
+          console.warn(`[chat] all providers failed: ${(err as Error).message.slice(0, 120)}; using static fallback`);
+          full = staticChatTurnFallback(transcriptIn.length);
           controller.enqueue(encoder.encode(full));
         }
       } else {
@@ -199,10 +234,23 @@ export async function POST(req: NextRequest) {
             controller.enqueue(encoder.encode(delta));
           }
         } catch (err) {
+          // P0-3: same static-fallback logic as gate-mode error path.
+          // Never persist "[Service is busy...]" text — ship a real probe
+          // and write a clean transcript so the next turn's context is sound.
           errored = true;
-          const msg = `\n\n[Service is busy — please retry in a few seconds. ${(err as Error).message.slice(0, 80)}]`;
-          controller.enqueue(encoder.encode(msg));
-          full = full ? full + msg : msg;
+          console.warn(`[chat] all providers failed (monitor): ${(err as Error).message.slice(0, 120)}; using static fallback`);
+          const fallback = staticChatTurnFallback(transcriptIn.length);
+          if (full) {
+            // Mid-stream failure: prefer the partial response over fallback if non-trivial,
+            // but mark the failure with a sentinel that downstream can strip if needed.
+            // For simplicity, replace with fallback unless we got a meaningful chunk.
+            if (full.trim().length < 10) {
+              full = fallback;
+            }
+          } else {
+            full = fallback;
+          }
+          controller.enqueue(encoder.encode(full));
         }
         if (guardrailMode === 'monitor' && !errored) {
           const verdict = checkResponse(full);
@@ -216,7 +264,20 @@ export async function POST(req: NextRequest) {
         ...withUser,
         { role: 'interviewer', content: full, timestamp: new Date().toISOString() },
       ];
-      await supabase.from('sessions').update({ transcript: finalTranscript }).eq('id', sessionId);
+
+      // P0-2: retry transcript save with exponential backoff; on residual
+      // failure log loudly so we have telemetry. Never throw — controller
+      // must close cleanly so the client doesn't hang.
+      try {
+        const { error: saveErr } = await withRetry(() =>
+          supabase.from('sessions').update({ transcript: finalTranscript }).eq('id', sessionId)
+        );
+        if (saveErr) {
+          console.error(`[chat] transcript save FAILED after retries for session ${sessionId}: ${JSON.stringify(saveErr).slice(0, 200)}`);
+        }
+      } catch (saveThrow) {
+        console.error(`[chat] transcript save THREW for session ${sessionId}: ${(saveThrow as Error).message.slice(0, 200)}`);
+      }
       controller.close();
     },
   });

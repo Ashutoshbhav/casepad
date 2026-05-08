@@ -2,6 +2,7 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { generateOpener } from '@/lib/groq/opener';
+import { withRetry } from '@/lib/supabase/with-retry';
 
 export async function startSession(caseId: string) {
   if (!caseId || typeof caseId !== 'string' || caseId.length > 100) {
@@ -100,18 +101,32 @@ export async function startSession(caseId: string) {
   // Tag the session with the user's preferred track so the track-aware
   // evaluator scores it on the right rubric.
   const track = user.user_metadata?.preferred_track || 'consulting';
-  const { data, error } = await supabase
-    .from('sessions')
-    .insert({
-      user_id: user.id,
-      case_id: caseId,
-      transcript: [openerTurn],
-      track,
-    })
-    .select('id')
-    .single();
+  // P0-6: retry the session insert. Without this, a transient Supabase 503 at
+  // session-creation time would prevent the user from starting a case at all —
+  // a hard NSM blocker. withRetry handles 5xx/429/network with exponential
+  // backoff; on residual failure we throw so SolvePage's catch can redirect.
+  const { data, error } = await withRetry(() =>
+    supabase
+      .from('sessions')
+      .insert({
+        user_id: user.id,
+        case_id: caseId,
+        transcript: [openerTurn],
+        track,
+      })
+      .select('id')
+      .single()
+  );
   if (error || !data) throw new Error(error?.message || 'failed to start session');
 
-  await supabase.from('cheat_sheets').insert({ session_id: data.id });
+  // Cheat sheet insert is non-blocking — if it fails, the cheatsheet panel
+  // self-heals on the next turn (regenerated each turn). Wrap in withRetry +
+  // catch so a failure here can never block session start.
+  try {
+    await withRetry(() => supabase.from('cheat_sheets').insert({ session_id: data.id }));
+  } catch (csErr) {
+    console.warn(`[start-session] cheat_sheet insert failed (non-blocking): ${(csErr as Error).message}`);
+  }
+
   redirect(`/solve/${caseId}?session=${data.id}`);
 }

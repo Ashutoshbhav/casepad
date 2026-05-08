@@ -119,3 +119,24 @@ export function staticWalkthroughFallback(): any {
     fallback_used: true,
   };
 }
+
+// ---------- Chat turn ----------
+// Used when ALL 4 LLM providers fail mid-conversation. Returns a plausible
+// Ash probe that keeps the case interview moving instead of poisoning the
+// transcript with "[Service is busy...]" error text. Picks a probe matching
+// where the candidate is in the case (turn count heuristic). Always usable.
+export function staticChatTurnFallback(turnCount: number): string {
+  if (turnCount <= 1) {
+    return "Walk me through how you'd structure this case.";
+  }
+  if (turnCount <= 3) {
+    return "What's your hypothesis so far — and why?";
+  }
+  if (turnCount <= 6) {
+    return "Where would you start digging — and what number would tell you you're right?";
+  }
+  if (turnCount <= 10) {
+    return "Pause — if you had to give the CEO your answer in 30 seconds, what would it be?";
+  }
+  return "What's the one number that would change your recommendation?";
+}
