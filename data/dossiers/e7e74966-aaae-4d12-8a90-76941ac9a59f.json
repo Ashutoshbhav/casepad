@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The retail industry for beverages is highly competitive, with a mix of large and small players competing for market share. The chilled juice segment is particularly competitive, with a high level of price sensitivity and a strong emphasis on brand recognition and loyalty. In India, the market for chilled juices is growing rapidly, driven by increasing demand from health-conscious consumers and a rising middle class. The industry is subject to various regulations, including food safety and labeling requirements.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for juice manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size for chilled juices in India",
+      "value": "Rs 500-700 crore",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of major players in the Indian juice market",
+      "value": "5-7",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average customer lifetime value for juice brands",
+      "value": "Rs 500-1000",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Growth rate for the Indian juice market",
+      "value": "10-15% per annum",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Typical advertising spend as a percentage of sales for juice manufacturers",
+      "value": "5-10%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average price per liter for chilled juices in India",
+      "value": "Rs 50-100",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Market share of the top three players in the Indian juice market",
+      "value": "60-80%",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the revenue contribution of the chilled juice segment to Zephyr's overall sales",
+      "formula": "Revenue contribution = (Chilled juice sales / Total sales) x 100",
+      "typical_answer_range": "5-10%"
+    },
+    {
+      "step": "Estimate the potential cost savings from reformulating the chilled juice products",
+      "formula": "Cost savings = (Current cost - New cost) x Volume",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Calculate the potential loss of sales from divesting the chilled juice business",
+      "formula": "Loss of sales = (Chilled juice sales / Total sales) x Synergy factor",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Estimate the potential increase in profitability from improving the manufacturing efficiency of the chilled juice products",
+      "formula": "Profitability increase = (New profit - Current profit) / Current profit",
+      "typical_answer_range": "5-15%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the potential synergies between the chilled juice and other products",
+    "Underestimating the competitive intensity of the Indian juice market",
+    "Failing to consider the potential impact of divesting the chilled juice business on Zephyr's overall brand reputation",
+    "Not adequately assessing the potential cost savings from reformulating the chilled juice products",
+    "Ignoring the potential risks and challenges associated with divesting a business unit"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian juice market?",
+      "a": "The Indian juice market is driven by increasing demand from health-conscious consumers, a rising middle class, and a growing preference for premium and niche products.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the competitive landscape of the Indian juice market impact Zephyr's business?",
+      "a": "The competitive landscape of the Indian juice market is highly intense, with a large number of players competing for market share. This competition can impact Zephyr's pricing power, profitability, and market share.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with divesting the chilled juice business?",
+      "a": "The potential risks and challenges associated with divesting the chilled juice business include loss of sales, damage to brand reputation, and potential disruption to the remaining business units.",
+      "category": "framework"
+    },
+    {
+      "q": "How can Zephyr improve the manufacturing efficiency of its chilled juice products?",
+      "a": "Zephyr can improve the manufacturing efficiency of its chilled juice products by implementing lean manufacturing techniques, investing in automation and technology, and optimizing its supply chain and logistics.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential benefits of reformulating the chilled juice products?",
+      "a": "The potential benefits of reformulating the chilled juice products include cost savings, improved profitability, and enhanced product quality and safety.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Zephyr assess the potential impact of divesting the chilled juice business on its overall brand reputation?",
+      "a": "Zephyr can assess the potential impact of divesting the chilled juice business on its overall brand reputation by conducting market research, analyzing customer feedback, and evaluating the potential risks and challenges associated with divesting a business unit.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key factors that influence consumer purchasing decisions in the Indian juice market?",
+      "a": "The key factors that influence consumer purchasing decisions in the Indian juice market include price, quality, brand reputation, and product variety.",
+      "category": "industry"
+    },
+    {
+      "q": "How can Zephyr improve its competitiveness in the Indian juice market?",
+      "a": "Zephyr can improve its competitiveness in the Indian juice market by investing in marketing and advertising, expanding its product portfolio, and enhancing its distribution and logistics capabilities.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential opportunities and challenges associated with expanding Zephyr's product portfolio?",
+      "a": "The potential opportunities associated with expanding Zephyr's product portfolio include increased revenue, improved profitability, and enhanced competitiveness. The potential challenges include increased complexity, higher costs, and potential cannibalization of existing products.",
+      "category": "framework"
+    },
+    {
+      "q": "How can Zephyr assess the potential impact of expanding its product portfolio on its overall business?",
+      "a": "Zephyr can assess the potential impact of expanding its product portfolio on its overall business by conducting market research, analyzing customer feedback, and evaluating the potential risks and challenges associated with expanding a product portfolio.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the potential synergies between the chilled juice and other products",
+    "Assess the competitive intensity of the Indian juice market and its impact on Zephyr's business",
+    "Evaluate the potential risks and challenges associated with divesting a business unit",
+    "Analyze the potential benefits of reformulating the chilled juice products",
+    "Consider the potential impact of divesting the chilled juice business on Zephyr's overall brand reputation"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Market research reports from Euromonitor and Nielsen",
+    "Industry benchmarks and surveys from the Indian Beverage Association",
+    "News articles and publications from The Economic Times and Business Standard"
+  ],
+  "case_type_notes": "This case requires the application of strategic thinking and analytical skills to evaluate the potential benefits and risks of divesting a business unit. The candidate should be able to analyze the competitive landscape, assess the potential synergies between products, and evaluate the potential impact on the overall business.",
+  "enriched_at": "2026-05-08T11:46:19.831Z"
+}

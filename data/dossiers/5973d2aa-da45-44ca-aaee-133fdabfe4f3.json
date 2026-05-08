@@ -1,0 +1,146 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry, particularly the beverage sector, is characterized by high competition, low margins, and a strong focus on branding and marketing. The chilled juice market, a subset of this industry, is dominated by a few large players and is highly price-sensitive, with consumers, especially mothers with young children, seeking reliable and affordable products. Regulatory environments, such as food safety standards and labeling requirements, also play a crucial role in this industry. Typical customer behavior includes loyalty to brands that offer quality, convenience, and value.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for FMCG companies",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Global chilled beverage market size",
+      "value": "$4-6 billion",
+      "source_hint": "Market research reports"
+    },
+    {
+      "metric": "Market share of leading players in the chilled juice market",
+      "value": "40-60%",
+      "source_hint": "Company filings and market research"
+    },
+    {
+      "metric": "Cost of pear/peach juice vs. orange juice",
+      "value": "Similar, with flavorings costing 2-3 times more",
+      "source_hint": "Agricultural commodity prices"
+    },
+    {
+      "metric": "Average customer retention rate in FMCG",
+      "value": "70-80%",
+      "source_hint": "Industry benchmarks"
+    },
+    {
+      "metric": "Growth rate of the chilled beverage market",
+      "value": "GDP growth rate or slightly higher",
+      "source_hint": "Economic forecasts"
+    },
+    {
+      "metric": "Typical advertising spend as a percentage of revenue in FMCG",
+      "value": "5-10%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Average price elasticity of demand for chilled juices",
+      "value": "-1.5 to -2.5",
+      "source_hint": "Economic studies"
+    },
+    {
+      "metric": "Number of major players in the global chilled juice market",
+      "value": "5-10",
+      "source_hint": "Market research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the potential cost savings from reformulating Zephyr's products",
+      "formula": "Current cost - New cost",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Determine the impact of a price increase on demand",
+      "formula": "Price elasticity of demand * Percentage price change",
+      "typical_answer_range": "-1.5% to -2.5%"
+    },
+    {
+      "step": "Estimate the valuation of the chilled juice business based on industry multiples",
+      "formula": "EBITDA * Industry multiple",
+      "typical_answer_range": "8-12 times EBITDA"
+    },
+    {
+      "step": "Calculate the potential revenue loss from exiting the chilled juice market",
+      "formula": "Current revenue * Market share",
+      "typical_answer_range": "10-20% of current revenue"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the difficulty in repurposing the California plant",
+    "Underestimating the impact of competitor advertising and promotions",
+    "Assuming that the market will pay a premium for Zephyr's unique ingredients without evidence",
+    "Failing to consider the potential synergies between the chilled juice business and other Zephyr products",
+    "Not evaluating the feasibility of finding a buyer for the chilled juice business or all juice businesses"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in the FMCG industry that could impact Zephyr's business?",
+      "a": "Sustainability, health and wellness, digitalization, and changing consumer preferences are key trends.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the regulatory environment affect the chilled juice market?",
+      "a": "Regulations around food safety, labeling, and advertising impact the market.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical customer acquisition costs in the FMCG industry?",
+      "a": "Customer acquisition costs can range from 5-20% of revenue.",
+      "category": "industry"
+    },
+    {
+      "q": "Can you estimate the potential cost savings from reformulating Zephyr's products?",
+      "a": "Cost savings could range from 5-15%.",
+      "category": "math"
+    },
+    {
+      "q": "How might Zephyr's competitors react to a potential sale of the chilled juice business?",
+      "a": "Competitors might attempt to acquire the business or increase their market share through promotions.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the implications of the highly concentrated market structure on Zephyr's business?",
+      "a": "A concentrated market can lead to higher barriers to entry and more competitive pricing.",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the use of more expensive ingredients impact Zephyr's cost structure?",
+      "a": "The use of pear/peach juice and exotic flavorings increases costs compared to competitors using citrus juices.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and benefits of divesting the chilled juice business?",
+      "a": "Risks include loss of synergies and revenue, while benefits include potential cost savings and focus on more profitable businesses.",
+      "category": "framework"
+    },
+    {
+      "q": "Can you evaluate the feasibility of finding a buyer for the chilled juice business or all juice businesses?",
+      "a": "Feasibility depends on market conditions, the attractiveness of Zephyr's businesses, and the ability to find a suitable buyer.",
+      "category": "framework"
+    },
+    {
+      "q": "How might Zephyr's brand reputation and customer loyalty impact the potential sale of the chilled juice business?",
+      "a": "A strong brand reputation and customer loyalty could increase the attractiveness of the business to potential buyers.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the impact of each strategic option on Zephyr's overall profitability and competitiveness",
+    "Evaluate the potential for cost reduction and reformulation to improve profitability",
+    "Assess the feasibility and potential benefits of divesting the chilled juice business or all juice businesses"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports from Euromonitor or Nielsen",
+    "Agricultural commodity price data from the US Department of Agriculture",
+    "Economic forecasts from the International Monetary Fund or the World Bank"
+  ],
+  "case_type_notes": "This operations case requires the candidate to analyze the strategic options for Zephyr's chilled juice business, considering factors such as cost structure, market competitiveness, and potential for reformulation and divestment. The candidate must demonstrate the ability to evaluate complex business problems, identify key issues, and develop a well-supported recommendation.",
+  "enriched_at": "2026-05-08T11:38:06.278Z"
+}

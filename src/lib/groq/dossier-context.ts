@@ -11,6 +11,33 @@
 //   - Renders compact summary at session start (top of prompt) so the AI
 //     has the context THROUGHOUT the case, not just on the turns where
 //     candidate explicitly asks domain questions
+//
+// 2026-05-08 v2: storage moved from Postgres JSONB to filesystem
+// (data/dossiers/{case_id}.json) — no DB migration required. loadDossier()
+// reads on-demand at chat-route entry; ~2-5ms per session start.
+
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const DOSSIER_DIR = path.resolve(process.cwd(), 'data', 'dossiers');
+
+/**
+ * Load a case's dossier from the filesystem.
+ * Returns null if the file doesn't exist (case not yet enriched).
+ * Fails open: any read/parse error returns null, never throws.
+ */
+export async function loadDossier(caseId: string): Promise<any | null> {
+  if (!caseId || typeof caseId !== 'string') return null;
+  // Sanitize: only UUID-shaped chars allowed in filename
+  if (!/^[a-zA-Z0-9_-]+$/.test(caseId)) return null;
+  try {
+    const fp = path.join(DOSSIER_DIR, `${caseId}.json`);
+    const txt = await readFile(fp, 'utf8');
+    return JSON.parse(txt);
+  } catch {
+    return null;
+  }
+}
 
 export interface CaseDossier {
   schema_version?: string;

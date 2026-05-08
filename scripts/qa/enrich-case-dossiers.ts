@@ -1,27 +1,26 @@
 // scripts/qa/enrich-case-dossiers.ts
 //
 // Stream 4 of AI training plan (2026-05-08). Enriches each case with a
-// pre-computed knowledge dossier injected into the chat system prompt at
-// session start so the AI has deep per-case grounding.
+// pre-computed knowledge dossier so the AI has deep per-case grounding.
+//
+// 2026-05-08 v2: storage moved from Postgres JSONB column to filesystem
+// (data/dossiers/{case_id}.json). Reasons:
+//   - No DATABASE_URL configured → cannot apply DDL programmatically
+//   - File-storage is reviewable in PRs (catches enrichment quality drift)
+//   - Single-pass cold read at chat-route start is <5ms for ~5KB JSON files
+//   - Trivial to swap to JSONB column later (just change the storage layer)
 //
 // Usage:
-//   # Apply migration first via Supabase Studio:
-//   #   supabase/migrations/0012_dossier.sql
-//   #
-//   # Then enrich:
 //   npx tsx --env-file=.env.local scripts/qa/enrich-case-dossiers.ts \
 //     [--limit=10] [--starter] [--force] [--ids=id1,id2,...]
-//
-// Per docs/research/PER-CASE-KNOWLEDGE-DEPTH.md:
-//   - Pattern A (case dossier) = highest ROI for closing question buckets
-//     b/c/d ("what's typical margin?", "who else is in this market?",
-//     "real-world numbers")
-//   - Schema follows Khanmigo's per-content metadata pattern
-//   - Cost: ~97 min total on Groq free tier for 1,165 cases ($0)
 
 import { createClient } from '@supabase/supabase-js';
+import { mkdir, writeFile, readFile, access } from 'node:fs/promises';
+import path from 'node:path';
 import { completeChat } from '../../src/lib/llm-router';
 import { STARTER_CASE_IDS } from '../../src/lib/starter-cases';
+
+const DOSSIER_DIR = path.resolve(process.cwd(), 'data', 'dossiers');
 
 const SCHEMA_VERSION = '1.0.0';
 
@@ -61,7 +60,23 @@ interface CaseRow {
   ideal_structure: any;
   interviewer_notes: any[] | null;
   industry: string | null;
-  dossier: any | null;
+}
+
+async function readExistingDossier(caseId: string): Promise<any | null> {
+  const fp = path.join(DOSSIER_DIR, `${caseId}.json`);
+  try {
+    await access(fp);
+    const txt = await readFile(fp, 'utf8');
+    return JSON.parse(txt);
+  } catch {
+    return null;
+  }
+}
+
+async function writeDossier(caseId: string, dossier: any): Promise<void> {
+  await mkdir(DOSSIER_DIR, { recursive: true });
+  const fp = path.join(DOSSIER_DIR, `${caseId}.json`);
+  await writeFile(fp, JSON.stringify(dossier, null, 2), 'utf8');
 }
 
 async function enrichOne(c: CaseRow): Promise<{ ok: boolean; dossier?: any; error?: string }> {
@@ -124,17 +139,13 @@ async function main() {
   // Decide which cases to enrich
   let query = supabase
     .from('cases')
-    .select('id, title, problem_statement, case_type, ideal_structure, interviewer_notes, industry, dossier');
+    .select('id, title, problem_statement, case_type, ideal_structure, interviewer_notes, industry');
   if (starter) {
     query = query.in('id', STARTER_CASE_IDS);
   } else if (ids.length > 0) {
     query = query.in('id', ids);
   } else {
     query = query.limit(limit);
-  }
-  if (!force) {
-    // Skip cases that already have a dossier with the current schema_version
-    // (we'll filter client-side since Supabase doesn't expose JSONB->>'x' WHERE on REST without RPC).
   }
 
   const { data: cases, error } = await query;
@@ -143,11 +154,18 @@ async function main() {
     process.exit(1);
   }
 
-  const todo = cases.filter((c: any) => {
-    if (force) return true;
-    if (!c.dossier) return true;
-    return c.dossier.schema_version !== SCHEMA_VERSION;
-  });
+  // Filter out cases that already have an up-to-date dossier on disk
+  const todo: CaseRow[] = [];
+  for (const c of cases as CaseRow[]) {
+    if (force) {
+      todo.push(c);
+      continue;
+    }
+    const existing = await readExistingDossier(c.id);
+    if (!existing || existing.schema_version !== SCHEMA_VERSION) {
+      todo.push(c);
+    }
+  }
 
   console.log(`[enrich] ${todo.length} cases to enrich (skipping ${cases.length - todo.length} already up-to-date)`);
 
@@ -159,17 +177,14 @@ async function main() {
     process.stdout.write(`[${i + 1}/${todo.length}] ${c.title.slice(0, 50).padEnd(50)} `);
     const r = await enrichOne(c);
     if (r.ok) {
-      const { error: writeErr } = await supabase
-        .from('cases')
-        .update({ dossier: r.dossier })
-        .eq('id', c.id);
-      if (writeErr) {
-        console.log(`✗ DB write failed: ${writeErr.message}`);
-        failed++;
-      } else {
+      try {
+        await writeDossier(c.id, r.dossier);
         const dur = Date.now() - startMs;
-        console.log(`✓ enriched in ${(dur / 1000).toFixed(1)}s`);
+        console.log(`✓ enriched in ${(dur / 1000).toFixed(1)}s → data/dossiers/${c.id}.json`);
         success++;
+      } catch (writeErr) {
+        console.log(`✗ file write failed: ${(writeErr as Error).message}`);
+        failed++;
       }
     } else {
       console.log(`✗ ${r.error}`);

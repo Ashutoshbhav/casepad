@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with key players like Hindustan Unilever, Procter & Gamble, and ITC. The industry is characterized by low margins, high volumes, and a strong focus on brand building and distribution. Regulatory bodies like the Food Safety and Standards Authority of India (FSSAI) and the Advertising Standards Council of India (ASCI) play a crucial role in shaping the industry. Typical customer behavior in the FMCG sector is driven by factors like price, quality, and convenience.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian FMCG industry",
+      "value": "₹4-5 trillion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of FMCG companies in India",
+      "value": "500-700",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Customer retention rate for FMCG brands in India",
+      "value": "60-80%",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Average customer acquisition cost for FMCG brands in India",
+      "value": "₹50-100",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Typical advertising spend as a percentage of revenue for FMCG companies in India",
+      "value": "5-10%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average product lifecycle for FMCG products in India",
+      "value": "2-5 years",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of distribution channels for FMCG products in India",
+      "value": "5-10",
+      "source_hint": "company directories"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the brand awareness gap between ABC and Bell",
+      "formula": "Awareness of Bell - Awareness of ABC",
+      "typical_answer_range": "10-30%"
+    },
+    {
+      "step": "Calculating the quality perception gap between ABC and Bell",
+      "formula": "Perception of Bell - Perception of ABC",
+      "typical_answer_range": "5-20%"
+    },
+    {
+      "step": "Calculating the customer retention rate for ABC",
+      "formula": "Number of retained customers / Total number of customers",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Calculating the return on investment (ROI) for advertising spend",
+      "formula": "Incremental revenue / Advertising spend",
+      "typical_answer_range": "100-300%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the competitive landscape and market trends",
+    "Overemphasizing brand awareness without focusing on quality perception",
+    "Not calculating the ROI for advertising spend",
+    "Not considering the customer retention rate and its impact on revenue",
+    "Not analyzing the distribution channels and their impact on sales",
+    "Not considering the product lifecycle and its impact on marketing strategy",
+    "Not using real-world benchmarks and industry reports to inform decisions"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the FMCG industry in India?",
+      "a": "The FMCG industry in India is shaped by trends like increasing demand for health and wellness products, growing e-commerce penetration, and rising competition from local and international players.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the brand awareness and perception of quality vary across different customer segments?",
+      "a": "Brand awareness and perception of quality can vary significantly across different customer segments, with factors like age, income, and education level playing a crucial role.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical marketing strategies used by FMCG companies in India?",
+      "a": "FMCG companies in India typically use a mix of advertising, promotions, and distribution strategies to reach their target audience.",
+      "category": "framework"
+    },
+    {
+      "q": "How can ABC improve its brand awareness and perception of quality?",
+      "a": "ABC can improve its brand awareness and perception of quality by investing in targeted advertising, promoting its products through joint marketing with retailers, and offering product trials to customers.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for measuring the success of an FMCG brand in India?",
+      "a": "Key KPIs for measuring the success of an FMCG brand in India include sales revenue, market share, customer retention rate, and return on investment (ROI) for advertising spend.",
+      "category": "math"
+    },
+    {
+      "q": "How can ABC use data and analytics to inform its marketing strategy?",
+      "a": "ABC can use data and analytics to inform its marketing strategy by analyzing customer behavior, tracking market trends, and measuring the effectiveness of its marketing campaigns.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with launching a new FMCG product in India?",
+      "a": "Potential risks and challenges associated with launching a new FMCG product in India include intense competition, regulatory hurdles, and supply chain complexities.",
+      "category": "industry"
+    },
+    {
+      "q": "How can ABC measure the effectiveness of its marketing campaigns?",
+      "a": "ABC can measure the effectiveness of its marketing campaigns by tracking metrics like sales lift, customer acquisition cost, and return on investment (ROI).",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Use a customer-centric approach to understand the needs and preferences of the target audience",
+    "Analyze the competitive landscape and market trends to identify opportunities and threats",
+    "Develop a multi-channel marketing strategy to reach the target audience",
+    "Focus on building a strong brand identity and creating engaging customer experiences"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Market research studies and surveys",
+    "Industry directories and databases",
+    "News articles and publications"
+  ],
+  "case_type_notes": "This case requires the application of marketing and branding concepts to a real-world scenario, with a focus on analyzing customer behavior, competitive landscape, and market trends. The case demands a structured approach to problem-solving, with a emphasis on using data and analytics to inform marketing strategy.",
+  "enriched_at": "2026-05-08T11:41:10.292Z"
+}

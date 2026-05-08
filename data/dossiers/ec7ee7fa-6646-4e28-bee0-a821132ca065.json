@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The whiskey industry in the US is a declining market with a 2% annual decline over the last 20 years. The market is highly competitive with a large number of players, including established brands and new entrants. The industry is also subject to strict regulations, including taxation and labeling requirements. Typical customer behavior in the whiskey market includes a strong loyalty to specific brands and a willingness to pay premium prices for high-quality products.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for whiskey manufacturers",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Market size of the US whiskey market",
+      "value": "$2-3 billion",
+      "source_hint": "Market research reports"
+    },
+    {
+      "metric": "Number of whiskey brands in the US market",
+      "value": "50-100",
+      "source_hint": "Industry directories"
+    },
+    {
+      "metric": "Average price per bottle of whiskey",
+      "value": "$20-50",
+      "source_hint": "Retail data"
+    },
+    {
+      "metric": "Customer retention rate for whiskey brands",
+      "value": "70-80%",
+      "source_hint": "Customer loyalty studies"
+    },
+    {
+      "metric": "Growth rate of craft whiskey segment",
+      "value": "5-10% per annum",
+      "source_hint": "Industry trends"
+    },
+    {
+      "metric": "Market share of top 3 whiskey brands in the US",
+      "value": "50-60%",
+      "source_hint": "Market share reports"
+    },
+    {
+      "metric": "Average marketing spend per bottle of whiskey",
+      "value": "$1-5",
+      "source_hint": "Advertising data"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the revenue decline of the client's whiskey brand",
+      "formula": "Revenue decline = (15% - 2%) * 10m bottles",
+      "typical_answer_range": "-$1-2 million"
+    },
+    {
+      "step": "Calculate the potential revenue gain from increasing marketing spend",
+      "formula": "Revenue gain = (5-10% increase in sales) * 10m bottles",
+      "typical_answer_range": "$500k-1 million"
+    },
+    {
+      "step": "Calculate the break-even point for a price increase",
+      "formula": "Break-even point = (price increase / (1 - margin)) * current sales",
+      "typical_answer_range": "5-10% price increase"
+    },
+    {
+      "step": "Calculate the customer lifetime value (CLV) for the whiskey brand",
+      "formula": "CLV = (average revenue per user * customer retention rate) / (1 - customer retention rate)",
+      "typical_answer_range": "$50-100"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of declining market trends on the client's brand",
+    "Overlooking the potential effects of changes in marketing spend or product quality",
+    "Failing to account for competitor activity and market share shifts",
+    "Not calculating the potential revenue gain from increasing marketing spend or improving product quality",
+    "Ignoring the importance of customer retention and loyalty in the whiskey market"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the US whiskey market?",
+      "a": "The US whiskey market is experiencing a decline in sales, driven by changing consumer preferences and a shift towards craft and premium products.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the client's brand position compare to its competitors?",
+      "a": "The client's brand is likely a mid-tier player in the US whiskey market, with a strong legacy but facing increasing competition from craft and premium brands.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and opportunities of increasing marketing spend for the client's brand?",
+      "a": "Increasing marketing spend could help to drive sales growth and improve brand awareness, but it also carries the risk of decreasing profitability if not executed effectively.",
+      "category": "math"
+    },
+    {
+      "q": "How might changes in product quality or availability impact the client's brand sales?",
+      "a": "Changes in product quality or availability could have a significant impact on the client's brand sales, as whiskey consumers are often loyal to specific brands and products.",
+      "category": "framework"
+    },
+    {
+      "q": "What role might pricing play in the client's brand turnaround strategy?",
+      "a": "Pricing could be a key lever in the client's brand turnaround strategy, as it could help to drive revenue growth and improve profitability, but it also carries the risk of decreasing sales volume if prices are increased too aggressively.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the impact of internal and external factors on the client's brand performance",
+    "Analyze the client's brand position and competitive landscape in the US whiskey market",
+    "Evaluate the potential risks and opportunities of different marketing and pricing strategies"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "IBISWorld market research reports",
+    "Company 10-K filings"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the client's brand performance and develop a turnaround strategy, taking into account both internal and external factors. The candidate must also consider the potential risks and opportunities of different marketing and pricing strategies, and evaluate the impact of changes in product quality or availability on the client's brand sales.",
+  "enriched_at": "2026-05-08T11:47:09.059Z"
+}

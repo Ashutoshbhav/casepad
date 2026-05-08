@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The e-book reader market is a growing segment within the tech industry, with key players like Amazon and Kobo dominating the global market. The industry is characterized by a competitive structure with high barriers to entry due to the need for significant investments in technology and content acquisition. The regulatory backdrop is relatively favorable, with few restrictions on the sale of e-book readers. Typical customer behavior includes a strong preference for convenience, affordability, and access to a wide range of content. In India, the e-book market is still in its nascent stages, with a significant opportunity for growth driven by increasing smartphone penetration and data usage.",
+  "real_world_numbers": [
+    {
+      "metric": "Global e-book reader market size",
+      "value": "10-15 billion USD",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average margin for e-book sales",
+      "value": "20-30%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of e-book readers sold globally",
+      "value": "10-20 million units",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Average price of an e-book reader",
+      "value": "100-200 USD",
+      "source_hint": "retail data"
+    },
+    {
+      "metric": "Customer lifetime value for e-book readers",
+      "value": "50-100 USD",
+      "source_hint": "company estimates"
+    },
+    {
+      "metric": "Market share of Amazon in the e-book reader market",
+      "value": "60-70%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Growth rate of the e-book market in India",
+      "value": "20-30% YoY",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Number of e-book titles available globally",
+      "value": "10-20 million titles",
+      "source_hint": "publisher data"
+    },
+    {
+      "metric": "Average revenue per user for e-book readers",
+      "value": "10-20 USD per month",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total addressable market for e-book readers in the new country",
+      "formula": "Population x Percentage of target segment x Average revenue per user",
+      "typical_answer_range": "100 million - 1 billion USD"
+    },
+    {
+      "step": "Estimate the profit potential of each sales channel",
+      "formula": "Revenue x Margin - Costs",
+      "typical_answer_range": "10-50 million USD"
+    },
+    {
+      "step": "Determine the optimal price for the e-book reader",
+      "formula": "Cost + Desired margin",
+      "typical_answer_range": "50-150 USD"
+    },
+    {
+      "step": "Calculate the customer acquisition cost",
+      "formula": "Marketing spend / Number of customers acquired",
+      "typical_answer_range": "10-50 USD per customer"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the competitive landscape and potential market entry by other players",
+    "Overestimating the target segment size and potential",
+    "Not accounting for the time value of money in segment analysis",
+    "Failing to evaluate the need for local adaptation of the product",
+    "Not considering the impact of pricing on demand and revenue",
+    "Overlooking the importance of content availability and selection breadth"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the e-book reader market in India?",
+      "a": "Increasing smartphone penetration, growing demand for digital content, and improving internet infrastructure",
+      "category": "industry"
+    },
+    {
+      "q": "How does the regulatory environment impact the e-book reader market in the new country?",
+      "a": "The regulatory environment is relatively favorable, with few restrictions on the sale of e-book readers",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical customer pain points in the e-book reader market?",
+      "a": "Convenience, affordability, and access to a wide range of content",
+      "category": "industry"
+    },
+    {
+      "q": "How does the market size and growth rate of the e-book market in India compare to other countries?",
+      "a": "The Indian e-book market is smaller but growing faster than many other countries",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key factors influencing the demand for e-book readers in the new country?",
+      "a": "Income level, education level, and access to digital content",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the pricing strategy for e-book readers impact demand and revenue?",
+      "a": "Pricing strategy can significantly impact demand and revenue, with lower prices potentially increasing demand but reducing revenue per unit",
+      "category": "math"
+    },
+    {
+      "q": "What are the typical marketing channels used to promote e-book readers?",
+      "a": "Online advertising, social media, and influencer marketing",
+      "category": "framework"
+    },
+    {
+      "q": "How does the availability of local content impact the demand for e-book readers?",
+      "a": "Availability of local content can significantly impact demand, with users preferring content in their local language",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key metrics used to evaluate the success of an e-book reader product?",
+      "a": "Customer acquisition cost, customer lifetime value, and revenue growth rate",
+      "category": "math"
+    },
+    {
+      "q": "How does the e-book reader market differ from other digital media markets?",
+      "a": "The e-book reader market is characterized by a strong preference for convenience, affordability, and access to a wide range of content",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Consider the customer journey and pain points in the e-book reader market",
+    "Evaluate the competitive landscape and potential market entry by other players",
+    "Assess the need for local adaptation of the product and content availability",
+    "Develop a pricing strategy that balances demand and revenue goals"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Publisher data",
+    "Industry associations and trade publications"
+  ],
+  "case_type_notes": "This case requires the application of marketing mix principles to a new market entry scenario, with a focus on segmentation, targeting, and positioning. The case is challenging due to the need to balance demand and revenue goals in a new market with limited data and high uncertainty.",
+  "enriched_at": "2026-05-08T11:39:05.498Z"
+}

@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The social media industry is highly competitive, with key players like Facebook, Instagram, and Twitter. The industry is characterized by high user engagement, with typical daily active users ranging from 10-50% of monthly active users. Regulatory backdrop includes data privacy concerns and advertising regulations. Typical customer behavior includes high-frequency usage, with an average user spending around 30-60 minutes per day on social media platforms.",
+  "real_world_numbers": [
+    {
+      "metric": "Instagram monthly active users",
+      "value": "1-2 billion",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average uploads per user per day",
+      "value": "2-5",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Instagram daily active users",
+      "value": "500-700 million",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Social media advertising revenue",
+      "value": "$50-100 billion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average time spent on social media per day",
+      "value": "30-60 minutes",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Number of social media platforms",
+      "value": "5-10",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical margin for social media companies",
+      "value": "20-40%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer lifetime value for social media companies",
+      "value": "$50-100",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Estimate total uploads per day",
+      "formula": "Total uploads = Average uploads per user * Number of daily active users",
+      "typical_answer_range": "100-500 million"
+    },
+    {
+      "step": "Calculate average uploads per user",
+      "formula": "Average uploads per user = Total uploads / Number of daily active users",
+      "typical_answer_range": "2-5"
+    },
+    {
+      "step": "Determine daily active users",
+      "formula": "Daily active users = Monthly active users * Daily active user percentage",
+      "typical_answer_range": "500-700 million"
+    },
+    {
+      "step": "Estimate monthly active users",
+      "formula": "Monthly active users = Total users * Monthly active user percentage",
+      "typical_answer_range": "1-2 billion"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering user demographics and upload frequency",
+    "Overestimating or underestimating average uploads per user",
+    "Not accounting for daily active user percentage",
+    "Using incorrect or outdated numbers for monthly active users",
+    "Not considering competition and market trends",
+    "Not breaking down the problem into smaller, manageable parts",
+    "Not using realistic and verifiable numbers"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the current market size of the social media industry in India?",
+      "a": "The current market size of the social media industry in India is around $1-2 billion.",
+      "category": "industry"
+    },
+    {
+      "q": "How does Instagram's user demographics affect photo uploads?",
+      "a": "Instagram's user demographics, such as age and location, can affect photo uploads, with younger users and those in urban areas tend to upload more photos.",
+      "category": "industry"
+    },
+    {
+      "q": "What are some common pitfalls when estimating photo uploads on Instagram?",
+      "a": "Common pitfalls include not considering user demographics and upload frequency, overestimating or underestimating average uploads per user, and not accounting for daily active user percentage.",
+      "category": "math"
+    },
+    {
+      "q": "How does the number of daily active users affect the estimation of photo uploads?",
+      "a": "The number of daily active users is a critical factor in estimating photo uploads, as it directly affects the total number of uploads.",
+      "category": "math"
+    },
+    {
+      "q": "What is the average revenue per user for social media companies in India?",
+      "a": "The average revenue per user for social media companies in India is around $5-10.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the social media industry in India compare to the global market?",
+      "a": "The social media industry in India is growing rapidly, with a large and increasing user base, but still lags behind the global market in terms of revenue and user engagement.",
+      "category": "industry"
+    },
+    {
+      "q": "What are some potential risks and challenges when estimating photo uploads on Instagram?",
+      "a": "Potential risks and challenges include using incorrect or outdated numbers, not considering competition and market trends, and not breaking down the problem into smaller, manageable parts.",
+      "category": "framework"
+    },
+    {
+      "q": "How can we use market sizing to estimate photo uploads on Instagram?",
+      "a": "Market sizing can be used to estimate photo uploads on Instagram by analyzing the number of daily active users, average uploads per user, and other relevant factors.",
+      "category": "framework"
+    },
+    {
+      "q": "What are some real-world benchmarks for social media companies in India?",
+      "a": "Real-world benchmarks for social media companies in India include user growth rates, revenue per user, and customer acquisition costs.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the Indian government's regulatory policies affect the social media industry?",
+      "a": "The Indian government's regulatory policies, such as data privacy laws and advertising regulations, can affect the social media industry by increasing costs and reducing revenue.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Use market sizing to estimate photo uploads on Instagram",
+    "Consider user demographics and upload frequency",
+    "Analyze daily active users and average uploads per user",
+    "Break down the problem into smaller, manageable parts"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Industry articles and news",
+    "Government regulatory policies"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to estimate a large and complex number, and to consider multiple factors and variables. The candidate must also be able to break down the problem into smaller, manageable parts and use realistic and verifiable numbers.",
+  "enriched_at": "2026-05-08T11:40:24.445Z"
+}

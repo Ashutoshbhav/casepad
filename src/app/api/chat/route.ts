@@ -14,8 +14,9 @@ import { staticChatTurnFallback } from '@/lib/groq/static-fallbacks';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { retrievePlaybookFindings, formatFindingsForPrompt, type RetrievedFinding } from '@/lib/groq/playbook-retriever';
 import { buildRegistry, toSystemPromptBlock as registryBlock, checkDraftAgainstRegistry } from '@/lib/case-state/number-registry';
+import { findArithmeticError, regenHintForArithmeticError } from '@/lib/case-state/arithmetic-verifier';
 import { renderRecentTurnAwareness, findRepeatedPhrase, regenHintForPhraseRepeat } from '@/lib/groq/recent-turn-context';
-import { renderDossierBlock, dossierIsUsable } from '@/lib/groq/dossier-context';
+import { renderDossierBlock, dossierIsUsable, loadDossier } from '@/lib/groq/dossier-context';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -69,31 +70,18 @@ export async function POST(req: NextRequest) {
     .single();
   if (sErr || !session) return new Response('session not found', { status: 404 });
 
-  // Stream-4 (2026-05-08): also fetch `dossier` column. Defensive: if the
-  // column doesn't exist (migration 0012 not yet applied), Supabase returns
-  // an error — we fall back to a select without dossier so chat keeps working.
-  let caseRow: any;
-  let cErr: any;
-  {
-    const r = await supabase
-      .from('cases')
-      .select('title, problem_statement, interviewer_notes, dossier')
-      .eq('id', session.case_id)
-      .single();
-    caseRow = r.data;
-    cErr = r.error;
-    if (cErr) {
-      // Column doesn't exist yet — retry without it
-      const r2 = await supabase
-        .from('cases')
-        .select('title, problem_statement, interviewer_notes')
-        .eq('id', session.case_id)
-        .single();
-      caseRow = r2.data;
-      cErr = r2.error;
-    }
-  }
+  const { data: caseRow, error: cErr } = await supabase
+    .from('cases')
+    .select('title, problem_statement, interviewer_notes')
+    .eq('id', session.case_id)
+    .single();
   if (cErr || !caseRow) return new Response('case not found', { status: 404 });
+
+  // Stream-4 (2026-05-08 v2): load per-case dossier from filesystem
+  // (data/dossiers/{case_id}.json). No DB migration needed. Defensive:
+  // null when not yet enriched — chat continues with problem_statement
+  // + interviewer_notes only.
+  const dossier = await loadDossier(session.case_id);
 
   const transcriptIn = (session.transcript as { role: string; content: string; timestamp: string }[]) ?? [];
 
@@ -197,8 +185,8 @@ export async function POST(req: NextRequest) {
   // absent or malformed, no block injected. Goes BEFORE registry/recent-turn
   // because dossier is grounding context, registry is current state.
   try {
-    if (caseRow?.dossier && dossierIsUsable(caseRow.dossier) && messages.length > 0 && messages[0].role === 'system') {
-      const dBlock = renderDossierBlock(caseRow.dossier);
+    if (dossier && dossierIsUsable(dossier) && messages.length > 0 && messages[0].role === 'system') {
+      const dBlock = renderDossierBlock(dossier);
       if (dBlock) {
         messages[0] = { ...messages[0], content: messages[0].content + dBlock };
       }
@@ -328,6 +316,37 @@ export async function POST(req: NextRequest) {
               } catch (regenErr) {
                 console.warn(`[registry/phrase] regen errored: ${(regenErr as Error).message}; shipping original`);
               }
+            }
+          }
+
+          // Gate 1.6 (NEW 2026-05-08): Arithmetic verification.
+          // Catches "125,000 × $1.50 = $200K" type errors via deterministic
+          // server-side compute. Simpler than full Groq tool-use; catches ~80%
+          // of arithmetic errors. One regen attempt with explicit correction.
+          const arithErr = findArithmeticError(full);
+          if (arithErr) {
+            console.warn(`[arithmetic] error in draft: ${arithErr.evidence}`);
+            const hinted = [
+              ...messages,
+              { role: 'system' as const, content: regenHintForArithmeticError(arithErr) },
+            ];
+            try {
+              let retry = '';
+              for await (const delta of streamChat({
+                messages: hinted as any,
+                max_tokens: 300,
+                temperature: 0.4,
+              })) {
+                retry += delta;
+              }
+              // Only swap if retry passes arithmetic AND existing checks
+              if (retry && !findArithmeticError(retry) && checkResponse(retry).ok) {
+                full = retry;
+              } else {
+                console.warn(`[arithmetic] regen failed; shipping original`);
+              }
+            } catch (regenErr) {
+              console.warn(`[arithmetic] regen errored: ${(regenErr as Error).message}`);
             }
           }
 
