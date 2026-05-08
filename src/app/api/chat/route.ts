@@ -15,6 +15,7 @@ import { withRetry } from '@/lib/supabase/with-retry';
 import { retrievePlaybookFindings, formatFindingsForPrompt, type RetrievedFinding } from '@/lib/groq/playbook-retriever';
 import { buildRegistry, toSystemPromptBlock as registryBlock, checkDraftAgainstRegistry } from '@/lib/case-state/number-registry';
 import { renderRecentTurnAwareness, findRepeatedPhrase, regenHintForPhraseRepeat } from '@/lib/groq/recent-turn-context';
+import { renderDossierBlock, dossierIsUsable } from '@/lib/groq/dossier-context';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -68,11 +69,30 @@ export async function POST(req: NextRequest) {
     .single();
   if (sErr || !session) return new Response('session not found', { status: 404 });
 
-  const { data: caseRow, error: cErr } = await supabase
-    .from('cases')
-    .select('title, problem_statement, interviewer_notes')
-    .eq('id', session.case_id)
-    .single();
+  // Stream-4 (2026-05-08): also fetch `dossier` column. Defensive: if the
+  // column doesn't exist (migration 0012 not yet applied), Supabase returns
+  // an error — we fall back to a select without dossier so chat keeps working.
+  let caseRow: any;
+  let cErr: any;
+  {
+    const r = await supabase
+      .from('cases')
+      .select('title, problem_statement, interviewer_notes, dossier')
+      .eq('id', session.case_id)
+      .single();
+    caseRow = r.data;
+    cErr = r.error;
+    if (cErr) {
+      // Column doesn't exist yet — retry without it
+      const r2 = await supabase
+        .from('cases')
+        .select('title, problem_statement, interviewer_notes')
+        .eq('id', session.case_id)
+        .single();
+      caseRow = r2.data;
+      cErr = r2.error;
+    }
+  }
   if (cErr || !caseRow) return new Response('case not found', { status: 404 });
 
   const transcriptIn = (session.transcript as { role: string; content: string; timestamp: string }[]) ?? [];
@@ -169,6 +189,22 @@ export async function POST(req: NextRequest) {
   } catch {
     // fall through — playbook retrieval is an enhancement, not a requirement
     turnFindings = [];
+  }
+
+  // STREAM-4 (2026-05-08): Inject the per-case dossier (deep knowledge for
+  // questions the casebook doesn't cover — industry benchmarks, common
+  // mistakes, anticipated questions). Defensive: dossier is optional; if
+  // absent or malformed, no block injected. Goes BEFORE registry/recent-turn
+  // because dossier is grounding context, registry is current state.
+  try {
+    if (caseRow?.dossier && dossierIsUsable(caseRow.dossier) && messages.length > 0 && messages[0].role === 'system') {
+      const dBlock = renderDossierBlock(caseRow.dossier);
+      if (dBlock) {
+        messages[0] = { ...messages[0], content: messages[0].content + dBlock };
+      }
+    }
+  } catch {
+    // fall through — dossier is enhancement, never blocks
   }
 
   // STREAM-2 + STREAM-3 (2026-05-08 post-research):
