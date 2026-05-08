@@ -3,10 +3,8 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-// Route-level error boundary. Lives in the redesigned palette: deep canvas
-// background, elevated card, Instrument Serif headline, coral CTA. Voice
-// stays quiet — "didn't load" reads less alarmist than "went wrong" while
-// preserving honesty.
+// Route-level error boundary in HUPR mono — Montserrat 700 uppercase title,
+// hairline rectangles (no rounded corners), no italic.
 
 export default function Error({
   error,
@@ -16,16 +14,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Verbose log so we can see the full error shape in console regardless
-    // of what the boundary surfaced.
     console.error('[casepad/error.tsx]', error);
-    console.error('[casepad/error.tsx] error.name:', error?.name);
-    console.error('[casepad/error.tsx] error.message:', error?.message);
-    console.error('[casepad/error.tsx] error.digest:', error?.digest);
-    console.error('[casepad/error.tsx] error.stack:', error?.stack);
-    console.error('[casepad/error.tsx] error.cause:', (error as { cause?: unknown })?.cause);
-    console.error('[casepad/error.tsx] error keys:', Object.keys(error ?? {}));
-    console.error('[casepad/error.tsx] error toString:', String(error));
   }, [error]);
 
   return (
@@ -34,35 +23,46 @@ export default function Error({
       style={{ background: 'var(--color-bg-canvas)' }}
     >
       <div
-        className="w-full max-w-md rounded-lg p-6 sm:p-8"
+        className="w-full max-w-md p-8"
         style={{
           background: 'var(--color-bg-elevated)',
           border: '1px solid var(--color-border)',
         }}
       >
-        <h1
-          className="font-headline italic text-2xl sm:text-3xl leading-tight"
+        <div
+          className="hupr-mono-eyebrow"
           style={{ color: 'var(--color-text-primary)' }}
+        >
+          CasePad · Error
+        </div>
+        <hr className="hupr-hairline mb-5" />
+        <h1
+          className="uppercase"
+          style={{
+            fontFamily: 'var(--font-headline)',
+            fontWeight: 700,
+            fontSize: 32,
+            lineHeight: 1.05,
+            letterSpacing: '-0.005em',
+            margin: 0,
+            color: 'var(--color-text-primary)',
+          }}
         >
           Something didn&rsquo;t load
         </h1>
         <p
-          className="mt-3 text-sm leading-relaxed"
+          className="mt-4 text-sm leading-relaxed"
           style={{ color: 'var(--color-text-secondary)' }}
         >
           CasePad ran into a hiccup. Try again, or head back to your cases.
         </p>
-        {/* Always-visible debug panel — even when digest + message are nullish
-            we want to see error.name, toString output, and key list so we can
-            identify the throw shape. Gated only by `error` existing at all. */}
         {error && (
           <pre
             style={{
               marginTop: 16,
               padding: 12,
-              background: 'rgba(0,0,0,0.3)',
+              background: 'var(--color-bg-sunken)',
               border: '1px solid var(--color-border)',
-              borderRadius: 4,
               fontSize: 11,
               fontFamily: 'var(--font-mono)',
               color: 'var(--color-text-secondary)',
@@ -81,24 +81,38 @@ stack:
 ${error.stack?.split('\n').slice(0, 8).join('\n') ?? '(no stack)'}`}
           </pre>
         )}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div className="mt-7 flex flex-wrap items-center gap-3">
           <button
             onClick={() => reset()}
-            className="px-5 py-2.5 rounded-md text-sm font-medium transition-opacity hover:opacity-90"
+            className="hupr-anim-btn"
             style={{
-              background: 'var(--color-accent)',
-              color: 'var(--color-accent-fg)',
+              background: 'var(--color-text-primary)',
+              color: 'var(--color-bg-canvas)',
+              padding: '14px 22px',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 13,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'inline-block',
             }}
           >
-            Try again
+            <span className="top">Try again</span>
+            <span className="btm">Try again</span>
           </button>
           <Link
             href="/cases"
-            className="px-5 py-2.5 rounded-md text-sm transition-opacity hover:opacity-80"
             style={{
+              padding: '14px 22px',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 13,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
               background: 'transparent',
-              border: '1px solid var(--color-accent)',
-              color: 'var(--color-accent)',
+              border: '1px solid var(--color-text-primary)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
             }}
           >
             Back to /cases

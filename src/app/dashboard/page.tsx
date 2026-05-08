@@ -5,8 +5,6 @@ import { withRetry } from '@/lib/supabase/with-retry';
 import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
-import { AsteriskSceneRegister } from '@/components/asterisk-scene-register';
-import { AsteriskHotspot } from '@/components/asterisk-hotspot';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 
 export const dynamic = 'force-dynamic';
@@ -287,12 +285,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       style={{ background: 'var(--color-bg-canvas)' }}
     >
       <HuprObserveReveals />
-      {/* AsteriskSceneRegister + AsteriskHotspot are no-ops now (the
-          PersistentAsterisk root was removed in the HUPR makeover). They
-          stay imported until the cleanup pass since their components don't
-          throw on unmounted-canvas — they just don't paint. */}
-      <AsteriskSceneRegister preset="dashboard" />
-      <AsteriskHotspot />
       {/* A. HERO BAND — collapsed to a single line above the today's case
           card. Greeting + streak + library link in one row. The case card
           IS the hero now; this band is just orientation. Headspace pattern:
@@ -378,7 +370,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       <div className="px-4 sm:px-8 py-12 max-w-5xl mx-auto">
 
-      {/* B.2 COHORT LEADERBOARD */}
+      {/* B.2 COHORT LEADERBOARD — hide entirely when the only row is the
+          self-placeholder with no real today-score. The empty leaderboard
+          was creating a jarring white gap between the sand "Today" sticky
+          band and the sage "Week" band. */}
+      {leaderboard.some((r) => r.todayScore !== null && !r.isMe) && (
       <section className="mb-12 sm:mb-16">
         <div className="flex items-baseline justify-between mb-4">
           <span
@@ -460,6 +456,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           )}
         </div>
       </section>
+      )}
 
       {/* STICKY CARD 2 — This Week. Sage band. */}
       <article

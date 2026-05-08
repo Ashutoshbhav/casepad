@@ -252,8 +252,14 @@ export function IssueTreePanel({
 
         {n.hypothesis && (
           <div
-            className="text-[10px] italic font-headline mt-0.5"
-            style={{ color: 'var(--color-text-secondary)', maxWidth: 240, margin: '4px auto 0' }}
+            className="text-[10px] mt-0.5"
+            style={{
+              fontFamily: 'var(--font-accent)',
+              color: 'var(--color-text-secondary)',
+              maxWidth: 240,
+              margin: '4px auto 0',
+              lineHeight: 1.4,
+            }}
           >
             ↳ {n.hypothesis}
           </div>

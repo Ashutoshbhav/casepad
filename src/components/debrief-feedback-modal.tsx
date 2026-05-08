@@ -250,10 +250,12 @@ export function DebriefFeedbackModal({ sessionId, initiallyDismissed = false }: 
                     id="feedback-modal-headline"
                     ref={headlineRef}
                     tabIndex={-1}
-                    className="font-headline italic leading-tight outline-none"
+                    className="font-headline uppercase leading-tight outline-none"
                     style={{
                       color: 'var(--color-text-primary)',
                       fontSize: 24,
+                      fontWeight: 700,
+                      letterSpacing: '-0.005em',
                     }}
                   >
                     One word. Was this useful?

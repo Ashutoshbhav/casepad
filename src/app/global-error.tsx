@@ -2,11 +2,10 @@
 
 import { useEffect } from 'react';
 
-// Root-level catch-all. Bypasses the root layout, so it must define its
-// own <html>/<body>. Only triggers for errors *in* the root layout itself.
-// Restyled 2026-05-04 to match the redesigned palette: deep canvas bg,
-// elevated card, Instrument Serif headline, coral CTA. The inline-only
-// styling is mandatory here — globals.css doesn't load at this layer.
+// Root-of-root catch-all. Bypasses RootLayout, so globals.css and next/font
+// CSS variables don't load — every style stays inline. HUPR mono palette:
+// white canvas, #323234 ink, hairline borders, no rounded corners, no italic,
+// system mono headline.
 export default function GlobalError({
   error,
   reset,
@@ -22,48 +21,66 @@ export default function GlobalError({
     <html lang="en">
       <body
         style={{
-          background: '#1a1817',
-          color: '#faf9f5',
+          background: '#FFFFFF',
+          color: '#323234',
           margin: 0,
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 16,
+          padding: 24,
           fontFamily:
-            "'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            "ui-monospace, 'IBM Plex Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace",
         }}
       >
         <div
           style={{
             width: '100%',
-            maxWidth: 420,
-            padding: 24,
-            border: '1px solid #2f2c29',
-            borderRadius: 8,
-            background: '#252220',
+            maxWidth: 480,
+            padding: 32,
+            border: '1px solid #e8e8e8',
+            background: '#FFFFFF',
           }}
         >
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 400,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              color: '#323234',
+              marginBottom: 4,
+            }}
+          >
+            CasePad · Error
+          </div>
+          <hr
+            style={{
+              border: 0,
+              borderTop: '1px solid #e8e8e8',
+              margin: '8px 0 20px',
+            }}
+          />
           <h1
             style={{
-              fontSize: 28,
-              fontWeight: 400,
-              margin: 0,
-              fontStyle: 'italic',
               fontFamily:
-                "'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif",
-              letterSpacing: '-0.015em',
-              lineHeight: 1.15,
-              color: '#faf9f5',
+                "'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+              fontSize: 32,
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '-0.005em',
+              lineHeight: 1.05,
+              margin: 0,
+              color: '#323234',
             }}
           >
             Something didn&rsquo;t load
           </h1>
           <p
             style={{
-              fontSize: 14,
-              color: '#b0aea5',
-              marginTop: 12,
+              fontSize: 13,
+              color: 'rgba(50, 50, 52, 0.72)',
+              marginTop: 16,
               marginBottom: 0,
               lineHeight: 1.55,
             }}
@@ -74,11 +91,9 @@ export default function GlobalError({
             <p
               style={{
                 fontSize: 10,
-                color: '#7a7873',
-                marginTop: 12,
+                color: 'rgba(50, 50, 52, 0.50)',
+                marginTop: 16,
                 marginBottom: 0,
-                fontFamily:
-                  "'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace",
                 textTransform: 'uppercase',
                 letterSpacing: '0.16em',
               }}
@@ -91,13 +106,10 @@ export default function GlobalError({
               style={{
                 marginTop: 16,
                 padding: 12,
-                background: 'rgba(0,0,0,0.3)',
-                border: '1px solid #2f2c29',
-                borderRadius: 4,
+                background: '#f4f4f4',
+                border: '1px solid #e8e8e8',
                 fontSize: 11,
-                fontFamily:
-                  "'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace",
-                color: '#b0aea5',
+                color: 'rgba(50, 50, 52, 0.72)',
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-word',
                 margin: '16px 0 0 0',
@@ -110,7 +122,7 @@ stack: ${error?.stack?.split('\n').slice(0, 6).join('\n') ?? 'none'}`}
           )}
           <div
             style={{
-              marginTop: 24,
+              marginTop: 28,
               display: 'flex',
               flexWrap: 'wrap',
               gap: 12,
@@ -119,13 +131,14 @@ stack: ${error?.stack?.split('\n').slice(0, 6).join('\n') ?? 'none'}`}
             <button
               onClick={() => reset()}
               style={{
-                padding: '10px 20px',
-                fontSize: 14,
+                padding: '14px 22px',
+                fontSize: 13,
                 fontWeight: 500,
-                background: '#d97757',
-                color: '#141413',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                background: '#323234',
+                color: '#FFFFFF',
                 border: 'none',
-                borderRadius: 6,
                 cursor: 'pointer',
               }}
             >
@@ -134,12 +147,13 @@ stack: ${error?.stack?.split('\n').slice(0, 6).join('\n') ?? 'none'}`}
             <a
               href="/cases"
               style={{
-                padding: '10px 20px',
-                fontSize: 14,
-                color: '#d97757',
+                padding: '14px 22px',
+                fontSize: 13,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: '#323234',
                 background: 'transparent',
-                border: '1px solid #d97757',
-                borderRadius: 6,
+                border: '1px solid #323234',
                 textDecoration: 'none',
               }}
             >

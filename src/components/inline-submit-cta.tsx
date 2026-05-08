@@ -40,18 +40,19 @@ export function InlineSubmitCTA({ sessionId, endSessionAction, messageCount }: P
       initial={reduced ? { opacity: 1 } : { opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: DURATION.smooth, ease: EASE.expo }}
-      className="mx-4 sm:mx-6 mb-2 mt-1 rounded-md px-4 py-3 flex flex-wrap items-center gap-3 justify-between"
+      className="mx-4 sm:mx-6 mb-2 mt-1 px-4 py-3 flex flex-wrap items-center gap-3 justify-between"
       style={{
-        // Light coral background tint — color-mix keeps the warm-dark feel
-        // without dominating the panel.
-        background: 'color-mix(in srgb, var(--color-accent) 12%, var(--color-bg-elevated))',
-        border: '1px solid color-mix(in srgb, var(--color-accent) 30%, transparent)',
+        background: 'var(--color-bg-sunken)',
+        border: '1px solid var(--color-border)',
       }}
       aria-live="polite"
     >
       <p
-        className="font-headline italic text-sm leading-snug flex-1 min-w-[200px]"
-        style={{ color: 'var(--color-text-primary)' }}
+        className="text-sm leading-snug flex-1 min-w-[200px]"
+        style={{
+          fontFamily: 'var(--font-accent)',
+          color: 'var(--color-text-primary)',
+        }}
       >
         {copy}
       </p>

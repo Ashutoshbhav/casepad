@@ -11,8 +11,9 @@ import { EASE } from '@/lib/motion-tokens';
 // Caller mounts this for ~700ms then unmounts. Reduced-motion users render
 // nothing (the chat send isn't gated on the animation, just a flourish).
 
-const ASH_COLOR = '#d97757';
-const ASH_GLOW = 'rgba(217, 119, 87, 0.45)';
+// HUPR mono — particles fly in #323234 ink, no coral. Glow uses ink at 35%.
+const ASH_COLOR = '#323234';
+const ASH_GLOW = 'rgba(50, 50, 52, 0.35)';
 
 export function DisperseParticles({
   fromX,

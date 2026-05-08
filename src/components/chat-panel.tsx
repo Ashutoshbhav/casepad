@@ -369,8 +369,12 @@ export function ChatPanel({
                   Ash · EM at Bain
                 </div>
                 <div
-                  className="font-headline italic text-[24px] sm:text-[30px] leading-[1.25] max-w-[40ch]"
-                  style={{ color: 'var(--color-text-primary)' }}
+                  className="font-headline uppercase text-[28px] sm:text-[36px] leading-[1.05] max-w-[40ch]"
+                  style={{
+                    color: 'var(--color-text-primary)',
+                    fontWeight: 700,
+                    letterSpacing: '-0.005em',
+                  }}
                 >
                   {m.content ? (
                     shouldTypewriter(i, m.role) ? (

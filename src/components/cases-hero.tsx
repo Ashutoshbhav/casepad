@@ -108,8 +108,11 @@ export function CasesHero({
               ? INSTANT
               : { duration: DURATION.smooth, delay: 0.20, ease: EASE.expo }
           }
-          className="font-headline italic mt-4 text-base leading-relaxed max-w-3xl"
-          style={{ color: 'var(--color-text-secondary)' }}
+          className="mt-4 text-base leading-relaxed max-w-3xl"
+          style={{
+            fontFamily: 'var(--font-accent)',
+            color: 'var(--color-text-secondary)',
+          }}
         >
           {excerpt}
         </motion.p>

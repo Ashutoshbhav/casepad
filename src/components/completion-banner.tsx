@@ -48,8 +48,12 @@ export function CompletionBanner({
       />
       {/* Headline strip on second row, full-width — Ash's voice on the moment. */}
       <p
-        className="col-span-3 mt-2 sm:mt-3 font-headline italic text-sm sm:text-base"
-        style={{ color: 'var(--color-text-secondary)' }}
+        className="col-span-3 mt-2 sm:mt-3 text-sm sm:text-base"
+        style={{
+          fontFamily: 'var(--font-accent)',
+          color: 'var(--color-text-secondary)',
+          lineHeight: 1.55,
+        }}
       >
         {headline}
       </p>

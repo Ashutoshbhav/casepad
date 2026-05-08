@@ -12,6 +12,8 @@ import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
 import { EASE, DURATION, INSTANT } from '@/lib/motion-tokens';
 import { SubmitForScoringButton } from './submit-for-scoring-button';
 import { XpTicker } from './xp-ticker';
+import { NotebookPaper } from './solve/notebook-paper';
+import { RoughUnderline } from './solve/rough-underline';
 
 // Solve-page main layout — header + body + drawer.
 //
@@ -239,10 +241,16 @@ export function SolveLayout({
 
   return (
     <>
+      {/* Notebook paper — fixed full-bleed background SVG with hand-drawn
+          horizontal rule lines + red margin rule. Lives behind everything.
+          Only mounted in /solve — the notebook aesthetic is exclusive to
+          the solving experience. */}
+      <NotebookPaper />
       {/* HEADER — minimal chrome, glyph + title + tools. */}
       <header
         data-tour="solve-header"
         className="px-6 sm:px-8 py-4 flex items-center justify-between gap-3"
+        style={{ position: 'relative', zIndex: 2, background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(2px)' }}
       >
         <div className="min-w-0 flex items-center gap-3">
           <div className="hidden sm:block flex-shrink-0">
@@ -273,6 +281,10 @@ export function SolveLayout({
             >
               {caseTitle}
             </h1>
+            {/* Hand-drawn underline — sets the notebook tone right at the top */}
+            <div className="mt-0.5" style={{ maxWidth: 280 }}>
+              <RoughUnderline strokeWidth={1.4} roughness={1.6} bowing={1.8} />
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">

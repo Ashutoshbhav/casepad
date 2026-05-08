@@ -1,13 +1,24 @@
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+// Home page — HUPR landing composition. Mirrors /auth/signin's layout
+// (marquee + stats + sticky tracks + spheres + news pair) but renders a
+// marketing CTA card in the hero-right slot instead of the sign-in form.
+//
+// Public — no auth gate. Signed-in users see this page if they navigate
+// here directly via the top-nav logo.
 
-export default async function Page() {
-  const supabase = await createSupabaseServerClient();
-  // Use getSession() instead of getUser() to avoid an extra Supabase Auth
-  // round-trip — proxy.ts already validated the JWT before this page rendered.
-  const { data: { session } } = await supabase.auth.getSession();
-  // /dashboard is the journey home for signed-in users; /cases is now the
-  // explore-the-library escape hatch reached from the dashboard.
-  if (session) redirect('/dashboard');
-  redirect('/auth/signin');
+import { HuprDesign } from './design-lab/hupr/_components/hupr-design';
+import { HomeHeroCard } from '@/components/home-hero-card';
+
+export default function HomePage() {
+  return (
+    <HuprDesign
+      eyebrow="Cohort case prep · 2026"
+      menuLinks={[
+        { label: 'How it works', href: '#tracks' },
+        { label: 'Cohort', href: '#spheres' },
+        { label: 'News', href: '#news' },
+        { label: 'Sign in', href: '/auth/signin' },
+      ]}
+      heroRightCard={<HomeHeroCard />}
+    />
+  );
 }

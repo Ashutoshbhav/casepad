@@ -342,15 +342,18 @@ export default async function CasesPage({
       </nav>
 
       {/* BROWSE BY CASE TYPE — 6 sticky stacking cards. Click any card to
-          filter the library to that case_type. Each card colored. */}
+          filter the library to that case_type. Slugs match DB case_type
+          enum exactly: profitability / market_entry / operations /
+          estimation / pricing / mna. Photos dropped — the typographic
+          billboard IS the visual. Whole card is a single <a>. */}
       <HuprStickyCardStack>
         {[
-          { type: 'profitability', label: 'Profitability', body: 'Why is profit dropping? Revenue vs cost decomposition. The classic root-cause case — most consulting first-rounds open here.', bg: 'var(--hupr-sand)', photo: '/case-photos/case-005.jpg' },
-          { type: 'market_entry', label: 'Market entry', body: 'Should we enter this market? Sizing the opportunity, competitive read, go-to-market plan. Tests structure under ambiguity.', bg: 'var(--hupr-terra)', photo: '/case-photos/case-022.jpg' },
-          { type: 'ma', label: 'M & A', body: 'Should we acquire? Strategic fit, valuation, integration risk, deal-breakers. Quant-heavy with judgment calls.', bg: 'var(--hupr-sage)', photo: '/case-photos/case-064.jpg' },
-          { type: 'pricing', label: 'Pricing', body: 'What should the price be? Cost-plus, value-based, competitive. Segmentation + WTP estimation under time pressure.', bg: 'var(--hupr-slate)', photo: '/case-photos/case-095.jpg' },
-          { type: 'growth', label: 'Growth', body: 'How do we double revenue in 3 years? Channel economics, retention loops, expansion paths. Tests creative breadth.', bg: 'var(--hupr-cognac)', photo: '/case-photos/case-115.jpg' },
-          { type: 'operations', label: 'Operations', body: 'The plant is bleeding margin. Cycle time, throughput, defect rate. Quant under operational complexity.', bg: 'var(--hupr-cream)', fg: '#323234', photo: '/case-photos/case-038.jpg' },
+          { type: 'profitability', label: 'Profitability', body: 'Why is profit dropping? Revenue vs cost decomposition. The classic root-cause case — most consulting first-rounds open here.', bg: 'var(--hupr-sand)' },
+          { type: 'market_entry', label: 'Market entry', body: 'Should we enter this market? Sizing the opportunity, competitive read, go-to-market plan. Tests structure under ambiguity.', bg: 'var(--hupr-terra)' },
+          { type: 'operations', label: 'Operations', body: 'The plant is bleeding margin. Cycle time, throughput, defect rate. Quant under operational complexity.', bg: 'var(--hupr-sage)' },
+          { type: 'estimation', label: 'Estimation', body: 'How many golf balls fit on a 747? Top-down vs bottom-up sizing. Tests assumption discipline + arithmetic under pressure.', bg: 'var(--hupr-slate)' },
+          { type: 'pricing', label: 'Pricing', body: 'What should the price be? Cost-plus, value-based, competitive. Segmentation + WTP estimation under time pressure.', bg: 'var(--hupr-cognac)' },
+          { type: 'mna', label: 'M & A', body: 'Should we acquire? Strategic fit, valuation, integration risk, deal-breakers. Quant-heavy with judgment calls.', bg: 'var(--hupr-cream)', fg: '#323234' },
         ].map((c, idx) => (
           <HuprStickyCard
             key={c.type}
@@ -360,9 +363,7 @@ export default async function CasesPage({
             eyebrow={`0${idx + 1}`}
             title={c.label}
             body={c.body}
-            photo={c.photo}
-            href={`/cases?type=${c.type}${activeTrack !== userTrack ? `&track=${activeTrack}` : ''}`}
-            cta={{ label: 'Browse →', href: '#' }}
+            href={`/cases?type=${c.type}${activeTrack !== userTrack ? `&track=${activeTrack}` : ''}#library`}
           />
         ))}
       </HuprStickyCardStack>

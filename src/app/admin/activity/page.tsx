@@ -3,9 +3,7 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
-// Admin activity view — full visibility into what every cohort member is
-// doing. Service-role client bypasses RLS so we can see across-user data.
-// Only ADMIN_EMAIL sees this. Linked from /admin hub.
+// Admin activity — HUPR mono. Service-role read of every cohort session.
 
 export default async function AdminActivityPage() {
   const supabase = await createSupabaseServerClient();
@@ -13,16 +11,29 @@ export default async function AdminActivityPage() {
   if (!session) redirect('/auth/signin');
   if (session.user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
     return (
-      <main className="min-h-screen p-8">
-        <Link href="/cases" className="text-sm text-zinc-500 hover:text-zinc-300">← back to cases</Link>
-        <h1 className="text-2xl font-semibold mt-3">Not admin.</h1>
+      <main
+        className="min-h-screen p-12 max-w-2xl mx-auto"
+        style={{ background: 'var(--color-bg-canvas)' }}
+      >
+        <Link href="/cases" className="hupr-mono-eyebrow underline">← back to cases</Link>
+        <h1
+          className="uppercase mt-4"
+          style={{
+            fontFamily: 'var(--font-headline)',
+            fontWeight: 700,
+            fontSize: 32,
+            color: 'var(--color-text-primary)',
+            margin: 0,
+          }}
+        >
+          Not admin.
+        </h1>
       </main>
     );
   }
 
   const admin = createSupabaseAdminClient();
 
-  // Fetch in parallel: all sessions, all users, allowlist, recent feedback.
   const [sessionsRes, usersRes, allowlistRes, feedbackRes] = await Promise.all([
     admin
       .from('sessions')
@@ -39,7 +50,6 @@ export default async function AdminActivityPage() {
   const allowlist = allowlistRes.data ?? [];
   const recentFeedback = feedbackRes.data ?? [];
 
-  // Build per-user stats by joining users + sessions.
   const userById = new Map(allUsers.map((u) => [u.id, u]));
   const sessionsByUser = new Map<string, typeof allSessions>();
   for (const s of allSessions) {
@@ -86,14 +96,12 @@ export default async function AdminActivityPage() {
       created_at: u.created_at,
     };
   }).sort((a, b) => {
-    // Active users first (last_active desc), then never-active
     if (a.last_active && !b.last_active) return -1;
     if (!a.last_active && b.last_active) return 1;
     if (a.last_active && b.last_active) return b.last_active.localeCompare(a.last_active);
     return b.created_at.localeCompare(a.created_at);
   });
 
-  // Cohort-wide aggregates
   const totalSessions = allSessions.length;
   const completedSessions = allSessions.filter((s) => s.status === 'completed').length;
   const last24h = allSessions.filter((s) => s.started_at && (Date.now() - new Date(s.started_at).getTime()) < 24 * 3600 * 1000).length;
@@ -103,7 +111,6 @@ export default async function AdminActivityPage() {
       .map((s) => s.user_id)
   ).size;
 
-  // Top case_types (engagement signal)
   const typeCount: Record<string, number> = {};
   for (const s of allSessions) {
     const t = ((s as any).cases?.case_type as string) ?? 'unknown';
@@ -112,150 +119,390 @@ export default async function AdminActivityPage() {
   const topTypes = Object.entries(typeCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
 
   return (
-    <main className="min-h-screen p-4 sm:p-6 max-w-6xl mx-auto">
-      <header className="mb-6">
-        <Link href="/admin" className="text-sm text-zinc-500 hover:text-zinc-300">← admin hub</Link>
-        <h1 className="text-2xl sm:text-3xl font-semibold mt-3 mb-1">📊 Cohort activity</h1>
-        <p className="text-xs text-zinc-500">Service-role view — full visibility across all users.</p>
-      </header>
-
-      {/* Aggregates */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        <Stat label="Cohort size" value={String(allowlist.length)} />
-        <Stat label="Active 24h" value={`${activeUsers24h}`} />
-        <Stat label="Sessions 24h" value={String(last24h)} />
-        <Stat label="Sessions all-time" value={`${totalSessions} (${completedSessions} done)`} />
-      </section>
-
-      {/* Per-user table */}
-      <section className="mb-8">
-        <h2 className="text-sm font-semibold text-zinc-300 mb-3">Per-user activity</h2>
-        <div className="rounded-lg border border-zinc-800 overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead className="bg-zinc-900 text-zinc-400 uppercase">
-              <tr>
-                <th className="text-left px-3 py-2">Email</th>
-                <th className="text-left px-3 py-2">Track</th>
-                <th className="text-right px-3 py-2">Sessions</th>
-                <th className="text-right px-3 py-2">Completed</th>
-                <th className="text-right px-3 py-2">In-prog</th>
-                <th className="text-right px-3 py-2">Avg score</th>
-                <th className="text-right px-3 py-2">Time (min)</th>
-                <th className="text-right px-3 py-2">Last active</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-800">
-              {userStats.map((u) => (
-                <tr key={u.user_id} className="hover:bg-zinc-900/50">
-                  <td className="px-3 py-2">
-                    <Link href={`/admin/activity/${u.user_id}`} className="text-zinc-200 hover:text-emerald-300">
-                      {u.email}
-                    </Link>
-                  </td>
-                  <td className="px-3 py-2 text-zinc-400">{u.track}</td>
-                  <td className="px-3 py-2 text-right">{u.total_sessions}</td>
-                  <td className="px-3 py-2 text-right text-emerald-400">{u.completed}</td>
-                  <td className="px-3 py-2 text-right text-amber-400">{u.in_progress}</td>
-                  <td className="px-3 py-2 text-right text-zinc-200">{u.avg_score || '—'}</td>
-                  <td className="px-3 py-2 text-right text-zinc-400">{u.total_minutes}</td>
-                  <td className="px-3 py-2 text-right text-zinc-500">
-                    {u.last_active ? formatRel(u.last_active) : 'never'}
-                  </td>
-                </tr>
-              ))}
-              {userStats.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="px-3 py-6 text-center text-zinc-500">
-                    No registered users yet. Add cohort members at <Link href="/admin/allowlist" className="underline">/admin/allowlist</Link>.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+    <main
+      className="min-h-screen"
+      style={{ background: 'var(--color-bg-canvas)' }}
+    >
+      {/* HERO band — slate */}
+      <section
+        className="px-6 sm:px-12 py-12 sm:py-16"
+        style={{ background: 'var(--hupr-slate)', color: '#FFFFFF' }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <Link href="/admin" className="hupr-mono-eyebrow underline" style={{ color: '#FFFFFF' }}>
+            ← admin hub
+          </Link>
+          <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0 0' }} />
+          <h1
+            className="uppercase mt-6"
+            style={{
+              fontFamily: 'var(--font-headline)',
+              fontWeight: 700,
+              fontSize: 'clamp(40px, 6vw, 72px)',
+              lineHeight: 1,
+              color: '#FFFFFF',
+              margin: 0,
+            }}
+          >
+            Cohort activity
+          </h1>
+          <p
+            className="mt-3"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              color: 'rgba(255,255,255,0.85)',
+            }}
+          >
+            Service-role view — full visibility across all users.
+          </p>
         </div>
-        <p className="text-[10px] text-zinc-600 mt-2">Click an email to see that user&apos;s session list + transcripts.</p>
       </section>
 
-      {/* Recent activity feed */}
-      <section className="mb-8">
-        <h2 className="text-sm font-semibold text-zinc-300 mb-3">Recent sessions (last 30)</h2>
-        <div className="rounded-lg border border-zinc-800 divide-y divide-zinc-800">
-          {allSessions.slice(0, 30).map((s) => {
-            const u = userById.get(s.user_id);
-            return (
-              <Link
-                key={s.id}
-                href={`/admin/activity/${s.user_id}#session-${s.id}`}
-                className="block px-3 py-2 hover:bg-zinc-900/50"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-sm text-zinc-200 truncate">{((s as any).cases?.title) || '(deleted case)'}</div>
-                    <div className="text-[10px] text-zinc-500">
-                      {u?.email ?? s.user_id.slice(0, 8)} · {new Date(s.started_at).toLocaleString()} · {s.track ?? 'no-track'}
+      <div className="px-6 sm:px-12 py-12 max-w-6xl mx-auto">
+        {/* Aggregates */}
+        <section className="grid grid-cols-2 sm:grid-cols-4 gap-px mb-12" style={{ background: 'var(--color-border)' }}>
+          <Stat label="Cohort size" value={String(allowlist.length)} />
+          <Stat label="Active 24h" value={String(activeUsers24h)} />
+          <Stat label="Sessions 24h" value={String(last24h)} />
+          <Stat label="All-time" value={`${totalSessions} (${completedSessions} done)`} />
+        </section>
+
+        {/* Per-user table */}
+        <section className="mb-12">
+          <div className="flex items-baseline gap-3 mb-6">
+            <span className="hupr-mono-eyebrow">Per-user activity</span>
+            <span className="flex-1 h-px" style={{ background: 'var(--color-border)' }} aria-hidden />
+          </div>
+          <div
+            className="overflow-x-auto"
+            style={{ border: '1px solid var(--color-border)' }}
+          >
+            <table
+              className="w-full"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                color: 'var(--color-text-primary)',
+                borderCollapse: 'collapse',
+              }}
+            >
+              <thead>
+                <tr style={{ background: 'var(--color-bg-sunken)' }}>
+                  <Th>Email</Th>
+                  <Th>Track</Th>
+                  <Th right>Sessions</Th>
+                  <Th right>Completed</Th>
+                  <Th right>In-prog</Th>
+                  <Th right>Avg</Th>
+                  <Th right>Min</Th>
+                  <Th right>Last active</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {userStats.map((u) => (
+                  <tr key={u.user_id} style={{ borderTop: '1px solid var(--color-border)' }}>
+                    <Td>
+                      <Link
+                        href={`/admin/activity/${u.user_id}`}
+                        style={{ color: 'var(--color-text-primary)', textDecoration: 'underline' }}
+                      >
+                        {u.email}
+                      </Link>
+                    </Td>
+                    <Td muted>{u.track}</Td>
+                    <Td right>{u.total_sessions}</Td>
+                    <Td right>{u.completed}</Td>
+                    <Td right muted>{u.in_progress || '—'}</Td>
+                    <Td right>{u.avg_score || '—'}</Td>
+                    <Td right muted>{u.total_minutes}</Td>
+                    <Td right muted>{u.last_active ? formatRel(u.last_active) : 'never'}</Td>
+                  </tr>
+                ))}
+                {userStats.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      style={{
+                        padding: '32px 16px',
+                        textAlign: 'center',
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
+                      No registered users. Add cohort members at{' '}
+                      <Link href="/admin/allowlist" style={{ textDecoration: 'underline' }}>
+                        /admin/allowlist
+                      </Link>
+                      .
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <p
+            className="mt-3"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              color: 'var(--color-text-muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+            }}
+          >
+            Click an email for that user&apos;s transcripts.
+          </p>
+        </section>
+
+        {/* Recent sessions */}
+        <section className="mb-12">
+          <div className="flex items-baseline gap-3 mb-6">
+            <span className="hupr-mono-eyebrow">Recent sessions (last 30)</span>
+            <span className="flex-1 h-px" style={{ background: 'var(--color-border)' }} aria-hidden />
+          </div>
+          <ul style={{ borderTop: '1px solid var(--color-border)' }}>
+            {allSessions.slice(0, 30).map((s) => {
+              const u = userById.get(s.user_id);
+              return (
+                <li key={s.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <Link
+                    href={`/admin/activity/${s.user_id}#session-${s.id}`}
+                    className="block py-3 px-1"
+                    style={{ textDecoration: 'none', color: 'var(--color-text-primary)' }}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <div
+                          className="truncate"
+                          style={{
+                            fontFamily: 'var(--font-headline)',
+                            fontWeight: 700,
+                            fontSize: 14,
+                            textTransform: 'uppercase',
+                            letterSpacing: '-0.005em',
+                            color: 'var(--color-text-primary)',
+                          }}
+                        >
+                          {((s as any).cases?.title) || '(deleted case)'}
+                        </div>
+                        <div
+                          className="mt-1"
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: 11,
+                            color: 'var(--color-text-muted)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.04em',
+                          }}
+                        >
+                          {u?.email ?? s.user_id.slice(0, 8)} · {new Date(s.started_at).toLocaleString()} · {s.track ?? 'no-track'}
+                        </div>
+                      </div>
+                      <div
+                        className="whitespace-nowrap"
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: 13,
+                          color: 'var(--color-text-primary)',
+                        }}
+                      >
+                        {s.status === 'completed' ? `${s.score}/100` : s.status}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-xs whitespace-nowrap">
-                    {s.status === 'completed' ? (
-                      <span className="text-emerald-400">{s.score}/100</span>
-                    ) : s.status === 'in_progress' ? (
-                      <span className="text-amber-400">in progress</span>
-                    ) : (
-                      <span className="text-zinc-500">{s.status}</span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-          {allSessions.length === 0 && (
-            <div className="px-3 py-6 text-center text-zinc-500 text-sm">No sessions yet across the cohort.</div>
-          )}
-        </div>
-      </section>
+                  </Link>
+                </li>
+              );
+            })}
+            {allSessions.length === 0 && (
+              <li
+                style={{
+                  padding: '32px 16px',
+                  textAlign: 'center',
+                  color: 'var(--color-text-muted)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                }}
+              >
+                No sessions yet across the cohort.
+              </li>
+            )}
+          </ul>
+        </section>
 
-      {/* Engagement by case type */}
-      <section className="mb-8">
-        <h2 className="text-sm font-semibold text-zinc-300 mb-3">Engagement by case type</h2>
-        <div className="flex flex-wrap gap-2">
-          {topTypes.map(([type, count]) => (
-            <span key={type} className="text-xs px-3 py-1.5 rounded bg-zinc-800 text-zinc-300">
-              {type.replace('_', ' ')}: <span className="text-emerald-300">{count}</span>
-            </span>
-          ))}
-          {topTypes.length === 0 && <span className="text-xs text-zinc-500">No data yet.</span>}
-        </div>
-      </section>
+        {/* Engagement by case type */}
+        <section className="mb-12">
+          <div className="flex items-baseline gap-3 mb-6">
+            <span className="hupr-mono-eyebrow">Engagement by case type</span>
+            <span className="flex-1 h-px" style={{ background: 'var(--color-border)' }} aria-hidden />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {topTypes.map(([type, count]) => (
+              <span
+                key={type}
+                style={{
+                  padding: '8px 14px',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-bg-canvas)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                {type.replace('_', ' ')} · {count}
+              </span>
+            ))}
+            {topTypes.length === 0 && (
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  color: 'var(--color-text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                No data yet.
+              </span>
+            )}
+          </div>
+        </section>
 
-      {/* Recent user feedback */}
-      <section className="mb-8">
-        <h2 className="text-sm font-semibold text-zinc-300 mb-3">Recent feedback</h2>
-        <div className="rounded-lg border border-zinc-800 divide-y divide-zinc-800">
-          {recentFeedback.map((f, i) => (
-            <div key={i} className="px-3 py-2 text-xs">
-              <span className={
-                f.sentiment === 'helpful' ? 'text-emerald-400' :
-                f.sentiment === 'confused' ? 'text-amber-400' : 'text-rose-400'
-              }>{f.sentiment}</span>
-              {f.free_text && <span className="text-zinc-300 ml-2">— &quot;{f.free_text}&quot;</span>}
-              <span className="text-zinc-600 ml-2">{formatRel(f.created_at)}</span>
-            </div>
-          ))}
-          {recentFeedback.length === 0 && (
-            <div className="px-3 py-3 text-zinc-500 text-xs">No feedback submitted yet.</div>
-          )}
-        </div>
-      </section>
+        {/* Recent feedback */}
+        <section className="mb-12">
+          <div className="flex items-baseline gap-3 mb-6">
+            <span className="hupr-mono-eyebrow">Recent feedback</span>
+            <span className="flex-1 h-px" style={{ background: 'var(--color-border)' }} aria-hidden />
+          </div>
+          <ul style={{ borderTop: '1px solid var(--color-border)' }}>
+            {recentFeedback.map((f, i) => (
+              <li
+                key={i}
+                style={{
+                  borderBottom: '1px solid var(--color-border)',
+                  padding: '12px 4px',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                <span
+                  style={{
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    fontWeight: 700,
+                    color:
+                      f.sentiment === 'positive'
+                        ? 'var(--color-text-primary)'
+                        : f.sentiment === 'neutral'
+                        ? 'var(--color-text-secondary)'
+                        : 'var(--color-signal-danger)',
+                  }}
+                >
+                  {f.sentiment}
+                </span>
+                {f.free_text && (
+                  <span
+                    className="ml-3"
+                    style={{ fontFamily: 'var(--font-accent)', fontSize: 14, color: 'var(--color-text-secondary)' }}
+                  >
+                    &quot;{f.free_text}&quot;
+                  </span>
+                )}
+                <span
+                  className="ml-3"
+                  style={{ color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                >
+                  {formatRel(f.created_at)}
+                </span>
+              </li>
+            ))}
+            {recentFeedback.length === 0 && (
+              <li
+                style={{
+                  padding: '24px 4px',
+                  textAlign: 'center',
+                  color: 'var(--color-text-muted)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  borderBottom: '1px solid var(--color-border)',
+                }}
+              >
+                No feedback submitted yet.
+              </li>
+            )}
+          </ul>
+        </section>
+      </div>
     </main>
   );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
-      <div className="text-[10px] uppercase text-zinc-500">{label}</div>
-      <div className="text-xl sm:text-2xl font-semibold mt-1 text-zinc-100">{value}</div>
+    <div style={{ background: 'var(--color-bg-canvas)', padding: '24px 20px' }}>
+      <div className="hupr-mono-eyebrow" style={{ color: 'var(--color-text-muted)' }}>
+        {label}
+      </div>
+      <div
+        className="mt-2 tabular-nums"
+        style={{
+          fontFamily: 'var(--font-headline)',
+          fontWeight: 700,
+          fontSize: 32,
+          lineHeight: 1,
+          color: 'var(--color-text-primary)',
+          letterSpacing: '-0.005em',
+        }}
+      >
+        {value}
+      </div>
     </div>
+  );
+}
+
+function Th({ children, right }: { children: React.ReactNode; right?: boolean }) {
+  return (
+    <th
+      style={{
+        textAlign: right ? 'right' : 'left',
+        padding: '10px 14px',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 11,
+        fontWeight: 400,
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+        color: 'var(--color-text-muted)',
+      }}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({
+  children,
+  right,
+  muted,
+}: {
+  children: React.ReactNode;
+  right?: boolean;
+  muted?: boolean;
+}) {
+  return (
+    <td
+      style={{
+        padding: '10px 14px',
+        textAlign: right ? 'right' : 'left',
+        color: muted ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
+        fontVariantNumeric: 'tabular-nums',
+      }}
+    >
+      {children}
+    </td>
   );
 }
 

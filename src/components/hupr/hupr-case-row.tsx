@@ -1,35 +1,40 @@
-// HUPR news-pair row for the cases library. Image on left + title + mono
-// metadata + Moderustic excerpt on right. Hairline divider between rows.
-//
-// Image strategy: 147 curated Unsplash photos saved locally in
-// /public/case-photos/case-NNN.jpg. Each case is hash-mapped from its UUID
-// to one of the photos so:
-//   1. The same case always shows the same photo (stable across renders)
-//   2. Consecutive cases on the page show different photos (varied)
-//   3. No live Unsplash dependency at runtime — all served from /public
+// HUPR news-pair row for the cases library — typographic placard on the
+// left (case_type-themed colored band with mono case-number eyebrow + label),
+// title + meta + Moderustic excerpt on the right. Hairline divider between
+// rows. No decorative photos — the typography is the visual.
 
 import { CaseListLink } from '../case-list-link';
 
-const PHOTO_COUNT = 147; // matches scripts/download-case-photos.sh output
+// Case-type → HUPR earth-tone background mapping. Matches the /cases sticky
+// browse-by-type cards so the same case_type carries the same color across
+// surfaces — strong visual recognition signal.
+const CASE_TYPE_BG: Record<string, { bg: string; fg: string }> = {
+  profitability:  { bg: 'var(--hupr-sand)',   fg: '#FFFFFF' },
+  market_entry:   { bg: 'var(--hupr-terra)',  fg: '#FFFFFF' },
+  operations:     { bg: 'var(--hupr-sage)',   fg: '#FFFFFF' },
+  estimation:     { bg: 'var(--hupr-slate)',  fg: '#FFFFFF' },
+  pricing:        { bg: 'var(--hupr-cognac)', fg: '#FFFFFF' },
+  mna:            { bg: 'var(--hupr-cream)',  fg: '#323234' },
+  gtm:            { bg: '#7a8f92',            fg: '#FFFFFF' },
+  other:          { bg: 'var(--color-bg-sunken)', fg: '#323234' },
+};
 
-// FNV-1a 32-bit hash — fast, deterministic, no crypto dep needed. Used to
-// turn a UUID string into a stable integer 0..PHOTO_COUNT-1.
-function hashCaseIdToPhotoIndex(caseId: string): number {
+function bgFor(caseType: string): { bg: string; fg: string } {
+  return CASE_TYPE_BG[caseType] ?? CASE_TYPE_BG.other;
+}
+
+// FNV-1a 32-bit hash → stable 2-digit case number per UUID. Used as a small
+// editorial marker on the placard, NOT for content selection.
+function hashCaseIdToNumber(caseId: string): number {
   let hash = 0x811c9dc5;
   for (let i = 0; i < caseId.length; i++) {
     hash ^= caseId.charCodeAt(i);
     hash = Math.imul(hash, 0x01000193);
   }
-  // Force unsigned 32-bit
-  return (hash >>> 0) % PHOTO_COUNT;
+  return (hash >>> 0) % 99 + 1;
 }
 
-function photoFor(caseId: string): string {
-  const idx = hashCaseIdToPhotoIndex(caseId);
-  return `/case-photos/case-${String(idx).padStart(3, '0')}.jpg`;
-}
-
-function DifficultyDots({ d }: { d: string }) {
+function DifficultyDots({ d, fg }: { d: string; fg: string }) {
   const fill = d === 'easy' ? 1 : d === 'medium' ? 2 : 3;
   return (
     <span
@@ -41,8 +46,9 @@ function DifficultyDots({ d }: { d: string }) {
           key={i}
           className="block h-1.5 w-1.5 rounded-full"
           style={{
-            background: i < fill ? 'var(--color-text-primary)' : 'transparent',
-            border: i < fill ? 'none' : '1px solid var(--color-text-muted)',
+            background: i < fill ? fg : 'transparent',
+            border: i < fill ? 'none' : `1px solid ${fg}`,
+            opacity: i < fill ? 1 : 0.5,
           }}
         />
       ))}
@@ -67,6 +73,8 @@ export function HuprCaseRow({
   c: HuprCaseRowData;
   completed?: boolean;
 }) {
+  const { bg, fg } = bgFor(c.case_type);
+  const caseNumber = hashCaseIdToNumber(c.id);
   const meta = [c.industry, c.case_type.replace('_', ' '), c.source ?? 'unknown']
     .filter(Boolean)
     .join(' · ');
@@ -86,21 +94,39 @@ export function HuprCaseRow({
       }}
     >
       <div className="flex flex-col sm:flex-row gap-5">
-        {/* Image — HUPR's image-zoom reveal on intersect, served local from
-            /public/case-photos/. */}
+        {/* Left placard — typographic billboard, case-type-themed. */}
         <div className="w-full sm:w-3/12 flex-shrink-0">
           <div
-            className="overflow-hidden"
-            style={{ aspectRatio: '4 / 2.8' }}
+            className="relative overflow-hidden flex flex-col justify-between p-4"
+            style={{
+              aspectRatio: '4 / 2.8',
+              background: bg,
+              color: fg,
+            }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photoFor(c.id)}
-              alt=""
-              loading="lazy"
-              className="hupr-image-zoom w-full h-full object-cover"
-              style={{ filter: 'saturate(0.92)' }}
-            />
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                fontWeight: 400,
+              }}
+            >
+              N° {String(caseNumber).padStart(2, '0')}
+            </div>
+            <div
+              className="uppercase"
+              style={{
+                fontFamily: 'var(--font-headline)',
+                fontWeight: 700,
+                fontSize: 20,
+                lineHeight: 1.05,
+                letterSpacing: '-0.005em',
+              }}
+            >
+              {c.case_type.replace('_', ' ')}
+            </div>
           </div>
         </div>
 
@@ -149,7 +175,7 @@ export function HuprCaseRow({
           >
             <span>{meta}</span>
             <span aria-hidden="true">·</span>
-            <DifficultyDots d={c.difficulty} />
+            <DifficultyDots d={c.difficulty} fg={'var(--color-text-secondary)'} />
           </div>
           {excerpt && (
             <p
