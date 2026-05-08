@@ -173,9 +173,13 @@ export interface HuprDesignProps {
   heroRightCard?: ReactNode;
   eyebrow?: string;
   menuLinks?: { label: string; href: string }[];
+  // When passed, replaces the entire <Hero> section (marquee + photo +
+  // floating right-card). Used by `/` so the home page gets a distinct
+  // marketing-first hero instead of the signin-shaped composition.
+  customHero?: ReactNode;
 }
 
-export function HuprDesign({ heroRightCard, eyebrow, menuLinks }: HuprDesignProps = {}) {
+export function HuprDesign({ heroRightCard, eyebrow, menuLinks, customHero }: HuprDesignProps = {}) {
   // Single IntersectionObserver wires HUPR's two reveal classes:
   //   .hupr-image-zoom — scale(1.3) blur(4px) → scale(1) blur(0)
   //   .hupr-fade-up    — opacity 0 + translateY(24px) → 1 + 0
@@ -226,7 +230,7 @@ export function HuprDesign({ heroRightCard, eyebrow, menuLinks }: HuprDesignProp
     >
       <HuprStyles />
       <Header eyebrow={eyebrow} menuLinks={menuLinks} />
-      <Hero rightCard={heroRightCard} />
+      {customHero ?? <Hero rightCard={heroRightCard} />}
       <StatsBillboard />
       <ServiceStack />
       <Spheres />

@@ -1,12 +1,10 @@
-// Home page — HUPR landing composition. Mirrors /auth/signin's layout
-// (marquee + stats + sticky tracks + spheres + news pair) but renders a
-// marketing CTA card in the hero-right slot instead of the sign-in form.
-//
-// Public — no auth gate. Signed-in users see this page if they navigate
-// here directly via the top-nav logo.
+// Home page — public marketing landing. Uses HuprDesign's stats / tracks
+// / spheres / news / footer composition but swaps in a custom HomeHero
+// instead of the signin-shaped marquee+right-card hero. That keeps the
+// home page visually distinct from /auth/signin.
 
 import { HuprDesign } from './design-lab/hupr/_components/hupr-design';
-import { HomeHeroCard } from '@/components/home-hero-card';
+import { HomeHero } from '@/components/home-hero';
 
 export default function HomePage() {
   return (
@@ -18,7 +16,7 @@ export default function HomePage() {
         { label: 'News', href: '#news' },
         { label: 'Sign in', href: '/auth/signin' },
       ]}
-      heroRightCard={<HomeHeroCard />}
+      customHero={<HomeHero />}
     />
   );
 }
