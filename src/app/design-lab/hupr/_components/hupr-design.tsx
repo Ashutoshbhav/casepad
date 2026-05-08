@@ -662,10 +662,17 @@ function Hero({ rightCard }: { rightCard?: ReactNode }) {
         />
       </div>
 
-      {/* Auto-scrolling marquee headline */}
+      {/* Auto-scrolling marquee headline. pointer-events:none so its huge
+          15vw H1 doesn't eat clicks on the floating right-card (sign-in)
+          when the marquee text scrolls behind/across it. Decorative only. */}
       <div
         className="absolute z-10 whitespace-nowrap overflow-hidden"
-        style={{ top: 'calc(75vh - 11vw)', left: 0, right: 0 }}
+        style={{
+          top: 'calc(75vh - 11vw)',
+          left: 0,
+          right: 0,
+          pointerEvents: 'none',
+        }}
       >
         <div className="hupr-marquee items-center">
           {[0, 1, 2].map((k) => (
@@ -706,14 +713,18 @@ function Hero({ rightCard }: { rightCard?: ReactNode }) {
       </div>
 
       {/* Floating right-card slot — defaults to "What we do / Learn more"
-          on /design-lab/hupr; signin overrides with the email form. */}
+          on /design-lab/hupr; signin overrides with the email form.
+          z-20 keeps the card visually + interactively above the marquee
+          (which is z-10 and now pointer-events:none anyway, but the
+          z-stack is still required so the card paints on top). */}
       <div
-        className="absolute px-5 lg:px-0"
+        className="absolute z-20 px-5 lg:px-0"
         style={{
           top: '50%',
           right: '2rem',
           width: 'min(420px, 92vw)',
           transform: 'translateY(-50%)',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.18)',
         }}
       >
         {rightCard ?? (

@@ -369,11 +369,12 @@ export function ChatPanel({
                   Ash · EM at Bain
                 </div>
                 <div
-                  className="font-headline uppercase text-[28px] sm:text-[36px] leading-[1.05] max-w-[40ch]"
+                  className="leading-[1.5] max-w-[60ch]"
                   style={{
+                    fontFamily: 'var(--font-accent)',
+                    fontSize: 17,
                     color: 'var(--color-text-primary)',
-                    fontWeight: 700,
-                    letterSpacing: '-0.005em',
+                    fontWeight: 500,
                   }}
                 >
                   {m.content ? (
