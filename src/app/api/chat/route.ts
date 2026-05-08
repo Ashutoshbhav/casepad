@@ -9,6 +9,7 @@ import { buildInterviewerMessages } from '@/lib/groq/interviewer';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isCannedTemplate } from '@/lib/canned-templates';
 import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '@/lib/groq/guardrails';
+import { critiqueResponse, regenHintForCritic, shouldCritique } from '@/lib/groq/critic';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -110,6 +111,7 @@ export async function POST(req: NextRequest) {
             full += delta;
           }
 
+          // Gate 1: deterministic guardrail (banned phrases + length cap)
           const verdict = checkResponse(full);
           if (!verdict.ok) {
             console.warn(`[guardrail] turn failed: ${describeFailure(verdict.failure)}`);
@@ -134,6 +136,46 @@ export async function POST(req: NextRequest) {
               }
             } catch (regenErr) {
               console.warn(`[guardrail] regen call errored: ${(regenErr as Error).message}; shipping original`);
+            }
+          }
+
+          // Gate 2: semantic critic (LLM-as-judge) — every Nth turn only.
+          // Skipped on early turns (turnIndex 0,1) so the opener handoff
+          // isn't gated; runs from turn 2 onward at CRITIC_TURN_INTERVAL cadence.
+          // Fail-open on critic errors; never block the user on judge outage.
+          const turnIndex = transcriptIn.length;
+          if (turnIndex >= 2 && shouldCritique(turnIndex)) {
+            try {
+              const cv = await critiqueResponse(full, safeUserTurn);
+              if (!cv.ok && cv.failures.length > 0) {
+                console.warn(`[critic] turn ${turnIndex} failed: ${cv.failures.join(',')}`);
+                const hintedMessages = [
+                  ...messages,
+                  { role: 'system' as const, content: regenHintForCritic(cv) },
+                ];
+                try {
+                  let retry = '';
+                  for await (const delta of streamChat({
+                    messages: hintedMessages as any,
+                    max_tokens: 300,
+                    temperature: 0.4,
+                  })) {
+                    retry += delta;
+                  }
+                  // Re-run guardrail on critic-driven regen so we don't ship
+                  // a banned-phrase-laden retry.
+                  if (retry && checkResponse(retry).ok) {
+                    full = retry;
+                  } else {
+                    console.warn(`[critic] regen failed guardrail or empty; shipping original`);
+                  }
+                } catch (regenErr) {
+                  console.warn(`[critic] regen call errored: ${(regenErr as Error).message}; shipping original`);
+                }
+              }
+            } catch (criticErr) {
+              // critiqueResponse already fails open internally, but defensive double-catch
+              console.warn(`[critic] outer catch: ${(criticErr as Error).message}`);
             }
           }
 
