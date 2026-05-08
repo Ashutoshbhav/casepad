@@ -714,17 +714,18 @@ function Hero({ rightCard }: { rightCard?: ReactNode }) {
 
       {/* Floating right-card slot — defaults to "What we do / Learn more"
           on /design-lab/hupr; signin overrides with the email form.
-          z-20 keeps the card visually + interactively above the marquee
-          (which is z-10 and now pointer-events:none anyway, but the
-          z-stack is still required so the card paints on top). */}
+          isolation:isolate forces a fresh stacking context so the marquee
+          (z-10 inside the same SECTION) cannot paint over the card no
+          matter what stacking-context tricks the marquee CSS pulls. */}
       <div
-        className="absolute z-20 px-5 lg:px-0"
+        className="absolute z-30 px-5 lg:px-0"
         style={{
           top: '50%',
           right: '2rem',
           width: 'min(420px, 92vw)',
           transform: 'translateY(-50%)',
           boxShadow: '0 24px 60px rgba(0,0,0,0.18)',
+          isolation: 'isolate',
         }}
       >
         {rightCard ?? (

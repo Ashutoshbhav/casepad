@@ -95,6 +95,10 @@ export function SignInCard({
         <input
           name="email"
           type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="off"
+          spellCheck={false}
           placeholder="you@school.edu"
           required
           autoFocus
@@ -104,12 +108,11 @@ export function SignInCard({
             border: '1px solid #e8e8e8',
             padding: '12px 14px',
             fontFamily: 'var(--font-body)',
-            fontSize: 13,
+            fontSize: 14,
             color: '#323234',
             borderRadius: 3,
             outline: 'none',
-            textTransform: 'uppercase',
-            letterSpacing: '0.02em',
+            // textTransform removed: emails display as the user typed them.
           }}
         />
         {returnTo && <input type="hidden" name="return_to" value={returnTo} />}
