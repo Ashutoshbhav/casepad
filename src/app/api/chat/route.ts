@@ -12,6 +12,7 @@ import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '
 import { critiqueResponse, regenHintForCritic, shouldCritique } from '@/lib/groq/critic';
 import { staticChatTurnFallback } from '@/lib/groq/static-fallbacks';
 import { withRetry } from '@/lib/supabase/with-retry';
+import { retrievePlaybookFindings, formatFindingsForPrompt } from '@/lib/groq/playbook-retriever';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -117,6 +118,31 @@ export async function POST(req: NextRequest) {
     }
   } catch {
     // fall through — never block the chat call on detection
+  }
+
+  // Week-2-3: Retrieve top-3 playbook findings relevant to the candidate's
+  // last turn (+ recent transcript context). Injects them as guidance into
+  // the system prompt so Ash's response is grounded in observed real-MBB
+  // interviewer practice. retrievePlaybookFindings is FAIL-OPEN — returns []
+  // on any internal error, so a retriever bug can never block the chat call.
+  try {
+    const recentText = withUser
+      .slice(-4)
+      .map((t) => t.content)
+      .join(' ');
+    const queryText = `${safeUserTurn} ${recentText}`.slice(-1200);
+    const findings = retrievePlaybookFindings(queryText, 3);
+    if (findings.length > 0 && messages.length > 0 && messages[0].role === 'system') {
+      const block = formatFindingsForPrompt(findings);
+      if (block) {
+        messages[0] = {
+          ...messages[0],
+          content: messages[0].content + block,
+        };
+      }
+    }
+  } catch {
+    // fall through — playbook retrieval is an enhancement, not a requirement
   }
 
   const encoder = new TextEncoder();
