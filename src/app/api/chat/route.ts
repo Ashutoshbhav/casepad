@@ -8,6 +8,7 @@ import { streamChat } from '@/lib/llm-router';
 import { buildInterviewerMessages } from '@/lib/groq/interviewer';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isCannedTemplate } from '@/lib/canned-templates';
+import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '@/lib/groq/guardrails';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -89,22 +90,86 @@ export async function POST(req: NextRequest) {
   }
 
   const encoder = new TextEncoder();
+  const guardrailMode = getGuardrailMode();
+
   const readable = new ReadableStream({
     async start(controller) {
       let full = '';
-      try {
-        for await (const delta of streamChat({
-          messages: messages as any,
-          max_tokens: 300,
-          temperature: 0.4,
-        })) {
-          full += delta;
-          controller.enqueue(encoder.encode(delta));
+      let errored = false;
+
+      // GATE mode: buffer the full response, validate, regen once on fail,
+      // then ship to client. Loses live token streaming for ~1-2s of latency
+      // but defends the system prompt deterministically.
+      if (guardrailMode === 'gate') {
+        try {
+          for await (const delta of streamChat({
+            messages: messages as any,
+            max_tokens: 300,
+            temperature: 0.4,
+          })) {
+            full += delta;
+          }
+
+          const verdict = checkResponse(full);
+          if (!verdict.ok) {
+            console.warn(`[guardrail] turn failed: ${describeFailure(verdict.failure)}`);
+            const hintedMessages = [
+              ...messages,
+              { role: 'system' as const, content: regenHintFor(verdict.failure) },
+            ];
+            try {
+              let retry = '';
+              for await (const delta of streamChat({
+                messages: hintedMessages as any,
+                max_tokens: 300,
+                temperature: 0.4,
+              })) {
+                retry += delta;
+              }
+              const retryVerdict = checkResponse(retry);
+              if (retryVerdict.ok) {
+                full = retry;
+              } else {
+                console.warn(`[guardrail] regen also failed: ${describeFailure(retryVerdict.failure)}; shipping original`);
+              }
+            } catch (regenErr) {
+              console.warn(`[guardrail] regen call errored: ${(regenErr as Error).message}; shipping original`);
+            }
+          }
+
+          controller.enqueue(encoder.encode(full));
+        } catch (err) {
+          errored = true;
+          full = `\n\n[Service is busy — please retry in a few seconds. ${(err as Error).message.slice(0, 80)}]`;
+          controller.enqueue(encoder.encode(full));
         }
-      } catch (err) {
-        const msg = `\n\n[Service is busy — please retry in a few seconds. ${(err as Error).message.slice(0, 80)}]`;
-        controller.enqueue(encoder.encode(msg));
+      } else {
+        // MONITOR or OFF: stream optimistically. In MONITOR we still log
+        // failures after the stream completes, so we get visibility without
+        // sacrificing UX. OFF skips even the post-stream check.
+        try {
+          for await (const delta of streamChat({
+            messages: messages as any,
+            max_tokens: 300,
+            temperature: 0.4,
+          })) {
+            full += delta;
+            controller.enqueue(encoder.encode(delta));
+          }
+        } catch (err) {
+          errored = true;
+          const msg = `\n\n[Service is busy — please retry in a few seconds. ${(err as Error).message.slice(0, 80)}]`;
+          controller.enqueue(encoder.encode(msg));
+          full = full ? full + msg : msg;
+        }
+        if (guardrailMode === 'monitor' && !errored) {
+          const verdict = checkResponse(full);
+          if (!verdict.ok) {
+            console.warn(`[guardrail:monitor] turn failed: ${describeFailure(verdict.failure)}`);
+          }
+        }
       }
+
       const finalTranscript = [
         ...withUser,
         { role: 'interviewer', content: full, timestamp: new Date().toISOString() },
