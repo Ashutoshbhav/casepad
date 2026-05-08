@@ -51,4 +51,39 @@ describe('buildInterviewerMessages', () => {
     const msgs = buildInterviewerMessages(sampleCase as any, [], turns);
     expect(msgs.length).toBe(11); // 1 system + 10 turns
   });
+
+  it('lists banned chatbot phrases the model must never produce', () => {
+    const msgs = buildInterviewerMessages(sampleCase as any, [], []);
+    const sys = msgs[0].content;
+    expect(sys).toContain('Great question');
+    expect(sys).toContain('Excellent observation');
+    expect(sys).toContain('As an AI');
+    expect(sys).toContain('Let me walk you through');
+  });
+
+  it('enforces the end-with-probe turn-level rule', () => {
+    const msgs = buildInterviewerMessages(sampleCase as any, [], []);
+    expect(msgs[0].content).toMatch(/End every turn with a probe/i);
+  });
+
+  it('includes the falsifiability rule (Ash can yield when wrong)', () => {
+    const msgs = buildInterviewerMessages(sampleCase as any, [], []);
+    expect(msgs[0].content).toContain('FALSIFIABILITY');
+    expect(msgs[0].content).toMatch(/yield/i);
+  });
+
+  it('includes the few-shot examples block with bad and Ash labels', () => {
+    const msgs = buildInterviewerMessages(sampleCase as any, [], []);
+    const sys = msgs[0].content;
+    expect(sys).toContain('EXAMPLES');
+    expect(sys).toContain('BAD (chatbot)');
+    expect(sys).toContain('ASH:');
+  });
+
+  it('locks FEED DATA to the trigger-keyword gate (no leak-by-structure)', () => {
+    const msgs = buildInterviewerMessages(sampleCase as any, [], []);
+    const sys = msgs[0].content;
+    expect(sys).toContain('trigger-keyword gate is non-negotiable');
+    expect(sys).toMatch(/never share gated facts/i);
+  });
 });

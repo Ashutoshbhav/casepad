@@ -1,0 +1,286 @@
+# Interviewer Playbook — Sections 4-6 (Math, Hypothesis, Brainstorming)
+
+> Compiled 2026-05-08 from web research. Findings drawn from Victor Cheng (caseinterview.com), Hacking the Case Interview, IGotAnOffer, RocketBlocks, PrepLounge, StrategyCase, CaseCoach, Crafting Cases, Management Consulted, and Reddit r/consulting threads. ~150+ findings.
+
+---
+
+## 4. Math / Quant phase
+
+### 4.1 How interviewers introduce data
+
+1. Interviewers typically hand off numbers verbally first, then sometimes follow up with a printed exhibit — McKinsey is the most consistent in giving exhibits with explicit titles, axis labels, and legends. [Case Interview Math (IGotAnOffer)](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+2. The standard format is "Here are some numbers / data / an exhibit. What can you tell me from this?" — open-ended interpretation expected before any calculation. [Hacking the Case Interview — Math Guide](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+3. McKinsey-style PEI/case math problems are usually set up as a "given X and Y, what is Z?" format with specific values stated, expecting precise answer. [IGotAnOffer Math Guide](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+4. Bain and BCG more often give partial data and expect the candidate to ask for what's missing rather than dumping everything upfront. [StrategyCase — Case Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+5. Common opener phrasing: "Let me give you some numbers" / "I have some data for you" / "Take a look at this exhibit" — interviewer pauses, waits for candidate to drive. [RocketBlocks — Case Math](https://www.rocketblocks.me/blog/case-interview-math.php)
+6. Many interviewers will deliberately read numbers out loud once and not repeat — testing note-taking discipline. [PrepLounge — How fast math](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+7. Format expectation: candidate writes numbers neatly in columns, labels units (USD, units, %), and confirms back: "So we have revenue of $500M and costs of $400M, correct?" [CaseCoach Math Guide](https://casecoach.com/b/case-interview-math/)
+8. Interviewers expect candidates to take 15-30 seconds of silence to digest an exhibit before talking — silence is allowed and rewarded. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+9. McKinsey often introduces data with a specific question ("What's the breakeven volume?") rather than open-ended ("What do you make of this?"). [Hacking the Case Interview — MBB Guide](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+10. Bain interviewers more often hand the exhibit and ask "What stands out to you?" — testing pattern recognition before quant. [Hacking the Case Interview Math](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+11. BCG style: chart-heavy exhibits, often with two axes and a legend; candidate must orient themselves before computing. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+12. Standard expected handoff sequence: interviewer reads data → candidate confirms numbers → candidate states approach → candidate asks "May I take a moment?" before calculating. [CaseCoach](https://casecoach.com/b/case-interview-math/)
+13. Interviewers expect candidates to ALWAYS ask "Is it OK if I round?" before starting — failing to ask is a common dock. [Hacking the Case Interview Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+14. Numbers given are often "messy on purpose" (e.g., $387M instead of $400M) to test whether candidate will round appropriately. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+15. Interviewers will sometimes withhold a key number deliberately so the candidate must request it: "What additional data would you need to answer this?" [Career in Consulting Math Practice](https://careerinconsulting.com/consulting-case-interview-math-practice-guide-2024/)
+16. The four-step communication framework interviewers expect: "Verbalize, Calculate, Sense-check, Interpret." [CaseCoach Math](https://casecoach.com/b/case-interview-math/)
+17. Interviewers often introduce an exhibit by saying "I'll let you take a look" — candidate is expected to study it silently for 20-30 sec then narrate. [RocketBlocks Math](https://www.rocketblocks.me/blog/case-interview-math.php)
+
+### 4.2 Phrases when candidate's math drifts
+
+1. "Walk me through that calculation." — most common probe when interviewer suspects an error. [Hacking the Case Interview Math](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+2. "Hmm, that doesn't feel right to me." — standard Bain-style soft challenge. [PrepLounge — Bain math](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+3. "Are you sure about that?" — direct McKinsey-style challenge designed to test if candidate will fold or defend. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+4. "Can you show me how you got there?" [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+5. "Talk me through your math." [CaseCoach](https://casecoach.com/b/case-interview-math/)
+6. "How did you arrive at that number?" [Hacking the Case Interview](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+7. "Does that answer make sense to you?" — sanity-check probe. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+8. "Is that the order of magnitude you'd expect?" [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+9. "Let me stop you there — can you double-check that?" [PrepLounge math threads](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+10. "I'm getting a different number — can you redo that?" [RocketBlocks](https://www.rocketblocks.me/blog/case-interview-math.php)
+11. "Did you account for [X variable]?" — leading question hinting at omission. [CaseCoach](https://casecoach.com/b/case-interview-math/)
+12. "What unit is that in?" — when candidate forgets to label. [Hacking the Case Interview](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+13. "How many zeros are in that?" — classic Bain probe when zeros get dropped. [PrepLounge](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+14. "Can you write that out for me?" — forcing the candidate to slow down and externalize. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+15. "What's your sanity check on that?" [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+16. "Just to make sure I follow — how did you get from $40M to $4M?" [CaseCoach](https://casecoach.com/b/case-interview-math/)
+17. "Take a step back — does that number pass the smell test?" [StrategyCase](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+18. "Are you confident in that number?" — silence after = candidate should hold or fix. [Hacking the Case Interview](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+19. "Try it again." — terse McKinsey-style; no hint, just redo. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+20. "Let's pause — what's your equation here?" [CaseCoach](https://casecoach.com/b/case-interview-math/)
+21. "Read me back the numbers." — when candidate seems lost. [PrepLounge](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+22. "What's that as a percentage of revenue?" — pushing for ratio sense. [Hacking the Case Interview](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+23. "I think you may have skipped a step." [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+24. "Can you simplify that approach?" — when candidate over-complicates. [CaseCoach](https://casecoach.com/b/case-interview-math/)
+25. "Why don't you start that one over?" [RocketBlocks Math](https://www.rocketblocks.me/blog/case-interview-math.php)
+26. "What does that number actually mean for the client?" — when candidate computes but doesn't interpret. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+27. "So what?" — classic terse follow-up after a number is delivered without context. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+28. "If we round, where do we land roughly?" — push toward order-of-magnitude. [Hacking the Case Interview Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+
+### 4.3 How they handle a wrong answer
+
+1. McKinsey interviewers tend to push back politely but firmly: "Are you sure?" with neutral facial expression — candidate must self-check without help. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+2. Bain interviewers more likely to soft-correct with a hint: "Did you account for fixed costs as well?" [PrepLounge Bain math](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+3. BCG style is closer to McKinsey: silent challenge, candidate is expected to catch their own error. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+4. Tier-1 norm: a single math error is recoverable if the candidate notices and corrects without prompting. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+5. If the candidate insists on a wrong answer when challenged, that is a near-fatal signal — interviewers value humility over false confidence. [CaseCoach](https://casecoach.com/b/case-interview-math/)
+6. If candidate folds immediately when challenged on a CORRECT answer, that's also a fail signal — interviewers sometimes challenge correct answers to test conviction. [PrepLounge math threads](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+7. Standard recovery is "Let me re-check that — give me a moment" → recompute aloud → "OK, I had a transcription error, the correct number is X." [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+8. Interviewers will often let a wrong number stand for a beat to see if the candidate sense-checks it themselves before delivering. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+9. At Bain, "candidates who failed math questions usually did not struggle with the actual arithmetic but failed because they jumped into calculations without a plan, lost track of zeros, or got the right number but could not explain what it meant." [Hacking the Case Interview Math](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+10. McKinsey interviewers will sometimes follow a wrong answer with another, harder question rather than correcting — the candidate's downstream logic gets evaluated against their own (wrong) number. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+11. If a candidate gets the wrong number but interprets it correctly, partial credit is given at all three firms. [CaseCoach Math](https://casecoach.com/b/case-interview-math/)
+12. "If you realize partway through that you've made an error, stop, acknowledge, and restart that step — don't try to hide it." [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+13. Tier-2 firms (Deloitte S&O, Accenture Strategy) tend to coach more during math; MBB will coach less and observe more. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+14. After a wrong answer is corrected, interviewers usually move on without dwelling — dwelling signals the error was disqualifying. [PrepLounge math threads](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+15. Repeated math errors (3+) are typically a hard fail at MBB even if framework and communication are strong. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+16. McKinsey PST and digital screens grade math purely on correctness — no partial credit for "good thinking." Round-by-round MBB interviews allow more nuance. [Hacking the Case Interview](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+
+### 4.4 Mental math expectations by firm/round
+
+1. Most case calculations should take 30-90 seconds; >2 minutes signals over-complication. [Hacking the Case Interview Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+2. McKinsey expects more precision; BCG and Bain more often allow rounding, especially in candidate-led cases. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+3. "Always practice without rounding — if you train for precision you can choose to round in interview." [Hacking the Case Interview Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+4. Round 1 (associate-conducted) typically more lenient on speed; Round 2/Final (partner-conducted) faster pace and less patience. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+5. Acceptable rounding tolerance: typically within 5-10% of the precise answer if rounding was declared upfront. [CaseCoach](https://casecoach.com/b/case-interview-math/)
+6. ~90% of case math is multiplication, division, percentages, fractions, and basic algebra — no calculus or stats. [Hacking the Case Interview Math](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+7. Candidates should be able to multiply 2-digit by 2-digit numbers (e.g., 47 × 32) within ~15 seconds in their head. [RocketBlocks Math](https://www.rocketblocks.me/blog/case-interview-math.php)
+8. Expected fluency: % conversions (12.5% = 1/8, 6.67% = 1/15) on demand — pre-memorized fraction-to-percent table. [Hacking the Case Interview Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+9. Big number arithmetic (millions × millions, etc.) — candidates expected to use scientific notation or "drop and remember zeros" approach. [StrategyCase](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+10. McKinsey Solve / Imbellus / digital screen has no partner forgiveness — speed AND accuracy both required, no rounding. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+11. Bain expects "feel for numbers" over raw speed — i.e., a candidate who is 5% slow but always gets directionally right beats a fast but error-prone one. [PrepLounge how-fast-math](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+12. Final round at all three firms expects partner-level "back-of-envelope" math — i.e., the candidate confidently states "roughly $200M" without grinding through digits. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+13. For market sizing specifically: rounding is always acceptable; precision is suspicious (suggests fake data). [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+14. BCG's Casey/Online Test grades on speed under timed pressure — expectation tighter than live interviews. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+15. "If your computation goes more than ~60 seconds without you saying anything out loud, you're failing the communication bar." [CaseCoach Math](https://casecoach.com/b/case-interview-math/)
+
+### 4.5 How interviewers test "feel for numbers"
+
+1. Order-of-magnitude probes: "Roughly how big is this market?" — interviewer wants the candidate to anchor on a known reference (e.g., US population ~330M) and reason. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+2. Sanity-check expectation: after every calculation, candidate should explicitly say "Does that make sense? If revenue is $500M and that's 20% of the market, market is $2.5B — checks out vs. what we know." [Hacking the Case Interview Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+3. Interviewers often deliberately let an obviously wrong number sit (e.g., a profit margin of 200%) to see if the candidate flags it. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+4. "Does this number pass the smell test?" — verbatim Bain probe. [PrepLounge](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+5. Reasonableness anchors interviewers expect candidates to know: US GDP ~$25T, US population ~330M, avg US household income ~$75K, avg car price ~$45K. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+6. "If your answer is off by 10x, you should feel it before the interviewer points it out." [Hacking the Case Interview Math](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+7. Top sign of strong "number feel": candidate says "That seems high — let me re-check" BEFORE delivering, not after challenge. [CaseCoach Math](https://casecoach.com/b/case-interview-math/)
+8. Common test: interviewer states "We earn $50M on $40M of revenue" — candidate should immediately flag impossible margin (>100%). [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+9. "Feel for numbers" is graded as much as accuracy — a fast-but-uncalibrated candidate fails. [IGotAnOffer Math](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+10. Bain interviewers value interpretation over computation — "What does this number mean for the client?" weighted as heavily as "What's the answer?" [PrepLounge](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+11. McKinsey interviewers often give a number and ask "Is that big or small?" — testing whether candidate can contextualize without a benchmark handed over. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+12. Pattern recognition test: interviewer shows a chart with an outlier and waits silently — candidate is expected to flag the outlier unprompted. [StrategyCase Math](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+
+---
+
+## 5. Hypothesis-driven thinking
+
+### 5.1 How interviewers test "drive from hypothesis"
+
+1. Case interviews are "hypothesis-driven, not framework-driven, and the hypothesis determines the choice of framework." [Victor Cheng — Case Interview Secrets summary](https://youexec.com/book-summaries/case-interview-secrets)
+2. Victor Cheng's four consulting tools: "1. Hypothesis 2. Issue Tree/Framework 3. Drill-Down Analysis 4. Synthesis" — interviewers expect the candidate to demonstrate all four. [Shortform — Victor Cheng's framework](https://www.shortform.com/books/blog/problem-solving-framework.html)
+3. "Drill Down Analysis" is the systematic method: at each branch, candidate analyzes data to prove or disprove that branch; if proven false, candidate revises the hypothesis and creates a new issue tree. [Hacking the Case Interview — Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+4. Interviewers expect candidates to surface a hypothesis WITHIN ~60 seconds of seeing data — silence past that = they will probe. [Caseinterview.com — Importance of hypothesis](https://caseinterview.com/hypothesis-in-a-case-interview)
+5. The "drive" signal: candidate uses each new piece of data to either confirm or revise the hypothesis — not just collect data. [MyConsultingCoach — hypothesis-driven](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+6. Interviewers grade whether candidate explicitly says "Based on what we've seen, my updated hypothesis is..." after each data drop. [Career in Consulting — hypothesis-driven](https://careerinconsulting.com/hypothesis/)
+7. McKinsey weighs hypothesis-driven thinking heavily because consulting work is hypothesis-driven by client mandate; framework-driven candidates fail. [Caseinterview.com — hypothesis](https://caseinterview.com/hypothesis-in-case-interview)
+8. "If you're doing the analysis correctly, you are constantly drilling down one branch, discovering it's not valid, revising your hypothesis... drill down, pull up, revise the hypothesis, restructure the issue tree, drill down again — lather, rinse, repeat." [Shortform — Cheng framework](https://www.shortform.com/books/blog/problem-solving-framework.html)
+9. Interviewer probe: "If you had only one piece of data to ask for next, what would it be and why?" — tests whether the candidate has a directed hypothesis. [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+10. Bain interviewers especially probe for "the answer-first" mindset: "If you had to bet right now, what would you say is driving this?" [Management Consulted — hypothesis](https://managementconsulted.com/what-is-a-hypothesis/)
+11. BCG interviewers tend to push hypothesis-revision more than initial-hypothesis: they drop a contradicting data point and watch how fast candidate updates. [CaseBasix — hypothesis approach](https://www.casebasix.com/pages/case-interview-hypothesis-approach)
+12. "Without a hypothesis, the candidate's questions look like a fishing expedition — one of the most common reasons for rejection." [CaseBasix — case interview mistakes](https://www.casebasix.com/pages/case-interview-mistakes-conceptual)
+13. Strong hypothesis is testable: it states a direction AND identifies what data would falsify it. Interviewers probe: "What would change your mind?" [MyConsultingCoach hypothesis](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+14. Interviewer probe: "Why that hypothesis and not [alternative]?" — tests candidate has considered priors, not just guessed. [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+15. Hypothesis must be tied to the case objective. Interviewer probes: "How does that hypothesis help us answer the client's question?" [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+16. Strongest signal: candidate proactively says "Let me state my hypothesis upfront so we can test it" without being asked. [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+17. McKinsey interviewer-led format will explicitly ask "What's your hypothesis?" at structuring time and again after each exhibit. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+
+### 5.2 Phrases when candidate is exploring without a hypothesis
+
+1. "So what's your hypothesis?" — most common direct probe. [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+2. "Where are you headed with this?" [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+3. "What are you trying to figure out?" [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+4. "If you had to give me an answer right now, what would it be?" [Management Consulted](https://managementconsulted.com/what-is-a-hypothesis/)
+5. "What's your best guess at what's driving this?" [CaseBasix](https://www.casebasix.com/pages/case-interview-hypothesis-approach)
+6. "What's the so-what here?" — when candidate analyzes without conclusion. [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+7. "Where do you want to go next, and why?" — testing directed search. [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+8. "What's your gut telling you?" — softer Bain-style probe. [Management Consulted](https://managementconsulted.com/what-is-a-hypothesis/)
+9. "Pause — before you ask for more data, what do you think the answer is?" [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+10. "What are you ruling in or ruling out with this question?" [Caseinterview.com](https://caseinterview.com/hypothesis-in-case-interview)
+11. "I see you've gone broad — but what's the punchline?" [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+12. "If your hypothesis were wrong, how would we know?" [CaseBasix — mistakes](https://www.casebasix.com/pages/case-interview-mistakes-conceptual)
+13. "Why is that the most important branch to investigate first?" [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+14. "OK, you've gathered some data — what does it tell you?" [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+15. "What's your point of view here?" [Management Consulted](https://managementconsulted.com/what-is-a-hypothesis/)
+16. "Let me push you — based on what we know, what would you tell the CEO?" [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+17. "What would you bet on?" [PrepLounge — hypothesis thread](https://www.preplounge.com/consulting-forum/is-cases-solutions-always-hypothesis-driven-1143)
+18. "You've described the situation — but what do you THINK is going on?" [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+19. "What's your top suspect?" — Bain detective-style probe. [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+20. "If you had 30 seconds with the CEO right now, what would you say?" [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+21. "Why are we asking that question?" — when probe seems unanchored. [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+22. "What do you expect to find?" — pre-data probe. [CaseBasix](https://www.casebasix.com/pages/case-interview-hypothesis-approach)
+
+### 5.3 What "good hypothesis-driven" sounds like (verbatim from candidate side)
+
+1. "My initial hypothesis is that this is a cost problem rather than a revenue problem — I'd like to test that by looking at cost trends first." [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+2. "Based on the data you've shared, my updated hypothesis is X. To confirm, I'd want to see Y." [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+3. "If my hypothesis is correct, we'd expect to see [Z signal]; if not, we'd see [W]. Can we look at that?" [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+4. "I'd start with the cost side because the magnitude of the cost increase is larger than the revenue decline — that's where the answer is more likely to be." [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+5. "My hypothesis is the issue is in the variable cost line, specifically labor — let me test that." [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+6. "Given this new data, I want to revise my hypothesis. The original direction is disconfirmed; the new view is..." [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+7. "I'd prioritize this branch over that one because it's both higher impact and faster to test." [Management Consulted](https://managementconsulted.com/what-is-a-hypothesis/)
+8. "If we look at the segment data and Segment A has flat margins, my cost hypothesis is wrong and I'll pivot to pricing." [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+9. "Before I ask for more data, let me state what I expect: I expect labor cost to be up >15% YoY." [Caseinterview.com](https://caseinterview.com/hypothesis-in-case-interview)
+10. "My working answer right now is that the client should NOT enter the market — three reasons: [X, Y, Z]. I'd want to stress-test reason Y." [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+11. "I'm going to focus on costs first because the case said margins compressed despite stable revenue — that points to cost." [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+12. "If the data confirms X, then we can rule out Y and move to Z; if not, we go back to Y." [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+13. "Let me synthesize so far: hypothesis A is partially confirmed; hypothesis B is ruled out; I want to dig into A's sub-branches." [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+14. "The most likely root cause given the data is X — I'd want one more data point on Y to be confident enough to recommend." [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+15. "I want to bet that this is a [demand-side / supply-side] issue — let me test that with the next question." [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+
+### 5.4 Common mistakes — pseudo-hypotheses interviewers reject
+
+1. Hypothesis too specific too early: "the decline in profits is caused by a recent trade embargo with China" before any data — flagged as red flag. [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+2. No hypothesis at all — asking question after question without committing — "one of the most common reasons for rejection." [CaseBasix mistakes](https://www.casebasix.com/pages/case-interview-mistakes-conceptual)
+3. Sticking with a disproven hypothesis when data clearly contradicts it. [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+4. "It might be costs OR revenue OR something else" — a list-of-possibilities is not a hypothesis, it's a framework restated. [Caseinterview.com](https://caseinterview.com/hypothesis-in-a-case-interview)
+5. Hypothesis that restates the question: "My hypothesis is profits are declining because of a problem somewhere." — circular, no testable claim. [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+6. Hypothesis untied to data: candidate states a hypothesis but asks for data unrelated to testing it. [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+7. Hypothesis with no falsifiability: candidate cannot answer "What would prove this wrong?" [Hacking the Case Interview Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+8. The "infinite regress" hypothesis: candidate keeps revising before testing — never commits long enough to learn. [Caseinterview.com](https://caseinterview.com/hypothesis-in-case-interview)
+9. Pseudo-hypothesis as framework category: "My hypothesis is we should look at the 4 Ps." — that's a structure, not a hypothesis. [Career in Consulting](https://careerinconsulting.com/hypothesis/)
+10. Hypothesis with no priority: candidate states "could be A, B, C, or D" with equal weight — interviewers want a directional bet. [MyConsultingCoach](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+11. "Anchoring too hard": candidate refuses to update hypothesis even after multiple disconfirming data points — fail signal. [CaseBasix mistakes](https://www.casebasix.com/pages/case-interview-mistakes-conceptual)
+
+---
+
+## 6. Brainstorming / Creativity
+
+### 6.1 How they frame "give me 5 reasons..." (verbatim openers)
+
+1. "What are all the reasons this plant might be underperforming?" [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+2. "What are all the reasons a coffee chain might be losing market share?" [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+3. "What levers could this hospital pull to reduce patient wait times?" [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+4. "Beyond price, what could differentiate our product in this category?" [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+5. "What would you analyze to size the opportunity?" [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+6. "What creative marketing plays could this scooter startup use to launch in urban Europe?" [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+7. "Why are sales declining?" — open-ended root-cause brainstorm. [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+8. "Make cities more liveable." — abstract creative prompt. [StrategyCase](https://strategycase.com/brainstorming-in-a-case-interview/)
+9. "What are the key risks of entering this market?" — risk-brainstorm framing. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+10. "What questions would you want to answer before recommending this acquisition?" — analytical brainstorm. [Hacking the Case Interview frameworks](https://www.hackingthecaseinterview.com/pages/case-interview-frameworks)
+11. "How would you increase revenue for this client?" — generic lever-brainstorm opener. [CaseBasix brainstorm](https://www.casebasix.com/courses/brainstorm)
+12. "Give me as many ideas as you can for X" — deliberate quantity push, common at BCG. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+
+### 6.2 How they push for breadth vs depth
+
+1. "When you share 2-3 prioritized ideas in a structured and MECE way, your interviewer will most likely ask 'anything else'" — push for breadth. [PrepLounge — brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+2. "If you initially give them more (6-8+ ideas), they will probably ask you to prioritize" — push for depth/judgment. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+3. Strongest candidates combine breadth-first with depth-second: brainstorm wide, then prioritize and explain why. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+4. MBB interviewers "incessantly ask 'what else?' in an eternal push to see how many ideas do you have under your belt." [Crafting Cases — creativity tips](https://www.craftingcases.com/case-interview-creativity-tips/)
+5. "A deeper structure helps you be more creative due to simple math: if you can generate 5 ideas per bucket, you'll have at most 10 ideas using [a flat] structure, but you can get up to 45 ideas using [a deeper] one." [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+6. Standard depth-push: "Pick the most promising one and tell me how you'd test it." [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+7. Standard depth-push: "Walk me through what that idea looks like in practice." [Hacking the Case Interview frameworks](https://www.hackingthecaseinterview.com/pages/case-interview-frameworks)
+8. Breadth signal: interviewer staying silent and nodding after each idea — keep going. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+9. Depth signal: interviewer asks "Why that one specifically?" or "How would you implement that?" — stop generating, start defending. [Hacking the Case Interview frameworks](https://www.hackingthecaseinterview.com/pages/case-interview-frameworks)
+10. Bain values "structured creativity" — categories first, then ideas under each, then examples under each idea (3 levels deep). [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+11. BCG specifically grades "creativity and the ability to drive the case independently" higher than the other two firms. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+
+### 6.3 What "creative" looks like in MBB grading
+
+1. The four hallmarks of strong brainstorm: "broad, deep, MECE, and insightful." [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+2. "Insight means also including the non-obvious angle: the structural shift competitors are missing, the second-order consequence of a trend, the counter-intuitive hypothesis." [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+3. Distinction: answers that "read like a consultant" vs. those that "read like a bystander" — judged on industry knowledge + business judgment. [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+4. Creative = generating ideas the interviewer didn't anticipate, but anchored to the case objective — not random/wild. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+5. "More structure leads to more ideas and greater creativity" — counterintuitive but consistent message across MBB graders. [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+6. The MECE bar is non-negotiable: ideas must not overlap, and the categories must cover the space. [Hacking the Case Interview frameworks](https://www.hackingthecaseinterview.com/pages/case-interview-frameworks)
+7. Tie every idea back to the client's objective: "use 2–3 MECE categories, preview before diving in, and tie every idea back to the client's objective." [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+8. Quantity floor: 5-7 distinct ideas across 2-3 categories is the typical MBB minimum bar. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+9. Insightful = at least ONE idea reflecting industry-specific knowledge or counter-intuitive logic, not just textbook categories. [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+10. Bonus signal: candidate prioritizes ideas after generating, e.g. "Of those, I'd start with X because [impact + feasibility]." [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+11. BCG specifically rewards independent ideation: candidate brings ideas the interviewer didn't seed via the case prompt. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+
+### 6.4 Phrases for creativity pushbacks
+
+1. "What else?" — most common, used repeatedly until candidate stops generating. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+2. "What would you add?" [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+3. "Anything else?" [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+4. "Can you push that further?" — deepening probe. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+5. "Anything beyond the obvious?" — explicit ask for non-textbook ideas. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+6. "What's a more creative angle?" [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+7. "Those are the standard ones — what would surprise me?" — Bain-style creativity push. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+8. "Pick the most promising one and tell me how you'd test it." — depth push. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+9. "How would you test this hypothesis?" — depth/feasibility push after idea generation. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+10. "What would you need to know to assess whether this idea is a good one?" — feasibility framing. [Crafting Cases creativity](https://www.craftingcases.com/case-interview-creativity-tips/)
+11. "Of all of those, which one would you start with and why?" — prioritization push. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+12. "Tell me more about that one." — invites the candidate to deepen ONE specific idea. [Hacking the Case Interview frameworks](https://www.hackingthecaseinterview.com/pages/case-interview-frameworks)
+13. "Are those all in the same bucket, or do you have ideas from another category?" — MECE push. [StrategyCase brainstorming](https://strategycase.com/brainstorming-in-a-case-interview/)
+14. "Keep going." — terse McKinsey-style push for more breadth. [Hacking the Case Interview MBB](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+15. "If you had to pick three, which three?" — forcing prioritization. [PrepLounge brainstorming](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+
+---
+
+## Source list
+
+- [Caseinterview.com — Hypothesis-Driven Case Interview](https://caseinterview.com/hypothesis-in-case-interview)
+- [Caseinterview.com — The Importance of a Hypothesis](https://caseinterview.com/hypothesis-in-a-case-interview)
+- [Hacking the Case Interview — Math Guide](https://www.hackingthecaseinterview.com/pages/consulting-case-interview-math)
+- [Hacking the Case Interview — Mental Math](https://www.hackingthecaseinterview.com/pages/case-interview-mental-math)
+- [Hacking the Case Interview — Hypothesis](https://www.hackingthecaseinterview.com/pages/case-interview-hypothesis)
+- [Hacking the Case Interview — MBB Guide](https://www.hackingthecaseinterview.com/pages/mbb-case-interview)
+- [Hacking the Case Interview — Frameworks](https://www.hackingthecaseinterview.com/pages/case-interview-frameworks)
+- [IGotAnOffer — Case Math (McKinsey blog)](https://igotanoffer.com/blogs/mckinsey-case-interview-blog/case-interview-maths)
+- [RocketBlocks — Case Interview Math](https://www.rocketblocks.me/blog/case-interview-math.php)
+- [PrepLounge — How fast math](https://www.preplounge.com/consulting-forum/how-fast-do-i-need-to-do-math-in-a-case-interview-4516)
+- [PrepLounge — Brainstorming prioritisation vs creativity](https://www.preplounge.com/consulting-forum/brainstorming-prioritisation-vs-creativity-9232)
+- [PrepLounge — Is hypothesis always needed](https://www.preplounge.com/consulting-forum/is-cases-solutions-always-hypothesis-driven-1143)
+- [StrategyCase — Case Math Ultimate Guide](https://strategycase.com/case-interview-math-the-ultimate-guide/)
+- [StrategyCase — Brainstorming Step-by-Step](https://strategycase.com/brainstorming-in-a-case-interview/)
+- [CaseCoach — Case Math Guide](https://casecoach.com/b/case-interview-math/)
+- [Crafting Cases — Creativity Tips](https://www.craftingcases.com/case-interview-creativity-tips/)
+- [MyConsultingCoach — Hypothesis-Driven Structure](https://www.myconsultingcoach.com/case-interview-hypothesis-driven-structure)
+- [Career in Consulting — Hypothesis-Driven Approach](https://careerinconsulting.com/hypothesis/)
+- [Career in Consulting — 47 Math Exercises](https://careerinconsulting.com/consulting-case-interview-math-practice-guide-2024/)
+- [Management Consulted — What is a Hypothesis](https://managementconsulted.com/what-is-a-hypothesis/)
+- [CaseBasix — Hypothesis Approach](https://www.casebasix.com/pages/case-interview-hypothesis-approach)
+- [CaseBasix — Conceptual Mistakes](https://www.casebasix.com/pages/case-interview-mistakes-conceptual)
+- [CaseBasix — Brainstorm Course](https://www.casebasix.com/courses/brainstorm)
+- [Shortform — Victor Cheng's Problem-Solving Framework](https://www.shortform.com/books/blog/problem-solving-framework.html)
+- [YouExec — Case Interview Secrets summary](https://youexec.com/book-summaries/case-interview-secrets)
