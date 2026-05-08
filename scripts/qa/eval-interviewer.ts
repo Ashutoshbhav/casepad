@@ -20,7 +20,8 @@ import { isCannedTemplate } from '../../src/lib/canned-templates';
 import { checkResponse, regenHintFor } from '../../src/lib/groq/guardrails';
 import { staticChatTurnFallback } from '../../src/lib/groq/static-fallbacks';
 import { retrievePlaybookFindings, formatFindingsForPrompt } from '../../src/lib/groq/playbook-retriever';
-import { runAllDetectors, type EvalTurn, type FullDetectorReport } from '../../src/lib/eval/detectors';
+import { runAllDetectors, type EvalTurn, type FullDetectorReport, type DetectorFinding } from '../../src/lib/eval/detectors';
+import { runTier2Detectors } from '../../src/lib/eval/tier2-judge';
 
 // ============================================================================
 // Configuration
@@ -166,7 +167,7 @@ interface CaseResult {
   error?: string;
 }
 
-async function runOneCase(caseRow: any): Promise<CaseResult> {
+async function runOneCase(caseRow: any, tier2Enabled: boolean): Promise<CaseResult> {
   const startMs = Date.now();
   const transcript: EvalTurn[] = [];
 
@@ -176,6 +177,7 @@ async function runOneCase(caseRow: any): Promise<CaseResult> {
     content: `Let's work on this case. ${caseRow.problem_statement.slice(0, 200)}... Where would you like to start?`,
   });
 
+  let errorMsg: string | undefined;
   try {
     for (let i = 0; i < TURN_BUDGET; i++) {
       const candidateTurn = await generateCandidateTurn(
@@ -190,16 +192,46 @@ async function runOneCase(caseRow: any): Promise<CaseResult> {
       transcript.push({ role: 'interviewer', content: interviewerTurn });
     }
   } catch (err) {
-    return {
-      case_id: caseRow.id,
-      case_title: caseRow.title,
-      case_type: caseRow.case_type || 'unknown',
-      transcript,
-      detector_report: runAllDetectors(transcript),
-      duration_ms: Date.now() - startMs,
-      errored: true,
-      error: (err as Error).message,
-    };
+    errorMsg = (err as Error).message;
+  }
+
+  // Run Tier-1 detectors (always)
+  const tier1Report = runAllDetectors(transcript);
+
+  // Run Tier-2 detectors (opt-in via --tier2 flag)
+  let tier2Findings: DetectorFinding[] = [];
+  if (tier2Enabled) {
+    try {
+      const tier2 = await runTier2Detectors(transcript, {
+        caseTitle: caseRow.title,
+        problemStatement: caseRow.problem_statement,
+        interviewerNotes: caseRow.interviewer_notes || [],
+      });
+      tier2Findings = tier2.findings;
+    } catch (err) {
+      console.warn(`[tier2] judge failed for ${caseRow.title}: ${(err as Error).message}`);
+    }
+  }
+
+  // Merge Tier-1 + Tier-2 into a combined report
+  const combinedFindings = [...tier1Report.findings, ...tier2Findings];
+  const combinedBySeverity: Record<string, number> = { critical: 0, high: 0, medium: 0, low: 0 };
+  for (const f of combinedFindings) combinedBySeverity[f.severity]++;
+  const combinedReport: FullDetectorReport = {
+    passed: combinedFindings.length === 0,
+    total_findings: combinedFindings.length,
+    findings_by_severity: combinedBySeverity,
+    per_detector: { ...tier1Report.per_detector },
+    findings: combinedFindings,
+  };
+  // Add Tier-2 detector counts
+  for (const f of tier2Findings) {
+    const key = f.detector;
+    if (!combinedReport.per_detector[key]) {
+      combinedReport.per_detector[key] = { passed: false, finding_count: 0 };
+    }
+    combinedReport.per_detector[key].finding_count++;
+    combinedReport.per_detector[key].passed = false;
   }
 
   return {
@@ -207,9 +239,10 @@ async function runOneCase(caseRow: any): Promise<CaseResult> {
     case_title: caseRow.title,
     case_type: caseRow.case_type || 'unknown',
     transcript,
-    detector_report: runAllDetectors(transcript),
+    detector_report: combinedReport,
     duration_ms: Date.now() - startMs,
-    errored: false,
+    errored: !!errorMsg,
+    error: errorMsg,
   };
 }
 
@@ -317,14 +350,19 @@ async function main() {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
+  // CLI / env flag: enable Tier-2 LLM-judge detectors. Costly (~$0.001/check
+  // × 3 detectors × N cases = ~$0.015/run on free tier — well within budget).
+  const tier2Enabled = process.argv.includes('--tier2') || process.env.TIER2_JUDGE === 'on';
+
   console.log(`[eval] picking ${TARGET_CASE_TYPES.length * CASES_PER_TYPE} cases…`);
+  if (tier2Enabled) console.log(`[eval] Tier-2 LLM-judge detectors ENABLED`);
   const cases = await pickCases(supabase);
   console.log(`[eval] picked ${cases.length} cases`);
 
   const results: CaseResult[] = [];
   for (const c of cases) {
     console.log(`[eval] running case "${c.title}" (${c.case_type})…`);
-    const r = await runOneCase(c);
+    const r = await runOneCase(c, tier2Enabled);
     console.log(`[eval]   → ${r.detector_report.total_findings} findings (${r.detector_report.findings_by_severity.critical ?? 0} critical, ${r.detector_report.findings_by_severity.high ?? 0} high)`);
     results.push(r);
   }
