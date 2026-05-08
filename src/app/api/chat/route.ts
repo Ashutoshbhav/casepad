@@ -81,6 +81,15 @@ export async function POST(req: NextRequest) {
   // interviewer response instead of re-calling the LLM + duplicating the turn.
   // Window: only the most-recent user turn — if user genuinely repeats themselves
   // 5 turns later, that's a real turn.
+  //
+  // KNOWN LIMITATION (DA-2): there's a race window of ~1.5s during the prior
+  // turn's withRetry transcript-save where this guard reads stale state — a
+  // duplicate arriving in that window would miss the dedup and hit the LLM
+  // again, producing a duplicate user+interviewer turn pair. Real-world risk
+  // is narrow (user must double-send within 1.5s of the LAST turn AND the dupe
+  // request must beat the save commit). Full fix requires either (a) writing
+  // the user turn before the LLM call, or (b) the deferred clientTurnId UUID
+  // scheme. Acceptable v1 trade-off; revisit if cohort signal shows duplicates.
   const lastTwoTurns = transcriptIn.slice(-2);
   const isDuplicateRetry =
     lastTwoTurns.length === 2 &&
@@ -275,23 +284,24 @@ export async function POST(req: NextRequest) {
             controller.enqueue(encoder.encode(delta));
           }
         } catch (err) {
-          // P0-3: same static-fallback logic as gate-mode error path.
-          // Never persist "[Service is busy...]" text — ship a real probe
-          // and write a clean transcript so the next turn's context is sound.
+          // P0-3 + DA-1 fix: in monitor mode, partial deltas have ALREADY been
+          // enqueued to the client during the for-await loop. We must NOT
+          // re-enqueue the full string (would duplicate bytes the client
+          // already received). Two cases:
+          //   (a) partial is meaningful (>=10 chars): leave it as-is for both
+          //       client UX and transcript persistence — user sees what they
+          //       saw, no contradiction.
+          //   (b) partial is trivial / empty: enqueue ONLY the fallback (the
+          //       NEW content the user hasn't seen) and use it as the
+          //       persisted turn.
           errored = true;
-          console.warn(`[chat] all providers failed (monitor): ${(err as Error).message.slice(0, 120)}; using static fallback`);
-          const fallback = staticChatTurnFallback(transcriptIn.length);
-          if (full) {
-            // Mid-stream failure: prefer the partial response over fallback if non-trivial,
-            // but mark the failure with a sentinel that downstream can strip if needed.
-            // For simplicity, replace with fallback unless we got a meaningful chunk.
-            if (full.trim().length < 10) {
-              full = fallback;
-            }
-          } else {
+          console.warn(`[chat] all providers failed (monitor): ${(err as Error).message.slice(0, 120)}`);
+          if (!full || full.trim().length < 10) {
+            const fallback = staticChatTurnFallback(transcriptIn.length);
+            controller.enqueue(encoder.encode(fallback));
             full = fallback;
           }
-          controller.enqueue(encoder.encode(full));
+          // else: keep partial — already streamed AND already in `full`.
         }
         if (guardrailMode === 'monitor' && !errored) {
           const verdict = checkResponse(full);
