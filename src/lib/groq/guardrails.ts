@@ -69,10 +69,15 @@ export function checkResponse(text: string): GuardrailResult {
 }
 
 export function regenHintFor(failure: GuardrailFailure): string {
+  // 2026-05-08 update: every regen hint now includes the explicit probe-end
+  // requirement. The eval found that regen drafts often dropped the probe
+  // (6 of 16 final findings were B2.10_no_probe) — the model focuses on
+  // fixing the cited issue and forgets the baseline rules.
+  const probeReminder = ' Your response MUST end with a question (?) or a one-word directive ("Go.", "Walk me through.", "Try again.") — never trail off with a period.';
   if (failure.type === 'banned_phrase') {
-    return `\n\n== REGEN HINT ==\nYour last draft contained the banned phrase "${failure.phrase}" (or a prefix of it). Rewrite without that phrase. Keep all other rules — short, blunt, end with a probe.`;
+    return `\n\n== REGEN HINT ==\nYour last draft contained the banned phrase "${failure.phrase}" (or a prefix of it). Rewrite without that phrase. Keep it short, blunt.${probeReminder}`;
   }
-  return `\n\n== REGEN HINT ==\nYour last draft was ${failure.wordCount} words — exceeds the 80-word hard cap. Rewrite under 80 words. Keep all other rules.`;
+  return `\n\n== REGEN HINT ==\nYour last draft was ${failure.wordCount} words — exceeds the 80-word hard cap. Rewrite under 80 words.${probeReminder}`;
 }
 
 export function describeFailure(f: GuardrailFailure): string {

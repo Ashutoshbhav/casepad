@@ -124,5 +124,5 @@ export function regenHintForCritic(verdict: CriticVerdict): string {
       }
     })
     .join(' ');
-  return `\n\n== CRITIC FEEDBACK (regen) ==\nYour last draft failed QA: ${reasons} Rewrite. Same input, fix these issues. Keep all other rules.`;
+  return `\n\n== CRITIC FEEDBACK (regen) ==\nYour last draft failed QA: ${reasons} Rewrite. Same input, fix these issues. Keep all other rules — and your response MUST end with a question (?) or a directive ("Go.", "Walk me through.", "Try again.") — never trail off with a period.`;
 }

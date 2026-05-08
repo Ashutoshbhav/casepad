@@ -86,5 +86,9 @@ function ngrams(text: string, n: number): Set<string> {
  * forward-looking, not backward-looking commentary.
  */
 export function regenHintForPhraseRepeat(repeatedPhrase: string): string {
-  return `\n\n== ANTI-REPEAT CONSTRAINT (this turn only) ==\nYou previously used the phrase "${repeatedPhrase}" in a recent turn. Do NOT reuse it. Write the next turn from scratch with different vocabulary. Same intent, different phrasing.`;
+  // 2026-05-08 update: explicit probe-end requirement added so the regen
+  // doesn't lose the "always end with a probe" baseline rule while focused
+  // on fixing the repeat. Eval found this was the dominant remaining failure
+  // mode — drafts dropping the probe under regen pressure.
+  return `\n\n== ANTI-REPEAT CONSTRAINT (this turn only) ==\nYou previously used the phrase "${repeatedPhrase}" in a recent turn. Do NOT reuse it. Write the next turn from scratch with different vocabulary. Same intent, different phrasing. Your response MUST still end with a question (?) or a directive ("Go.", "Walk me through.", "Try again.") — never trail off with a period.`;
 }
