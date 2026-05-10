@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The automotive paint industry is a niche segment of the larger coatings market, with key players such as PPG Industries, Axalta Coating Systems, and BASF. The industry is characterized by a competitive structure with a few large players and several smaller ones. Typical customer behavior involves car manufacturers and body shops seeking high-quality, durable paints that meet regulatory standards. The regulatory backdrop includes environmental regulations such as VOC limits and safety standards for paint application. In the Indian context, the automotive paint market is growing rapidly due to increasing vehicle production and a rising demand for premium paints.",
+  "real_world_numbers": [
+    {
+      "metric": "Average paint consumption per vehicle",
+      "value": "15-25 gallons",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global automotive paint market size",
+      "value": "$10-15 billion",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Typical margin for automotive paint manufacturers",
+      "value": "8-12%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of automotive paint manufacturers globally",
+      "value": "10-20",
+      "source_hint": "industry directories"
+    },
+    {
+      "metric": "Average cost of paint per gallon",
+      "value": "$20-50",
+      "source_hint": "market prices"
+    },
+    {
+      "metric": "Vehicle production in India",
+      "value": "4-5 million units per year",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "Paint consumption per unit in India",
+      "value": "10-20 gallons",
+      "source_hint": "industry estimates"
+    },
+    {
+      "metric": "Growth rate of Indian automotive paint market",
+      "value": "8-12% per annum",
+      "source_hint": "market research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate surface area of lower cuboid",
+      "formula": "2 × (L+B+H)",
+      "typical_answer_range": "5-10 m²"
+    },
+    {
+      "step": "Calculate surface area of upper cuboid",
+      "formula": "2 × (L+B+H)",
+      "typical_answer_range": "10-20 m²"
+    },
+    {
+      "step": "Subtract window area from total surface area",
+      "formula": "Total surface area - window area",
+      "typical_answer_range": "15-30 m²"
+    },
+    {
+      "step": "Estimate paint consumption based on door proxy",
+      "formula": "Total surface area / paint per door proxy",
+      "typical_answer_range": "10-30 gallons"
+    }
+  ],
+  "common_mistakes": [
+    "Forgetting to subtract window area from total surface area",
+    "Using incorrect dimensions for the cuboids",
+    "Not accounting for paint waste and overspray",
+    "Using an incorrect paint consumption rate per unit area",
+    "Not considering the impact of paint type and quality on consumption",
+    "Failing to adjust for the shape and size of the car",
+    "Not researching industry benchmarks for paint consumption"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the typical paint consumption per vehicle in the Indian market?",
+      "a": "10-20 gallons",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the shape and size of the car affect paint consumption?",
+      "a": "Larger and more complex shapes require more paint",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key factors that influence paint consumption in the automotive industry?",
+      "a": "Paint type, quality, and application method",
+      "category": "industry"
+    },
+    {
+      "q": "How does the use of primer and clear coat affect paint consumption?",
+      "a": "Increases paint consumption by 10-20%",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the environmental regulations that affect the automotive paint industry?",
+      "a": "VOC limits and safety standards for paint application",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian automotive paint market differ from the global market?",
+      "a": "India has a growing market with increasing demand for premium paints",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the common pitfalls in estimating paint consumption for a car?",
+      "a": "Forgetting to subtract window area, using incorrect dimensions, and not accounting for paint waste",
+      "category": "framework"
+    },
+    {
+      "q": "How can we adjust our estimate for a car with a different shape and size?",
+      "a": "Use a more complex model or consult industry benchmarks",
+      "category": "math"
+    },
+    {
+      "q": "What is the impact of paint quality on consumption?",
+      "a": "Higher-quality paints may require less paint due to better coverage",
+      "category": "industry"
+    },
+    {
+      "q": "How can we research industry benchmarks for paint consumption?",
+      "a": "Consult industry reports, company filings, and market research studies",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Use a bottom-up approach to estimate paint consumption",
+    "Consider the shape and size of the car in your estimate",
+    "Research industry benchmarks for paint consumption",
+    "Account for paint waste and overspray in your estimate",
+    "Consider the impact of paint type and quality on consumption"
+  ],
+  "sources": [
+    "Industry reports from market research firms",
+    "Company filings and annual reports",
+    "Market research studies on the automotive paint industry",
+    "Industry associations and trade organizations",
+    "Government regulations and standards for paint application"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to apply a bottom-up approach to estimate paint consumption, considering the shape and size of the car, and researching industry benchmarks. The candidate must also avoid common pitfalls such as forgetting to subtract window area and not accounting for paint waste.",
+  "enriched_at": "2026-05-10T06:32:33.789Z"
+}

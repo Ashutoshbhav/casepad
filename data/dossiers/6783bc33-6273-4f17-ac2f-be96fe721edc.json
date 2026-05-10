@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with a large number of players competing for market share. The industry is characterized by low margins, high volumes, and a strong focus on supply chain efficiency. Regulatory bodies such as the Food Safety and Standards Authority of India (FSSAI) play a crucial role in ensuring compliance with packaging standards. Typical customer behavior in this industry involves a high frequency of purchases, with consumers prioritizing convenience, affordability, and product quality.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian packaging industry",
+      "value": "Rs. 700-800 billion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of packaging manufacturers in India",
+      "value": "5000-6000",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "Average customer retention rate for FMCG companies",
+      "value": "70-80%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Typical lead time for packaging manufacturing",
+      "value": "3-7 days",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average capacity utilization for packaging manufacturers",
+      "value": "70-85%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Inventory turnover ratio for FMCG companies",
+      "value": "5-7 times",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average training hours per employee per year",
+      "value": "20-30 hours",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average salary for a line manager in the packaging industry",
+      "value": "Rs. 600,000-800,000 per annum",
+      "source_hint": "salary surveys"
+    },
+    {
+      "metric": "Typical machine uptime in the packaging industry",
+      "value": "85-90%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the total manufacturing time",
+      "formula": "Total Manufacturing Time = Sum of individual machine times + setup times + idle times",
+      "typical_answer_range": "5-15 days"
+    },
+    {
+      "step": "Determining the optimal production batch size",
+      "formula": "Optimal Batch Size = sqrt((2 * setup cost * demand) / (holding cost * (1 - utilization)))",
+      "typical_answer_range": "100-500 units"
+    },
+    {
+      "step": "Calculating the capacity utilization",
+      "formula": "Capacity Utilization = (Actual Output / Maximum Potential Output) * 100",
+      "typical_answer_range": "70-90%"
+    },
+    {
+      "step": "Evaluating the impact of training on operator efficiency",
+      "formula": "Operator Efficiency = (Output per hour after training / Output per hour before training) * 100",
+      "typical_answer_range": "10-20% increase"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of supply chain disruptions on completion time",
+    "Overlooking the role of inventory management in reducing lead times",
+    "Failing to account for machine downtime and maintenance schedules",
+    "Not evaluating the effectiveness of existing training programs",
+    "Ignoring the potential benefits of implementing a total productive maintenance (TPM) program",
+    "Not analyzing the impact of demand variability on production planning",
+    "Failing to consider the trade-offs between batch size and inventory levels"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the typical packaging materials used in the FMCG industry?",
+      "a": "Paper, plastic, glass, and metal are commonly used packaging materials in the FMCG industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian packaging industry compare to the global market?",
+      "a": "The Indian packaging industry is growing rapidly, driven by increasing demand from the FMCG and pharmaceutical sectors, and is expected to reach Rs. 1 trillion by 2025.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key challenges faced by packaging manufacturers in India?",
+      "a": "Packaging manufacturers in India face challenges such as high raw material costs, increasing competition, and stringent regulatory requirements.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can packaging manufacturers reduce their environmental impact?",
+      "a": "Packaging manufacturers can reduce their environmental impact by using sustainable materials, minimizing waste, and implementing recycling programs.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the role of technology in improving packaging manufacturing efficiency?",
+      "a": "Technology can improve packaging manufacturing efficiency by enabling automation, optimizing production planning, and enhancing quality control.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can companies measure the effectiveness of their training programs?",
+      "a": "Companies can measure the effectiveness of their training programs by tracking key performance indicators such as operator efficiency, productivity, and quality metrics.",
+      "category": "math"
+    },
+    {
+      "q": "What are the benefits of implementing a total productive maintenance (TPM) program?",
+      "a": "Implementing a TPM program can help packaging manufacturers reduce downtime, increase productivity, and improve overall equipment effectiveness.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can companies balance the trade-offs between batch size and inventory levels?",
+      "a": "Companies can balance the trade-offs between batch size and inventory levels by using analytical models and simulation tools to optimize their production planning and inventory management strategies.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key considerations for packaging manufacturers when selecting a new machine or equipment?",
+      "a": "Packaging manufacturers should consider factors such as machine capacity, productivity, and maintenance requirements when selecting new equipment.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can companies evaluate the impact of demand variability on their production planning?",
+      "a": "Companies can evaluate the impact of demand variability on their production planning by using statistical models and simulation tools to analyze the effects of different demand scenarios.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the production process to identify bottlenecks and areas for improvement",
+    "Evaluate the effectiveness of existing training programs and identify opportunities for enhancement",
+    "Assess the impact of supply chain disruptions on completion time and develop strategies to mitigate these risks",
+    "Develop a comprehensive maintenance program to minimize machine downtime and optimize equipment effectiveness",
+    "Implement a total productive maintenance (TPM) program to improve overall equipment effectiveness"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Industry associations and trade publications",
+    "Packaging industry conferences and seminars",
+    "Academic research papers on operations management and supply chain optimization"
+  ],
+  "case_type_notes": "This operations case requires the candidate to analyze the production process, identify areas for improvement, and develop strategies to reduce completion time. The candidate should be able to apply analytical tools and techniques to evaluate the effectiveness of different solutions and recommend the most effective approach.",
+  "enriched_at": "2026-05-10T06:41:32.713Z"
+}

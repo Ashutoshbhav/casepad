@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The taxi industry in the 2000s is characterized by a competitive market structure with numerous players, including individual cab drivers and taxi companies. The key economics of the industry involve maximizing revenue through increased trips and fares, while minimizing costs such as fuel and maintenance. Regulatory backdrop includes licensing requirements and fare regulations. Typical customer behavior involves hailing taxis on the street or booking in advance, with a preference for safe and reliable services.",
+  "real_world_numbers": [
+    {
+      "metric": "Average daily trips per taxi",
+      "value": "15-25",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average fare per trip",
+      "value": "₹50-₹100",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Typical margin for a taxi driver",
+      "value": "8-12%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Market size of the taxi industry in India",
+      "value": "₹10,000-₹15,000 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of taxi drivers in major cities",
+      "value": "50,000-100,000",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Customer retention rate for taxi services",
+      "value": "60-80%",
+      "source_hint": "company surveys"
+    },
+    {
+      "metric": "Average fuel consumption per trip",
+      "value": "5-10 liters",
+      "source_hint": "industry estimates"
+    },
+    {
+      "metric": "Maintenance cost per month",
+      "value": "₹5,000-₹10,000",
+      "source_hint": "company records"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate revenue per trip",
+      "formula": "Average fare per trip * Number of trips per day",
+      "typical_answer_range": "₹500-₹2,000"
+    },
+    {
+      "step": "Calculate daily profit",
+      "formula": "Revenue per day - (Fuel cost per day + Maintenance cost per day)",
+      "typical_answer_range": "₹1,000-₹5,000"
+    },
+    {
+      "step": "Calculate customer lifetime value",
+      "formula": "Average fare per trip * Number of trips per customer per year * Customer retention rate",
+      "typical_answer_range": "₹5,000-₹20,000"
+    },
+    {
+      "step": "Calculate break-even point",
+      "formula": "Fixed costs / (Average fare per trip - Variable costs per trip)",
+      "typical_answer_range": "100-500 trips"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of fuel prices on profitability",
+    "Overestimating the number of trips that can be completed in a day",
+    "Underestimating the importance of customer retention",
+    "Not accounting for maintenance costs",
+    "Failing to optimize routes to minimize idle time",
+    "Not considering the competitive landscape and market trends",
+    "Overrelying on a single revenue stream"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors that affect the demand for taxi services in India?",
+      "a": "Key factors include population density, urbanization, and economic growth, as well as the availability and affordability of alternative modes of transportation.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the taxi industry in India compare to other countries in terms of market size and growth rate?",
+      "a": "The Indian taxi market is one of the largest and fastest-growing in the world, driven by a large and growing middle class and increasing urbanization.",
+      "category": "industry"
+    },
+    {
+      "q": "What are some common pitfalls that taxi drivers face in terms of managing their finances and optimizing their routes?",
+      "a": "Common pitfalls include failing to track expenses, not optimizing routes to minimize idle time, and not diversifying revenue streams.",
+      "category": "math"
+    },
+    {
+      "q": "How can taxi drivers use data and analytics to improve their profitability and customer satisfaction?",
+      "a": "Taxi drivers can use data and analytics to optimize their routes, identify high-demand areas, and improve their customer service, leading to increased profitability and customer satisfaction.",
+      "category": "math"
+    },
+    {
+      "q": "What are some potential risks and challenges that taxi drivers face in terms of regulatory changes and market trends?",
+      "a": "Potential risks and challenges include changes in regulations, increased competition from ride-hailing services, and shifts in customer preferences and behaviors.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can taxi drivers differentiate themselves and compete with other modes of transportation, such as ride-hailing services and public transportation?",
+      "a": "Taxi drivers can differentiate themselves by providing high-quality customer service, optimizing their routes and fares, and offering unique amenities and services.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are some potential opportunities for taxi drivers to increase their revenue and profitability through partnerships and collaborations?",
+      "a": "Potential opportunities include partnering with hotels and restaurants to offer bundled services, collaborating with other taxi drivers to share resources and expertise, and offering specialized services such as airport transfers and tourist tours.",
+      "category": "framework"
+    },
+    {
+      "q": "How can taxi drivers use technology and digital platforms to improve their operations and customer engagement?",
+      "a": "Taxi drivers can use technology and digital platforms to optimize their routes, manage their finances, and engage with customers through social media and mobile apps.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the impact of external factors such as traffic and weather on taxi demand and profitability",
+    "Analyze the competitive landscape and market trends to identify opportunities and threats",
+    "Evaluate the potential for partnerships and collaborations to increase revenue and profitability"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Government statistics",
+    "Industry benchmarks and estimates"
+  ],
+  "case_type_notes": "This case requires the candidate to think creatively and strategically about how to increase profits in a competitive industry, while also considering the potential risks and challenges that taxi drivers face. The candidate should be able to analyze the industry context, identify key factors that affect demand and profitability, and develop a comprehensive plan to increase revenue and profitability.",
+  "enriched_at": "2026-05-10T06:37:27.774Z"
+}

@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian education loan market is highly competitive, with both public and private sector banks offering loans to students. The market is regulated by the Reserve Bank of India, which sets guidelines for interest rates and loan disbursal. The typical customer behavior in this market is that students from lower and middle-income families rely heavily on education loans to fund their undergraduate studies. The market size for education loans in India is estimated to be around ₹1.5 lakh crore. The key players in this market include State Bank of India, HDFC Bank, and ICICI Bank.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical interest rate on education loans",
+      "value": "8-12%",
+      "source_hint": "RBI guidelines"
+    },
+    {
+      "metric": "Average loan amount for undergraduate studies",
+      "value": "₹2-5 lakh",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Default rate on education loans",
+      "value": "5-8%",
+      "source_hint": "Credit rating agency reports"
+    },
+    {
+      "metric": "Number of banks offering education loans in India",
+      "value": "20-25",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Growth rate of education loan market in India",
+      "value": "15-20% per annum",
+      "source_hint": "Market research reports"
+    },
+    {
+      "metric": "Average tenure of education loans",
+      "value": "5-7 years",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Percentage of students opting for education loans",
+      "value": "20-25%",
+      "source_hint": "Education sector reports"
+    },
+    {
+      "metric": "Total outstanding education loans in India",
+      "value": "₹1.2-1.8 lakh crore",
+      "source_hint": "RBI data"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the number of students in the 18-25 age group",
+      "formula": "Total population * percentage of 18-25 age group",
+      "typical_answer_range": "250-300 million"
+    },
+    {
+      "step": "Calculating the number of students pursuing undergraduate studies",
+      "formula": "Number of students in 18-25 age group * percentage pursuing undergraduate studies",
+      "typical_answer_range": "50-70 million"
+    },
+    {
+      "step": "Calculating the number of students taking education loans",
+      "formula": "Number of students pursuing undergraduate studies * percentage taking loans",
+      "typical_answer_range": "10-20 million"
+    },
+    {
+      "step": "Calculating the total outstanding education loans",
+      "formula": "Number of students taking loans * average loan amount * percentage of loans outstanding for 7 years or more",
+      "typical_answer_range": "40-60 million"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the population below the poverty line",
+    "Not accounting for the difference between domestic and international education loans",
+    "Not using the correct interest rate or loan tenure",
+    "Not considering the default rate on education loans",
+    "Not using the correct percentage of students pursuing undergraduate studies",
+    "Not using the correct percentage of students taking loans",
+    "Not accounting for the growth rate of the education loan market"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the current market size of the education loan industry in India?",
+      "a": "The current market size is estimated to be around ₹1.5 lakh crore.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key factors driving the growth of the education loan market in India?",
+      "a": "The key factors driving growth are increasing demand for higher education, rising costs of education, and government initiatives to promote education loans.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the interest rate on education loans in India compare to other countries?",
+      "a": "The interest rate on education loans in India is relatively high compared to other countries, ranging from 8-12% per annum.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the typical loan tenure for education loans in India?",
+      "a": "The typical loan tenure for education loans in India is 5-7 years.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the default rate on education loans in India?",
+      "a": "The default rate on education loans in India is estimated to be around 5-8%.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the education loan market in India compare to other countries in terms of size and growth rate?",
+      "a": "The education loan market in India is relatively small compared to other countries, but it is growing at a rapid pace of 15-20% per annum.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key challenges faced by the education loan market in India?",
+      "a": "The key challenges faced by the education loan market in India are high default rates, lack of awareness about education loans, and limited access to credit for students from lower-income families.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the education loan market in India be made more accessible and affordable for students from lower-income families?",
+      "a": "The education loan market in India can be made more accessible and affordable for students from lower-income families by offering subsidized interest rates, increasing the loan amount, and providing financial literacy programs.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the role of the government in promoting education loans in India?",
+      "a": "The government plays a crucial role in promoting education loans in India by providing subsidies, guarantees, and regulatory support to banks and other lenders.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the education loan market in India be made more sustainable and profitable for lenders?",
+      "a": "The education loan market in India can be made more sustainable and profitable for lenders by implementing robust credit assessment and risk management practices, offering flexible repayment options, and providing financial literacy programs to students.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Use a top-down approach to estimate the number of outstanding education loans",
+    "Consider the population below the poverty line and exclude them from the calculation",
+    "Account for the difference between domestic and international education loans",
+    "Use the correct interest rate and loan tenure to calculate the outstanding loan amount"
+  ],
+  "sources": [
+    "RBI guidelines and reports",
+    "Banking industry reports and publications",
+    "Market research reports and studies",
+    "Education sector reports and publications",
+    "Credit rating agency reports and publications"
+  ],
+  "case_type_notes": "This case requires the candidate to use a top-down approach to estimate the number of outstanding education loans in India, considering various factors such as population, age group, and loan uptake. The candidate should be able to identify the key drivers of the education loan market and use relevant data and assumptions to arrive at a reasonable estimate.",
+  "enriched_at": "2026-05-10T06:01:52.865Z"
+}

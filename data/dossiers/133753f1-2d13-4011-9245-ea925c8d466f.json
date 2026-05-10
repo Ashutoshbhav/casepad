@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The tech industry, particularly the virtual reality (VR) segment, is characterized by rapid innovation and decreasing hardware costs, leading to increased adoption in gaming, education, and healthcare. The competitive structure is marked by key players like Oculus, HTC, and Sony, with new entrants emerging from the gaming and smartphone sectors. Regulatory backdrop includes concerns over data privacy and potential health impacts. Typical customer behavior involves a high willingness to pay for immersive experiences, with a growing demand for standalone headsets.",
+  "real_world_numbers": [
+    {
+      "metric": "Global VR market size",
+      "value": "USD 10-15 billion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average cost of a VR headset",
+      "value": "INR 20,000-50,000",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "VR adoption rate in Indian gaming sector",
+      "value": "15-25%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Typical margin for VR hardware manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry analysis"
+    },
+    {
+      "metric": "Number of VR startups in India",
+      "value": "50-100",
+      "source_hint": "startup databases"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for VR gaming platforms",
+      "value": "INR 5,000-10,000",
+      "source_hint": "company reports"
+    },
+    {
+      "metric": "Growth rate of VR market in India",
+      "value": "20-30% YoY",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for VR content providers",
+      "value": "INR 500-1,000",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Estimating the total addressable market for VR in India",
+      "formula": "Market size = (Number of potential customers) x (Average revenue per user)",
+      "typical_answer_range": "INR 1,000-5,000 crores"
+    },
+    {
+      "step": "Calculating the break-even point for a VR startup",
+      "formula": "Break-even point = (Fixed costs) / (Contribution margin per unit)",
+      "typical_answer_range": "6-18 months"
+    },
+    {
+      "step": "Determining the customer acquisition cost (CAC) for a VR gaming platform",
+      "formula": "CAC = (Marketing spend) / (Number of new customers acquired)",
+      "typical_answer_range": "INR 500-2,000"
+    },
+    {
+      "step": "Evaluating the return on investment (ROI) for a VR hardware manufacturer",
+      "formula": "ROI = (Net profit) / (Total investment)",
+      "typical_answer_range": "15-30%"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating the addressable market size without considering competition and customer willingness to pay",
+    "Underestimating the costs associated with developing and marketing VR content",
+    "Failing to account for the high research and development expenses in the VR industry",
+    "Not considering the potential regulatory hurdles and data privacy concerns",
+    "Overlooking the importance of user experience and content quality in driving customer adoption"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key applications of virtual reality beyond gaming?",
+      "a": "Education, healthcare, and entertainment are significant applications of VR, with growing demand for immersive experiences.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian VR market differ from the global market?",
+      "a": "The Indian VR market is characterized by a growing middle class, increasing smartphone penetration, and a strong gaming culture, making it an attractive market for VR companies.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the major challenges faced by VR startups in India?",
+      "a": "VR startups in India face challenges such as high development costs, limited access to funding, and intense competition from established players.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the potential impact of 5G technology on the VR industry?",
+      "a": "5G technology is expected to enable faster data transfer rates, lower latency, and greater connectivity, making it an essential factor for the growth of the VR industry.",
+      "category": "tech"
+    },
+    {
+      "q": "How can VR companies measure the effectiveness of their marketing campaigns?",
+      "a": "VR companies can measure the effectiveness of their marketing campaigns by tracking metrics such as customer engagement, conversion rates, and return on investment (ROI).",
+      "category": "math"
+    },
+    {
+      "q": "What are the key factors influencing customer adoption of VR technology?",
+      "a": "Key factors influencing customer adoption of VR technology include cost, content quality, user experience, and social influence.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can VR companies address concerns over data privacy and security?",
+      "a": "VR companies can address concerns over data privacy and security by implementing robust data protection policies, ensuring transparency, and complying with regulatory requirements.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the role of artificial intelligence (AI) in enhancing VR experiences?",
+      "a": "AI can enhance VR experiences by enabling personalized content recommendations, improving user interface, and creating more realistic simulations.",
+      "category": "tech"
+    }
+  ],
+  "framework_hints": [
+    "Consider the VR value chain, including content creation, distribution, and consumption",
+    "Analyze the competitive landscape, including key players, market share, and barriers to entry",
+    "Evaluate the regulatory environment, including data privacy concerns and potential hurdles"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports from firms like IDC and Gartner"
+  ],
+  "case_type_notes": "This estimation case requires candidates to demonstrate their understanding of the VR industry, including market size, growth rate, and key applications, as well as their ability to perform calculations and analyze data to inform business decisions.",
+  "enriched_at": "2026-05-10T06:36:14.207Z"
+}

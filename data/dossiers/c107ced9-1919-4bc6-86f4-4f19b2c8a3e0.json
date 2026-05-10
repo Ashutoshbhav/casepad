@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian real estate industry is highly competitive, with a large number of players operating in the market. The industry is characterized by high construction costs, regulatory hurdles, and fluctuating demand. Typical customers in the residential segment are sensitive to prices, with a strong preference for amenities and location. The regulatory backdrop is complex, with laws such as the Real Estate (Regulation and Development) Act, 2016, governing the industry.",
+  "real_world_numbers": [
+    {
+      "metric": "Average construction cost per square foot in Kolkata",
+      "value": "₹2,500 - ₹3,500",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical margin for residential real estate developers in India",
+      "value": "15% - 25%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of residential units sold in Kolkata in 2022",
+      "value": "10,000 - 15,000",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Average price per square foot of residential apartments in Kolkata",
+      "value": "₹4,000 - ₹6,000",
+      "source_hint": "property listings"
+    },
+    {
+      "metric": "Customer acquisition cost for residential real estate developers in India",
+      "value": "₹50,000 - ₹100,000",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average customer lifetime value for residential real estate developers in India",
+      "value": "₹5 lakh - ₹10 lakh",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of residential real estate developers operating in Kolkata",
+      "value": "50 - 100",
+      "source_hint": "industry directories"
+    },
+    {
+      "metric": "Typical land cost as a percentage of total construction cost in Kolkata",
+      "value": "20% - 30%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total construction cost of the residential complex",
+      "formula": "Total Construction Cost = Land Cost + Construction Cost per Square Foot x Total Square Feet",
+      "typical_answer_range": "₹50 crore - ₹100 crore"
+    },
+    {
+      "step": "Determine the optimal price per square foot using value-based pricing",
+      "formula": "Optimal Price per Square Foot = Customer Willingness to Pay + Unique Selling Points - Competitor Prices",
+      "typical_answer_range": "₹4,500 - ₹6,500"
+    },
+    {
+      "step": "Calculate the expected revenue from the residential complex",
+      "formula": "Expected Revenue = Optimal Price per Square Foot x Total Square Feet",
+      "typical_answer_range": "₹200 crore - ₹400 crore"
+    },
+    {
+      "step": "Calculate the break-even point for the residential complex",
+      "formula": "Break-Even Point = Total Construction Cost / (Optimal Price per Square Foot - Variable Cost per Square Foot)",
+      "typical_answer_range": "6 - 12 months"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the regulatory environment and its impact on construction costs and timelines",
+    "Failing to account for customer willingness to pay and unique selling points in value-based pricing",
+    "Not analyzing competitor prices and market trends in competitor-based pricing",
+    "Overestimating the demand for residential units in Kolkata",
+    "Not considering the land cost as a significant component of total construction cost",
+    "Failing to calculate the break-even point and expected revenue from the residential complex",
+    "Not evaluating the customer acquisition cost and customer lifetime value in the pricing strategy"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors that influence customer willingness to pay for residential apartments in Kolkata?",
+      "a": "Factors such as location, amenities, and unique selling points influence customer willingness to pay for residential apartments in Kolkata.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the regulatory environment in India impact the construction costs and timelines for residential real estate developers?",
+      "a": "The regulatory environment in India, including laws such as the Real Estate (Regulation and Development) Act, 2016, can impact construction costs and timelines for residential real estate developers by introducing additional compliance requirements and approval processes.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical margins for residential real estate developers in India, and how do they compare to other industries?",
+      "a": "Typical margins for residential real estate developers in India range from 15% to 25%, which is relatively high compared to other industries.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can a residential real estate developer in Kolkata differentiate its product offerings to increase customer willingness to pay?",
+      "a": "A residential real estate developer in Kolkata can differentiate its product offerings by providing unique amenities, such as rooftop gardens or swimming pools, and emphasizing the location and accessibility of the residential complex.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key risks and challenges associated with developing a residential complex in Kolkata, and how can they be mitigated?",
+      "a": "Key risks and challenges associated with developing a residential complex in Kolkata include regulatory hurdles, construction delays, and market fluctuations. These risks can be mitigated by conducting thorough market research, engaging with regulatory authorities, and developing a robust project management plan.",
+      "category": "framework"
+    },
+    {
+      "q": "How can a residential real estate developer in Kolkata use data analytics to inform its pricing strategy and optimize revenue?",
+      "a": "A residential real estate developer in Kolkata can use data analytics to inform its pricing strategy by analyzing market trends, customer behavior, and competitor prices. This data can be used to optimize revenue by identifying the optimal price point for the residential complex.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the location and accessibility of the residential complex in determining the optimal price",
+    "Analyze competitor prices and market trends to inform the pricing strategy",
+    "Evaluate the unique selling points and amenities of the residential complex to determine customer willingness to pay"
+  ],
+  "sources": [
+    "Statista industry reports on the Indian real estate market",
+    "Company filings and annual reports of residential real estate developers in India",
+    "Market research reports on the Kolkata residential real estate market"
+  ],
+  "case_type_notes": "This case requires the application of pricing frameworks, including cost-based pricing, competitor-based pricing, and value-based pricing, to determine the optimal price for a residential complex in Kolkata. The case also involves analyzing market trends, customer behavior, and competitor prices to inform the pricing strategy.",
+  "enriched_at": "2026-05-10T06:41:28.257Z"
+}

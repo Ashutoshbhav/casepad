@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian online ticketing industry is highly competitive, with key players like BookMyShow, Paytm, and TicketNew. The industry is characterized by low margins, with typical margins ranging from 8-12%. Regulatory backdrop includes guidelines from the Ministry of Information and Broadcasting, and typical customer behavior involves frequent usage of mobile apps for booking tickets. The industry has seen significant growth in recent years, driven by increasing internet penetration and smartphone adoption.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for online ticketing platforms",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of Indian online ticketing industry",
+      "value": "INR 5,000-7,000 crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of online ticketing platforms in India",
+      "value": "10-15",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer LTV for online ticketing platforms",
+      "value": "INR 500-1,000",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average booking value for online ticketing platforms",
+      "value": "INR 200-500",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Monthly active users for BookMyShow",
+      "value": "10-20 million",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Annual revenue for BookMyShow",
+      "value": "INR 1,000-2,000 crores",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Growth rate of Indian online ticketing industry",
+      "value": "15-20% YoY",
+      "source_hint": "Statista industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the revenue impact of a 10% decline in bookings",
+      "formula": "Revenue impact = (10% of total bookings) * average booking value",
+      "typical_answer_range": "INR 20-50 crores"
+    },
+    {
+      "step": "Estimate the customer acquisition cost for online ticketing platforms",
+      "formula": "CAC = (marketing spend) / (number of new customers acquired)",
+      "typical_answer_range": "INR 50-200"
+    },
+    {
+      "step": "Calculate the retention rate of existing users for BookMyShow",
+      "formula": "Retention rate = (number of retained users) / (total number of users)",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Determine the break-even point for a new marketing campaign",
+      "formula": "Break-even point = (marketing spend) / (incremental revenue generated)",
+      "typical_answer_range": "INR 50-100 lakhs"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the competitive landscape of the industry",
+    "Failing to account for the impact of external factors like seasonality and events",
+    "Overlooking the importance of customer retention and loyalty",
+    "Not analyzing the root cause of the decline in bookings",
+    "Jumping to conclusions without gathering sufficient data and insights"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of the decline in bookings among existing users?",
+      "a": "The decline could be due to various factors such as changes in user behavior, increased competition, or issues with the app or website.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the online ticketing industry in India compare to other countries?",
+      "a": "The Indian online ticketing industry is characterized by low margins and high competition, similar to other emerging markets.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical customer pain points in the online ticketing industry?",
+      "a": "Common pain points include difficulty in finding events, high service fees, and issues with ticket delivery or cancellation.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can BookMyShow improve its customer retention rates?",
+      "a": "BookMyShow can improve customer retention by offering personalized recommendations, enhancing the user experience, and providing loyalty programs or rewards.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key metrics to track for an online ticketing platform?",
+      "a": "Key metrics include bookings, revenue, customer acquisition cost, retention rate, and average booking value.",
+      "category": "framework"
+    },
+    {
+      "q": "How can BookMyShow leverage data analytics to drive business growth?",
+      "a": "BookMyShow can leverage data analytics to gain insights into customer behavior, optimize pricing and inventory, and improve the overall user experience.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with the online ticketing industry?",
+      "a": "Potential risks and challenges include intense competition, regulatory changes, and cybersecurity threats.",
+      "category": "industry"
+    },
+    {
+      "q": "How can BookMyShow expand its services to increase revenue and growth?",
+      "a": "BookMyShow can expand its services by offering additional features such as event discovery, ticket insurance, or premium services.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key factors to consider when evaluating the effectiveness of a marketing campaign?",
+      "a": "Key factors include return on investment, customer acquisition cost, and retention rate.",
+      "category": "math"
+    },
+    {
+      "q": "How can BookMyShow improve its app and website to enhance the user experience?",
+      "a": "BookMyShow can improve its app and website by simplifying the booking process, enhancing search and discovery, and providing personalized recommendations.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the customer journey to identify pain points and areas for improvement",
+    "Evaluate the competitive landscape to identify opportunities and threats",
+    "Assess the impact of external factors like seasonality and events on bookings",
+    "Develop a framework to track and measure key metrics and KPIs"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Industry benchmarks and research studies",
+    "News articles and media coverage"
+  ],
+  "case_type_notes": "This case requires the candidate to deep dive into the problem and investigate the cause of the decline in bookings, without necessarily diagnosing it. The candidate should demonstrate the ability to analyze complex data, identify key drivers and trends, and develop a framework to address the issue.",
+  "enriched_at": "2026-05-08T12:05:56.931Z"
+}

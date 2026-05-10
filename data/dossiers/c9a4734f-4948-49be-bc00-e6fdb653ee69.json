@@ -1,0 +1,196 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian retail industry is highly competitive, with a mix of brick-and-mortar stores and e-commerce platforms. The home decor segment, in particular, has seen significant growth in recent years, driven by increasing demand for online shopping and home improvement. Key players in the industry include HomeTown, Pepperfry, and FabFurnish. The regulatory backdrop is characterized by policies such as the Goods and Services Tax (GST) and the Foreign Direct Investment (FDI) norms, which impact the retail sector. Typical customer behavior in the home decor segment involves significant research and comparison before making a purchase, with a focus on quality, price, and convenience.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for home decor retailers in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian home decor market",
+      "value": "Rs 15,000-20,000 crores",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Number of e-commerce players in the Indian home decor segment",
+      "value": "20-30",
+      "source_hint": "industry estimates"
+    },
+    {
+      "metric": "Customer acquisition cost for e-commerce players in India",
+      "value": "Rs 500-1,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average order value for home decor products online",
+      "value": "Rs 2,000-5,000",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Retention rate for customers in the home decor segment",
+      "value": "20-30%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average time to break even for an e-commerce startup in India",
+      "value": "2-5 years",
+      "source_hint": "venture capital reports"
+    },
+    {
+      "metric": "Cost of equity for retail companies in India",
+      "value": "20-30%",
+      "source_hint": "financial databases"
+    },
+    {
+      "metric": "Average working capital requirements for retail companies in India",
+      "value": "15-25% of sales",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the net present value (NPV) of the acquisition",
+      "formula": "NPV = ∑ (CFt / (1 + r)^t)",
+      "typical_answer_range": "-Rs 500 lakhs to Rs 1,500 lakhs"
+    },
+    {
+      "step": "Estimating the cost of equity using the capital asset pricing model (CAPM)",
+      "formula": "Ke = Rf + β * (Rm - Rf)",
+      "typical_answer_range": "20-35%"
+    },
+    {
+      "step": "Determining the terminal value of the project using the perpetuity growth model",
+      "formula": "TV = FCFe / (Ke - g)",
+      "typical_answer_range": "Rs 500 lakhs to Rs 2,000 lakhs"
+    },
+    {
+      "step": "Calculating the internal rate of return (IRR) of the project",
+      "formula": "IRR = rate at which NPV = 0",
+      "typical_answer_range": "15-30%"
+    },
+    {
+      "step": "Analyzing the sensitivity of the project's NPV to changes in sales growth",
+      "formula": "ΔNPV / ΔSales growth",
+      "typical_answer_range": "-10% to 20%"
+    },
+    {
+      "step": "Evaluating the impact of the license fee option on the project's NPV",
+      "formula": "NPV with license fee - NPV without license fee",
+      "typical_answer_range": "-Rs 100 lakhs to Rs 500 lakhs"
+    },
+    {
+      "step": "Assessing the project's return on investment (ROI) using the payback period",
+      "formula": "Payback period = Initial investment / Annual cash flows",
+      "typical_answer_range": "2-5 years"
+    },
+    {
+      "step": "Comparing the NPV of the acquisition with the NPV of building an online store from scratch",
+      "formula": "NPV of acquisition - NPV of building online store",
+      "typical_answer_range": "-Rs 500 lakhs to Rs 1,500 lakhs"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating the sales growth of the online business",
+    "Underestimating the costs associated with integrating the acquired company",
+    "Ignoring the impact of the license fee option on the project's NPV",
+    "Failing to consider the strategic fit between the acquired company and the parent company",
+    "Not accounting for the tax implications of the acquisition",
+    "Using an incorrect cost of equity or discount rate",
+    "Not performing a thorough sensitivity analysis",
+    "Overlooking the potential risks and challenges associated with the acquisition"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends and drivers in the Indian home decor market?",
+      "a": "The Indian home decor market is driven by increasing demand for online shopping, home improvement, and quality products. Key trends include the growth of e-commerce, the rise of affordable luxury, and the importance of sustainability.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the acquisition of Walsarus align with Home Art's overall business strategy?",
+      "a": "The acquisition of Walsarus aligns with Home Art's strategy to expand its online presence, increase its customer base, and improve its competitive position in the market.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with the acquisition?",
+      "a": "The potential risks and challenges associated with the acquisition include integration issues, cultural differences, and the potential for disruption to the existing business.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the license fee option impact the project's NPV?",
+      "a": "The license fee option can significantly impact the project's NPV, depending on the terms of the option and the projected sales growth of the online business.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the online business?",
+      "a": "The key KPIs for the online business include sales growth, customer acquisition cost, customer retention rate, and average order value.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the acquisition of Walsarus impact Home Art's financial statements?",
+      "a": "The acquisition of Walsarus will impact Home Art's financial statements, including its income statement, balance sheet, and cash flow statement.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential synergies between Home Art and Walsarus?",
+      "a": "The potential synergies between Home Art and Walsarus include cost savings, increased efficiency, and improved customer service.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the acquisition of Walsarus impact Home Art's competitive position in the market?",
+      "a": "The acquisition of Walsarus can improve Home Art's competitive position in the market by increasing its online presence, expanding its customer base, and improving its product offerings.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key assumptions and sensitivities in the financial model?",
+      "a": "The key assumptions and sensitivities in the financial model include sales growth, cost of equity, and the license fee option.",
+      "category": "math"
+    },
+    {
+      "q": "How does the acquisition of Walsarus align with Home Art's long-term goals and objectives?",
+      "a": "The acquisition of Walsarus aligns with Home Art's long-term goals and objectives by expanding its online presence, increasing its customer base, and improving its competitive position in the market.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential exit options for the online business?",
+      "a": "The potential exit options for the online business include an initial public offering (IPO), a merger or acquisition, or a sale to a strategic investor.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the acquisition of Walsarus impact Home Art's organizational structure and management?",
+      "a": "The acquisition of Walsarus may require changes to Home Art's organizational structure and management, including the integration of new teams and the appointment of new leadership.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key risks and challenges associated with integrating the acquired company?",
+      "a": "The key risks and challenges associated with integrating the acquired company include cultural differences, system integration issues, and the potential for disruption to the existing business.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the acquisition of Walsarus impact Home Art's financial planning and budgeting?",
+      "a": "The acquisition of Walsarus will impact Home Art's financial planning and budgeting, including its capital expenditure plans, working capital requirements, and funding requirements.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential opportunities for cost savings and efficiency improvements?",
+      "a": "The potential opportunities for cost savings and efficiency improvements include the integration of systems, the elimination of redundant costs, and the improvement of supply chain management.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the strategic fit between Home Art and Walsarus",
+    "Evaluate the potential synergies between the two companies",
+    "Assess the impact of the acquisition on Home Art's competitive position in the market",
+    "Analyze the potential risks and challenges associated with the acquisition",
+    "Develop a comprehensive integration plan to ensure a smooth transition"
+  ],
+  "sources": [
+    "Industry reports from research firms such as Euromonitor and Nielsen",
+    "Company filings and annual reports from Home Art and Walsarus",
+    "News articles and press releases from reputable sources such as The Economic Times and Business Standard",
+    "Market research studies from firms such as McKinsey and BCG",
+    "Financial databases such as Bloomberg and Thomson Reuters"
+  ],
+  "case_type_notes": "This case requires the application of capital budgeting and discounted cash flow analysis to evaluate the acquisition of Walsarus by Home Art. The case also involves the consideration of strategic fit, synergies, and integration planning, making it a challenging and comprehensive case study.",
+  "enriched_at": "2026-05-10T06:04:11.595Z"
+}

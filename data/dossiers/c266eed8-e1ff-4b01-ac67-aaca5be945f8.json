@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The oncology industry is highly competitive, with a large number of players operating globally. The industry is characterized by high research and development costs, strict regulatory requirements, and a strong need for innovation. Patients typically have limited options for treatment, and healthcare providers play a significant role in prescribing medications. The Indian market, in particular, has seen significant growth in the oncology sector, driven by an increasing incidence of cancer and a growing demand for specialized treatments.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for oncology firms",
+      "value": "15-25%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global oncology market size",
+      "value": "$150-200 billion",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Number of oncology firms operating globally",
+      "value": "50-70",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Average R&D expenditure for oncology firms",
+      "value": "20-30% of revenue",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer lifetime value for oncology patients",
+      "value": "$50,000-$100,000",
+      "source_hint": "healthcare studies"
+    },
+    {
+      "metric": "Typical patent lifespan for oncology drugs",
+      "value": "10-15 years",
+      "source_hint": "patent databases"
+    },
+    {
+      "metric": "Average time to market for new oncology drugs",
+      "value": "8-12 years",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global incidence of cancer",
+      "value": "18-20 million new cases per year",
+      "source_hint": "WHO reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating revenue per patient",
+      "formula": "Total revenue / Number of patients",
+      "typical_answer_range": "Rs. 50,000 - Rs. 1,00,000"
+    },
+    {
+      "step": "Determining cost of goods sold",
+      "formula": "Total cost of production / Number of units sold",
+      "typical_answer_range": "Rs. 10,000 - Rs. 20,000"
+    },
+    {
+      "step": "Evaluating R&D expenditure as a percentage of revenue",
+      "formula": "R&D expenditure / Total revenue",
+      "typical_answer_range": "20-30%"
+    },
+    {
+      "step": "Assessing the impact of price changes on revenue",
+      "formula": "New price * Number of units sold",
+      "typical_answer_range": "Rs. 50,000 - Rs. 1,00,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of regulatory changes on the firm's operations",
+    "Overlooking the role of healthcare providers in prescribing medications",
+    "Failing to account for the high R&D costs associated with oncology drug development",
+    "Not evaluating the competitive landscape of the oncology industry",
+    "Ignoring the potential for generic competition",
+    "Not assessing the firm's pricing strategy",
+    "Failing to consider the impact of patent expirations on revenue"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the oncology industry in India?",
+      "a": "The Indian oncology market is driven by an increasing incidence of cancer, a growing demand for specialized treatments, and a rising awareness of cancer diagnosis and treatment options.",
+      "category": "industry"
+    },
+    {
+      "q": "How do healthcare providers influence the adoption of new oncology treatments?",
+      "a": "Healthcare providers play a significant role in prescribing medications, and their recommendations can significantly impact the adoption of new treatments.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical barriers to entry for new oncology firms?",
+      "a": "New oncology firms face significant barriers to entry, including high R&D costs, strict regulatory requirements, and intense competition from established players.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the firm optimize its cost structure to improve profitability?",
+      "a": "The firm can optimize its cost structure by reducing waste, improving operational efficiency, and renegotiating contracts with suppliers.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key risks associated with investing in oncology firms?",
+      "a": "Investing in oncology firms carries significant risks, including regulatory risks, clinical trial risks, and market risks.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the firm improve its revenue streams?",
+      "a": "The firm can improve its revenue streams by developing new products, expanding into new markets, and increasing its pricing.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the typical characteristics of successful oncology firms?",
+      "a": "Successful oncology firms are characterized by a strong R&D pipeline, a robust commercialization strategy, and a strong distribution network.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the firm assess the effectiveness of its R&D expenditure?",
+      "a": "The firm can assess the effectiveness of its R&D expenditure by evaluating the number of new products developed, the success rate of clinical trials, and the return on investment.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key challenges facing oncology firms in India?",
+      "a": "Oncology firms in India face significant challenges, including a lack of infrastructure, a shortage of skilled personnel, and intense competition from established players.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the firm mitigate the risks associated with patent expirations?",
+      "a": "The firm can mitigate the risks associated with patent expirations by developing new products, expanding its product portfolio, and diversifying its revenue streams.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Evaluate the firm's product portfolio and assess the potential for new product development",
+    "Analyze the firm's cost structure and identify areas for optimization",
+    "Assess the firm's pricing strategy and evaluate the potential for price increases",
+    "Evaluate the firm's distribution network and identify opportunities for expansion",
+    "Develop a comprehensive strategy to mitigate the risks associated with patent expirations"
+  ],
+  "sources": [
+    "Industry reports from research firms such as McKinsey and BCG",
+    "Company filings and annual reports",
+    "Market research studies from firms such as Euromonitor and Nielsen",
+    "Healthcare studies and reports from organizations such as the WHO and the Indian Ministry of Health",
+    "Patent databases and intellectual property reports"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the firm's profitability and identify areas for improvement, while also considering the complex and competitive nature of the oncology industry. The candidate must demonstrate a strong understanding of the industry, as well as the ability to analyze complex data and develop effective solutions.",
+  "enriched_at": "2026-05-10T06:00:52.665Z"
+}

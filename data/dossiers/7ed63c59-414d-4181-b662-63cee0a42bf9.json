@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The lighting industry is a highly competitive market with a mix of established players and new entrants. The average cost of a traditional light bulb is around ₹10-20, with a lifespan of 1,000-2,000 hours. In contrast, LED bulbs, which are more energy-efficient, can last up to 50,000 hours and cost between ₹200-500. The Indian government has implemented policies to promote the use of energy-efficient lighting, driving growth in the LED market. Typical customer behavior in this industry involves considering factors such as initial cost, energy efficiency, and durability when making purchasing decisions.",
+  "real_world_numbers": [
+    {
+      "metric": "Average cost of traditional light bulb",
+      "value": "₹10-20",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Lifespan of traditional light bulb",
+      "value": "1,000-2,000 hours",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Cost of LED bulb",
+      "value": "₹200-500",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Lifespan of LED bulb",
+      "value": "25,000-50,000 hours",
+      "source_hint": "industry standards"
+    },
+    {
+      "metric": "Market size of Indian lighting industry",
+      "value": "₹10,000-15,000 crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Growth rate of LED market in India",
+      "value": "15-20% per annum",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer lifetime value for lighting products",
+      "value": "₹500-1,000",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Typical margin for lighting manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of lighting manufacturers in India",
+      "value": "50-100",
+      "source_hint": "directory listings"
+    },
+    {
+      "metric": "Average price of smart lighting products",
+      "value": "₹1,000-2,500",
+      "source_hint": "e-commerce platforms"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate customer lifetime value",
+      "formula": "CLV = (average revenue per user) x (customer lifespan)",
+      "typical_answer_range": "₹500-1,000"
+    },
+    {
+      "step": "Determine cost-based pricing",
+      "formula": "price = (manufacturing cost + R&D cost) / (1 - desired margin)",
+      "typical_answer_range": "₹500-1,500"
+    },
+    {
+      "step": "Calculate competitor-based pricing",
+      "formula": "price = (competitor price) x (1 + differentiation factor)",
+      "typical_answer_range": "₹200-500"
+    },
+    {
+      "step": "Determine value-based pricing",
+      "formula": "price = (customer willingness to pay) x (unique selling points)",
+      "typical_answer_range": "₹1,000-2,500"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering alternative markets, such as commercial or industrial lighting",
+    "Failing to calculate customer lifetime value",
+    "Not accounting for R&D costs in cost-based pricing",
+    "Ignoring competitor prices and market analysis",
+    "Overestimating customer willingness to pay",
+    "Not considering the impact of government policies on the lighting industry",
+    "Failing to differentiate between traditional and LED lighting products"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in the Indian lighting industry?",
+      "a": "The Indian lighting industry is experiencing a shift towards energy-efficient lighting, driven by government policies and increasing demand for LED bulbs.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the longevity of the new light bulb impact pricing?",
+      "a": "The 500-year lifespan of the new light bulb could justify a higher price point due to its unique selling point and potential cost savings for customers.",
+      "category": "value-based"
+    },
+    {
+      "q": "What are the typical margins for lighting manufacturers in India?",
+      "a": "Typical margins for lighting manufacturers in India range from 8-12%.",
+      "category": "math"
+    },
+    {
+      "q": "How does the new light bulb compare to existing products in the market?",
+      "a": "The new light bulb's 500-year lifespan is significantly longer than traditional and LED bulbs, making it a unique product in the market.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with launching a new lighting product?",
+      "a": "Potential risks and challenges include competition from established players, high R&D costs, and the need to educate customers about the benefits of the new product.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the company determine the optimal price for the new light bulb?",
+      "a": "The company can use a combination of cost-based pricing, competitor-based pricing, and value-based pricing to determine the optimal price for the new light bulb.",
+      "category": "framework"
+    },
+    {
+      "q": "What role does government policy play in the Indian lighting industry?",
+      "a": "Government policies, such as those promoting energy-efficient lighting, can drive growth in the LED market and impact the overall lighting industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company measure the effectiveness of its pricing strategy?",
+      "a": "The company can measure the effectiveness of its pricing strategy by tracking sales, revenue, and customer acquisition costs, as well as conducting market research to understand customer willingness to pay.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential opportunities for the new light bulb in alternative markets?",
+      "a": "The new light bulb could be marketed to commercial or industrial customers, who may be willing to pay a premium for its unique features and benefits.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company balance the need for profitability with the need to compete with established players?",
+      "a": "The company can balance the need for profitability with the need to compete with established players by using a value-based pricing strategy, which takes into account the unique features and benefits of the new light bulb.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the customer's total cost of ownership, including energy costs and replacement costs",
+    "Analyze the competitive landscape, including the pricing strategies of established players",
+    "Evaluate the unique selling points of the new light bulb, such as its 500-year lifespan and energy efficiency"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Industry associations and trade organizations",
+    "Government policy documents"
+  ],
+  "case_type_notes": "This pricing case is challenging because it requires the candidate to consider multiple factors, including cost, competition, and customer willingness to pay, in order to determine the optimal price for a unique product with a 500-year lifespan.",
+  "enriched_at": "2026-05-10T06:47:44.968Z"
+}

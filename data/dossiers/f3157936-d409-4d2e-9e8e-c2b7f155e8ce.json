@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The management consulting industry in India is highly competitive, with key players like McKinsey, BCG, and Bain. The industry is driven by the need for strategic advice and operational improvement, with typical client engagements ranging from 6-12 months. Regulatory backdrop includes data protection and privacy laws, while customer behavior is driven by the need for expertise and objective advice. The industry is also witnessing a shift towards digital transformation and innovation.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for consulting firms",
+      "value": "15-25%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average revenue per consultant",
+      "value": "₹40-60 lakhs",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of Indian consulting industry",
+      "value": "₹20,000-30,000 crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of management consulting firms in India",
+      "value": "500-700",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "Average client engagement duration",
+      "value": "6-12 months",
+      "source_hint": "company surveys"
+    },
+    {
+      "metric": "Typical consultant utilization rate",
+      "value": "70-90%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average annual growth rate of Indian consulting industry",
+      "value": "10-15%",
+      "source_hint": "IBEF reports"
+    },
+    {
+      "metric": "Proportion of digital consulting services",
+      "value": "20-30%",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating revenue per consultant",
+      "formula": "Total revenue / Number of consultants",
+      "typical_answer_range": "₹30-60 lakhs"
+    },
+    {
+      "step": "Estimating market share",
+      "formula": "Firm revenue / Total market size",
+      "typical_answer_range": "1-5%"
+    },
+    {
+      "step": "Determining consultant utilization rate",
+      "formula": "Billable hours / Total available hours",
+      "typical_answer_range": "70-90%"
+    },
+    {
+      "step": "Calculating client acquisition cost",
+      "formula": "Marketing spend / Number of new clients",
+      "typical_answer_range": "₹50,000-1,00,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not understanding the client's needs and objectives",
+    "Failing to define the problem statement clearly",
+    "Not considering alternative solutions or perspectives",
+    "Overlooking key stakeholders or their interests",
+    "Not providing a clear and concise recommendation",
+    "Failing to quantify the impact of the recommendation",
+    "Not considering the implementation challenges and risks",
+    "Overestimating the feasibility of the solution"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian consulting industry?",
+      "a": "Digital transformation, innovation, and increasing demand for specialized services",
+      "category": "industry"
+    },
+    {
+      "q": "How do consulting firms measure their performance and success?",
+      "a": "Through metrics like revenue growth, client satisfaction, and consultant utilization rate",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical challenges faced by consulting firms in India?",
+      "a": "Attracting and retaining talent, managing client relationships, and staying ahead of the competition",
+      "category": "competitive"
+    },
+    {
+      "q": "How do consultants approach a new client engagement?",
+      "a": "By understanding the client's needs, defining the problem statement, and developing a tailored solution",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key skills required to be a successful consultant?",
+      "a": "Strong analytical and problem-solving skills, effective communication and interpersonal skills, and ability to work under pressure",
+      "category": "real-world"
+    },
+    {
+      "q": "How do consulting firms differentiate themselves in a competitive market?",
+      "a": "Through their expertise, reputation, and ability to deliver results",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical career paths for consultants in India?",
+      "a": "From analyst to associate to manager to partner, with opportunities to specialize in specific areas or industries",
+      "category": "real-world"
+    },
+    {
+      "q": "How do consulting firms approach digital transformation and innovation?",
+      "a": "By investing in digital technologies, developing new services and solutions, and acquiring or partnering with digital companies",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Use a structured approach to define the problem statement and develop a solution",
+    "Consider multiple perspectives and alternative solutions",
+    "Focus on delivering results and creating value for the client",
+    "Develop a clear and concise recommendation and implementation plan"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "IBEF reports",
+    "Company filings and surveys",
+    "Industry associations and benchmarks"
+  ],
+  "case_type_notes": "This case type is challenging because it requires the candidate to think critically and creatively, and to develop a structured approach to solving complex problems. It also requires the candidate to have a strong understanding of the consulting industry and its trends, as well as the ability to quantify and analyze data.",
+  "enriched_at": "2026-05-10T07:38:59.029Z"
+}

@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian retail industry is characterized by a mix of organized and unorganized players, with the latter dominating the market. The activewear segment has seen significant growth in recent years, driven by increasing health consciousness and a rising middle class. Key players in the industry include Decathlon, Nike, and Adidas, among others. The industry is subject to various regulations, including those related to labor laws, taxation, and consumer protection. Typical customer behavior in the Indian retail market includes a preference for affordable prices, quality products, and a seamless shopping experience.",
+  "real_world_numbers": [
+    {
+      "metric": "Average revenue growth rate of Indian activewear brands",
+      "value": "15-20% per annum",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian activewear market",
+      "value": "₹20,000-₹30,000 Cr",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Number of retail outlets in India",
+      "value": "12-15 million",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Average customer acquisition cost for Indian retail brands",
+      "value": "₹500-₹1,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer retention rate for Indian retail brands",
+      "value": "20-30%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average order value for Indian e-commerce platforms",
+      "value": "₹1,500-₹3,000",
+      "source_hint": "e-commerce reports"
+    },
+    {
+      "metric": "Number of Indian consumers using digital payment methods",
+      "value": "300-400 million",
+      "source_hint": "digital payment reports"
+    },
+    {
+      "metric": "Average margin for Indian retail brands",
+      "value": "10-15%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of Indian cities with a population over 1 million",
+      "value": "50-60",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Average footfall per day for Indian retail stores",
+      "value": "50-100 customers",
+      "source_hint": "retail industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the required growth rate to reach ₹1000 Cr ARR",
+      "formula": "(1000 - 600) / 600",
+      "typical_answer_range": "66-67%"
+    },
+    {
+      "step": "Determine the number of new retailers needed to achieve the growth target",
+      "formula": "(required growth rate * current ARR) / average revenue per retailer",
+      "typical_answer_range": "1,500-2,000 retailers"
+    },
+    {
+      "step": "Calculate the customer acquisition cost per retailer",
+      "formula": "total customer acquisition cost / number of new retailers",
+      "typical_answer_range": "₹500-₹1,000"
+    },
+    {
+      "step": "Estimate the revenue contribution from each new retailer",
+      "formula": "average order value * number of orders per retailer",
+      "typical_answer_range": "₹10,000-₹20,000 per annum"
+    },
+    {
+      "step": "Determine the return on investment (ROI) for the retailer acquisition strategy",
+      "formula": "(revenue contribution - customer acquisition cost) / customer acquisition cost",
+      "typical_answer_range": "2-5 times"
+    },
+    {
+      "step": "Calculate the break-even point for the retailer acquisition strategy",
+      "formula": "customer acquisition cost / (revenue contribution - customer acquisition cost)",
+      "typical_answer_range": "6-12 months"
+    },
+    {
+      "step": "Estimate the impact of a 10% increase in average order value on revenue growth",
+      "formula": "(10% * average order value) * number of orders",
+      "typical_answer_range": "5-10% increase in revenue"
+    },
+    {
+      "step": "Determine the effect of a 20% reduction in customer acquisition cost on ROI",
+      "formula": "(revenue contribution - reduced customer acquisition cost) / reduced customer acquisition cost",
+      "typical_answer_range": "10-20% increase in ROI"
+    }
+  ],
+  "common_mistakes": [
+    "Underestimating the complexity of the Indian retail market",
+    "Overlooking the importance of digital literacy among retailers",
+    "Failing to prioritize high-potential retailer cohorts",
+    "Not considering unconventional communication channels",
+    "Insufficiently tracking key performance indicators (KPIs)",
+    "Not refining the pilot strategy based on KPI data",
+    "Scaling the pilot too quickly without testing assumptions",
+    "Not integrating the retailer acquisition strategy with existing programs"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian activewear market?",
+      "a": "Increasing health consciousness, rising middle class, and growing demand for affordable and quality products.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian retail market differ from other emerging markets?",
+      "a": "The Indian market is characterized by a large unorganized sector, diverse consumer preferences, and a complex regulatory environment.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the most effective channels for reaching non-digital retailers in India?",
+      "a": "Unconventional channels like packaging inserts, partnerships with local kirana stores, and in-store signage or QR codes at point-of-sale.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can Technosport leverage its existing initiatives to support the retailer acquisition strategy?",
+      "a": "By promoting Technodirect via QR codes on physical materials and incentivizing retailers through discounts or rewards, and integrating Blue Origin with digital literacy workshops.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key metrics to track when evaluating the success of the retailer acquisition strategy?",
+      "a": "Onboarding rate, activation rate, repeat order rate, average order value, data capture completeness, and contribution to ARR growth.",
+      "category": "math"
+    },
+    {
+      "q": "How can Technosport balance the need for rapid growth with the risk of over-expansion?",
+      "a": "By piloting the strategy in a few high-potential cities, refining the approach based on KPI data, and scaling up gradually to minimize risk.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with the retailer acquisition strategy?",
+      "a": "Risks include over-reliance on a single channel, insufficient digital literacy among retailers, and failure to track KPIs effectively.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Technosport ensure that its retailer acquisition strategy is aligned with its overall business goals?",
+      "a": "By integrating the strategy with existing programs, prioritizing high-potential retailer cohorts, and continuously monitoring and refining the approach based on KPI data.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential opportunities for Technosport to expand its reach beyond the Indian market?",
+      "a": "Opportunities include expanding into neighboring countries, partnering with international brands, and leveraging e-commerce platforms to reach a broader audience.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Technosport use data and analytics to inform its retailer acquisition strategy?",
+      "a": "By tracking KPIs, analyzing customer behavior, and using data to refine the approach and optimize resource allocation.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Segmentation-Targeting-Channel Strategy",
+    "Prioritizing high-potential retailer cohorts",
+    "Leveraging unconventional communication channels",
+    "Integrating with existing programs like Technodirect and Blue Origin",
+    "Piloting and refining the strategy based on KPI data"
+  ],
+  "sources": [
+    "Industry reports from firms like Euromonitor and Nielsen",
+    "Market research studies from companies like McKinsey and BCG",
+    "Company filings and annual reports from Indian retail brands",
+    "Government statistics and reports from the Ministry of Commerce and Industry",
+    "E-commerce reports and data from platforms like Amazon and Flipkart"
+  ],
+  "case_type_notes": "This case requires the application of a Segmentation-Targeting-Channel Strategy framework to drive growth in the Indian retail market. The complexity of the market, the need for digital literacy among retailers, and the importance of tracking KPIs make this case challenging and relevant for Indian business schools.",
+  "enriched_at": "2026-05-10T06:33:14.945Z"
+}

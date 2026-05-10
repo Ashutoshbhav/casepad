@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian insurance market is a growing industry with a competitive structure, comprising both public and private sector players. The key economics of the industry include low penetration rates, high growth potential, and increasing demand for insurance products. The regulatory backdrop is governed by the Insurance Regulatory and Development Authority of India (IRDAI), which oversees the industry and ensures compliance with regulations. Typical customer behavior in India includes a preference for traditional insurance products, such as life insurance, and a growing awareness of the need for health and other non-life insurance products.",
+  "real_world_numbers": [
+    {
+      "metric": "Insurance penetration rate in India",
+      "value": "3.7-4.2%",
+      "source_hint": "IRDAI reports"
+    },
+    {
+      "metric": "Indian life insurance market size",
+      "value": "INR 5.5-6.5 trillion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Indian non-life insurance market size",
+      "value": "INR 1.8-2.2 trillion",
+      "source_hint": "ICRA research reports"
+    },
+    {
+      "metric": "Average claim settlement ratio for health insurance in India",
+      "value": "85-95%",
+      "source_hint": "IRDAI reports"
+    },
+    {
+      "metric": "Typical margin for health insurance companies in India",
+      "value": "8-12%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of life insurance companies in India",
+      "value": "24-28",
+      "source_hint": "IRDAI reports"
+    },
+    {
+      "metric": "Number of non-life insurance companies in India",
+      "value": "34-38",
+      "source_hint": "IRDAI reports"
+    },
+    {
+      "metric": "Customer LTV for life insurance companies in India",
+      "value": "INR 50,000-1,00,000",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate market size for the target segment",
+      "formula": "Market size = (number of potential customers) x (average premium per customer)",
+      "typical_answer_range": "INR 1,000-5,000 crore"
+    },
+    {
+      "step": "Determine the competitive intensity of the target segment",
+      "formula": "Competitive intensity = (number of competitors) / (market size)",
+      "typical_answer_range": "0.5-2.0"
+    },
+    {
+      "step": "Evaluate the financial viability of the target segment",
+      "formula": "Financial viability = (revenue) - (costs)",
+      "typical_answer_range": "INR 100-500 crore"
+    },
+    {
+      "step": "Assess the pricing strategy for the target segment",
+      "formula": "Pricing strategy = (average premium per customer) x (competitive intensity)",
+      "typical_answer_range": "INR 5,000-20,000"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating the market size and growth potential of the target segment",
+    "Underestimating the competitive intensity of the target segment",
+    "Failing to consider regulatory barriers and compliance requirements",
+    "Ignoring the importance of customer awareness and education in the target segment",
+    "Not adequately assessing the financial viability and pricing strategy for the target segment"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian insurance market?",
+      "a": "The Indian insurance market is witnessing a shift towards digitalization, increasing demand for health and non-life insurance products, and growing awareness of the need for insurance among the middle class.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the regulatory environment in India impact the insurance market?",
+      "a": "The IRDAI regulates the insurance market in India, ensuring compliance with regulations and overseeing the industry. The regulatory environment can impact the market through policies and guidelines that govern insurance products, pricing, and distribution.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical customer segments in the Indian insurance market?",
+      "a": "The typical customer segments in the Indian insurance market include individual customers, group customers, and corporate customers. These segments can be further divided based on demographics, income levels, and risk profiles.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can a new entrant in the Indian insurance market differentiate itself from existing players?",
+      "a": "A new entrant in the Indian insurance market can differentiate itself through innovative products, digital distribution channels, and customer-centric services. It can also focus on niche segments or emerging trends, such as cyber insurance or renewable energy insurance.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the Indian insurance market?",
+      "a": "The key performance indicators (KPIs) for the Indian insurance market include premium growth, claim settlement ratio, customer retention, and return on equity (ROE). These KPIs can help insurers evaluate their performance and make informed decisions.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the target segment's customer needs and preferences",
+    "Evaluate the competitive landscape and market dynamics",
+    "Assess the regulatory environment and compliance requirements",
+    "Develop a financial model to evaluate the viability of the target segment",
+    "Create a marketing strategy to reach and acquire customers in the target segment"
+  ],
+  "sources": [
+    "IRDAI reports",
+    "Statista industry reports",
+    "ICRA research reports",
+    "Company filings",
+    "Industry publications and articles"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to analyze the Indian insurance market, identify a target segment, and evaluate the feasibility and viability of entering that segment. The candidate must demonstrate an understanding of the industry context, competitive landscape, and regulatory environment, as well as the ability to perform financial calculations and develop a marketing strategy.",
+  "enriched_at": "2026-05-10T06:06:29.986Z"
+}

@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with a large number of players competing for market share. The industry is characterized by low margins, high volumes, and a strong focus on supply chain efficiency. Typical customer behavior in the FMCG industry involves frequent purchases of small quantities, with a strong emphasis on convenience and affordability. The regulatory backdrop is governed by the Food Safety and Standards Authority of India (FSSAI), which sets standards for food safety and quality. The industry is also subject to various taxes and duties, including the Goods and Services Tax (GST).",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average spoilage rate for perishable products in FMCG",
+      "value": "2-5%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the FMCG industry in India",
+      "value": "₹ 4-5 lakh crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of FMCG companies in India",
+      "value": "500-700",
+      "source_hint": "directory listings"
+    },
+    {
+      "metric": "Average customer lifetime value (LTV) for FMCG companies",
+      "value": "₹ 5,000-10,000",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Typical inventory turnover ratio for FMCG companies",
+      "value": "5-10",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average supply chain cost as a percentage of sales for FMCG companies",
+      "value": "5-10%",
+      "source_hint": "consulting reports"
+    },
+    {
+      "metric": "Number of warehouses used by a typical FMCG company in India",
+      "value": "10-50",
+      "source_hint": "logistics industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total cost of spoilage",
+      "formula": "Total Cost of Spoilage = (Spoilage Rate x Total Production) x Cost per Unit",
+      "typical_answer_range": "₹ 50 lakhs - ₹ 5 crores"
+    },
+    {
+      "step": "Determine the optimal production quantity",
+      "formula": "Optimal Production Quantity = (Demand x (1 + Service Level)) / (1 - (Lead Time x Demand))",
+      "typical_answer_range": "10,000 - 50,000 units"
+    },
+    {
+      "step": "Calculate the inventory holding cost",
+      "formula": "Inventory Holding Cost = (Average Inventory x Cost per Unit) x Holding Cost Rate",
+      "typical_answer_range": "₹ 10 lakhs - ₹ 1 crore"
+    },
+    {
+      "step": "Evaluate the impact of demand forecasting errors on spoilage rate",
+      "formula": "Spoilage Rate = (Forecast Error x Production) / Total Demand",
+      "typical_answer_range": "1-5%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of seasonality on demand forecasting",
+    "Overlooking the role of transportation and logistics in spoilage rate",
+    "Failing to account for the cost of waste disposal in the total cost of spoilage",
+    "Not evaluating the effectiveness of existing inventory management systems",
+    "Ignoring the potential benefits of implementing a just-in-time (JIT) production system"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the typical causes of spoilage in FMCG products?",
+      "a": "The typical causes of spoilage in FMCG products include over-production, inaccurate demand forecasting, poor inventory management, and inadequate transportation and logistics.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the GST impact the FMCG industry in India?",
+      "a": "The GST has a significant impact on the FMCG industry in India, as it affects the pricing and profitability of products. The GST rate for FMCG products ranges from 5-28%, depending on the product category.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the benefits of implementing a JIT production system?",
+      "a": "The benefits of implementing a JIT production system include reduced inventory holding costs, lower waste disposal costs, and improved supply chain efficiency.",
+      "category": "math"
+    },
+    {
+      "q": "How can demand forecasting errors be minimized?",
+      "a": "Demand forecasting errors can be minimized by using advanced analytics and machine learning algorithms, as well as by incorporating data from various sources, such as sales data, weather data, and economic indicators.",
+      "category": "math"
+    },
+    {
+      "q": "What are the typical inventory management systems used in the FMCG industry?",
+      "a": "The typical inventory management systems used in the FMCG industry include the first-in-first-out (FIFO) system, the last-in-first-out (LIFO) system, and the just-in-time (JIT) system.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the FSSAI regulate the FMCG industry in India?",
+      "a": "The FSSAI regulates the FMCG industry in India by setting standards for food safety and quality, as well as by monitoring and enforcing compliance with these standards.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the benefits of using data analytics in demand forecasting?",
+      "a": "The benefits of using data analytics in demand forecasting include improved forecast accuracy, reduced forecast errors, and improved supply chain efficiency.",
+      "category": "math"
+    },
+    {
+      "q": "How can the spoilage rate be reduced in the FMCG industry?",
+      "a": "The spoilage rate can be reduced in the FMCG industry by implementing effective inventory management systems, improving demand forecasting accuracy, and optimizing production and logistics operations.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the typical challenges faced by FMCG companies in India?",
+      "a": "The typical challenges faced by FMCG companies in India include intense competition, changing consumer preferences, and regulatory compliance.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the FMCG industry in India be made more sustainable?",
+      "a": "The FMCG industry in India can be made more sustainable by implementing environmentally friendly packaging, reducing waste disposal, and promoting sustainable sourcing practices.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the value chain to identify areas of inefficiency and opportunities for improvement",
+    "Evaluate the effectiveness of existing inventory management systems and consider alternatives",
+    "Consider the impact of seasonality and other external factors on demand forecasting",
+    "Assess the benefits and feasibility of implementing a JIT production system"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "FSSAI regulations and guidelines",
+    "Industry benchmarks and best practices",
+    "Market research reports and studies"
+  ],
+  "case_type_notes": "This operations case requires the candidate to analyze the value chain, evaluate the effectiveness of existing systems, and identify opportunities for improvement. The candidate must also consider the impact of external factors, such as seasonality and regulatory compliance, on the FMCG company's operations.",
+  "enriched_at": "2026-05-10T07:26:47.812Z"
+}

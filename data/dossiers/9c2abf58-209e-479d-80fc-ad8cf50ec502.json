@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian retail food industry is highly competitive, with a mix of organized and unorganized players. The industry is characterized by low margins, with typical profit margins ranging from 8-12%. Customer behavior is largely driven by factors such as taste, price, and convenience. The Mughlai food segment, in particular, is popular in India, with a large customer base across various demographics.",
+  "real_world_numbers": [
+    {
+      "metric": "Average annual sales per unit for a mid-sized restaurant in India",
+      "value": "₹1.5-2.5 crores",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical customer acquisition cost for a restaurant in India",
+      "value": "₹50-100",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average customer retention rate for a restaurant in India",
+      "value": "30-50%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Market size of the Indian food services industry",
+      "value": "₹4-5 lakh crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of restaurants in India",
+      "value": "1.5-2 million",
+      "source_hint": "industry estimates"
+    },
+    {
+      "metric": "Average price of a meal at a mid-sized restaurant in India",
+      "value": "₹200-500",
+      "source_hint": "Zomato data"
+    },
+    {
+      "metric": "Typical margin for a restaurant in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Customer lifetime value for a restaurant in India",
+      "value": "₹5,000-10,000",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the revenue impact of the 20% decline in profits",
+      "formula": "Revenue = Profits / Margin",
+      "typical_answer_range": "₹1-2 crores"
+    },
+    {
+      "step": "Estimate the number of customers lost due to the perceived price increase",
+      "formula": "Customers Lost = (Decline in Profits / Average Order Value) / Margin",
+      "typical_answer_range": "100-200 customers"
+    },
+    {
+      "step": "Calculate the customer acquisition cost per customer segment",
+      "formula": "CAC = Marketing Spend / Number of New Customers",
+      "typical_answer_range": "₹50-100"
+    },
+    {
+      "step": "Determine the break-even point for the restaurant",
+      "formula": "Break-Even Point = Fixed Costs / (Selling Price - Variable Costs)",
+      "typical_answer_range": "₹50,000-1 lakh"
+    }
+  ],
+  "common_mistakes": [
+    "Assuming that the perceived price increase is the only factor affecting customer behavior",
+    "Failing to consider the impact of the renovation on customer segments other than blue-collar workers",
+    "Not accounting for the potential cannibalization of sales from other customer segments",
+    "Overestimating the effectiveness of short-term marketing campaigns",
+    "Underestimating the importance of online presence and ordering capabilities"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian retail food industry?",
+      "a": "The industry is witnessing a shift towards online ordering, increasing demand for healthy and sustainable food options, and growing competition from international players.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Mughlai food segment perform in terms of sales and profitability compared to other cuisines?",
+      "a": "Mughlai food is a popular and profitable segment, with average sales per unit ranging from ₹1.5-2.5 crores and margins of 8-12%.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical customer retention strategies employed by restaurants in India?",
+      "a": "Restaurants in India often employ loyalty programs, personalized marketing, and excellent customer service to retain customers.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can the restaurant measure the effectiveness of its marketing campaigns?",
+      "a": "The restaurant can track metrics such as customer acquisition cost, customer retention rate, and return on investment (ROI) to measure the effectiveness of its marketing campaigns.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with expanding the restaurant's online presence?",
+      "a": "The potential risks and challenges include increased competition, higher marketing spend, and the need for significant investments in technology and logistics.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the restaurant balance its short-term and long-term goals?",
+      "a": "The restaurant can balance its short-term and long-term goals by prioritizing initiatives that drive immediate sales and profitability while also investing in strategic initiatives that drive long-term growth and sustainability.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the customer journey to identify touchpoints where the restaurant can improve the customer experience",
+    "Assess the competitive landscape to identify opportunities for differentiation and growth",
+    "Evaluate the restaurant's operational efficiency and identify areas for cost optimization"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Zomato data",
+    "Industry benchmarks and estimates"
+  ],
+  "case_type_notes": "This case requires the candidate to apply a profitability framework to a real-world scenario, considering factors such as revenue, costs, and customer behavior. The candidate must also demonstrate an understanding of the Indian retail food industry and the Mughlai food segment, as well as the ability to analyze data and make informed recommendations.",
+  "enriched_at": "2026-05-08T12:19:10.423Z"
+}

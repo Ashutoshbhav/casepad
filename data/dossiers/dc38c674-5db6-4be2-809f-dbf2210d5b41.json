@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with a large number of players vying for market share. The sugar cereal market is a significant segment within this industry, with major players like Kellogg's and PepsiCo competing for shelf space and consumer attention. Regulatory bodies like the Food Safety and Standards Authority of India (FSSAI) play a crucial role in ensuring compliance with food safety standards. Typical customer behavior in this market includes seeking affordable and convenient breakfast options, with a growing preference for healthier alternatives.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian breakfast cereal market",
+      "value": "INR 2,500-3,500 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of major players in the Indian sugar cereal market",
+      "value": "5-7",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average customer lifetime value (LTV) for FMCG companies in India",
+      "value": "INR 5,000-10,000",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Typical shelf space allocation for sugar cereals in Indian retail stores",
+      "value": "10-15%",
+      "source_hint": "retail industry reports"
+    },
+    {
+      "metric": "Average promotional spend as a percentage of sales for FMCG companies in India",
+      "value": "5-10%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of sales representatives required to service a large retail account like Big M Mart",
+      "value": "5-10",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average price premium for branded sugar cereals in India",
+      "value": "15-25%",
+      "source_hint": "market research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the potential revenue loss due to lower shelf space allocation",
+      "formula": "Revenue = (Market Share x Market Size) x (1 - Shelf Space Allocation)",
+      "typical_answer_range": "INR 50-100 lakhs"
+    },
+    {
+      "step": "Determine the required increase in promotional spend to match competitor levels",
+      "formula": "Promotional Spend = (Competitor Promotional Spend / Competitor Sales) x Client Sales",
+      "typical_answer_range": "INR 20-50 lakhs"
+    },
+    {
+      "step": "Estimate the potential increase in sales due to improved product placement",
+      "formula": "Sales = (Market Share x Market Size) x (1 + Product Placement Improvement)",
+      "typical_answer_range": "5-10%"
+    },
+    {
+      "step": "Calculate the return on investment (ROI) for increasing the number of sales representatives",
+      "formula": "ROI = (Incremental Sales / Incremental Cost) x 100",
+      "typical_answer_range": "15-30%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the impact of regulatory compliance on product formulation and packaging",
+    "Underestimating the importance of shelf space allocation in driving sales",
+    "Failing to account for the price premium commanded by branded sugar cereals",
+    "Not considering the potential for cannibalization of existing sales by introducing new products or promotions",
+    "Ignoring the role of sales representatives in influencing retailer decisions and driving sales"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian breakfast cereal market?",
+      "a": "The Indian breakfast cereal market is witnessing a shift towards healthier and more convenient options, with a growing demand for products with high nutritional value and low sugar content.",
+      "category": "industry"
+    },
+    {
+      "q": "How do FMCG companies in India typically allocate their marketing budgets?",
+      "a": "FMCG companies in India typically allocate their marketing budgets across multiple channels, including television, print, digital, and in-store promotions, with a focus on reaching their target audience and driving sales.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the average customer acquisition cost for FMCG companies in India?",
+      "a": "The average customer acquisition cost for FMCG companies in India can range from INR 50-200, depending on the product category, marketing channels, and target audience.",
+      "category": "math"
+    },
+    {
+      "q": "How can our client improve its product placement and shelf space allocation in Big M Mart stores?",
+      "a": "Our client can improve its product placement and shelf space allocation by negotiating with Big M Mart, offering competitive pricing and promotions, and providing category management support to the retailer.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with increasing the number of sales representatives?",
+      "a": "The potential risks and challenges associated with increasing the number of sales representatives include higher costs, potential cannibalization of existing sales, and the need for effective training and management of the sales team.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the client's product portfolio and identify opportunities for innovation and differentiation",
+    "Assess the competitive landscape and identify areas for improvement in marketing and sales strategies",
+    "Evaluate the client's supply chain and logistics operations to identify opportunities for cost savings and efficiency improvements",
+    "Develop a category management approach to improve product placement and shelf space allocation in Big M Mart stores",
+    "Create a sales and marketing plan to drive sales growth and increase market share"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports from Euromonitor and Nielsen",
+    "Industry benchmarks and best practices from the FMCG industry",
+    "Retail industry reports and research studies"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to analyze the client's situation, identify areas for improvement, and develop a comprehensive plan to drive sales growth and increase market share. The candidate must demonstrate a deep understanding of the FMCG industry, marketing and sales strategies, and the importance of effective category management and sales representation.",
+  "enriched_at": "2026-05-08T12:08:31.199Z"
+}

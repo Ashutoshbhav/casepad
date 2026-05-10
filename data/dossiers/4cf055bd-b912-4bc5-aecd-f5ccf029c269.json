@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The lighting industry in India is highly competitive, with a mix of local and international players. The market is driven by factors such as energy efficiency, durability, and affordability. Key customers include residential and commercial segments, with a growing demand for smart and sustainable lighting solutions. The industry is subject to regulations such as the Bureau of Energy Efficiency's (BEE) star rating system, which promotes energy-efficient products. Typical customer behavior includes seeking products with long lifespans and low maintenance costs.",
+  "real_world_numbers": [
+    {
+      "metric": "Average lifespan of traditional incandescent bulbs",
+      "value": "1,000-2,000 hours",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average lifespan of LED bulbs",
+      "value": "25,000-50,000 hours",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian lighting industry",
+      "value": "₹50,000-₹70,000 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Typical margin for lighting manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for residential lighting customers",
+      "value": "₹5,000-₹10,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of lighting manufacturers in India",
+      "value": "500-700",
+      "source_hint": "industry directories"
+    },
+    {
+      "metric": "Average price of a traditional incandescent bulb",
+      "value": "₹20-₹50",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Average price of an LED bulb",
+      "value": "₹200-₹500",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Growth rate of the Indian lighting industry",
+      "value": "10-15% per annum",
+      "source_hint": "market research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the break-even point for the new bulb",
+      "formula": "Break-even point = (Fixed costs + Variable costs) / Contribution margin",
+      "typical_answer_range": "₹500-₹1,000"
+    },
+    {
+      "step": "Determine the optimal price using value-based pricing",
+      "formula": "Optimal price = (Customer willingness to pay + Competitor pricing) / 2",
+      "typical_answer_range": "₹500-₹1,500"
+    },
+    {
+      "step": "Calculate the customer lifetime value (CLV) for the new bulb",
+      "formula": "CLV = (Average revenue per user - Average cost per user) x Customer lifespan",
+      "typical_answer_range": "₹5,000-₹20,000"
+    },
+    {
+      "step": "Analyze the sensitivity of demand to price changes",
+      "formula": "Demand elasticity = (Percentage change in demand) / (Percentage change in price)",
+      "typical_answer_range": "-0.5 to -1.5"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the customer's willingness to pay a premium for a durable product",
+    "Failing to account for the competition's pricing strategy",
+    "Not calculating the break-even point for the new bulb",
+    "Overestimating the market size and growth rate",
+    "Not considering the regulatory environment and its impact on the industry",
+    "Failing to analyze the sensitivity of demand to price changes",
+    "Not considering the potential cannibalization of existing products"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian lighting industry?",
+      "a": "The industry is driven by factors such as energy efficiency, durability, and affordability, with a growing demand for smart and sustainable lighting solutions.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Bureau of Energy Efficiency's (BEE) star rating system impact the lighting industry?",
+      "a": "The BEE star rating system promotes energy-efficient products and influences customer purchasing decisions, with higher-rated products commanding a premium price.",
+      "category": "regulatory"
+    },
+    {
+      "q": "What is the typical customer behavior in the residential lighting segment?",
+      "a": "Customers typically seek products with long lifespans and low maintenance costs, and are willing to pay a premium for durable and energy-efficient products.",
+      "category": "customer"
+    },
+    {
+      "q": "How do lighting manufacturers in India typically price their products?",
+      "a": "Manufacturers typically use a combination of cost-based and value-based pricing strategies, considering factors such as production costs, competitor pricing, and customer willingness to pay.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key challenges in determining the optimal price for a new product?",
+      "a": "The key challenges include estimating customer willingness to pay, analyzing competitor pricing, and calculating the break-even point for the new product.",
+      "category": "math"
+    },
+    {
+      "q": "How can the company ensure that the new bulb is priced competitively?",
+      "a": "The company can conduct market research to understand customer willingness to pay, analyze competitor pricing, and consider the value proposition of the new bulb.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and opportunities associated with launching a new product?",
+      "a": "The potential risks include cannibalization of existing products, competition from established players, and regulatory challenges, while the opportunities include capturing a premium price, increasing market share, and building brand loyalty.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the company measure the success of the new product launch?",
+      "a": "The company can track key performance indicators (KPIs) such as sales revenue, market share, customer satisfaction, and return on investment (ROI).",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the customer's willingness to pay a premium for a durable product",
+    "Analyze the competition's pricing strategy and market share",
+    "Calculate the break-even point for the new bulb and determine the optimal price",
+    "Evaluate the regulatory environment and its impact on the industry"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports from firms such as Euromonitor and Nielsen",
+    "Industry directories and associations, such as the Indian Lighting Industry Association"
+  ],
+  "case_type_notes": "This pricing case requires the candidate to consider both cost-based and value-based pricing strategies, and to analyze the competitive landscape and customer behavior in the Indian lighting industry. The candidate must also calculate the break-even point for the new bulb and determine the optimal price, while considering the regulatory environment and potential risks and opportunities.",
+  "enriched_at": "2026-05-10T06:14:30.794Z"
+}

@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The market for new products is highly competitive, with numerous players vying for consumer attention. Key economics include high research and development costs, moderate to high marketing expenses, and a regulatory backdrop that varies by industry. Typical customer behavior involves seeking innovative solutions that meet their evolving needs. In India, the market is characterized by a large and diverse consumer base, with a growing middle class driving demand for new products.",
+  "real_world_numbers": [
+    {
+      "metric": "Average product development cost",
+      "value": "₹50-100 lakhs",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical market size for a new product launch",
+      "value": "₹500-2000 crores",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Competitor count in a typical Indian market",
+      "value": "10-50 players",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for a new product",
+      "value": "₹5000-20000",
+      "source_hint": "academic research"
+    },
+    {
+      "metric": "Gross margin for a new product launch",
+      "value": "15-30%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Marketing expense as a percentage of sales",
+      "value": "5-15%",
+      "source_hint": "company reports"
+    },
+    {
+      "metric": "Product failure rate in the Indian market",
+      "value": "60-80%",
+      "source_hint": "industry studies"
+    },
+    {
+      "metric": "Time to break-even for a new product launch",
+      "value": "6-18 months",
+      "source_hint": "business publications"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the break-even point",
+      "formula": "Break-even point = Fixed costs / (Selling price - Variable costs)",
+      "typical_answer_range": "₹50-200 lakhs"
+    },
+    {
+      "step": "Determine the market size",
+      "formula": "Market size = Number of potential customers x Average revenue per user",
+      "typical_answer_range": "₹500-2000 crores"
+    },
+    {
+      "step": "Calculate the customer acquisition cost (CAC)",
+      "formula": "CAC = Marketing expenses / Number of new customers acquired",
+      "typical_answer_range": "₹500-5000"
+    },
+    {
+      "step": "Evaluate the return on investment (ROI)",
+      "formula": "ROI = (Gain from investment - Cost of investment) / Cost of investment",
+      "typical_answer_range": "15-50%"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating market size and growth rate",
+    "Underestimating competition and market saturation",
+    "Failing to conduct thorough customer research",
+    "Setting unrealistic pricing and revenue targets",
+    "Insufficient marketing and promotion budget",
+    "Lack of contingency planning for product launch",
+    "Inadequate understanding of regulatory requirements"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors that influence the success of a new product launch in India?",
+      "a": "Key factors include understanding consumer needs, competitive landscape, pricing strategy, and effective marketing channels.",
+      "category": "industry"
+    },
+    {
+      "q": "How do I determine the optimal price point for my new product?",
+      "a": "Conduct market research, analyze competitor pricing, and consider the value proposition of your product to determine the optimal price point.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the most effective marketing channels for a new product launch in India?",
+      "a": "Effective marketing channels include social media, influencer marketing, digital advertising, and strategic partnerships.",
+      "category": "math"
+    },
+    {
+      "q": "How do I measure the success of my new product launch?",
+      "a": "Track key performance indicators (KPIs) such as sales revenue, customer acquisition cost, customer retention rate, and return on investment (ROI).",
+      "category": "framework"
+    },
+    {
+      "q": "What are the common pitfalls to avoid during a new product launch?",
+      "a": "Common pitfalls include inadequate market research, insufficient marketing budget, poor pricing strategy, and lack of contingency planning.",
+      "category": "real-world"
+    },
+    {
+      "q": "How do I conduct a thorough competitor analysis for my new product launch?",
+      "a": "Analyze competitor strengths, weaknesses, market share, pricing strategy, and marketing channels to identify opportunities and threats.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the importance of understanding consumer behavior and preferences in a new product launch?",
+      "a": "Understanding consumer behavior and preferences helps to create a product that meets their needs, increases customer satisfaction, and drives business success.",
+      "category": "industry"
+    },
+    {
+      "q": "How do I develop an effective launch strategy for my new product?",
+      "a": "Develop a launch strategy that includes market research, competitive analysis, pricing strategy, marketing channels, and performance metrics.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key regulatory requirements for a new product launch in India?",
+      "a": "Key regulatory requirements include compliance with product safety standards, labeling and packaging regulations, and intellectual property protection.",
+      "category": "real-world"
+    },
+    {
+      "q": "How do I manage and mitigate risks during a new product launch?",
+      "a": "Manage and mitigate risks by conducting thorough market research, developing a contingency plan, and monitoring performance metrics.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the product's value proposition and unique selling points",
+    "Assess the competitive landscape and market trends",
+    "Develop a pricing strategy that balances revenue goals with customer affordability",
+    "Identify effective marketing channels and tactics to reach the target audience"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research studies by Euromonitor and Nielsen",
+    "Business publications such as Forbes and Entrepreneur",
+    "Academic research on marketing and consumer behavior"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to analyze the viability of a new product launch and recommend the best way to launch the product, considering factors such as market size, growth rate, competitive landscape, pricing strategy, and marketing channels.",
+  "enriched_at": "2026-05-10T06:08:34.366Z"
+}

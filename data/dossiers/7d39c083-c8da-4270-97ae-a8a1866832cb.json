@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The consulting industry is highly competitive, with key players like KPMG, Deloitte, and McKinsey. The industry is characterized by high margins, with typical consulting margins ranging from 15-25%. The regulatory backdrop is relatively stable, with professional services firms subject to industry-specific regulations. Typical customer behavior involves seeking expertise and objective advice from consultants. In India, the consulting industry is growing rapidly, driven by increasing demand from businesses and government agencies.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical consulting margin",
+      "value": "15-25%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Indian consulting market size",
+      "value": "INR 20,000-30,000 crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of consulting firms in India",
+      "value": "500-700",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Average revenue per consultant",
+      "value": "INR 20-30 lakhs",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Growth rate of Indian consulting industry",
+      "value": "10-15% per annum",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical customer acquisition cost",
+      "value": "INR 50,000-1,00,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer retention rate",
+      "value": "70-80%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average project duration",
+      "value": "3-6 months",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total prize money for the national championship",
+      "formula": "INR 100,000 + INR 40,000",
+      "typical_answer_range": "INR 140,000"
+    },
+    {
+      "step": "Calculate the average revenue per consultant per month",
+      "formula": "INR 20-30 lakhs / 12",
+      "typical_answer_range": "INR 1.67-2.5 lakhs"
+    },
+    {
+      "step": "Calculate the total market size of the Indian consulting industry",
+      "formula": "INR 20,000-30,000 crores",
+      "typical_answer_range": "INR 20,000-30,000 crores"
+    },
+    {
+      "step": "Calculate the customer lifetime value",
+      "formula": "average revenue per customer * customer retention rate",
+      "typical_answer_range": "INR 10-20 lakhs"
+    }
+  ],
+  "common_mistakes": [
+    "Not understanding the eligibility criteria for KICC participation",
+    "Not identifying the key issues in the case study",
+    "Not providing a well-substantiated analysis",
+    "Not presenting a realistic and creative action plan",
+    "Not demonstrating excellent presentation skills and knowledge of the case",
+    "Not considering the regulatory backdrop and industry-specific regulations",
+    "Not analyzing the competitive structure of the consulting industry"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the consulting industry in India?",
+      "a": "The Indian consulting industry is driven by increasing demand from businesses and government agencies, and is characterized by high margins and a competitive landscape.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the consulting industry in India compare to other countries?",
+      "a": "The Indian consulting industry is growing rapidly, driven by increasing demand from businesses and government agencies, and is characterized by high margins and a competitive landscape.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical challenges faced by consulting firms in India?",
+      "a": "Consulting firms in India face challenges such as intense competition, high customer acquisition costs, and the need to demonstrate expertise and objective advice.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can consulting firms in India differentiate themselves from competitors?",
+      "a": "Consulting firms in India can differentiate themselves by demonstrating expertise and objective advice, providing high-quality services, and building strong relationships with clients.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key skills required for success in the consulting industry?",
+      "a": "The key skills required for success in the consulting industry include analytical and problem-solving skills, communication and presentation skills, and the ability to work in a team.",
+      "category": "math"
+    },
+    {
+      "q": "How can consulting firms in India measure their success?",
+      "a": "Consulting firms in India can measure their success by tracking metrics such as revenue growth, customer satisfaction, and customer retention rate.",
+      "category": "math"
+    },
+    {
+      "q": "What are the typical career paths for consultants in India?",
+      "a": "The typical career paths for consultants in India include starting as a junior consultant, progressing to a senior consultant, and then moving to a leadership role or starting their own consulting firm.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can consultants in India stay up-to-date with industry trends and developments?",
+      "a": "Consultants in India can stay up-to-date with industry trends and developments by attending industry conferences, reading industry publications, and participating in professional networks.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Identify the key issues in the case study and provide a well-substantiated analysis",
+    "Develop a realistic and creative action plan and solutions",
+    "Demonstrate excellent presentation skills and knowledge of the case",
+    "Consider the regulatory backdrop and industry-specific regulations",
+    "Analyze the competitive structure of the consulting industry"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings",
+    "Industry benchmarks",
+    "Professional networks",
+    "Industry publications"
+  ],
+  "case_type_notes": "The market entry case type is challenging because it requires identifying the key issues in the case study, developing a realistic and creative action plan, and demonstrating excellent presentation skills and knowledge of the case. The case also requires considering the regulatory backdrop and industry-specific regulations, and analyzing the competitive structure of the consulting industry.",
+  "enriched_at": "2026-05-08T12:10:30.405Z"
+}

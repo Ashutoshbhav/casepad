@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian bicycle industry is a significant sector, with the country being one of the largest bicycle manufacturers in the world. The industry is characterized by a mix of domestic and international players, with a competitive structure that includes both organized and unorganized segments. Key economics of the industry include low margins due to high competition and a large unorganized market. The regulatory backdrop includes policies aimed at promoting the use of bicycles as a sustainable mode of transportation. Typical customer behavior in West Bengal includes a preference for affordable and durable bicycles, with a significant portion of sales occurring in rural areas.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for bicycle manufacturers in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian bicycle industry",
+      "value": "INR 40-50 billion",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of bicycles sold in India per year",
+      "value": "15-20 million",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average price of a bicycle in India",
+      "value": "INR 5,000-10,000",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Proportion of rural households in West Bengal",
+      "value": "60-70%",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Proportion of urban households in West Bengal",
+      "value": "30-40%",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Average number of cycles per household in urban areas",
+      "value": "3-5",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Average number of cycles per household in rural areas",
+      "value": "5-7",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Population of West Bengal",
+      "value": "90-100 million",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Number of households in West Bengal",
+      "value": "20-25 million",
+      "source_hint": "government statistics"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Estimate the number of households in urban and rural areas",
+      "formula": "Population / Average household size",
+      "typical_answer_range": "10-15 million urban households, 10-12 million rural households"
+    },
+    {
+      "step": "Calculate the number of cycles sold in urban areas",
+      "formula": "Number of urban households * Average number of cycles per urban household",
+      "typical_answer_range": "3-7.5 million"
+    },
+    {
+      "step": "Calculate the number of cycles sold in rural areas",
+      "formula": "Number of rural households * Average number of cycles per rural household",
+      "typical_answer_range": "5-10.5 million"
+    },
+    {
+      "step": "Estimate the total number of cycles sold in West Bengal",
+      "formula": "Number of cycles sold in urban areas + Number of cycles sold in rural areas",
+      "typical_answer_range": "8-18 million"
+    }
+  ],
+  "common_mistakes": [
+    "Not accounting for the difference in average number of cycles per household between urban and rural areas",
+    "Not considering the proportion of rural and urban households in West Bengal",
+    "Using incorrect population or household size estimates",
+    "Not adjusting for income brackets and their impact on cycle sales",
+    "Not considering the competitive structure of the industry and its impact on sales"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the current trend in the Indian bicycle industry?",
+      "a": "The industry is experiencing a shift towards premium and high-end bicycles, with a growing demand for electric and hybrid bicycles.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the competitive structure of the industry impact sales in West Bengal?",
+      "a": "The competitive structure of the industry, with both organized and unorganized players, leads to low margins and high competition, which can impact sales in West Bengal.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the average price of a bicycle in West Bengal?",
+      "a": "The average price of a bicycle in West Bengal is INR 5,000-10,000, depending on the type and brand of the bicycle.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the regulatory backdrop impact the industry?",
+      "a": "The regulatory backdrop, including policies aimed at promoting the use of bicycles as a sustainable mode of transportation, can impact the industry by increasing demand and driving growth.",
+      "category": "industry"
+    },
+    {
+      "q": "What is the proportion of rural households in West Bengal?",
+      "a": "The proportion of rural households in West Bengal is 60-70%, according to government statistics.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does income bracket impact cycle sales in West Bengal?",
+      "a": "Income bracket can impact cycle sales in West Bengal, with higher-income households more likely to purchase premium and high-end bicycles.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the average number of cycles per household in urban areas?",
+      "a": "The average number of cycles per household in urban areas is 3-5, depending on factors such as income and lifestyle.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the population of West Bengal impact cycle sales?",
+      "a": "The population of West Bengal, with a large proportion of rural households, can impact cycle sales by driving demand for affordable and durable bicycles.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the market size of the Indian bicycle industry?",
+      "a": "The market size of the Indian bicycle industry is INR 40-50 billion, according to company filings and industry reports.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the industry's competitive structure impact margins?",
+      "a": "The industry's competitive structure, with both organized and unorganized players, leads to low margins due to high competition.",
+      "category": "competitive"
+    }
+  ],
+  "framework_hints": [
+    "Consider the proportion of rural and urban households in West Bengal and their impact on cycle sales",
+    "Account for the difference in average number of cycles per household between urban and rural areas",
+    "Adjust for income brackets and their impact on cycle sales",
+    "Consider the competitive structure of the industry and its impact on sales"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Government statistics",
+    "Market research reports"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to make assumptions and estimates based on limited data, and to consider various factors that can impact cycle sales in West Bengal. The case is challenging because it requires the candidate to think critically and make informed estimates, rather than simply relying on given data.",
+  "enriched_at": "2026-05-10T07:37:26.812Z"
+}

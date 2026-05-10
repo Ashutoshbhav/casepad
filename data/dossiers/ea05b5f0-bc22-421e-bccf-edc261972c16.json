@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian restaurant industry is highly competitive, with over 1.5 million establishments across the country. The industry is characterized by low margins, typically ranging from 8-12%, and high labor costs. Regulatory backdrop includes food safety and hygiene standards, as well as taxes on food services. Typical customer behavior includes a preference for local cuisine, with 70% of consumers opting for traditional Indian dishes. The industry is also influenced by seasonal fluctuations, with peak demand during festivals and holidays.",
+  "real_world_numbers": [
+    {
+      "metric": "average restaurant margin",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "number of restaurants in India",
+      "value": "1.5-2 million",
+      "source_hint": "statistical surveys"
+    },
+    {
+      "metric": "average customer spend per meal",
+      "value": "₹200-₹500",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "food inflation rate",
+      "value": "4-6% per annum",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "labor costs as a percentage of revenue",
+      "value": "25-35%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "average customer retention rate",
+      "value": "20-30%",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "online ordering and delivery market size",
+      "value": "₹10,000-₹15,000 crores",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "average review rating for restaurants on review platforms",
+      "value": "3.5-4.5",
+      "source_hint": "review platform data"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "calculate revenue per available seat",
+      "formula": "revenue / (number of seats * hours of operation)",
+      "typical_answer_range": "₹500-₹1,500 per seat per hour"
+    },
+    {
+      "step": "calculate customer acquisition cost",
+      "formula": "marketing spend / number of new customers",
+      "typical_answer_range": "₹50-₹200 per customer"
+    },
+    {
+      "step": "calculate break-even point",
+      "formula": "fixed costs / (average sale per customer - variable costs per customer)",
+      "typical_answer_range": "500-2,000 customers per month"
+    },
+    {
+      "step": "calculate employee productivity",
+      "formula": "revenue per employee / labor cost per employee",
+      "typical_answer_range": "₹50,000-₹1,50,000 per month"
+    }
+  ],
+  "common_mistakes": [
+    "not accounting for seasonal fluctuations in demand",
+    "overlooking the impact of food inflation on menu pricing",
+    "failing to track customer retention rates",
+    "not optimizing menu engineering for profitability",
+    "ignoring the role of online reviews in customer acquisition",
+    "not monitoring labor costs and productivity",
+    "failing to analyze competitor pricing and strategy"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors affecting restaurant profitability in India?",
+      "a": "Key factors include food costs, labor costs, customer acquisition and retention, and menu pricing strategy.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian restaurant industry compare to global markets?",
+      "a": "The Indian restaurant industry is characterized by low margins and high competition, similar to other emerging markets.",
+      "category": "industry"
+    },
+    {
+      "q": "What role do online review platforms play in restaurant marketing?",
+      "a": "Online review platforms can significantly impact customer acquisition and retention, with high-rated restaurants experiencing increased demand.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can restaurants optimize their menu for profitability?",
+      "a": "Restaurants can optimize their menu by analyzing customer preferences, food costs, and pricing strategy to maximize revenue and profitability.",
+      "category": "math"
+    },
+    {
+      "q": "What are the implications of food inflation on restaurant profitability?",
+      "a": "Food inflation can significantly impact restaurant profitability, requiring restaurants to adjust menu pricing and portion sizes to maintain margins.",
+      "category": "industry"
+    },
+    {
+      "q": "How can restaurants measure and improve customer retention?",
+      "a": "Restaurants can measure customer retention through loyalty programs and feedback surveys, and improve retention through targeted marketing and service quality initiatives.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for restaurant profitability?",
+      "a": "Key KPIs include revenue per available seat, customer acquisition cost, and labor productivity.",
+      "category": "math"
+    },
+    {
+      "q": "How can restaurants leverage technology to improve operations and profitability?",
+      "a": "Restaurants can leverage technology to improve inventory management, customer ordering and payment systems, and data analytics to optimize operations and profitability.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the regulatory requirements for restaurants in India?",
+      "a": "Regulatory requirements include food safety and hygiene standards, taxes on food services, and labor laws.",
+      "category": "industry"
+    },
+    {
+      "q": "How can restaurants develop a competitive pricing strategy?",
+      "a": "Restaurants can develop a competitive pricing strategy by analyzing competitor pricing, customer willingness to pay, and menu engineering.",
+      "category": "competitive"
+    }
+  ],
+  "framework_hints": [
+    "analyze the customer journey to identify pain points and opportunities for improvement",
+    "assess the competitive landscape to identify market gaps and opportunities",
+    "evaluate the restaurant's operational efficiency and identify areas for cost reduction",
+    "develop a targeted marketing strategy to improve customer acquisition and retention",
+    "optimize menu engineering to maximize revenue and profitability"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "National Restaurant Association of India (NRAI) publications",
+    "Food Safety and Standards Authority of India (FSSAI) guidelines",
+    "Review platform data (e.g. Zomato, Swiggy)",
+    "Market research reports (e.g. Euromonitor, Nielsen)"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the restaurant's profitability and identify areas for improvement, using a combination of industry knowledge, mathematical calculations, and framework-based analysis. The candidate should be able to think critically and strategically to develop a comprehensive solution.",
+  "enriched_at": "2026-05-10T06:04:57.500Z"
+}

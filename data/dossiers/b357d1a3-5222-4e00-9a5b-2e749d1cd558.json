@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The asset management industry is highly competitive, with a large number of players competing for market share. Key economics include management fees, which typically range from 0.5-2.0% of assets under management, and performance fees, which can range from 10-20% of returns. Regulatory backdrop includes strict guidelines from SEBI in India, and typical customer behavior includes a focus on long-term returns and risk management. The industry is also subject to market fluctuations and economic downturns.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical management fee",
+      "value": "0.5-2.0%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Typical performance fee",
+      "value": "10-20% of returns",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Average assets under management for Indian mutual funds",
+      "value": "₹20-30 trillion",
+      "source_hint": "SEBI reports"
+    },
+    {
+      "metric": "Number of asset management companies in India",
+      "value": "40-50",
+      "source_hint": "Industry associations"
+    },
+    {
+      "metric": "Average return on investment for Indian equity mutual funds",
+      "value": "8-12% per annum",
+      "source_hint": "Morningstar reports"
+    },
+    {
+      "metric": "Average customer retention rate for asset management companies",
+      "value": "70-80%",
+      "source_hint": "Company surveys"
+    },
+    {
+      "metric": "Typical expense ratio for Indian mutual funds",
+      "value": "1.5-2.5%",
+      "source_hint": "SEBI reports"
+    },
+    {
+      "metric": "Market size of the Indian asset management industry",
+      "value": "₹50-70 trillion",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating assets under management",
+      "formula": "AUM = Total assets - Liabilities",
+      "typical_answer_range": "₹10-50 trillion"
+    },
+    {
+      "step": "Calculating return on investment",
+      "formula": "ROI = (Gain - Cost) / Cost",
+      "typical_answer_range": "5-15% per annum"
+    },
+    {
+      "step": "Calculating management fees",
+      "formula": "Management fees = AUM x Management fee percentage",
+      "typical_answer_range": "₹500-5000 crores"
+    },
+    {
+      "step": "Calculating performance fees",
+      "formula": "Performance fees = Returns x Performance fee percentage",
+      "typical_answer_range": "₹100-1000 crores"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of market fluctuations on assets under management",
+    "Not accounting for expenses and fees when calculating return on investment",
+    "Not understanding the difference between management fees and performance fees",
+    "Not considering the competitive landscape of the asset management industry",
+    "Not using real-world benchmarks and data to inform estimates"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of growth in the asset management industry?",
+      "a": "The key drivers of growth include increasing financial literacy, growing demand for investment products, and expanding distribution channels.",
+      "category": "industry"
+    },
+    {
+      "q": "How do asset management companies in India differentiate themselves from competitors?",
+      "a": "Asset management companies in India differentiate themselves through their investment strategies, fund performance, and customer service.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical customer segments for asset management companies in India?",
+      "a": "The typical customer segments include individual investors, institutional investors, and high net worth individuals.",
+      "category": "industry"
+    },
+    {
+      "q": "How do market fluctuations impact assets under management?",
+      "a": "Market fluctuations can significantly impact assets under management, as changes in market values can affect the overall value of assets.",
+      "category": "math"
+    },
+    {
+      "q": "What are the regulatory requirements for asset management companies in India?",
+      "a": "The regulatory requirements include registration with SEBI, compliance with investment guidelines, and disclosure of fees and expenses.",
+      "category": "industry"
+    },
+    {
+      "q": "How do asset management companies measure and report their performance?",
+      "a": "Asset management companies measure and report their performance through metrics such as return on investment, assets under management, and expense ratios.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the typical benchmarks used to evaluate the performance of asset management companies?",
+      "a": "The typical benchmarks include indices such as the NIFTY or SENSEX, as well as peer group comparisons.",
+      "category": "real-world"
+    },
+    {
+      "q": "How do asset management companies manage risk and ensure compliance with regulatory requirements?",
+      "a": "Asset management companies manage risk through diversification, hedging, and compliance with regulatory requirements, and ensure compliance through regular audits and monitoring.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Consider the impact of market fluctuations on assets under management",
+    "Evaluate the competitive landscape of the asset management industry",
+    "Assess the regulatory requirements and compliance framework for asset management companies",
+    "Analyze the customer segments and their needs and preferences"
+  ],
+  "sources": [
+    "SEBI reports",
+    "Industry associations",
+    "Morningstar reports",
+    "Company filings"
+  ],
+  "case_type_notes": "This case requires the candidate to estimate key performance metrics for the asset management industry, and to consider the competitive landscape, regulatory requirements, and customer needs and preferences. The candidate should use real-world benchmarks and data to inform their estimates.",
+  "enriched_at": "2026-05-10T06:26:55.044Z"
+}

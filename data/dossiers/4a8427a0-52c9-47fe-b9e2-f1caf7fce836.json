@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The fantasy sports industry in India is a rapidly growing market, driven by increasing internet penetration, smartphone adoption, and a strong interest in sports. The industry is characterized by a competitive landscape with key players such as Dream11, My11Circle, and MPL. The regulatory backdrop is evolving, with the Indian government considering regulations to govern the industry. Typical customer behavior involves frequent engagement with fantasy sports platforms, with a focus on cricket and other popular sports.",
+  "real_world_numbers": [
+    {
+      "metric": "Indian population",
+      "value": "1.38-1.42 billion",
+      "source_hint": "World Bank reports"
+    },
+    {
+      "metric": "Mobile penetration in India",
+      "value": "75-85%",
+      "source_hint": "TRAI reports"
+    },
+    {
+      "metric": "Internet penetration in India",
+      "value": "40-50%",
+      "source_hint": "Internet and Mobile Association of India reports"
+    },
+    {
+      "metric": "Fantasy sports market size in India",
+      "value": "INR 10,000-15,000 crores",
+      "source_hint": "KPMG reports"
+    },
+    {
+      "metric": "Number of fantasy sports users in India",
+      "value": "10-20 million",
+      "source_hint": "Industry estimates"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for fantasy sports platforms",
+      "value": "INR 500-1,000",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Growth rate of fantasy sports industry in India",
+      "value": "20-30% YoY",
+      "source_hint": "Market research reports"
+    },
+    {
+      "metric": "Market share of key players in the Indian fantasy sports industry",
+      "value": "Dream11 (50-60%), My11Circle (20-30%), MPL (10-20%)",
+      "source_hint": "Industry estimates"
+    },
+    {
+      "metric": "Customer acquisition cost for fantasy sports platforms",
+      "value": "INR 100-500",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Customer retention rate for fantasy sports platforms",
+      "value": "30-50%",
+      "source_hint": "Industry estimates"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the number of males in the 18-25 age group",
+      "formula": "Total population * 0.5 * 0.2",
+      "typical_answer_range": "140-160 million"
+    },
+    {
+      "step": "Calculate the number of males with mobile phones",
+      "formula": "Number of males in 18-25 age group * 0.8",
+      "typical_answer_range": "110-130 million"
+    },
+    {
+      "step": "Calculate the number of males with internet access",
+      "formula": "Number of males with mobile phones * 0.5",
+      "typical_answer_range": "55-65 million"
+    },
+    {
+      "step": "Calculate the number of males interested in sports",
+      "formula": "Number of males with internet access * 0.8",
+      "typical_answer_range": "40-50 million"
+    },
+    {
+      "step": "Calculate the number of fantasy sports users",
+      "formula": "Number of males interested in sports * 0.5",
+      "typical_answer_range": "20-25 million"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the evolving regulatory landscape",
+    "Overestimating the number of fantasy sports users",
+    "Underestimating the competition in the market",
+    "Not accounting for the varying levels of internet penetration across different regions",
+    "Not considering the impact of seasonality on fantasy sports engagement",
+    "Not evaluating the customer acquisition and retention strategies of fantasy sports platforms"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of growth in the Indian fantasy sports industry?",
+      "a": "Increasing internet penetration, smartphone adoption, and a strong interest in sports are key drivers of growth in the Indian fantasy sports industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian fantasy sports industry compare to the global market?",
+      "a": "The Indian fantasy sports industry is a significant contributor to the global market, with a large and growing user base.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the major challenges faced by fantasy sports platforms in India?",
+      "a": "Fantasy sports platforms in India face challenges such as regulatory uncertainty, intense competition, and high customer acquisition costs.",
+      "category": "competitive"
+    },
+    {
+      "q": "How do fantasy sports platforms in India generate revenue?",
+      "a": "Fantasy sports platforms in India generate revenue through entry fees, advertising, and sponsorships.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the average revenue per user (ARPU) for fantasy sports platforms in India?",
+      "a": "The average revenue per user (ARPU) for fantasy sports platforms in India is INR 500-1,000.",
+      "category": "real-world"
+    },
+    {
+      "q": "How do fantasy sports platforms in India acquire and retain customers?",
+      "a": "Fantasy sports platforms in India acquire and retain customers through targeted marketing, engaging user experiences, and loyalty programs.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the market share of key players in the Indian fantasy sports industry?",
+      "a": "The market share of key players in the Indian fantasy sports industry is Dream11 (50-60%), My11Circle (20-30%), and MPL (10-20%).",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the Indian fantasy sports industry impact the sports ecosystem?",
+      "a": "The Indian fantasy sports industry has a positive impact on the sports ecosystem, increasing engagement and viewership of sports events.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with fantasy sports in India?",
+      "a": "The potential risks and challenges associated with fantasy sports in India include regulatory uncertainty, addiction, and fraud.",
+      "category": "industry"
+    },
+    {
+      "q": "How can fantasy sports platforms in India improve their user experience and engagement?",
+      "a": "Fantasy sports platforms in India can improve their user experience and engagement by offering more features, improving their user interface, and providing better customer support.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the top-down approach to estimate the market size of fantasy sports users in India",
+    "Evaluate the competitive landscape of the Indian fantasy sports industry",
+    "Assess the regulatory backdrop and its impact on the industry",
+    "Analyze the customer behavior and preferences in the Indian fantasy sports market"
+  ],
+  "sources": [
+    "KPMG reports on the Indian fantasy sports industry",
+    "TRAI reports on mobile and internet penetration in India",
+    "Internet and Mobile Association of India reports on internet penetration",
+    "Company filings of key players in the Indian fantasy sports industry",
+    "Industry estimates and market research reports"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to apply a top-down approach to estimate the market size of fantasy sports users in India, considering various factors such as population, mobile penetration, internet penetration, and interest in sports. The candidate should be able to evaluate the competitive landscape, regulatory backdrop, and customer behavior to arrive at a reasonable estimate.",
+  "enriched_at": "2026-05-10T06:01:56.775Z"
+}

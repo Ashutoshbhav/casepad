@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The urban wildlife management industry in India, particularly in cities like Ahmedabad, is characterized by a complex interplay between human settlements, forest cover, and wildlife populations. The Gujarat Forest Department and the Ahmedabad Municipal Corporation play crucial roles in managing urban forests and wildlife. Typical customer behavior in this context involves citizens' interactions with urban wildlife, including crows. The regulatory backdrop includes the Wildlife Protection Act of 1972 and the Forest Conservation Act of 1980.",
+  "real_world_numbers": [
+    {
+      "metric": "Urban forest cover in Ahmedabad",
+      "value": "10-15%",
+      "source_hint": "Gujarat Forest Department reports"
+    },
+    {
+      "metric": "Average number of trees per hectare in urban forests",
+      "value": "50-100",
+      "source_hint": "Indian Forest Survey reports"
+    },
+    {
+      "metric": "Typical crow nesting density",
+      "value": "5-10 nests per hectare",
+      "source_hint": "Ornithological studies"
+    },
+    {
+      "metric": "Average crow flock size",
+      "value": "10-50 crows",
+      "source_hint": "Wildlife observation studies"
+    },
+    {
+      "metric": "Urban population density in Ahmedabad",
+      "value": "10,000-20,000 people per square kilometer",
+      "source_hint": "Census of India data"
+    },
+    {
+      "metric": "Total urban area of Ahmedabad",
+      "value": "400-500 square kilometers",
+      "source_hint": "Ahmedabad Municipal Corporation data"
+    },
+    {
+      "metric": "Crow population growth rate",
+      "value": "5-10% per annum",
+      "source_hint": "Wildlife conservation reports"
+    },
+    {
+      "metric": "Average lifespan of a crow in urban environments",
+      "value": "2-5 years",
+      "source_hint": "Ornithological research"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total number of trees in Ahmedabad",
+      "formula": "Total trees = Urban forest cover percentage * Total urban area * Average trees per hectare",
+      "typical_answer_range": "100,000 to 500,000"
+    },
+    {
+      "step": "Estimate the number of crows per tree",
+      "formula": "Crows per tree = Average crow flock size / Average trees per hectare",
+      "typical_answer_range": "0.1 to 1.0"
+    },
+    {
+      "step": "Calculate the total number of crows in Ahmedabad",
+      "formula": "Total crows = Total trees * Crows per tree",
+      "typical_answer_range": "10,000 to 100,000"
+    },
+    {
+      "step": "Account for crow population growth rate",
+      "formula": "Future crow population = Current crow population * (1 + Growth rate)",
+      "typical_answer_range": "10,000 to 200,000"
+    }
+  ],
+  "common_mistakes": [
+    "Underestimating the complexity of urban forest ecosystems",
+    "Overlooking the impact of human activities on crow populations",
+    "Failing to account for crow population growth rates",
+    "Using inaccurate or outdated data on urban forest cover and tree density",
+    "Not considering the variability in crow nesting densities and flock sizes"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors influencing crow populations in urban environments?",
+      "a": "Food availability, habitat quality, human activity, and climate change",
+      "category": "industry"
+    },
+    {
+      "q": "How do crow populations impact urban ecosystems?",
+      "a": "Crows can act as seed dispersers, predators, and indicators of environmental health",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical challenges in estimating crow populations?",
+      "a": "Difficulty in counting individual crows, variability in nesting densities, and limited data on urban forest cover",
+      "category": "math"
+    },
+    {
+      "q": "How can we validate our estimate of crow populations in Ahmedabad?",
+      "a": "By comparing with historical data, conducting field surveys, or using remote sensing techniques",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the implications of our estimate for urban wildlife management?",
+      "a": "Informing conservation efforts, guiding policy decisions, and raising awareness about urban wildlife",
+      "category": "industry"
+    },
+    {
+      "q": "How does the estimated crow population in Ahmedabad compare to other cities in India?",
+      "a": "Ahmedabad's crow population is likely similar to other urban centers with similar forest cover and human population densities",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential biases in our estimation approach?",
+      "a": "Assuming uniform crow nesting densities, overlooking seasonal variations, and using incomplete data on urban forest cover",
+      "category": "math"
+    },
+    {
+      "q": "How can we refine our estimate using additional data or research?",
+      "a": "Incorporating data on food availability, habitat quality, and human activity, or using machine learning models to analyze satellite imagery",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the hierarchical structure of urban ecosystems, from trees to crow populations",
+    "Account for the dynamic interactions between crows, humans, and the environment",
+    "Use a combination of top-down and bottom-up approaches to estimate crow populations"
+  ],
+  "sources": [
+    "Gujarat Forest Department reports",
+    "Indian Forest Survey reports",
+    "Ornithological studies and research papers",
+    "Ahmedabad Municipal Corporation data and publications",
+    "Wildlife conservation reports and online resources"
+  ],
+  "case_type_notes": "This estimation case requires a deep understanding of urban ecosystems, wildlife populations, and the complex interactions between humans and the environment. The candidate must demonstrate the ability to gather and analyze data, identify key factors influencing crow populations, and develop a robust estimation framework.",
+  "enriched_at": "2026-05-10T07:13:06.851Z"
+}

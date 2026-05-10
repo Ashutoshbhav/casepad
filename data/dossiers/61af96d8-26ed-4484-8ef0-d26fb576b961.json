@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The credit card industry in India is highly competitive, with major players such as HDFC, SBI, and ICICI competing for market share. The industry is regulated by the Reserve Bank of India, which sets guidelines for credit card issuance and operations. Typical customer behavior includes using credit cards for online transactions, shopping, and travel. The industry has seen significant growth in recent years, driven by increasing digital payments and e-commerce adoption.",
+  "real_world_numbers": [
+    {
+      "metric": "Average credit card penetration in India",
+      "value": "2-3%",
+      "source_hint": "RBI reports"
+    },
+    {
+      "metric": "Credit card market size in India",
+      "value": "INR 5-6 trillion",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Typical credit card transaction value",
+      "value": "INR 2,000-5,000",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Average credit card customer acquisition cost",
+      "value": "INR 500-1,000",
+      "source_hint": "Industry benchmarks"
+    },
+    {
+      "metric": "Credit card customer retention rate",
+      "value": "70-80%",
+      "source_hint": "Company reports"
+    },
+    {
+      "metric": "Average credit card interest rate",
+      "value": "36-40%",
+      "source_hint": "RBI guidelines"
+    },
+    {
+      "metric": "Number of credit card players in India",
+      "value": "20-25",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Credit card market growth rate",
+      "value": "20-25% YoY",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total number of credit cards sold per year",
+      "formula": "Number of malls * Number of credit cards sold per mall * Number of stalls per mall",
+      "typical_answer_range": "50,000-100,000"
+    },
+    {
+      "step": "Calculate the revenue generated per credit card",
+      "formula": "Average transaction value * Number of transactions per credit card",
+      "typical_answer_range": "INR 10,000-20,000"
+    },
+    {
+      "step": "Calculate the customer acquisition cost as a percentage of revenue",
+      "formula": "Customer acquisition cost / Revenue per credit card",
+      "typical_answer_range": "5-10%"
+    },
+    {
+      "step": "Calculate the break-even point for the credit card business",
+      "formula": "Fixed costs / (Revenue per credit card - Variable costs per credit card)",
+      "typical_answer_range": "6-12 months"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the competitive landscape of the credit card industry",
+    "Overestimating the potential for increasing sales without considering operational constraints",
+    "Not accounting for customer retention and churn rates",
+    "Failing to consider the regulatory environment and RBI guidelines",
+    "Not analyzing the customer segmentation and targeting strategies",
+    "Overlooking the importance of digital channels and online marketing",
+    "Not evaluating the effectiveness of the sales pitch and training programs"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the credit card industry in India?",
+      "a": "Increasing digital payments, e-commerce adoption, and mobile wallets are driving growth in the industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the credit card business model work?",
+      "a": "The business model involves issuing credit cards, earning interest on outstanding balances, and charging fees for transactions and services.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical customer pain points in the credit card industry?",
+      "a": "Customers often face issues with high interest rates, hidden fees, and poor customer service.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can we measure the effectiveness of our sales strategy?",
+      "a": "We can track metrics such as sales conversion rates, customer acquisition costs, and revenue growth to evaluate the effectiveness of our sales strategy.",
+      "category": "math"
+    },
+    {
+      "q": "What are the regulatory requirements for credit card companies in India?",
+      "a": "Credit card companies must comply with RBI guidelines on interest rates, fees, and customer protection.",
+      "category": "framework"
+    },
+    {
+      "q": "How can we leverage technology to improve our sales and customer engagement?",
+      "a": "We can use digital channels such as social media, email, and mobile apps to engage with customers and offer personalized services.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the credit card business?",
+      "a": "KPIs include sales growth, customer acquisition costs, customer retention rates, and revenue per user.",
+      "category": "math"
+    },
+    {
+      "q": "How can we optimize our sales pitch and training programs to improve conversion rates?",
+      "a": "We can use data analytics to identify effective sales strategies and provide training programs that focus on customer needs and pain points.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Use the People/Product/Tech framework to identify opportunities for improvement in the sales process",
+    "Apply the Location rationalization framework to optimize the placement of sales stalls in malls",
+    "Leverage the Digital kiosk framework to enhance customer engagement and experience"
+  ],
+  "sources": [
+    "RBI reports and guidelines",
+    "Industry reports and research studies",
+    "Company filings and annual reports",
+    "Market research and analysis reports"
+  ],
+  "case_type_notes": "This operations case requires the candidate to think critically about the sales process and identify opportunities for improvement, while also considering the competitive landscape and regulatory environment of the credit card industry.",
+  "enriched_at": "2026-05-10T06:54:21.921Z"
+}

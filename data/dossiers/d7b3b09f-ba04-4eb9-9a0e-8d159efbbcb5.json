@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian sports industry is a growing market with a competitive structure, dominated by cricket. However, other sports like kabaddi, football, and badminton are gaining popularity. The key economics of the industry involve sponsorship, advertising, and ticket sales. The regulatory backdrop is governed by the Ministry of Youth Affairs and Sports, with various sports federations overseeing their respective sports. Typical customer behavior involves a strong fan base for popular sports, with increasing interest in alternative sports. The Indian sports industry is expected to reach INR 10,000 crore by 2025, with a growth rate of 10-15% per annum.",
+  "real_world_numbers": [
+    {
+      "metric": "Market size of the Indian sports industry",
+      "value": "INR 5,000-7,000 crore",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Growth rate of the Indian sports industry",
+      "value": "10-15% per annum",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of sports federations in India",
+      "value": "50-60",
+      "source_hint": "government websites"
+    },
+    {
+      "metric": "Average revenue of a sports federation in India",
+      "value": "INR 50-100 crore",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical margin of a sports equipment manufacturer",
+      "value": "15-25%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer LTV for a sports league",
+      "value": "INR 1,000-5,000",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average attendance per match for a popular sports league",
+      "value": "10,000-50,000",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Sponsorship revenue for a popular sports league",
+      "value": "INR 50-200 crore",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of sports infrastructure projects in India",
+      "value": "100-200",
+      "source_hint": "government websites"
+    },
+    {
+      "metric": "Average cost of building a sports stadium",
+      "value": "INR 50-200 crore",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total addressable market for Karate in India",
+      "formula": "Total addressable market = (Number of potential customers) x (Average revenue per customer)",
+      "typical_answer_range": "INR 100-500 crore"
+    },
+    {
+      "step": "Determine the required investment to increase awareness about Karate",
+      "formula": "Required investment = (Desired awareness level) x (Cost per awareness unit)",
+      "typical_answer_range": "INR 10-50 crore"
+    },
+    {
+      "step": "Calculate the potential revenue from sponsorship and advertising for Karate",
+      "formula": "Potential revenue = (Number of events) x (Average sponsorship revenue per event) + (Number of advertisements) x (Average advertising revenue per advertisement)",
+      "typical_answer_range": "INR 20-100 crore"
+    },
+    {
+      "step": "Estimate the number of new infrastructure projects required to support the growth of Karate",
+      "formula": "Number of new infrastructure projects = (Desired infrastructure capacity) / (Average capacity per project)",
+      "typical_answer_range": "10-50 projects"
+    }
+  ],
+  "common_mistakes": [
+    "Underestimating the competition from established sports like cricket",
+    "Overlooking the importance of grassroots development for Karate",
+    "Failing to consider the regulatory hurdles in promoting Karate",
+    "Ignoring the need for a strong marketing and promotion strategy",
+    "Not accounting for the potential cannibalization of other sports",
+    "Assuming that increasing awareness will automatically lead to increased participation",
+    "Not considering the role of technology in promoting and developing Karate"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key differences between the consumer journey for Karate and Cricket?",
+      "a": "The consumer journey for Karate is likely to involve more awareness-building and education about the sport, whereas Cricket has a more established fan base. Karate may also require more investment in infrastructure and coaching to make it more accessible.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian sports industry's growth rate compare to other countries?",
+      "a": "The Indian sports industry's growth rate is higher than many other countries, driven by increasing demand for alternative sports and a growing middle class. However, it still lags behind countries like the US and China in terms of market size.",
+      "category": "industry"
+    },
+    {
+      "q": "What are some potential partnerships that Karate Federation of India could explore to increase awareness and accessibility?",
+      "a": "Potential partnerships could include collaborations with schools and universities to introduce Karate as a sport, partnerships with fitness centers and gyms to offer Karate classes, and tie-ups with sports equipment manufacturers to provide affordable equipment.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can Karate Federation of India measure the effectiveness of its awareness-building efforts?",
+      "a": "The effectiveness of awareness-building efforts can be measured through metrics such as social media engagement, website traffic, and participation in Karate events and tournaments. Surveys and focus groups can also be conducted to gauge awareness and interest in the sport.",
+      "category": "math"
+    },
+    {
+      "q": "What are some potential risks and challenges that Karate Federation of India may face in its efforts to popularize Karate?",
+      "a": "Potential risks and challenges include competition from established sports, limited resources and funding, and regulatory hurdles. There may also be challenges in building a strong and sustainable ecosystem for Karate, including developing a pipeline of talented athletes and creating a fan base.",
+      "category": "framework"
+    },
+    {
+      "q": "How can Karate Federation of India balance the need to increase awareness and accessibility with the need to maintain the integrity and authenticity of the sport?",
+      "a": "This can be achieved by ensuring that any efforts to increase awareness and accessibility are aligned with the core values and principles of Karate, and that the sport is not compromised or watered down in the process. This may involve working with experienced coaches and athletes to develop programs and initiatives that promote the sport while maintaining its integrity.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the consumer journey for Karate and how it differs from other sports",
+    "Analyze the competitive landscape for Karate and identify potential partnerships and collaborations",
+    "Evaluate the regulatory environment and potential hurdles for Karate",
+    "Develop a comprehensive marketing and promotion strategy for Karate",
+    "Assess the potential risks and challenges for Karate Federation of India and develop mitigation strategies"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Government websites and publications",
+    "Industry associations and trade organizations",
+    "Academic research and studies on the sports industry"
+  ],
+  "case_type_notes": "This case requires a deep understanding of the Indian sports industry and the consumer journey for Karate. It also requires the ability to analyze complex data and develop a comprehensive strategy to increase awareness and accessibility for the sport. The case is challenging because it involves a niche sport with limited awareness and infrastructure, and requires creative and innovative solutions to drive growth and popularity.",
+  "enriched_at": "2026-05-10T07:15:17.397Z"
+}

@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The retail industry in China is highly competitive, with a large number of small, independent shops and street stalls. The industry is characterized by low margins and high competition, with customers being highly price-sensitive. The accessory shop market is particularly competitive, with many shops offering similar products at varying price points. In India, the retail industry is also highly competitive, with a mix of organized and unorganized players. The industry is expected to grow rapidly, driven by increasing consumer spending and urbanization.",
+  "real_world_numbers": [
+    {
+      "metric": "Average gross margin for retail shops in China",
+      "value": "15-25%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical rent for a retail shop in a university area in China",
+      "value": "RMB2,000-5,000 per month",
+      "source_hint": "real estate listings"
+    },
+    {
+      "metric": "Average sales per square meter for retail shops in China",
+      "value": "RMB5,000-10,000 per month",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of retail shops in China",
+      "value": "1-2 million",
+      "source_hint": "statistical yearbooks"
+    },
+    {
+      "metric": "Average customer spend on accessories in China",
+      "value": "RMB500-1,000 per year",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Growth rate of the retail industry in China",
+      "value": "5-10% per year",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average employee salary for retail shops in China",
+      "value": "RMB2,000-4,000 per month",
+      "source_hint": "labor statistics"
+    },
+    {
+      "metric": "Typical inventory turnover for retail shops in China",
+      "value": "2-5 times per year",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average customer acquisition cost for retail shops in China",
+      "value": "RMB50-100 per customer",
+      "source_hint": "marketing research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the break-even point for the shop",
+      "formula": "Fixed Costs / (Selling Price - Variable Costs)",
+      "typical_answer_range": "RMB1,500-3,000 per day"
+    },
+    {
+      "step": "Calculate the gross profit margin for the shop",
+      "formula": "(Selling Price - Cost of Goods Sold) / Selling Price",
+      "typical_answer_range": "40-60%"
+    },
+    {
+      "step": "Calculate the customer acquisition cost for the shop",
+      "formula": "Marketing Expenses / Number of New Customers",
+      "typical_answer_range": "RMB50-100 per customer"
+    },
+    {
+      "step": "Calculate the inventory turnover for the shop",
+      "formula": "Cost of Goods Sold / Average Inventory",
+      "typical_answer_range": "2-5 times per year"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the opportunity cost of Ho's time",
+    "Not accounting for the high competition in the accessory shop market",
+    "Not analyzing the customer segments and their willingness to pay",
+    "Not considering the potential for price elasticity",
+    "Not evaluating the break-even point and profitability of the shop"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in the retail industry in China?",
+      "a": "The retail industry in China is characterized by high competition, low margins, and increasing consumer spending.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the accessory shop market differ from other retail markets?",
+      "a": "The accessory shop market is highly competitive, with many shops offering similar products at varying price points.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical costs associated with opening and operating a retail shop in China?",
+      "a": "The typical costs include rent, employee salaries, inventory, marketing expenses, and other overheads.",
+      "category": "math"
+    },
+    {
+      "q": "How can Ho increase sales and profitability for the shop?",
+      "a": "Ho can increase sales by offering promotions, improving customer service, and targeting a different customer segment. He can also reduce costs by renegotiating rent or sourcing cheaper goods.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with operating a retail shop in China?",
+      "a": "The potential risks and challenges include high competition, changing consumer preferences, and regulatory risks.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Ho balance his full-time job, family life, and the shop's demands?",
+      "a": "Ho can balance his responsibilities by prioritizing tasks, delegating responsibilities to employees, and setting clear goals and expectations.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for a retail shop in China?",
+      "a": "The key KPIs include sales growth, gross profit margin, customer acquisition cost, and inventory turnover.",
+      "category": "math"
+    },
+    {
+      "q": "How can Ho use data and analytics to improve the shop's performance?",
+      "a": "Ho can use data and analytics to track sales, customer behavior, and inventory levels, and make data-driven decisions to improve the shop's performance.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential exit options for Ho if the shop is not profitable?",
+      "a": "The potential exit options include closing the shop, subletting the space, or changing the business model.",
+      "category": "framework"
+    },
+    {
+      "q": "How can Ho evaluate the success of the shop and make adjustments accordingly?",
+      "a": "Ho can evaluate the success of the shop by tracking KPIs, gathering customer feedback, and making adjustments to the business model, marketing strategy, or operations as needed.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the customer segments and their willingness to pay",
+    "Evaluate the competition and market trends",
+    "Calculate the break-even point and profitability of the shop",
+    "Consider the opportunity cost of Ho's time",
+    "Develop a marketing strategy to increase sales and customer acquisition"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Labor statistics",
+    "Real estate listings"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the profitability of a retail shop in China and develop a plan to improve its performance. The candidate must consider the competitive landscape, customer segments, and financial metrics to make recommendations for Ho.",
+  "enriched_at": "2026-05-10T06:31:26.234Z"
+}

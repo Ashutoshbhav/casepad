@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian toll road industry is a growing sector, with the government investing heavily in infrastructure development. The Delhi-Gurgaon toll plaza is a critical connector between the national capital and the industrial hub of Gurgaon. The industry is characterized by a mix of public and private players, with toll rates regulated by the government. Typical customer behavior includes a high volume of daily commuters and commercial vehicles. The industry is also subject to various regulations, including those related to toll collection and road safety.",
+  "real_world_numbers": [
+    {
+      "metric": "Average daily toll revenue per plaza",
+      "value": "₹20-50 lakhs",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Total number of toll plazas in India",
+      "value": "400-500",
+      "source_hint": "government data"
+    },
+    {
+      "metric": "Average toll rate for two-wheelers",
+      "value": "₹20-50",
+      "source_hint": "toll operator websites"
+    },
+    {
+      "metric": "Average toll rate for four-wheelers",
+      "value": "₹50-100",
+      "source_hint": "toll operator websites"
+    },
+    {
+      "metric": "Average toll rate for heavy vehicles",
+      "value": "₹100-300",
+      "source_hint": "toll operator websites"
+    },
+    {
+      "metric": "Typical margin for toll operators",
+      "value": "10-20%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average daily traffic volume at a busy toll plaza",
+      "value": "50,000-100,000 vehicles",
+      "source_hint": "traffic studies"
+    },
+    {
+      "metric": "Growth rate of Indian toll road industry",
+      "value": "10-15% per annum",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate total vehicles per hour per booth",
+      "formula": "vehicles per minute * 60",
+      "typical_answer_range": "6-60"
+    },
+    {
+      "step": "Calculate total revenue per hour per booth",
+      "formula": "vehicles per hour * toll rate",
+      "typical_answer_range": "₹500-₹50,000"
+    },
+    {
+      "step": "Calculate total daily revenue",
+      "formula": "total revenue per hour * total hours",
+      "typical_answer_range": "₹20-50 lakhs"
+    },
+    {
+      "step": "Calculate percentage of total revenue from each vehicle type",
+      "formula": "revenue from vehicle type / total revenue * 100",
+      "typical_answer_range": "10-60%"
+    }
+  ],
+  "common_mistakes": [
+    "Not accounting for different toll rates for different vehicle types",
+    "Not considering the impact of traffic volume on revenue",
+    "Not calculating the total daily revenue correctly",
+    "Not considering the growth rate of the industry",
+    "Not researching real-world benchmarks for toll rates and traffic volumes"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the typical toll rates for different vehicle types in India?",
+      "a": "The typical toll rates for two-wheelers, four-wheelers, and heavy vehicles are ₹20-50, ₹50-100, and ₹100-300 respectively.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the growth rate of the Indian toll road industry impact revenue projections?",
+      "a": "The growth rate of the industry can impact revenue projections by increasing the number of vehicles using the toll road, thereby increasing revenue.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key factors that affect traffic volume at a toll plaza?",
+      "a": "The key factors that affect traffic volume at a toll plaza include the time of day, day of the week, and season.",
+      "category": "real-world"
+    },
+    {
+      "q": "How do toll operators typically allocate their revenue?",
+      "a": "Toll operators typically allocate their revenue towards maintenance and operation costs, debt repayment, and profit.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the common challenges faced by toll operators in India?",
+      "a": "The common challenges faced by toll operators in India include managing traffic congestion, collecting tolls efficiently, and maintaining road safety.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian government regulate the toll road industry?",
+      "a": "The Indian government regulates the toll road industry through various laws and regulations, including the National Highways Act and the Toll Policy.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the real-world benchmarks for toll plaza efficiency?",
+      "a": "The real-world benchmarks for toll plaza efficiency include metrics such as average waiting time, toll collection rate, and traffic volume.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can toll operators improve their revenue through non-toll sources?",
+      "a": "Toll operators can improve their revenue through non-toll sources such as advertising, food and beverage sales, and parking fees.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Consider the different vehicle types and their corresponding toll rates",
+    "Account for the varying traffic volumes during different times of the day",
+    "Research real-world benchmarks for toll rates and traffic volumes",
+    "Consider the growth rate of the industry and its impact on revenue projections"
+  ],
+  "sources": [
+    "Industry reports from research firms such as ICRA and CRISIL",
+    "Government data from the Ministry of Road Transport and Highways",
+    "Toll operator websites and annual reports",
+    "Traffic studies and research papers from academic institutions"
+  ],
+  "case_type_notes": "This case requires the candidate to estimate the revenue of a toll plaza using a bottom-up approach, considering various factors such as traffic volume, toll rates, and vehicle types. The candidate must also research real-world benchmarks and consider the growth rate of the industry to make an informed estimate.",
+  "enriched_at": "2026-05-10T06:03:08.976Z"
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The consulting industry is highly competitive, with key players such as McKinsey, BCG, and Bain. The industry is characterized by high margins, with typical profit margins ranging from 15-25%. Consulting firms operate in a wide range of sectors, including strategy, operations, and IT. Regulatory requirements and customer behavior vary across sectors, with clients typically seeking expertise and objective advice. In India, the consulting industry is growing rapidly, driven by increasing demand from domestic and international clients.",
+  "real_world_numbers": [
+    {
+      "metric": "Global consulting market size",
+      "value": "$250-300 billion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical consulting project duration",
+      "value": "3-6 months",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average consultant salary in India",
+      "value": "₹15-25 lakhs per annum",
+      "source_hint": "salary surveys"
+    },
+    {
+      "metric": "Consulting firm staff utilization rates",
+      "value": "70-90%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Client acquisition cost for consulting firms",
+      "value": "₹50,000-2,00,000",
+      "source_hint": "marketing reports"
+    },
+    {
+      "metric": "Average consulting project team size",
+      "value": "4-8 members",
+      "source_hint": "company reports"
+    },
+    {
+      "metric": "Consulting industry growth rate in India",
+      "value": "10-15% per annum",
+      "source_hint": "industry forecasts"
+    },
+    {
+      "metric": "Typical consulting firm leverage ratio",
+      "value": "3:1 to 5:1",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average consultant billing rate in India",
+      "value": "₹5,000-15,000 per hour",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating consulting firm revenue",
+      "formula": "Number of consultants x Average billing rate x Utilization rate",
+      "typical_answer_range": "₹50 lakhs to ₹5 crores per annum"
+    },
+    {
+      "step": "Estimating consulting project costs",
+      "formula": "Number of team members x Average salary x Project duration",
+      "typical_answer_range": "₹5 lakhs to ₹50 lakhs per project"
+    },
+    {
+      "step": "Determining consulting firm profitability",
+      "formula": "Revenue - Costs",
+      "typical_answer_range": "15-25% of revenue"
+    },
+    {
+      "step": "Calculating client lifetime value",
+      "formula": "Average project value x Number of projects per client x Client retention rate",
+      "typical_answer_range": "₹50 lakhs to ₹5 crores per client"
+    }
+  ],
+  "common_mistakes": [
+    "Not understanding the client's needs and expectations",
+    "Failing to demonstrate expertise and credibility",
+    "Not providing a clear and concise solution",
+    "Overlooking the competitive landscape and market trends",
+    "Not preparing for common consulting interview questions",
+    "Not having a strong understanding of the consulting firm's services and culture",
+    "Failing to show enthusiasm and interest in the consulting industry",
+    "Not being able to think critically and solve problems effectively"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the consulting industry in India?",
+      "a": "The consulting industry in India is being shaped by trends such as digital transformation, sustainability, and increasing demand for specialized services.",
+      "category": "industry"
+    },
+    {
+      "q": "How do consulting firms differentiate themselves in a competitive market?",
+      "a": "Consulting firms differentiate themselves through their expertise, reputation, and service offerings, as well as their ability to deliver high-quality results and build strong client relationships.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the most common types of consulting projects in India?",
+      "a": "The most common types of consulting projects in India include strategy development, operational improvement, and IT implementation, as well as projects focused on digital transformation and sustainability.",
+      "category": "industry"
+    },
+    {
+      "q": "How do consulting firms measure the success of their projects?",
+      "a": "Consulting firms measure the success of their projects through metrics such as client satisfaction, project delivery timelines, and return on investment, as well as through feedback from clients and stakeholders.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key skills and qualities required to be a successful consultant?",
+      "a": "The key skills and qualities required to be a successful consultant include strong analytical and problem-solving skills, excellent communication and interpersonal skills, and the ability to think critically and creatively.",
+      "category": "framework"
+    },
+    {
+      "q": "How do consulting firms approach digital transformation and innovation?",
+      "a": "Consulting firms approach digital transformation and innovation through a range of strategies, including the use of emerging technologies such as AI and blockchain, as well as the development of new business models and services.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the most common challenges faced by consulting firms in India?",
+      "a": "The most common challenges faced by consulting firms in India include intense competition, changing client needs and expectations, and the need to attract and retain top talent.",
+      "category": "industry"
+    },
+    {
+      "q": "How do consulting firms build and maintain strong client relationships?",
+      "a": "Consulting firms build and maintain strong client relationships through a range of strategies, including regular communication, high-quality service delivery, and a deep understanding of the client's needs and goals.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key factors driving growth in the consulting industry in India?",
+      "a": "The key factors driving growth in the consulting industry in India include increasing demand from domestic and international clients, the growing need for specialized services, and the increasing adoption of digital technologies.",
+      "category": "industry"
+    },
+    {
+      "q": "How do consulting firms approach sustainability and social responsibility?",
+      "a": "Consulting firms approach sustainability and social responsibility through a range of strategies, including the development of sustainable business models, the reduction of environmental impact, and the promotion of social and economic development.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Use a structured approach to analyze the consulting industry, including the use of frameworks such as Porter's Five Forces and the McKinsey 7S model.",
+    "Consider the key trends and drivers shaping the consulting industry, including digital transformation, sustainability, and changing client needs and expectations.",
+    "Focus on the development of strong client relationships and the delivery of high-quality services, including the use of metrics such as client satisfaction and return on investment."
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Consulting firm websites and publications",
+    "Industry associations and trade organizations",
+    "Academic research and journals"
+  ],
+  "case_type_notes": "This case type is challenging because it requires a deep understanding of the consulting industry and the ability to think critically and strategically. It also requires the ability to analyze complex data and information, and to develop effective solutions to real-world problems.",
+  "enriched_at": "2026-05-10T06:45:18.645Z"
+}

@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The European airline industry is highly competitive, with numerous low-cost carriers competing for market share. Key economics include high fixed costs, such as aircraft leases and hangar fees, as well as variable costs like fuel and maintenance. Regulatory backdrop includes strict safety and environmental regulations. Typical customer behavior involves price sensitivity and a preference for convenience. The industry has seen significant consolidation in recent years, with major players like Ryanair and EasyJet dominating the market.",
+  "real_world_numbers": [
+    {
+      "metric": "Average load factor for European low-cost carriers",
+      "value": "70-80%",
+      "source_hint": "IATA reports"
+    },
+    {
+      "metric": "Typical margin for low-cost airlines",
+      "value": "5-10%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of low-cost carriers in Europe",
+      "value": "20-30",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average cost per available seat kilometer (CASK) for European low-cost carriers",
+      "value": "€0.04-€0.06",
+      "source_hint": "Airline industry publications"
+    },
+    {
+      "metric": "Market size of European low-cost airline market",
+      "value": "€50-70 billion",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for low-cost airlines",
+      "value": "€100-€200",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average fuel price for European airlines",
+      "value": "€500-€700 per ton",
+      "source_hint": "energy market reports"
+    },
+    {
+      "metric": "Typical airport fee per passenger",
+      "value": "€10-€20",
+      "source_hint": "airport authority reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate revenue per available seat kilometer (RASK)",
+      "formula": "RASK = (Total Revenue) / (Total Available Seat Kilometers)",
+      "typical_answer_range": "€0.05-€0.10"
+    },
+    {
+      "step": "Calculate cost per available seat kilometer (CASK)",
+      "formula": "CASK = (Total Cost) / (Total Available Seat Kilometers)",
+      "typical_answer_range": "€0.04-€0.06"
+    },
+    {
+      "step": "Calculate break-even load factor",
+      "formula": "Break-even Load Factor = (Fixed Costs) / (Total Available Seat Kilometers * (RASK - CASK))",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Calculate customer lifetime value (CLV)",
+      "formula": "CLV = (Average Revenue per User) * (Customer Lifetime)",
+      "typical_answer_range": "€100-€200"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of airport fees on overall costs",
+    "Overlooking the effect of fuel price volatility on profitability",
+    "Failing to account for the difference in transport modes to the airport",
+    "Not analyzing the competitive landscape and market trends",
+    "Ignoring the potential for cost savings through operational efficiencies",
+    "Not considering the impact of customer behavior and preferences on revenue",
+    "Failing to calculate the break-even load factor and its implications"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the decline in occupancy rates?",
+      "a": "The decline in occupancy rates could be due to various factors such as increased competition, changes in customer behavior, or external factors like economic downturns.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the airline's cost structure compare to its competitors?",
+      "a": "The airline's cost structure may be higher due to the ownership of airports, which increases hangar costs. However, this can also provide opportunities for cost savings through operational efficiencies.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential solutions to increase revenue and reduce costs?",
+      "a": "Potential solutions could include optimizing pricing strategies, improving operational efficiencies, and enhancing customer experience. Additionally, the airline could explore opportunities to reduce costs through renegotiation of contracts or implementation of cost-saving technologies.",
+      "category": "math"
+    },
+    {
+      "q": "How does the airline's business model differ from its competitors?",
+      "a": "The airline's business model may differ from its competitors in terms of its focus on owning airports, which can provide opportunities for cost savings and increased revenue through non-aeronautical activities.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the implications of the airline's ownership of airports on its cost structure?",
+      "a": "The ownership of airports can increase hangar costs, but it can also provide opportunities for cost savings through operational efficiencies and increased revenue through non-aeronautical activities.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the airline improve its customer experience and increase revenue?",
+      "a": "The airline can improve its customer experience by enhancing its services, such as providing more convenient check-in and boarding processes, and increasing its revenue through targeted marketing and pricing strategies.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with the airline's business model?",
+      "a": "The potential risks and challenges associated with the airline's business model include increased competition, changes in customer behavior, and external factors like economic downturns. Additionally, the ownership of airports can increase the airline's exposure to risks such as airport closures or changes in regulations.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can the airline measure and track its key performance indicators (KPIs)?",
+      "a": "The airline can measure and track its KPIs through the use of data analytics and performance metrics such as revenue per available seat kilometer (RASK), cost per available seat kilometer (CASK), and customer satisfaction ratings.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential opportunities for the airline to increase its revenue through non-aeronautical activities?",
+      "a": "The airline can increase its revenue through non-aeronautical activities such as retail sales, advertising, and airport services. Additionally, the ownership of airports can provide opportunities for the airline to generate revenue through airport-related activities such as parking and ground handling.",
+      "category": "framework"
+    },
+    {
+      "q": "How can the airline balance its short-term and long-term goals?",
+      "a": "The airline can balance its short-term and long-term goals by prioritizing its objectives and allocating resources accordingly. Additionally, the airline can use tools such as scenario planning and sensitivity analysis to evaluate the potential impact of different strategies on its short-term and long-term goals.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the airline's revenue and cost structure to identify areas for improvement",
+    "Evaluate the impact of the airline's ownership of airports on its cost structure and revenue",
+    "Assess the competitive landscape and market trends to identify opportunities and threats",
+    "Consider the potential for cost savings through operational efficiencies and implementation of cost-saving technologies",
+    "Develop a comprehensive strategy to improve customer experience and increase revenue"
+  ],
+  "sources": [
+    "IATA reports",
+    "Airline industry publications",
+    "Company filings",
+    "Market research reports",
+    "Airport authority reports"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the airline's profitability and develop a comprehensive strategy to improve its financial performance. The candidate must consider the airline's revenue and cost structure, competitive landscape, and market trends to identify areas for improvement and develop a plan to increase revenue and reduce costs.",
+  "enriched_at": "2026-05-10T07:22:10.579Z"
+}

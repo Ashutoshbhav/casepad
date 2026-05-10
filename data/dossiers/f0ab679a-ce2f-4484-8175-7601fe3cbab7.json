@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian aviation market is a rapidly growing industry with a competitive landscape dominated by low-cost carriers such as IndiGo and SpiceJet. The market is characterized by high demand, driven by a growing middle class and increasing air travel penetration. Regulatory bodies such as the Directorate General of Civil Aviation (DGCA) play a crucial role in shaping the industry. Typical customer behavior in the Indian aviation market includes a strong preference for low fares and convenience. The industry is also subject to various economic factors, including fuel prices and foreign exchange rates.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for Indian airlines",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of Indian aviation industry",
+      "value": " ₹400-500 billion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of passengers carried by Indian airlines",
+      "value": "300-400 million",
+      "source_hint": "DGCA reports"
+    },
+    {
+      "metric": "Average fare for domestic flights in India",
+      "value": "₹4,000-₹6,000",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Fuel cost as a percentage of total operating costs for Indian airlines",
+      "value": "30-40%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer acquisition cost for Indian airlines",
+      "value": "₹500-₹1,000",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average customer lifetime value for Indian airlines",
+      "value": "₹10,000-₹20,000",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of airlines operating in India",
+      "value": "10-15",
+      "source_hint": "DGCA reports"
+    },
+    {
+      "metric": "Growth rate of Indian aviation industry",
+      "value": "10-15%",
+      "source_hint": "Statista industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Estimate market size using traffic data and revenue projections",
+      "formula": "Market size = (Number of passengers) x (Average fare)",
+      "typical_answer_range": "₹400-500 billion"
+    },
+    {
+      "step": "Calculate the cost of acquiring an existing airline",
+      "formula": "Acquisition cost = (Enterprise value of target airline) / (Number of shares outstanding)",
+      "typical_answer_range": "₹5,000-10,000 crore"
+    },
+    {
+      "step": "Evaluate the potential for growth and returns on investment",
+      "formula": "Growth rate = (Change in revenue) / (Previous year's revenue)",
+      "typical_answer_range": "10-15%"
+    },
+    {
+      "step": "Calculate the payback period for the acquisition",
+      "formula": "Payback period = (Acquisition cost) / (Annual cash flows)",
+      "typical_answer_range": "5-10 years"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the regulatory environment and its impact on the acquisition",
+    "Overestimating the growth potential of the Indian aviation market",
+    "Underestimating the competition from existing players",
+    "Not evaluating the financial health of the target airline",
+    "Not considering the integration costs and challenges",
+    "Not evaluating the potential for returns on investment",
+    "Not considering the impact of fuel prices and foreign exchange rates on the acquisition"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the growth of the Indian aviation market?",
+      "a": "The growth of the Indian aviation market is driven by a growing middle class, increasing air travel penetration, and a strong preference for low fares and convenience.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the competitive landscape of the Indian aviation market impact the acquisition strategy?",
+      "a": "The competitive landscape of the Indian aviation market is dominated by low-cost carriers, which would require the acquirer to have a strong cost structure and competitive pricing strategy.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the regulatory requirements for acquiring an airline in India?",
+      "a": "The regulatory requirements for acquiring an airline in India include obtaining approval from the DGCA and complying with the regulations set by the Ministry of Civil Aviation.",
+      "category": "industry"
+    },
+    {
+      "q": "How do fuel prices and foreign exchange rates impact the profitability of Indian airlines?",
+      "a": "Fuel prices and foreign exchange rates have a significant impact on the profitability of Indian airlines, as fuel costs account for a large proportion of operating costs and fluctuations in foreign exchange rates can impact revenue and costs.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key metrics to evaluate when considering the acquisition of an airline?",
+      "a": "The key metrics to evaluate when considering the acquisition of an airline include the target airline's financial health, growth potential, competitive position, and integration costs and challenges.",
+      "category": "math"
+    },
+    {
+      "q": "How does the acquisition of an airline impact the acquirer's overall revenue and profitability?",
+      "a": "The acquisition of an airline can impact the acquirer's overall revenue and profitability by increasing revenue through the addition of new routes and customers, and improving profitability through cost savings and synergies.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with acquiring an airline in India?",
+      "a": "The potential risks and challenges associated with acquiring an airline in India include regulatory risks, integration challenges, competition from existing players, and fluctuations in fuel prices and foreign exchange rates.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the Indian aviation market compare to other emerging markets in terms of growth and profitability?",
+      "a": "The Indian aviation market is one of the fastest-growing markets in the world, with a strong preference for low fares and convenience, and a growing middle class driving demand.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key factors to consider when evaluating the cost of acquiring an existing airline?",
+      "a": "The key factors to consider when evaluating the cost of acquiring an existing airline include the enterprise value of the target airline, the number of shares outstanding, and the potential for growth and returns on investment.",
+      "category": "math"
+    },
+    {
+      "q": "How does the acquisition of an airline impact the acquirer's overall cost structure and competitive position?",
+      "a": "The acquisition of an airline can impact the acquirer's overall cost structure and competitive position by increasing costs through the addition of new routes and customers, and improving competitiveness through cost savings and synergies.",
+      "category": "competitive"
+    }
+  ],
+  "framework_hints": [
+    "Evaluate the market size and growth potential of the Indian aviation market",
+    "Assess the competitive landscape and the target airline's position within it",
+    "Consider the regulatory environment and its impact on the acquisition",
+    "Evaluate the financial health and growth potential of the target airline",
+    "Consider the integration costs and challenges associated with the acquisition"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "DGCA reports",
+    "Company filings",
+    "Industry reports",
+    "Ministry of Civil Aviation regulations"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to evaluate the potential for growth and returns on investment in the Indian aviation market, and to consider the regulatory environment, competitive landscape, and financial health of the target airline. The candidate must also demonstrate an understanding of the key metrics and factors that impact the profitability of Indian airlines.",
+  "enriched_at": "2026-05-10T06:12:50.300Z"
+}

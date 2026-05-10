@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Formula 1 industry is a global sports phenomenon with a significant following, comprising 10 teams and over 20 races per season. The industry is characterized by high operational costs, significant sponsorship deals, and a strong focus on safety and performance. The regulatory backdrop is governed by the Fédération Internationale de l'Automobile (FIA), which sets rules and standards for the sport. Typical customer behavior includes attending races, watching broadcasts, and engaging with teams and drivers on social media.",
+  "real_world_numbers": [
+    {
+      "metric": "Average attendance per Formula 1 race",
+      "value": "80,000 - 120,000",
+      "source_hint": "Formula 1 official reports"
+    },
+    {
+      "metric": "Number of people involved in a Formula 1 team",
+      "value": "500 - 700",
+      "source_hint": "Team websites and industry reports"
+    },
+    {
+      "metric": "Number of masks used per person per day",
+      "value": "2 - 5",
+      "source_hint": "General health and safety guidelines"
+    },
+    {
+      "metric": "Number of days a Formula 1 race event typically lasts",
+      "value": "3 - 5",
+      "source_hint": "Formula 1 official schedules"
+    },
+    {
+      "metric": "Total number of people involved in a Formula 1 race event",
+      "value": "10,000 - 20,000",
+      "source_hint": "Event management reports"
+    },
+    {
+      "metric": "Average number of face masks used per person per day in a crowded event",
+      "value": "3 - 6",
+      "source_hint": "Health and safety studies"
+    },
+    {
+      "metric": "Number of teams participating in a Formula 1 season",
+      "value": "10",
+      "source_hint": "Formula 1 official website"
+    },
+    {
+      "metric": "Number of races in a Formula 1 season",
+      "value": "20 - 25",
+      "source_hint": "Formula 1 official schedules"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total number of people involved in a Formula 1 race event",
+      "formula": "Number of teams * Number of people per team + Number of organizers and staff",
+      "typical_answer_range": "10,000 - 20,000"
+    },
+    {
+      "step": "Calculate the total number of face masks used per day",
+      "formula": "Number of people * Number of masks used per person per day",
+      "typical_answer_range": "20,000 - 100,000"
+    },
+    {
+      "step": "Calculate the total number of face masks used for the entire event",
+      "formula": "Total number of face masks used per day * Number of days",
+      "typical_answer_range": "60,000 - 500,000"
+    },
+    {
+      "step": "Estimate the number of face masks used in a Formula 1 race",
+      "formula": "Total number of face masks used for the entire event",
+      "typical_answer_range": "60,000 - 500,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the number of organizers and staff in the calculation",
+    "Underestimating the number of face masks used per person per day",
+    "Not accounting for the number of days the event lasts",
+    "Using incorrect numbers for the number of teams and people involved",
+    "Not considering the variability in face mask usage among different groups of people"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the average attendance per Formula 1 race?",
+      "a": "80,000 - 120,000",
+      "category": "industry"
+    },
+    {
+      "q": "How many people are typically involved in a Formula 1 team?",
+      "a": "500 - 700",
+      "category": "industry"
+    },
+    {
+      "q": "What is the estimated number of face masks used per person per day in a crowded event?",
+      "a": "3 - 6",
+      "category": "real-world"
+    },
+    {
+      "q": "How many days does a Formula 1 race event typically last?",
+      "a": "3 - 5",
+      "category": "industry"
+    },
+    {
+      "q": "What is the total number of people involved in a Formula 1 race event?",
+      "a": "10,000 - 20,000",
+      "category": "industry"
+    },
+    {
+      "q": "How many face masks are used per day in a Formula 1 race event?",
+      "a": "20,000 - 100,000",
+      "category": "math"
+    },
+    {
+      "q": "What is the estimated number of face masks used for the entire Formula 1 race event?",
+      "a": "60,000 - 500,000",
+      "category": "math"
+    },
+    {
+      "q": "How does the number of face masks used vary among different groups of people?",
+      "a": "It can vary significantly depending on factors such as role, location, and personal preference",
+      "category": "real-world"
+    },
+    {
+      "q": "What are some common pitfalls to avoid when estimating the number of face masks used in a Formula 1 race?",
+      "a": "Not considering the number of organizers and staff, underestimating face mask usage, and not accounting for the number of days the event lasts",
+      "category": "framework"
+    },
+    {
+      "q": "How can we estimate the number of face masks used in a Formula 1 race?",
+      "a": "By calculating the total number of people involved, the number of face masks used per person per day, and the number of days the event lasts",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the number of people involved in the event, including teams, organizers, and staff",
+    "Estimate the number of face masks used per person per day based on general health and safety guidelines",
+    "Account for the number of days the event lasts and the variability in face mask usage among different groups of people"
+  ],
+  "sources": [
+    "Formula 1 official reports",
+    "Team websites and industry reports",
+    "General health and safety guidelines",
+    "Event management reports",
+    "Health and safety studies"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to think critically about the various factors that contribute to the total number of face masks used in a Formula 1 race, and to make reasonable assumptions based on general knowledge and industry context.",
+  "enriched_at": "2026-05-10T07:13:48.720Z"
+}

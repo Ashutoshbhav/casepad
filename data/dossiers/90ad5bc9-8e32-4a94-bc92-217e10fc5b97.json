@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian oil and gas industry is a highly competitive and regulated sector, with key players such as Indian Oil Corporation, Hindustan Petroleum, and Bharat Petroleum. The industry is characterized by fluctuating global crude oil prices, increasing demand for energy, and a growing focus on sustainability and renewable energy sources. The midstream sector, which involves the transportation and storage of oil and gas, is a critical component of the industry. Typical customer behavior in this sector includes a focus on reliability, safety, and cost-effectiveness.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for midstream oil and gas companies",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian oil and gas industry",
+      "value": "INR 10-15 trillion",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of major oil and gas companies in India",
+      "value": "5-7",
+      "source_hint": "industry directories"
+    },
+    {
+      "metric": "Customer LTV for oil and gas companies",
+      "value": "INR 50,000-1,00,000",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Growth rate of the Indian oil and gas industry",
+      "value": "5-7% per annum",
+      "source_hint": "industry forecasts"
+    },
+    {
+      "metric": "Average cost of transporting oil and gas in India",
+      "value": "INR 5-10 per kilometer",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Typical return on investment for midstream oil and gas projects",
+      "value": "12-18%",
+      "source_hint": "financial reports"
+    },
+    {
+      "metric": "Market share of the top 3 oil and gas companies in India",
+      "value": "60-70%",
+      "source_hint": "industry analysis"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the required growth rate to achieve 4x revenue increase in 10 years",
+      "formula": "(4x)^(1/10) - 1",
+      "typical_answer_range": "14-16% per annum"
+    },
+    {
+      "step": "Determine the potential market size of the drinking water distribution business",
+      "formula": "Market size = Population x Per capita consumption x Price",
+      "typical_answer_range": "INR 5,000-10,000 crore"
+    },
+    {
+      "step": "Estimate the potential revenue contribution from the new business",
+      "formula": "Revenue = Market size x Market share",
+      "typical_answer_range": "INR 1,000-2,000 crore"
+    },
+    {
+      "step": "Calculate the required investment for the new business",
+      "formula": "Investment = Revenue / Return on investment",
+      "typical_answer_range": "INR 500-1,000 crore"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating the growth potential of the new business",
+    "Underestimating the competition in the drinking water distribution market",
+    "Failing to consider the regulatory hurdles in the oil and gas industry",
+    "Not accounting for the potential cannibalization of existing business",
+    "Ignoring the sustainability and environmental concerns in the oil and gas industry",
+    "Not considering the potential impact of global crude oil price fluctuations on the business",
+    "Failing to evaluate the potential risks and challenges associated with the new business"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian oil and gas industry?",
+      "a": "The industry is witnessing a shift towards sustainability, increasing demand for energy, and fluctuating global crude oil prices.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the midstream sector contribute to the overall oil and gas value chain?",
+      "a": "The midstream sector plays a critical role in the transportation and storage of oil and gas, ensuring a reliable and efficient supply chain.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with entering the drinking water distribution business?",
+      "a": "The company may face challenges such as intense competition, regulatory hurdles, and potential cannibalization of existing business.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can the company ensure a successful entry into the drinking water distribution market?",
+      "a": "The company can ensure a successful entry by conducting thorough market research, developing a robust business plan, and establishing strategic partnerships.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential synergies between the oil and gas business and the drinking water distribution business?",
+      "a": "The company can leverage its existing infrastructure, logistics, and customer base to create synergies between the two businesses.",
+      "category": "framework"
+    },
+    {
+      "q": "How can the company measure the success of its growth strategy?",
+      "a": "The company can measure the success of its growth strategy by tracking key performance indicators such as revenue growth, market share, and return on investment.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential implications of global crude oil price fluctuations on the company's business?",
+      "a": "The company may face challenges such as fluctuating revenues, changing customer behavior, and potential disruptions to the supply chain.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the company balance its growth ambitions with its sustainability and environmental responsibilities?",
+      "a": "The company can balance its growth ambitions with its sustainability and environmental responsibilities by investing in renewable energy sources, reducing its carbon footprint, and implementing sustainable practices throughout its operations.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the company's existing capabilities and competencies to identify potential areas for growth",
+    "Evaluate the market attractiveness and growth potential of the drinking water distribution business",
+    "Assess the competitive landscape and potential barriers to entry in the drinking water distribution market",
+    "Develop a robust business plan and financial model to support the growth strategy",
+    "Identify potential synergies and areas for integration between the oil and gas business and the drinking water distribution business"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Industry directories and benchmarks",
+    "Market research and analysis reports",
+    "Financial news and publications"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to think critically about the company's growth strategy, evaluate the potential risks and challenges, and develop a robust business plan to support the entry into the drinking water distribution market. The candidate must also demonstrate an understanding of the Indian oil and gas industry, its trends, and its challenges.",
+  "enriched_at": "2026-05-10T06:39:53.341Z"
+}

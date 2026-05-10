@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with key players such as Hindustan Unilever and Procter & Gamble. The industry is characterized by low margins, typically ranging from 8-12%, and high volumes. Regulatory backdrop includes compliance with food safety and packaging regulations. Typical customer behavior involves frequent purchases of everyday essentials, with brand loyalty playing a significant role.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian FMCG industry",
+      "value": "₹4-5 trillion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of FMCG companies in India",
+      "value": "500-700",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Customer LTV for FMCG companies",
+      "value": "₹5,000-10,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average debt-to-equity ratio for FMCG companies in India",
+      "value": "0.5-1.5",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Typical return on assets (ROA) for FMCG companies",
+      "value": "10-15%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average employee count for mid-sized FMCG companies in India",
+      "value": "500-2,000",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Typical capital expenditure as a percentage of revenue for FMCG companies",
+      "value": "5-10%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the break-even point for Chem Co.",
+      "formula": "Break-even point = Fixed Costs / (Selling Price - Variable Costs)",
+      "typical_answer_range": "₹50-100 million"
+    },
+    {
+      "step": "Determine the return on investment (ROI) for a potential asset sale",
+      "formula": "ROI = (Gain from Sale - Cost of Sale) / Cost of Sale",
+      "typical_answer_range": "10-20%"
+    },
+    {
+      "step": "Calculate the impact of a 10% reduction in fixed costs on profitability",
+      "formula": "New Profit = Old Profit + (10% of Fixed Costs)",
+      "typical_answer_range": "5-15% increase in profitability"
+    },
+    {
+      "step": "Estimate the potential revenue increase from a 5% price hike",
+      "formula": "New Revenue = Old Revenue + (5% of Old Revenue)",
+      "typical_answer_range": "3-7% increase in revenue"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the potential impact of regulatory changes on the industry",
+    "Overlooking the importance of brand loyalty in the FMCG sector",
+    "Failing to account for the potential costs of liquidating assets",
+    "Not analyzing the company's product portfolio and identifying potential areas for optimization",
+    "Ignoring the potential for economies of scale in the industry",
+    "Not considering the potential impact of a sale on employee morale and retention"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian FMCG industry?",
+      "a": "The Indian FMCG industry is characterized by increasing demand for health and wellness products, growing e-commerce penetration, and rising competition from local players.",
+      "category": "industry"
+    },
+    {
+      "q": "How do FMCG companies in India typically manage their supply chains?",
+      "a": "FMCG companies in India typically manage their supply chains through a combination of owned and outsourced logistics, with a focus on reducing costs and improving efficiency.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical exit options for a struggling FMCG company in India?",
+      "a": "Typical exit options for a struggling FMCG company in India include selling the company, liquidating assets, or undergoing a restructuring process.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can Chem Co. reduce its fixed costs?",
+      "a": "Chem Co. can reduce its fixed costs by identifying and eliminating underutilized assets, renegotiating contracts with suppliers, and implementing cost-saving initiatives.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and benefits of selling the company?",
+      "a": "The potential risks of selling the company include loss of control and potential job losses, while the benefits include access to new capital and resources, and the potential for improved profitability.",
+      "category": "framework"
+    },
+    {
+      "q": "How can Chem Co. improve its profitability analysis?",
+      "a": "Chem Co. can improve its profitability analysis by identifying and addressing the root causes of its financial difficulties, such as underperforming products or inefficient operations.",
+      "category": "math"
+    },
+    {
+      "q": "What are the typical benchmarks for FMCG companies in India in terms of revenue growth and profitability?",
+      "a": "Typical benchmarks for FMCG companies in India include revenue growth of 10-15% per annum and profitability margins of 8-12%.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Chem Co. identify and prioritize its most profitable products?",
+      "a": "Chem Co. can identify and prioritize its most profitable products by conducting a profitability analysis, which involves calculating the contribution margin of each product and identifying areas for optimization.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential consequences of not addressing Chem Co.'s financial difficulties?",
+      "a": "The potential consequences of not addressing Chem Co.'s financial difficulties include bankruptcy, loss of market share, and damage to the company's reputation.",
+      "category": "framework"
+    },
+    {
+      "q": "How can Chem Co. balance the need to reduce costs with the need to invest in growth initiatives?",
+      "a": "Chem Co. can balance the need to reduce costs with the need to invest in growth initiatives by prioritizing cost-saving initiatives that do not compromise the company's growth prospects, such as reducing non-essential expenses and investing in digital transformation.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider using a profitability framework to identify areas for cost reduction and revenue growth",
+    "Analyze the company's product portfolio and identify potential areas for optimization",
+    "Evaluate the potential risks and benefits of different exit options, such as selling the company or liquidating assets",
+    "Use a SWOT analysis to identify the company's strengths, weaknesses, opportunities, and threats",
+    "Consider using a scenario planning framework to anticipate and prepare for potential future scenarios"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Industry associations and trade publications",
+    "Market research reports from firms such as Euromonitor and Nielsen",
+    "News articles and business publications such as The Economic Times and Business Standard"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to think critically about the company's financial difficulties and identify potential solutions, while also considering the broader industry context and potential risks and benefits of different exit options. The candidate must also be able to analyze complex financial data and identify areas for cost reduction and revenue growth.",
+  "enriched_at": "2026-05-08T12:15:15.074Z"
+}

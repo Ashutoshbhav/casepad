@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with key players competing on pricing, product quality, and distribution networks. Regulatory backdrop includes GST and other taxations affecting profit margins. Typical customer behavior involves seeking value for money and brand loyalty. The industry is characterized by low margins and high volumes.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average return on sales for TV manufacturers",
+      "value": "15-20%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian TV market",
+      "value": "INR 20,000-25,000 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of major TV manufacturers in India",
+      "value": "5-7",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Customer lifetime value for a TV brand",
+      "value": "INR 50,000-70,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average price of a TV in India",
+      "value": "INR 30,000-50,000",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Growth rate of the Indian TV market",
+      "value": "8-10% per annum",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average distribution cost for FMCG companies in India",
+      "value": "5-8% of sales",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the surplus split",
+      "formula": "(TV manufacturer's return on sales + Vivid's return on sales) / 2",
+      "typical_answer_range": "40-60 split"
+    },
+    {
+      "step": "Determining the optimal price increase",
+      "formula": "(surplus / total sales) * 100",
+      "typical_answer_range": "5-10% increase"
+    },
+    {
+      "step": "Evaluating the impact on return on sales",
+      "formula": "(new price - old price) / old price * 100",
+      "typical_answer_range": "15-25% increase"
+    },
+    {
+      "step": "Assessing the effect on customer lifetime value",
+      "formula": "(new price / old price) * customer lifetime value",
+      "typical_answer_range": "INR 50,000-70,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the competitive structure of the industry",
+    "Overlooking the regulatory backdrop and its impact on pricing",
+    "Failing to account for customer behavior and brand loyalty",
+    "Miscalculating the surplus split and optimal price increase",
+    "Not evaluating the impact on return on sales and customer lifetime value",
+    "Ignoring the distribution costs and their effect on pricing",
+    "Not considering the growth rate of the Indian TV market"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors influencing the pricing strategy in the FMCG industry?",
+      "a": "Competitive structure, regulatory backdrop, customer behavior, and brand loyalty",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian TV market's growth rate impact the pricing strategy?",
+      "a": "A growing market provides opportunities for price increases, while a declining market may require price reductions",
+      "category": "industry"
+    },
+    {
+      "q": "What is the typical distribution cost for FMCG companies in India?",
+      "a": "5-8% of sales",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the surplus split affect the return on sales for both the TV manufacturer and Vivid?",
+      "a": "A 40/60 split offers a 20% return on sales for both players",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks of a price increase in the FMCG industry?",
+      "a": "Loss of market share, decreased customer loyalty, and increased competition",
+      "category": "competitive"
+    },
+    {
+      "q": "How can Vivid ensure a successful price increase strategy?",
+      "a": "By considering the competitive structure, regulatory backdrop, customer behavior, and brand loyalty, and evaluating the impact on return on sales and customer lifetime value",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for evaluating the success of a pricing strategy in the FMCG industry?",
+      "a": "Return on sales, customer lifetime value, market share, and customer loyalty",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the Indian government's taxation policies affect the FMCG industry's pricing strategy?",
+      "a": "Taxation policies, such as GST, can impact profit margins and pricing decisions",
+      "category": "industry"
+    },
+    {
+      "q": "What role does brand loyalty play in the FMCG industry's pricing strategy?",
+      "a": "Brand loyalty can influence customer willingness to pay a premium price and reduce the risk of losing market share due to price increases",
+      "category": "industry"
+    },
+    {
+      "q": "How can Vivid balance the need for a price increase with the risk of losing market share?",
+      "a": "By evaluating the competitive structure, customer behavior, and brand loyalty, and considering alternative pricing strategies, such as value-based pricing or tiered pricing",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the value chain and the roles of the TV manufacturer and Vivid",
+    "Evaluate the competitive structure and market dynamics",
+    "Assess the regulatory backdrop and its impact on pricing",
+    "Analyze customer behavior and brand loyalty",
+    "Develop a pricing strategy that balances the needs of both the TV manufacturer and Vivid"
+  ],
+  "sources": [
+    "Industry reports from research firms, such as Euromonitor or Nielsen",
+    "Company filings and annual reports",
+    "Market research reports from firms, such as Statista or McKinsey",
+    "Government publications and taxation policies"
+  ],
+  "case_type_notes": "This pricing case requires the candidate to consider the competitive structure, regulatory backdrop, and customer behavior, and to evaluate the impact of a price increase on return on sales and customer lifetime value. The candidate must also balance the needs of both the TV manufacturer and Vivid, making it a challenging and nuanced case.",
+  "enriched_at": "2026-05-08T23:49:26.817Z"
+}

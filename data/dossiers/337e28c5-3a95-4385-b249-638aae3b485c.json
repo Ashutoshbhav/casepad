@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian energy sector is characterized by a mix of state-owned and private players, with a growing focus on renewable energy sources. The country aims to achieve 40% of its installed electricity capacity from non-fossil fuels by 2030. The sector is regulated by the Ministry of Power and the Central Electricity Regulatory Commission. India's energy demand is expected to grow significantly, driven by urbanization and industrialization. The country's energy mix is shifting towards cleaner sources, with solar and wind energy becoming increasingly important.",
+  "real_world_numbers": [
+    {
+      "metric": "Renewable energy capacity addition",
+      "value": "10-15 GW per annum",
+      "source_hint": "MNRE reports"
+    },
+    {
+      "metric": "Solar energy tariff",
+      "value": "₹2.50-₹3.50 per unit",
+      "source_hint": "SECI auctions"
+    },
+    {
+      "metric": "Wind energy tariff",
+      "value": "₹2.80-₹3.80 per unit",
+      "source_hint": "SECI auctions"
+    },
+    {
+      "metric": "Energy storage market size",
+      "value": "₹10,000-₹20,000 crore by 2025",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Electric vehicle penetration",
+      "value": "5-10% of new vehicle sales by 2025",
+      "source_hint": "Society of Manufacturers of Electric Vehicles"
+    },
+    {
+      "metric": "Grid reliability",
+      "value": "99.5-99.9%",
+      "source_hint": "Central Electricity Authority reports"
+    },
+    {
+      "metric": "Transmission and distribution losses",
+      "value": "15-20%",
+      "source_hint": "Central Electricity Authority reports"
+    },
+    {
+      "metric": "Average cost of debt for renewable energy projects",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Average return on equity for renewable energy projects",
+      "value": "12-15%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Lithium-ion battery cost",
+      "value": "₹8,000-₹12,000 per kWh",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the levelized cost of electricity (LCOE) for a solar power project",
+      "formula": "LCOE = (Capital cost + O&M cost) / Total energy generated",
+      "typical_answer_range": "₹2.50-₹3.50 per unit"
+    },
+    {
+      "step": "Determine the optimal mix of renewable energy sources to meet the energy demand",
+      "formula": "Optimal mix = (Solar capacity x Solar CF) + (Wind capacity x Wind CF)",
+      "typical_answer_range": "40-60% solar, 20-30% wind"
+    },
+    {
+      "step": "Calculate the energy storage requirement to stabilize the grid",
+      "formula": "Energy storage requirement = (Peak demand - Base demand) x Storage duration",
+      "typical_answer_range": "2-4 hours"
+    },
+    {
+      "step": "Evaluate the financial viability of a renewable energy project",
+      "formula": "NPV = (Cash inflows - Cash outflows) / Discount rate",
+      "typical_answer_range": "₹100-₹500 crore"
+    },
+    {
+      "step": "Assess the impact of transmission and distribution losses on the grid reliability",
+      "formula": "Grid reliability = (1 - Transmission and distribution losses) x 100",
+      "typical_answer_range": "99.5-99.9%"
+    },
+    {
+      "step": "Calculate the cost of capital for a renewable energy project",
+      "formula": "Cost of capital = (Debt x Cost of debt) + (Equity x Cost of equity)",
+      "typical_answer_range": "8-12%"
+    },
+    {
+      "step": "Determine the optimal sequencing of investments in grid expansion, storage deployment, and renewable capacity",
+      "formula": "Optimal sequencing = (Grid expansion x Storage deployment x Renewable capacity) / Total investment",
+      "typical_answer_range": "40-60% grid expansion, 20-30% storage deployment, 10-20% renewable capacity"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating the potential of renewable energy sources",
+    "Underestimating the impact of transmission and distribution losses",
+    "Ignoring the importance of energy storage in stabilizing the grid",
+    "Failing to consider the financial viability of renewable energy projects",
+    "Not evaluating the optimal mix of renewable energy sources",
+    "Overlooking the need for grid expansion and modernization",
+    "Not assessing the impact of global supply chain risks on the energy transition"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of the energy transition in India?",
+      "a": "The key drivers of the energy transition in India are the growing demand for energy, the need to reduce greenhouse gas emissions, and the decreasing cost of renewable energy sources.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian energy sector compare to other countries in terms of renewable energy adoption?",
+      "a": "India has made significant progress in renewable energy adoption, with a target of 40% of its installed electricity capacity from non-fossil fuels by 2030. However, other countries like China and the US have also made significant strides in renewable energy adoption.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with the energy transition in India?",
+      "a": "The potential risks and challenges associated with the energy transition in India include the high upfront costs of renewable energy projects, the lack of grid infrastructure, and the risk of supply chain disruptions.",
+      "category": "industry"
+    },
+    {
+      "q": "How can India mobilize the required financing for the energy transition?",
+      "a": "India can mobilize the required financing for the energy transition through a combination of government support, private sector investment, and international funding. Innovative financing mechanisms such as green bonds and yieldcos can also be explored.",
+      "category": "financing"
+    },
+    {
+      "q": "What is the role of energy storage in the energy transition?",
+      "a": "Energy storage plays a critical role in the energy transition by providing a buffer against the intermittency of renewable energy sources and helping to stabilize the grid.",
+      "category": "technology"
+    },
+    {
+      "q": "How can India ensure a just and equitable energy transition?",
+      "a": "India can ensure a just and equitable energy transition by prioritizing the needs of vulnerable communities, promoting decentralized energy solutions, and providing training and employment opportunities in the renewable energy sector.",
+      "category": "social"
+    },
+    {
+      "q": "What are the potential opportunities for Indian companies in the global energy transition?",
+      "a": "Indian companies can capitalize on the global energy transition by exporting renewable energy technologies, providing energy services, and investing in international renewable energy projects.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can India balance its energy security and environmental concerns?",
+      "a": "India can balance its energy security and environmental concerns by promoting a diversified energy mix, improving energy efficiency, and investing in renewable energy sources.",
+      "category": "industry"
+    },
+    {
+      "q": "What is the role of policy and regulation in the energy transition?",
+      "a": "Policy and regulation play a critical role in the energy transition by providing a framework for the development and deployment of renewable energy technologies, and by creating a level playing field for all energy sources.",
+      "category": "policy"
+    },
+    {
+      "q": "How can India ensure the reliability and resilience of its energy system?",
+      "a": "India can ensure the reliability and resilience of its energy system by investing in grid modernization, promoting energy storage, and developing smart grid technologies.",
+      "category": "technology"
+    }
+  ],
+  "framework_hints": [
+    "Integrated energy system redesign",
+    "Financing architecture for the energy transition",
+    "Phased implementation roadmap for the energy transition",
+    "Measurable success targets for the energy transition",
+    "Grid expansion and modernization"
+  ],
+  "sources": [
+    "Ministry of New and Renewable Energy (MNRE) reports",
+    "Central Electricity Authority (CEA) reports",
+    "International Energy Agency (IEA) reports",
+    "World Bank reports",
+    "Industry associations and research organizations"
+  ],
+  "case_type_notes": "This case requires a deep understanding of the Indian energy sector, the challenges and opportunities associated with the energy transition, and the need for a comprehensive and integrated approach to addressing these challenges. The case also requires strong analytical and problem-solving skills, as well as the ability to think creatively and develop innovative solutions.",
+  "enriched_at": "2026-05-10T05:58:26.957Z"
+}

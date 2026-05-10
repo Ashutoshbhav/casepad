@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The sports industry, particularly professional baseball, is a highly competitive and regulated market with significant revenue streams from ticket sales, sponsorships, and media rights. In the Indian context, while cricket dominates, other sports like baseball are gaining traction. The industry's key economics involve high operational costs, including player salaries and stadium maintenance, with typical profit margins ranging from 5-15%. Regulatory bodies like the Indian Sports Federation and international leagues play a crucial role in shaping the industry's landscape.",
+  "real_world_numbers": [
+    {
+      "metric": "Average annual revenue of a professional baseball team",
+      "value": "₹500-₹1,500 crores",
+      "source_hint": "Industry reports and sports business publications"
+    },
+    {
+      "metric": "Typical margin for a professional sports team",
+      "value": "5-15%",
+      "source_hint": "Company filings and financial analyses"
+    },
+    {
+      "metric": "Number of professional baseball teams in India",
+      "value": "10-20",
+      "source_hint": "Sports directories and league websites"
+    },
+    {
+      "metric": "Average player salary in professional baseball",
+      "value": "₹50 lakhs - ₹5 crores",
+      "source_hint": "Sports news outlets and player associations"
+    },
+    {
+      "metric": "Growth rate of the Indian sports industry",
+      "value": "10-20% annually",
+      "source_hint": "Market research reports and industry forecasts"
+    },
+    {
+      "metric": "Ticket price range for a professional baseball game in India",
+      "value": "₹500 - ₹5,000",
+      "source_hint": "Ticketing websites and stadium box offices"
+    },
+    {
+      "metric": "Sponsorship revenue as a percentage of total team revenue",
+      "value": "20-40%",
+      "source_hint": "Sponsorship reports and team financials"
+    },
+    {
+      "metric": "Average attendance per game for a professional baseball team in India",
+      "value": "5,000 - 20,000",
+      "source_hint": "Stadium reports and attendance data"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the potential return on investment (ROI) for buying a baseball team",
+      "formula": "ROI = (Gain from Investment - Cost of Investment) / Cost of Investment",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Determining the break-even point for the investment",
+      "formula": "Break-Even Point = Fixed Costs / (Selling Price - Variable Costs)",
+      "typical_answer_range": "2-5 years"
+    },
+    {
+      "step": "Evaluating the impact of different revenue streams on the team's profitability",
+      "formula": "Profit = Revenue - Costs",
+      "typical_answer_range": "₹50 crores - ₹200 crores"
+    },
+    {
+      "step": "Assessing the sensitivity of the investment to changes in key variables like ticket prices or sponsorship revenue",
+      "formula": "Sensitivity = (Change in Outcome / Change in Variable) * (Variable / Outcome)",
+      "typical_answer_range": "5-20%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the importance of regulatory approvals and league permissions",
+    "Underestimating the costs and challenges of replacing existing management",
+    "Failing to consider the potential tension between financial returns and competitive spending",
+    "Not accounting for the opportunity cost of alternative investments",
+    "Ignoring the impact of macro risks like changes in fan interest or economic downturns",
+    "Insufficiently evaluating the quality of the existing team management",
+    "Not developing a comprehensive plan for achieving synergies and improving operational efficiency"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key differences between the Indian and international professional baseball markets?",
+      "a": "The Indian market is smaller and less established, with lower revenue streams and fewer teams, while the international market is more mature with higher revenues and a stronger fan base.",
+      "category": "industry"
+    },
+    {
+      "q": "How do regulatory bodies like the Indian Sports Federation influence the professional baseball industry?",
+      "a": "They set rules, provide funding, and oversee the development of the sport, which can impact team operations, player salaries, and revenue streams.",
+      "category": "regulatory"
+    },
+    {
+      "q": "What are some common pitfalls when evaluating the financial performance of a professional sports team?",
+      "a": "These include overlooking non-cash items, failing to account for depreciation, and not considering the impact of one-time events or transactions.",
+      "category": "math"
+    },
+    {
+      "q": "How can a private equity buyer like Alpha add value to a baseball team beyond financial investment?",
+      "a": "By bringing in expertise in areas like marketing, operations, and player development, as well as providing access to networks and resources that can enhance the team's performance and revenue streams.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are some potential synergies that Alpha could achieve by buying a baseball team?",
+      "a": "These could include cross-promotions with other portfolio companies, shared resources and expertise, and enhanced brand recognition and marketing opportunities.",
+      "category": "framework"
+    },
+    {
+      "q": "How might changes in fan interest or viewing habits impact the financial performance of a baseball team?",
+      "a": "Declines in fan interest could lead to lower ticket sales and revenue, while changes in viewing habits could impact media rights and sponsorship deals.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are some alternative investments that Alpha could consider instead of buying a baseball team?",
+      "a": "These could include other sports teams, entertainment or media companies, or investments in related industries like sports equipment or fitness.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Alpha assess the quality of the existing team management and determine whether replacement is necessary?",
+      "a": "By evaluating their track record, expertise, and fit with Alpha's vision and goals, as well as considering the costs and challenges of replacing them.",
+      "category": "framework"
+    },
+    {
+      "q": "What are some key risks and challenges that Alpha should consider when buying a baseball team?",
+      "a": "These include regulatory and legal risks, macro risks like changes in fan interest or economic downturns, and operational challenges like managing player salaries and stadium maintenance.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the potential for synergies between the baseball team and other portfolio companies or investments",
+    "Evaluate the quality of the existing team management and determine whether replacement is necessary",
+    "Assess the regulatory and legal landscape for professional baseball in India and internationally",
+    "Develop a comprehensive plan for achieving operational efficiency and improving financial performance"
+  ],
+  "sources": [
+    "Industry reports and sports business publications like Sports Business Journal or Forbes",
+    "Company filings and financial analyses from sources like Bloomberg or Thomson Reuters",
+    "Sports news outlets and player associations like ESPN or the MLB Players Association",
+    "Market research reports and industry forecasts from firms like Deloitte or PwC"
+  ],
+  "case_type_notes": "This MNA case requires evaluating the potential acquisition of a baseball team, considering factors beyond initial financial analysis like management team quality, access to capital, and regulatory risks. It demands a comprehensive and nuanced approach, incorporating both quantitative and qualitative factors to inform the investment decision.",
+  "enriched_at": "2026-05-10T07:35:13.889Z"
+}

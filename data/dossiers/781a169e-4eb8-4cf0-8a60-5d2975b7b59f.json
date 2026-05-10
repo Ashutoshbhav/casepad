@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian tyre industry is a significant sector, driven by the growing demand for vehicles. The industry is characterized by a competitive structure, with several domestic and international players. Key economics include the average price of a tyre, which can range from Rs. 3,000 to Rs. 5,000, and the typical margin for tyre manufacturers, which can range from 8-12%. The regulatory backdrop includes government initiatives to promote the use of eco-friendly tyres and to improve road safety. Typical customer behavior includes a preference for durable and fuel-efficient tyres.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for tyre manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average price of a tyre",
+      "value": "Rs. 3,000 - Rs. 5,000",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Number of tyre manufacturers in India",
+      "value": "10-15",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Market size of the Indian tyre industry",
+      "value": "Rs. 400-500 billion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Growth rate of the Indian tyre industry",
+      "value": "5-7% per annum",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Average tyre replacement rate",
+      "value": "2-3 years",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical customer lifetime value (CLV) for a tyre manufacturer",
+      "value": "Rs. 10,000 - Rs. 20,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of four-wheelers sold in India per year",
+      "value": "2-3 million",
+      "source_hint": "automotive industry reports"
+    },
+    {
+      "metric": "Average number of tyres used per four-wheeler",
+      "value": "4-5",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total number of four-wheelers in use",
+      "formula": "Total population * % of population using four-wheelers * average number of cars per household",
+      "typical_answer_range": "15-25 million"
+    },
+    {
+      "step": "Calculate the total number of tyres in use",
+      "formula": "Total number of four-wheelers * average number of tyres per four-wheeler",
+      "typical_answer_range": "60-100 million"
+    },
+    {
+      "step": "Calculate the total revenue of the tyre industry",
+      "formula": "Total number of tyres in use * average price of a tyre",
+      "typical_answer_range": "Rs. 200-500 billion"
+    },
+    {
+      "step": "Calculate the market share of a particular tyre manufacturer",
+      "formula": "Total revenue of the manufacturer / total revenue of the industry",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Calculate the customer lifetime value (CLV) for a tyre manufacturer",
+      "formula": "Average revenue per customer * average customer lifespan",
+      "typical_answer_range": "Rs. 10,000 - Rs. 50,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the average number of tyres used per four-wheeler",
+    "Not accounting for the replacement rate of tyres",
+    "Not using the correct average price of a tyre",
+    "Not considering the growth rate of the industry",
+    "Not using the correct market size of the industry",
+    "Not calculating the customer lifetime value (CLV) correctly",
+    "Not considering the competitive structure of the industry"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the current market trend in the Indian tyre industry?",
+      "a": "The Indian tyre industry is experiencing a growth rate of 5-7% per annum, driven by the increasing demand for vehicles.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the average price of a tyre affect the revenue of the tyre industry?",
+      "a": "The average price of a tyre has a direct impact on the revenue of the tyre industry. An increase in the average price of a tyre can lead to an increase in revenue, while a decrease can lead to a decrease in revenue.",
+      "category": "math"
+    },
+    {
+      "q": "What is the competitive structure of the Indian tyre industry?",
+      "a": "The Indian tyre industry is characterized by a competitive structure, with several domestic and international players. The industry is dominated by a few large players, with smaller players competing in niche segments.",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the government's initiative to promote eco-friendly tyres affect the industry?",
+      "a": "The government's initiative to promote eco-friendly tyres can lead to an increase in demand for eco-friendly tyres, which can benefit manufacturers who produce such tyres. However, it can also lead to an increase in costs for manufacturers who need to adapt to the new regulations.",
+      "category": "industry"
+    },
+    {
+      "q": "What is the typical customer behavior in the Indian tyre industry?",
+      "a": "Typical customer behavior in the Indian tyre industry includes a preference for durable and fuel-efficient tyres. Customers also consider factors such as price, brand reputation, and after-sales service when making a purchase decision.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the growth rate of the industry affect the revenue of tyre manufacturers?",
+      "a": "The growth rate of the industry can have a positive impact on the revenue of tyre manufacturers, as an increasing demand for tyres can lead to an increase in sales and revenue.",
+      "category": "math"
+    },
+    {
+      "q": "What is the average customer lifetime value (CLV) for a tyre manufacturer?",
+      "a": "The average customer lifetime value (CLV) for a tyre manufacturer can range from Rs. 10,000 to Rs. 50,000, depending on factors such as the average revenue per customer and the average customer lifespan.",
+      "category": "math"
+    },
+    {
+      "q": "How does the replacement rate of tyres affect the revenue of tyre manufacturers?",
+      "a": "The replacement rate of tyres can have a significant impact on the revenue of tyre manufacturers, as a higher replacement rate can lead to an increase in sales and revenue.",
+      "category": "math"
+    },
+    {
+      "q": "What is the market share of a particular tyre manufacturer?",
+      "a": "The market share of a particular tyre manufacturer can range from 5-15%, depending on factors such as the size of the manufacturer, the quality of its products, and its marketing efforts.",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the regulatory backdrop affect the Indian tyre industry?",
+      "a": "The regulatory backdrop can have a significant impact on the Indian tyre industry, as government initiatives and regulations can affect the demand for tyres, the cost of production, and the competitive structure of the industry.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Use a top-down approach to estimate the market size of the tyre industry",
+    "Consider the average number of tyres used per four-wheeler",
+    "Account for the replacement rate of tyres",
+    "Use the correct average price of a tyre",
+    "Consider the growth rate of the industry"
+  ],
+  "sources": [
+    "Industry reports from research firms such as ICRA and CRISIL",
+    "Company filings and annual reports of tyre manufacturers",
+    "Market research reports from firms such as Nielsen and Euromonitor",
+    "Government reports and statistics from the Ministry of Commerce and Industry",
+    "Automotive industry reports from firms such as SIAM and ACMA"
+  ],
+  "case_type_notes": "This case requires the use of a top-down approach to estimate the market size of the tyre industry, and involves the calculation of various metrics such as the total number of four-wheelers in use, the total number of tyres in use, and the total revenue of the industry. The case also requires the consideration of various factors such as the average number of tyres used per four-wheeler, the replacement rate of tyres, and the growth rate of the industry.",
+  "enriched_at": "2026-05-10T06:03:30.017Z"
+}

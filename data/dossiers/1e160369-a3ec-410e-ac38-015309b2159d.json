@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian telecom industry is highly competitive, with several major players competing for market share. The industry is characterized by low margins, with typical margins ranging from 8-12%. The regulatory backdrop is complex, with the Telecom Regulatory Authority of India (TRAI) playing a key role in shaping the industry. Typical customer behavior includes a high propensity to switch providers in search of better services and prices.",
+  "real_world_numbers": [
+    {
+      "metric": "Average Revenue Per User (ARPU)",
+      "value": "₹150-₹250",
+      "source_hint": "TRAI reports"
+    },
+    {
+      "metric": "Telecom market size",
+      "value": "₹1.5-₹2.5 trillion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of telecom operators",
+      "value": "5-7",
+      "source_hint": "TRAI data"
+    },
+    {
+      "metric": "Customer churn rate",
+      "value": "2-5%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Typical customer acquisition cost",
+      "value": "₹200-₹500",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Customer Lifetime Value (CLV)",
+      "value": "₹1,500-₹3,000",
+      "source_hint": "company data"
+    },
+    {
+      "metric": "Market growth rate",
+      "value": "5-10%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Penetration of 4G services",
+      "value": "50-70%",
+      "source_hint": "TRAI reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate market size",
+      "formula": "Number of subscribers x ARPU",
+      "typical_answer_range": "₹1.5-₹2.5 trillion"
+    },
+    {
+      "step": "Calculate customer acquisition cost per subscriber",
+      "formula": "Total customer acquisition cost / Number of new subscribers",
+      "typical_answer_range": "₹200-₹500"
+    },
+    {
+      "step": "Calculate customer lifetime value",
+      "formula": "ARPU x Average customer lifespan",
+      "typical_answer_range": "₹1,500-₹3,000"
+    },
+    {
+      "step": "Calculate market share",
+      "formula": "Company revenue / Total market size",
+      "typical_answer_range": "5-15%"
+    }
+  ],
+  "common_mistakes": [
+    "Not conducting thorough market research",
+    "Underestimating competition",
+    "Failing to develop a unique value proposition",
+    "Not considering regulatory hurdles",
+    "Overestimating market size or growth rate",
+    "Not accounting for customer churn",
+    "Failing to calculate customer acquisition cost and CLV"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in the Indian telecom industry?",
+      "a": "The Indian telecom industry is characterized by increasing demand for data services, growing adoption of 4G and 5G technologies, and intense competition among players.",
+      "category": "industry"
+    },
+    {
+      "q": "How do Indian telecom operators typically acquire new customers?",
+      "a": "Indian telecom operators typically acquire new customers through a combination of promotional offers, advertising, and distribution partnerships.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the average revenue per user (ARPU) for Indian telecom operators?",
+      "a": "The average ARPU for Indian telecom operators ranges from ₹150-₹250.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can a new telecom operator differentiate its service in a crowded market?",
+      "a": "A new telecom operator can differentiate its service by offering unique features, such as high-speed data, exclusive content, or innovative pricing plans.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the regulatory hurdles that a new telecom operator might face in India?",
+      "a": "A new telecom operator in India might face regulatory hurdles related to licensing, spectrum allocation, and compliance with TRAI regulations.",
+      "category": "industry"
+    },
+    {
+      "q": "How can a telecom operator calculate its customer lifetime value (CLV)?",
+      "a": "A telecom operator can calculate its CLV by multiplying the average revenue per user (ARPU) by the average customer lifespan.",
+      "category": "math"
+    },
+    {
+      "q": "What is the typical customer churn rate for Indian telecom operators?",
+      "a": "The typical customer churn rate for Indian telecom operators ranges from 2-5%.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can a telecom operator reduce its customer acquisition cost?",
+      "a": "A telecom operator can reduce its customer acquisition cost by optimizing its marketing campaigns, improving its distribution channels, and offering targeted promotions.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for a telecom operator?",
+      "a": "The key KPIs for a telecom operator include ARPU, customer churn rate, customer acquisition cost, and market share.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze market trends and competition to identify gaps in the market",
+    "Develop a unique value proposition to differentiate the service",
+    "Calculate customer acquisition cost and CLV to optimize marketing campaigns",
+    "Consider regulatory hurdles and compliance requirements"
+  ],
+  "sources": [
+    "TRAI reports",
+    "Industry reports from firms like Deloitte and KPMG",
+    "Company filings and annual reports",
+    "Telecom industry associations and research organizations"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to analyze the competitive landscape, identify market trends, and develop a unique value proposition to differentiate the service. The candidate must also consider regulatory hurdles and calculate key metrics such as customer acquisition cost and CLV.",
+  "enriched_at": "2026-05-10T07:44:14.992Z"
+}

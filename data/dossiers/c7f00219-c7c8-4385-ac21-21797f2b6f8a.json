@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian banking industry is highly competitive, with both public and private sector banks operating in the market. The industry is regulated by the Reserve Bank of India (RBI), which sets guidelines for banking operations, including interest rates and lending norms. Typical customer behavior in the Indian banking industry includes a preference for low-cost banking services, with a growing demand for digital banking channels. The industry has seen significant growth in recent years, driven by government initiatives to increase financial inclusion and promote digital payments.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical net interest margin for Indian banks",
+      "value": "2.5-3.5%",
+      "source_hint": "RBI reports"
+    },
+    {
+      "metric": "Average return on assets (ROA) for Indian banks",
+      "value": "0.5-1.5%",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Number of bank branches per 100,000 people in India",
+      "value": "10-15",
+      "source_hint": "World Bank data"
+    },
+    {
+      "metric": "Average customer acquisition cost for Indian banks",
+      "value": "₹500-₹1,000",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Typical loan-to-deposit ratio for Indian banks",
+      "value": "70-90%",
+      "source_hint": "RBI reports"
+    },
+    {
+      "metric": "Average non-performing assets (NPAs) for Indian banks",
+      "value": "5-10%",
+      "source_hint": "RBI reports"
+    },
+    {
+      "metric": "Growth rate of digital payments in India",
+      "value": "20-30% per annum",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for Indian banks",
+      "value": "₹500-₹1,500",
+      "source_hint": "Banking industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the net interest income",
+      "formula": "Net interest income = (Interest income - Interest expense)",
+      "typical_answer_range": "₹100-₹500 crore"
+    },
+    {
+      "step": "Calculating the return on assets (ROA)",
+      "formula": "ROA = (Net profit / Total assets) * 100",
+      "typical_answer_range": "0.5-1.5%"
+    },
+    {
+      "step": "Calculating the customer acquisition cost",
+      "formula": "Customer acquisition cost = (Total marketing spend / Number of new customers acquired)",
+      "typical_answer_range": "₹500-₹1,000"
+    },
+    {
+      "step": "Calculating the loan-to-deposit ratio",
+      "formula": "Loan-to-deposit ratio = (Total loans / Total deposits) * 100",
+      "typical_answer_range": "70-90%"
+    },
+    {
+      "step": "Calculating the non-performing assets (NPAs)",
+      "formula": "NPAs = (Total NPAs / Total loans) * 100",
+      "typical_answer_range": "5-10%"
+    },
+    {
+      "step": "Calculating the revenue per user (ARPU)",
+      "formula": "ARPU = (Total revenue / Number of customers)",
+      "typical_answer_range": "₹500-₹1,500"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of regulatory changes on the banking industry",
+    "Not analyzing the competitive landscape of the Indian banking industry",
+    "Not identifying the root cause of the decline in profitability",
+    "Not developing a comprehensive strategy to increase revenue and reduce costs",
+    "Not considering the impact of digital payments on the banking industry",
+    "Not analyzing the customer behavior and preferences in the Indian banking industry",
+    "Not identifying the opportunities for growth in the retail banking segment"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian banking industry?",
+      "a": "The Indian banking industry is witnessing a significant shift towards digital payments, with a growing demand for online banking services and mobile banking apps. Additionally, there is a growing focus on financial inclusion, with the government launching initiatives to increase access to banking services for the unbanked population.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the public sector bank's profitability compare to its private sector peers?",
+      "a": "The public sector bank's profitability is lower compared to its private sector peers, due to higher operating costs and lower net interest margins. However, the public sector bank has a larger branch network and a stronger presence in rural areas.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key challenges facing the Indian banking industry?",
+      "a": "The Indian banking industry is facing several challenges, including a high level of non-performing assets (NPAs), a decline in credit growth, and increasing competition from fintech companies. Additionally, the industry is facing regulatory challenges, including the implementation of Basel III norms and the introduction of the Insolvency and Bankruptcy Code.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the bank increase its revenue through retail assets?",
+      "a": "The bank can increase its revenue through retail assets by targeting high-growth segments such as personal loans, credit cards, and mortgages. Additionally, the bank can increase its revenue by selling associated products such as insurance and investment products.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key opportunities for growth in the Indian banking industry?",
+      "a": "The Indian banking industry is witnessing significant growth opportunities in the retail banking segment, particularly in the areas of digital payments, personal loans, and credit cards. Additionally, there are opportunities for growth in the rural banking segment, with the government launching initiatives to increase access to banking services for the unbanked population.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the bank reduce its operating costs?",
+      "a": "The bank can reduce its operating costs by implementing cost-saving measures such as reducing branch network, automating processes, and outsourcing non-core activities. Additionally, the bank can reduce its operating costs by increasing its digital channels and reducing its reliance on physical branches.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key risks facing the Indian banking industry?",
+      "a": "The Indian banking industry is facing several risks, including credit risk, operational risk, and regulatory risk. Additionally, the industry is facing risks related to cybersecurity, with the increasing use of digital channels and online banking services.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the bank improve its asset quality?",
+      "a": "The bank can improve its asset quality by implementing a robust credit assessment process, monitoring loan portfolios regularly, and taking prompt action to recover non-performing assets. Additionally, the bank can improve its asset quality by diversifying its loan portfolio and reducing its exposure to high-risk sectors.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key opportunities for growth in the digital payments space?",
+      "a": "The digital payments space is witnessing significant growth opportunities, particularly in the areas of mobile payments, online payments, and contactless payments. Additionally, there are opportunities for growth in the areas of digital wallets, payment banks, and fintech companies.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the bank's revenue streams and identify opportunities for growth",
+    "Assess the bank's cost structure and identify areas for cost reduction",
+    "Evaluate the bank's asset quality and identify opportunities for improvement",
+    "Develop a comprehensive strategy to increase revenue and reduce costs",
+    "Consider the impact of regulatory changes on the banking industry"
+  ],
+  "sources": [
+    "RBI reports",
+    "Banking industry reports",
+    "World Bank data",
+    "Company filings",
+    "Industry research reports"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the bank's profitability and identify the root cause of the decline. Additionally, the candidate needs to develop a comprehensive strategy to increase revenue and reduce costs, while considering the impact of regulatory changes and industry trends.",
+  "enriched_at": "2026-05-10T06:03:17.738Z"
+}

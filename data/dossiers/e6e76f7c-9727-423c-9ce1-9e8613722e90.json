@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is characterized by intense competition, with key players such as Hindustan Unilever, Procter & Gamble, and Nestle. The industry is driven by factors such as changing consumer behavior, increasing demand for convenience and health-oriented products, and a growing e-commerce market. Regulatory bodies such as the Food Safety and Standards Authority of India (FSSAI) play a crucial role in shaping the industry. Typical customer behavior in this industry includes seeking value for money, convenience, and a wide range of product options.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian FMCG industry",
+      "value": "₹4-5 trillion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of FMCG companies in India",
+      "value": "500-700",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Customer retention rate for FMCG companies",
+      "value": "60-80%",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Average customer lifetime value (CLV) for FMCG companies",
+      "value": "₹5,000-10,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Supply chain costs as a percentage of revenue for FMCG companies",
+      "value": "10-15%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Inventory turnover ratio for FMCG companies",
+      "value": "5-7 times",
+      "source_hint": "financial statements"
+    },
+    {
+      "metric": "Average order value for FMCG companies",
+      "value": "₹500-1,000",
+      "source_hint": "market research studies"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the potential savings from implementing a loyalty program",
+      "formula": "Potential savings = (Number of customers x Average order value x Frequency of purchases) x (Retention rate - 1)",
+      "typical_answer_range": "₹50,000-1,00,000"
+    },
+    {
+      "step": "Determining the return on investment (ROI) for a supply chain optimization project",
+      "formula": "ROI = (Cost savings / Investment) x 100",
+      "typical_answer_range": "15-25%"
+    },
+    {
+      "step": "Calculating the customer lifetime value (CLV) for a typical FMCG customer",
+      "formula": "CLV = (Average order value x Purchase frequency x Customer lifespan) - (Acquisition cost + Retention cost)",
+      "typical_answer_range": "₹5,000-10,000"
+    },
+    {
+      "step": "Evaluating the effectiveness of a trade promotion campaign",
+      "formula": "Effectiveness = (Sales lift / Promotion cost) x 100",
+      "typical_answer_range": "10-20%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the importance of supply chain optimization in reducing costs and improving efficiency",
+    "Failing to consider the impact of changing consumer behavior on product demand and sales",
+    "Not accounting for the potential cannibalization of sales from existing products when introducing new products",
+    "Underestimating the role of digital marketing in influencing consumer purchasing decisions",
+    "Ignoring the need for continuous monitoring and evaluation of trade promotion campaigns"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian FMCG industry?",
+      "a": "The Indian FMCG industry is being shaped by trends such as increasing demand for health-oriented products, growing e-commerce market, and changing consumer behavior.",
+      "category": "industry"
+    },
+    {
+      "q": "How do FMCG companies in India typically measure the effectiveness of their trade promotion campaigns?",
+      "a": "FMCG companies in India typically measure the effectiveness of their trade promotion campaigns by tracking sales lift, market share, and return on investment (ROI).",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the common pitfalls to avoid when implementing a loyalty program in the FMCG industry?",
+      "a": "Common pitfalls to avoid when implementing a loyalty program in the FMCG industry include over-reliance on discounts, failing to personalize offers, and not continuously monitoring and evaluating program effectiveness.",
+      "category": "math"
+    },
+    {
+      "q": "How can FMCG companies in India leverage digital marketing to influence consumer purchasing decisions?",
+      "a": "FMCG companies in India can leverage digital marketing by creating engaging content, using social media influencers, and offering personalized promotions and discounts.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for evaluating the success of a supply chain optimization project in the FMCG industry?",
+      "a": "Key performance indicators (KPIs) for evaluating the success of a supply chain optimization project in the FMCG industry include inventory turnover ratio, supply chain costs as a percentage of revenue, and order fulfillment rate.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the 4Ps framework (product, price, promotion, and place) to analyze the FMCG industry",
+    "Use the McKinsey 7S framework to evaluate the effectiveness of a supply chain optimization project",
+    "Apply the customer journey mapping framework to understand consumer behavior and preferences"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Market research studies and surveys",
+    "Industry benchmarks and best practices",
+    "Academic research papers and journals"
+  ],
+  "case_type_notes": "This operations case requires the candidate to analyze the benefits and engagement possibilities for General Trade in the FMCG industry, considering factors such as supply chain optimization, loyalty programs, and trade promotion campaigns. The candidate should be able to evaluate the effectiveness of different strategies and provide recommendations for improvement.",
+  "enriched_at": "2026-05-10T06:49:24.270Z"
+}

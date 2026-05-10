@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian aviation industry is highly competitive, with several players competing for market share. The industry is characterized by high operating costs, stringent regulatory requirements, and increasing demand for sustainable practices. Typical customer behavior includes a preference for low-cost carriers and a growing awareness of environmental concerns. The industry is also subject to various regulations, including those related to emissions and waste management.",
+  "real_world_numbers": [
+    {
+      "metric": "Average fuel efficiency of Indian airlines",
+      "value": "3.5-4.5 km per liter",
+      "source_hint": "DGCA reports"
+    },
+    {
+      "metric": "Carbon emissions per passenger km",
+      "value": "80-120 grams",
+      "source_hint": "ICAO estimates"
+    },
+    {
+      "metric": "Average margin of Indian airlines",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of airlines operating in India",
+      "value": "10-15",
+      "source_hint": "DGCA data"
+    },
+    {
+      "metric": "Average customer LTV for Indian airlines",
+      "value": "Rs. 50,000-1,00,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of Indian aviation industry",
+      "value": "Rs. 1,50,000-2,50,000 crores",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Fuel cost as a percentage of total operating costs",
+      "value": "30-40%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average load factor of Indian airlines",
+      "value": "70-80%",
+      "source_hint": "DGCA reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total carbon emissions of the airline",
+      "formula": "Total emissions = (Fuel consumption x Emission factor) / Load factor",
+      "typical_answer_range": "10,000-50,000 tons"
+    },
+    {
+      "step": "Determine the potential cost savings from fuel efficiency improvements",
+      "formula": "Cost savings = (Fuel consumption x Fuel price x Efficiency improvement) / 100",
+      "typical_answer_range": "Rs. 50-200 crores"
+    },
+    {
+      "step": "Calculate the return on investment (ROI) of implementing green initiatives",
+      "formula": "ROI = (Cost savings / Investment) x 100",
+      "typical_answer_range": "10-30%"
+    },
+    {
+      "step": "Estimate the potential revenue increase from implementing sustainable practices",
+      "formula": "Revenue increase = (Customer willingness to pay premium x Number of customers) / 100",
+      "typical_answer_range": "5-15%"
+    }
+  ],
+  "common_mistakes": [
+    "Not clarifying the definition of 'go green' and its scope",
+    "Not considering the regulatory requirements and industry standards for sustainability",
+    "Not evaluating the cost-benefit analysis of implementing green initiatives",
+    "Not assessing the customer willingness to pay a premium for sustainable practices",
+    "Not considering the potential impact on operations and supply chain"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the current trends in sustainable aviation practices in India?",
+      "a": "The Indian aviation industry is adopting sustainable practices such as using biofuels, reducing water consumption, and implementing energy-efficient systems.",
+      "category": "industry"
+    },
+    {
+      "q": "How do Indian airlines compare to global airlines in terms of sustainability?",
+      "a": "Indian airlines are lagging behind global airlines in terms of sustainability, but there is a growing awareness and adoption of sustainable practices.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential challenges in implementing green initiatives in the Indian aviation industry?",
+      "a": "The potential challenges include high upfront costs, lack of infrastructure, and regulatory hurdles.",
+      "category": "framework"
+    },
+    {
+      "q": "How can the airline measure the effectiveness of its sustainability initiatives?",
+      "a": "The airline can measure the effectiveness of its sustainability initiatives by tracking key performance indicators (KPIs) such as carbon emissions, water consumption, and waste reduction.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential benefits of adopting sustainable practices for the airline's brand reputation?",
+      "a": "The potential benefits include enhanced brand reputation, increased customer loyalty, and improved stakeholder relationships.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Use the value chain framework to identify areas for sustainability improvements",
+    "Consider the 4C structure (Company, competition, context, and cost) to gain more information",
+    "Evaluate the airline's operations and supply chain to identify potential areas for sustainability improvements"
+  ],
+  "sources": [
+    "DGCA reports",
+    "ICAO estimates",
+    "Industry reports",
+    "Company filings",
+    "Statista industry reports"
+  ],
+  "case_type_notes": "This case requires the candidate to think critically about the Indian aviation industry and its unique challenges and opportunities for sustainability. The candidate should be able to analyze the value chain and identify areas for improvement, while also considering the regulatory and competitive landscape.",
+  "enriched_at": "2026-05-10T07:24:45.129Z"
+}

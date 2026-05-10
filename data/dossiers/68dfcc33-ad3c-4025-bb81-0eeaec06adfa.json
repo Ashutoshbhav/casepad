@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The retail industry in India, particularly in urban areas like Delhi, is highly competitive with a mix of local and international brands. The food court segment within malls attracts a significant footfall, driven by a growing middle class with increasing disposable incomes. Regulatory backdrop includes food safety standards and licensing requirements. Typical customer behavior involves a preference for variety and affordability, with an increasing trend towards online ordering and delivery.",
+  "real_world_numbers": [
+    {
+      "metric": "Average annual footfall in a Delhi mall",
+      "value": "10-15 million",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average food court size in a Delhi mall",
+      "value": "5,000-10,000 sq. ft.",
+      "source_hint": "mall developer publications"
+    },
+    {
+      "metric": "Typical margin for a food stall in a mall",
+      "value": "15-25%",
+      "source_hint": "restaurant industry analyses"
+    },
+    {
+      "metric": "Average customer spend per visit in a food court",
+      "value": "Rs. 200-500",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Number of malls in Delhi NCR",
+      "value": "50-70",
+      "source_hint": "retail industry reports"
+    },
+    {
+      "metric": "Growth rate of the food service industry in India",
+      "value": "10-15% annually",
+      "source_hint": "consulting firm reports"
+    },
+    {
+      "metric": "Average rental cost per sq. ft. for a food stall in a Delhi mall",
+      "value": "Rs. 500-1,000",
+      "source_hint": "real estate industry publications"
+    },
+    {
+      "metric": "Staffing cost as a percentage of revenue for a food stall",
+      "value": "20-30%",
+      "source_hint": "hospitality industry benchmarks"
+    },
+    {
+      "metric": "Marketing expenses as a percentage of revenue for a food stall",
+      "value": "5-10%",
+      "source_hint": "marketing industry reports"
+    },
+    {
+      "metric": "Food cost as a percentage of revenue for a food stall",
+      "value": "30-40%",
+      "source_hint": "restaurant industry analyses"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate total weekly footfall",
+      "formula": "Total footfall = (Weekday footfall * 5) + (Weekend footfall * 2)",
+      "typical_answer_range": "20,000-30,000"
+    },
+    {
+      "step": "Calculate average footfall per stall per week",
+      "formula": "Average footfall per stall = Total footfall / Number of stalls",
+      "typical_answer_range": "500-1,000"
+    },
+    {
+      "step": "Calculate total weekly revenue",
+      "formula": "Total weekly revenue = Average order value * Total footfall",
+      "typical_answer_range": "Rs. 1,00,000-2,00,000"
+    },
+    {
+      "step": "Calculate revenue per stall per week",
+      "formula": "Revenue per stall = Total weekly revenue / Number of stalls",
+      "typical_answer_range": "Rs. 3,000-6,000"
+    },
+    {
+      "step": "Calculate monthly revenue",
+      "formula": "Monthly revenue = Total weekly revenue * 4",
+      "typical_answer_range": "Rs. 4,00,000-8,00,000"
+    },
+    {
+      "step": "Calculate annual revenue",
+      "formula": "Annual revenue = Monthly revenue * 12",
+      "typical_answer_range": "Rs. 48,00,000-96,00,000"
+    },
+    {
+      "step": "Calculate profit per stall per week",
+      "formula": "Profit per stall = (Revenue per stall * Margin) - (Staffing cost + Marketing expenses + Food cost)",
+      "typical_answer_range": "Rs. 1,000-3,000"
+    },
+    {
+      "step": "Calculate break-even point",
+      "formula": "Break-even point = Fixed costs / (Revenue per stall - Variable costs)",
+      "typical_answer_range": "2-6 months"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of peak and non-peak hours on footfall and revenue",
+    "Assuming a uniform average order value across all stalls",
+    "Not accounting for operational costs such as staffing, marketing, and food costs",
+    "Overestimating or underestimating the number of stalls or footfall",
+    "Not considering the competitive landscape and market trends",
+    "Not calculating the break-even point or profit per stall",
+    "Not considering the regulatory and licensing requirements for food stalls",
+    "Not researching the local market and customer preferences"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving footfall in a mall food court?",
+      "a": "Factors such as location, variety of options, pricing, and ambiance play a crucial role in driving footfall.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the average order value vary across different types of food stalls?",
+      "a": "The average order value can vary significantly across different types of food stalls, with high-end restaurants typically having a higher average order value than fast-food or street-food stalls.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical operational costs for a food stall in a mall?",
+      "a": "Typical operational costs include staffing, marketing, food costs, and rental costs, which can range from 20-50% of revenue.",
+      "category": "math"
+    },
+    {
+      "q": "How does the food court layout and design impact customer behavior and revenue?",
+      "a": "A well-designed food court layout can increase customer dwell time, encourage exploration, and ultimately drive revenue.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the regulatory requirements for food stalls in a Delhi mall?",
+      "a": "Food stalls in a Delhi mall must comply with food safety standards, obtain necessary licenses, and adhere to local health and safety regulations.",
+      "category": "industry"
+    },
+    {
+      "q": "How can food stalls in a mall effectively use technology to enhance customer experience and drive sales?",
+      "a": "Food stalls can leverage technology such as mobile ordering, digital menus, and loyalty programs to enhance customer experience and drive sales.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for a food stall in a mall?",
+      "a": "Key KPIs include revenue growth, customer satisfaction, footfall, and profit margins.",
+      "category": "math"
+    },
+    {
+      "q": "How can food stalls in a mall create a unique and memorable brand identity?",
+      "a": "Food stalls can create a unique brand identity through effective branding, marketing, and customer service strategies.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the challenges and opportunities for food stalls in a mall in terms of sustainability and social responsibility?",
+      "a": "Food stalls in a mall can face challenges such as reducing food waste, increasing energy efficiency, and promoting sustainable practices, while also opportunities for social responsibility initiatives.",
+      "category": "industry"
+    },
+    {
+      "q": "How can food stalls in a mall effectively manage inventory and supply chain logistics?",
+      "a": "Food stalls can effectively manage inventory and supply chain logistics through strategies such as just-in-time inventory management, supplier partnerships, and technology-enabled tracking.",
+      "category": "math"
+    },
+    {
+      "q": "What are the implications of changing consumer preferences and trends on food stalls in a mall?",
+      "a": "Changing consumer preferences and trends, such as increasing demand for healthy and sustainable food options, can impact food stalls in a mall and require adaptations to menu offerings and marketing strategies.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can food stalls in a mall measure and improve customer satisfaction?",
+      "a": "Food stalls can measure customer satisfaction through feedback mechanisms, surveys, and reviews, and improve it through strategies such as staff training, menu innovation, and ambiance enhancement.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the opportunities and challenges for food stalls in a mall in terms of digital transformation and innovation?",
+      "a": "Food stalls in a mall can leverage digital transformation and innovation to enhance customer experience, improve operational efficiency, and drive revenue growth, while also facing challenges such as cybersecurity and data privacy.",
+      "category": "industry"
+    },
+    {
+      "q": "How can food stalls in a mall create a loyal customer base and encourage repeat business?",
+      "a": "Food stalls can create a loyal customer base through strategies such as loyalty programs, personalized marketing, and exceptional customer service.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key considerations for food stalls in a mall when expanding to new locations or markets?",
+      "a": "Food stalls expanding to new locations or markets must consider factors such as market research, competitive analysis, regulatory compliance, and operational scalability.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Consider the impact of external factors such as seasonality, events, and competitor activity on footfall and revenue",
+    "Analyze the customer journey and pain points to identify opportunities for improvement",
+    "Evaluate the operational efficiency and cost structure of the food stall to identify areas for optimization",
+    "Assess the competitive landscape and market trends to inform pricing and marketing strategies",
+    "Develop a comprehensive marketing strategy that incorporates digital and offline channels"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research studies",
+    "Retail industry publications",
+    "Hospitality industry benchmarks"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to apply a bottom-up approach to estimate the weekly revenue from food stalls in a Delhi mall food court, considering factors such as footfall, average order value, and operational costs. The candidate must demonstrate the ability to break down complex problems into manageable components, apply relevant formulas and calculations, and arrive at a reasonable estimate.",
+  "enriched_at": "2026-05-10T06:23:03.213Z"
+}

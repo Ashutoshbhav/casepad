@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The elevator manufacturing industry in India is highly competitive, with key players such as Otis, Kone, and Schindler. The industry is characterized by high capital expenditure, long product lifecycles, and a strong focus on after-sales service. Regulatory requirements, such as those related to safety and accessibility, also play a crucial role in shaping the industry. Typical customer behavior involves a strong emphasis on reliability, maintenance costs, and energy efficiency. The Indian government's initiatives to boost infrastructure development have led to an increase in demand for elevators, particularly in the commercial and residential sectors.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for elevator manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average cost of an elevator installation",
+      "value": "₹5-10 lakhs",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian elevator industry",
+      "value": "₹10,000-15,000 crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of elevator manufacturers in India",
+      "value": "50-70",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "Customer retention rate for elevator manufacturers",
+      "value": "70-80%",
+      "source_hint": "company surveys"
+    },
+    {
+      "metric": "Average lifespan of an elevator",
+      "value": "20-30 years",
+      "source_hint": "industry experts"
+    },
+    {
+      "metric": "Energy efficiency standards for elevators in India",
+      "value": "30-50% reduction in energy consumption",
+      "source_hint": "government regulations"
+    },
+    {
+      "metric": "Growth rate of the Indian elevator industry",
+      "value": "10-15% per annum",
+      "source_hint": "market research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the market share of the client",
+      "formula": "(Client's revenue / Total market size) * 100",
+      "typical_answer_range": "10-20%"
+    },
+    {
+      "step": "Determine the revenue impact of a 10% decline in market share",
+      "formula": "Revenue * (1 - 0.10)",
+      "typical_answer_range": "₹500-1000 lakhs"
+    },
+    {
+      "step": "Calculate the customer acquisition cost for the client",
+      "formula": "Marketing and sales expenses / Number of new customers acquired",
+      "typical_answer_range": "₹50,000-1,00,000"
+    },
+    {
+      "step": "Evaluate the return on investment for a potential acquisition",
+      "formula": "(Acquisition price / Expected annual synergies) * 100",
+      "typical_answer_range": "10-20%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the importance of after-sales service in the elevator industry",
+    "Failing to consider the regulatory requirements and their impact on the business",
+    "Underestimating the competition and the potential for new entrants",
+    "Not accounting for the long product lifecycles and their impact on revenue streams",
+    "Ignoring the role of brand reputation and sales network in driving customer acquisition",
+    "Not evaluating the potential for partnerships or collaborations to drive growth",
+    "Failing to consider the energy efficiency standards and their impact on product development"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian elevator industry?",
+      "a": "The Indian elevator industry is being shaped by trends such as increasing demand for energy-efficient elevators, growing focus on after-sales service, and rising competition from new entrants.",
+      "category": "industry"
+    },
+    {
+      "q": "How do elevator manufacturers in India typically acquire new customers?",
+      "a": "Elevator manufacturers in India typically acquire new customers through a combination of marketing efforts, sales outreach, and partnerships with builders and developers.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical costs associated with installing an elevator in a commercial building?",
+      "a": "The typical costs associated with installing an elevator in a commercial building include the cost of the elevator itself, installation costs, and ongoing maintenance expenses.",
+      "category": "math"
+    },
+    {
+      "q": "How do regulatory requirements impact the elevator industry in India?",
+      "a": "Regulatory requirements, such as those related to safety and accessibility, play a crucial role in shaping the elevator industry in India, and manufacturers must ensure compliance with these regulations to operate in the market.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with acquiring another company in the elevator industry?",
+      "a": "The potential risks and challenges associated with acquiring another company in the elevator industry include integrating the acquired company's operations, managing cultural differences, and addressing potential synergies and redundancies.",
+      "category": "framework"
+    },
+    {
+      "q": "How can the client leverage its brand and sales network to drive growth?",
+      "a": "The client can leverage its brand and sales network to drive growth by investing in marketing efforts, expanding its sales outreach, and developing strategic partnerships with key customers and suppliers.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the elevator industry in India?",
+      "a": "The key performance indicators (KPIs) for the elevator industry in India include metrics such as market share, revenue growth, customer acquisition costs, and customer retention rates.",
+      "category": "math"
+    },
+    {
+      "q": "How can the client evaluate the effectiveness of its competitive response strategy?",
+      "a": "The client can evaluate the effectiveness of its competitive response strategy by tracking key metrics such as market share, revenue growth, and customer acquisition costs, and making adjustments to the strategy as needed.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the client's strengths and weaknesses in the market, as well as the opportunities and threats posed by the new competitor",
+    "Evaluate the potential for partnerships or collaborations to drive growth and improve competitiveness",
+    "Assess the client's brand reputation and sales network, and identify opportunities to leverage these assets to drive customer acquisition and retention"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Industry associations and trade publications",
+    "Government regulations and policy documents",
+    "Market research reports and studies"
+  ],
+  "case_type_notes": "This case requires the candidate to think strategically about the client's competitive response, considering factors such as market trends, customer behavior, and regulatory requirements. The candidate must also be able to evaluate the client's strengths and weaknesses, and identify opportunities to drive growth and improve competitiveness.",
+  "enriched_at": "2026-05-10T06:25:29.377Z"
+}

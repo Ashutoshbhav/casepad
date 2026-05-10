@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The textile industry is characterized by low margins, high competition, and fluctuating raw material prices. In India, the textile sector is a significant contributor to the country's GDP and employment. The industry is subject to various regulations, including those related to labor, environment, and trade. Typical customer behavior in the textile industry involves a high degree of price sensitivity and a preference for quality products.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for textile companies",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average return on capital for textile companies",
+      "value": "10-15%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian textile industry",
+      "value": "INR 4-5 trillion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of textile companies in India",
+      "value": "10,000-15,000",
+      "source_hint": "Ministry of Textiles data"
+    },
+    {
+      "metric": "Average debt-to-equity ratio for textile companies",
+      "value": "0.5-1.0",
+      "source_hint": "RBI data"
+    },
+    {
+      "metric": "Typical customer retention rate for textile companies",
+      "value": "60-80%",
+      "source_hint": "industry surveys"
+    },
+    {
+      "metric": "Average employee productivity in the textile sector",
+      "value": "INR 1.5-2.5 lakh per annum",
+      "source_hint": "NSSO data"
+    },
+    {
+      "metric": "Growth rate of the Indian textile industry",
+      "value": "8-10% per annum",
+      "source_hint": "industry forecasts"
+    },
+    {
+      "metric": "Export share of the Indian textile industry",
+      "value": "20-25%",
+      "source_hint": "DGFT data"
+    },
+    {
+      "metric": "Average capacity utilization for textile companies",
+      "value": "70-90%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating return on capital",
+      "formula": "ROC = (EBIT / Total Capital) * 100",
+      "typical_answer_range": "10-20%"
+    },
+    {
+      "step": "Analyzing margin decline",
+      "formula": "Margin = (Revenue - Cost) / Revenue",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Estimating working capital requirements",
+      "formula": "WC = (Accounts Receivable + Inventory - Accounts Payable)",
+      "typical_answer_range": "INR 50-100 crore"
+    },
+    {
+      "step": "Calculating debt service coverage ratio",
+      "formula": "DSCR = (EBIT / Total Debt Service)",
+      "typical_answer_range": "1.5-3.0"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of raw material price fluctuations on margins",
+    "Overlooking the effect of working capital management on return on capital",
+    "Failing to account for regulatory changes affecting the textile industry",
+    "Not analyzing the competitive landscape and market share",
+    "Ignoring the role of capacity utilization in determining profitability",
+    "Not evaluating the company's product mix and pricing strategy",
+    "Failing to consider the impact of employee productivity on costs",
+    "Overlooking the importance of customer retention and acquisition costs"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of return on capital in the textile industry?",
+      "a": "Raw material prices, labor costs, capacity utilization, and working capital management are key drivers of return on capital in the textile industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the textile industry's competitive structure impact profitability?",
+      "a": "The textile industry's competitive structure, characterized by many small and medium-sized players, leads to low margins and high competition, making it challenging for companies to maintain profitability.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the typical debt-to-equity ratio for textile companies in India?",
+      "a": "The typical debt-to-equity ratio for textile companies in India is between 0.5 and 1.0, indicating a moderate level of indebtedness.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the Indian government's textile policy impact the industry?",
+      "a": "The Indian government's textile policy aims to promote the growth and development of the textile industry, with initiatives such as tax incentives, subsidies, and trade agreements.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key challenges faced by textile companies in India?",
+      "a": "Textile companies in India face challenges such as fluctuating raw material prices, labor shortages, and increasing competition from foreign players.",
+      "category": "industry"
+    },
+    {
+      "q": "How can textile companies improve their return on capital?",
+      "a": "Textile companies can improve their return on capital by optimizing their production processes, managing their working capital effectively, and investing in research and development to improve product quality and reduce costs.",
+      "category": "framework"
+    },
+    {
+      "q": "What is the role of technology in the textile industry?",
+      "a": "Technology plays a crucial role in the textile industry, with advancements in areas such as automation, digital printing, and sustainable manufacturing enabling companies to improve efficiency, reduce costs, and enhance product quality.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the textile industry's supply chain impact profitability?",
+      "a": "The textile industry's supply chain, characterized by long lead times and high inventory levels, can significantly impact profitability, with companies that manage their supply chains effectively able to reduce costs and improve margins.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key performance indicators for textile companies?",
+      "a": "Key performance indicators for textile companies include return on capital, margin, debt service coverage ratio, and capacity utilization.",
+      "category": "math"
+    },
+    {
+      "q": "How can textile companies mitigate the risks associated with raw material price fluctuations?",
+      "a": "Textile companies can mitigate the risks associated with raw material price fluctuations by diversifying their raw material sources, hedging against price volatility, and developing long-term relationships with suppliers.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the company's value chain to identify areas for cost reduction and efficiency improvement",
+    "Evaluate the company's competitive position and market share",
+    "Assess the company's working capital management and identify opportunities for improvement",
+    "Consider the impact of regulatory changes on the company's operations and profitability",
+    "Develop a framework to analyze the company's product mix and pricing strategy"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Ministry of Textiles data",
+    "RBI data",
+    "NSSO data",
+    "DGFT data"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the textile company's decline in return on capital and identify the underlying causes, which may involve a combination of industry, competitive, and company-specific factors.",
+  "enriched_at": "2026-05-10T06:04:01.935Z"
+}

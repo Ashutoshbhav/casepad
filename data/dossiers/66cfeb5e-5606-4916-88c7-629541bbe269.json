@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry, which includes airline food, is characterized by low margins and high volume sales. In the Indian context, the FMCG market is highly competitive, with key players such as ITC and Hindustan Unilever. The regulatory backdrop is governed by the Food Safety and Standards Authority of India (FSSAI), which ensures compliance with food safety standards. Typical customer behavior in this industry is driven by convenience, affordability, and quality.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for FMCG companies",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Market size of the Indian FMCG industry",
+      "value": "INR 4-5 lakh crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of major FMCG players in India",
+      "value": "10-15",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Customer retention rate for FMCG companies",
+      "value": "70-80%",
+      "source_hint": "Market research studies"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for airline food",
+      "value": "INR 500-700",
+      "source_hint": "Airline industry reports"
+    },
+    {
+      "metric": "Variable cost as a percentage of revenue for FMCG companies",
+      "value": "60-70%",
+      "source_hint": "Industry benchmarks"
+    },
+    {
+      "metric": "Payback period for investments in new equipment",
+      "value": "2-5 years",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Return on investment (ROI) for FMCG companies",
+      "value": "15-20%",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the reduction in variable costs",
+      "formula": "Reduction in variable costs = 10% of current variable costs",
+      "typical_answer_range": "INR 50-100 lakhs"
+    },
+    {
+      "step": "Calculate the payback period",
+      "formula": "Payback period = Cost of new equipment / Reduction in variable costs",
+      "typical_answer_range": "2-5 years"
+    },
+    {
+      "step": "Calculate the ROI",
+      "formula": "ROI = (Reduction in variable costs / Cost of new equipment) * 100",
+      "typical_answer_range": "15-20%"
+    },
+    {
+      "step": "Calculate the net present value (NPV)",
+      "formula": "NPV = Reduction in variable costs - Cost of new equipment",
+      "typical_answer_range": "INR 50-100 lakhs"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the time value of money while calculating the payback period",
+    "Not accounting for potential risks and uncertainties in the investment",
+    "Overestimating the reduction in variable costs",
+    "Not considering alternative investment options",
+    "Not evaluating the impact of the investment on the company's overall profitability"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the FMCG industry in India?",
+      "a": "The FMCG industry in India is shaped by trends such as increasing demand for healthy and organic products, growing e-commerce penetration, and rising competition from new entrants.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the regulatory environment impact the airline food industry?",
+      "a": "The regulatory environment, governed by the FSSAI, ensures compliance with food safety standards, which can impact the airline food industry's operations and profitability.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key drivers of customer behavior in the FMCG industry?",
+      "a": "Customer behavior in the FMCG industry is driven by convenience, affordability, and quality, with a growing emphasis on health and wellness.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the investment in new equipment impact the company's competitive position?",
+      "a": "The investment in new equipment can improve the company's competitive position by reducing variable costs and improving efficiency, allowing it to better compete with rivals.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and uncertainties associated with the investment?",
+      "a": "The potential risks and uncertainties associated with the investment include technological obsolescence, changes in market demand, and regulatory changes.",
+      "category": "math"
+    },
+    {
+      "q": "How does the investment in new equipment impact the company's profitability?",
+      "a": "The investment in new equipment can improve the company's profitability by reducing variable costs and improving efficiency, which can lead to increased margins and profitability.",
+      "category": "math"
+    },
+    {
+      "q": "What are the alternative investment options available to the company?",
+      "a": "The alternative investment options available to the company include investing in new products, expanding into new markets, or improving operational efficiency.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the company's cost structure impact its profitability?",
+      "a": "The company's cost structure, including variable and fixed costs, impacts its profitability, with a focus on reducing variable costs to improve margins.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for evaluating the success of the investment?",
+      "a": "The KPIs for evaluating the success of the investment include reduction in variable costs, improvement in efficiency, and increase in profitability.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the investment in new equipment impact the company's sustainability and environmental footprint?",
+      "a": "The investment in new equipment can impact the company's sustainability and environmental footprint by reducing energy consumption and waste, leading to a more sustainable operation.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Evaluate the investment using a cost-benefit analysis framework",
+    "Consider the impact of the investment on the company's competitive position and profitability",
+    "Assess the potential risks and uncertainties associated with the investment",
+    "Evaluate alternative investment options and their potential impact on the company's profitability"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings",
+    "Market research studies",
+    "Airline industry reports",
+    "FSSAI regulations"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to evaluate the investment in new equipment using a cost-benefit analysis framework, considering the impact on the company's profitability, competitive position, and sustainability, while also assessing potential risks and uncertainties.",
+  "enriched_at": "2026-05-08T12:07:49.143Z"
+}

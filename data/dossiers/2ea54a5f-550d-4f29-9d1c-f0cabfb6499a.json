@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The golf industry in India is a niche market with a growing number of golf courses and players. The sport is predominantly played by the affluent segment of the population, with a significant presence in urban areas. The regulatory backdrop is relatively relaxed, with golf courses often being part of larger real estate developments. Typical customer behavior includes membership-based access to golf courses, with players often belonging to multiple clubs. The industry is characterized by a mix of public and private golf courses, with the latter being more prevalent.",
+  "real_world_numbers": [
+    {
+      "metric": "Number of golf courses in India",
+      "value": "200-250",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average number of golf players per course",
+      "value": "500-1000",
+      "source_hint": "golf course associations"
+    },
+    {
+      "metric": "Typical margin for golf equipment sales",
+      "value": "15-25%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian golf industry",
+      "value": "₹500-₹750 crore",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of golf balls sold in India per year",
+      "value": "1-2 million",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average price of a golf ball in India",
+      "value": "₹50-₹100",
+      "source_hint": "online marketplaces"
+    },
+    {
+      "metric": "Number of urban areas with golf courses in India",
+      "value": "20-30",
+      "source_hint": "geographic information systems"
+    },
+    {
+      "metric": "Average number of golf balls lost per player per game",
+      "value": "2-5",
+      "source_hint": "golf course staff interviews"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the total number of golf players in India",
+      "formula": "Number of golf courses * Average number of golf players per course",
+      "typical_answer_range": "100,000-250,000"
+    },
+    {
+      "step": "Estimating the average number of golf balls in play per player",
+      "formula": "Number of hits per game * Number of golf balls lost per player per game",
+      "typical_answer_range": "5-15"
+    },
+    {
+      "step": "Calculating the total number of golf balls in the air in an average second",
+      "formula": "Total number of golf players * Average number of golf balls in play per player * Frequency of play",
+      "typical_answer_range": "100-500"
+    },
+    {
+      "step": "Adjusting for the income threshold and urban areas",
+      "formula": "Total number of golf players * Proportion of players earning ₹15 lakh and above * Proportion of players in urban areas",
+      "typical_answer_range": "50-200"
+    }
+  ],
+  "common_mistakes": [
+    "Not accounting for the income threshold and urban areas",
+    "Overestimating the number of golf courses and players",
+    "Underestimating the average number of golf balls lost per player per game",
+    "Not considering the frequency of play and its impact on the number of golf balls in the air",
+    "Failing to adjust for the proportion of players earning ₹15 lakh and above and living in urban areas",
+    "Using point estimates instead of ranges for key variables",
+    "Not considering the regulatory backdrop and its impact on the golf industry"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the average cost of maintaining a golf course in India?",
+      "a": "The average cost of maintaining a golf course in India can range from ₹50 lakh to ₹1 crore per year, depending on the size and amenities of the course.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian golf industry compare to the global market?",
+      "a": "The Indian golf industry is relatively small compared to the global market, with a market size of around ₹500-₹750 crore compared to the global market size of around $10-15 billion.",
+      "category": "industry"
+    },
+    {
+      "q": "What is the typical customer behavior of golf players in India?",
+      "a": "Golf players in India often belong to multiple golf clubs and have a high disposable income, with a significant proportion earning ₹15 lakh and above per year.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the frequency of play impact the number of golf balls in the air?",
+      "a": "The frequency of play has a significant impact on the number of golf balls in the air, with more frequent play resulting in more golf balls being hit and potentially lost.",
+      "category": "math"
+    },
+    {
+      "q": "What are some common pitfalls to avoid when estimating the number of golf balls in the air?",
+      "a": "Common pitfalls to avoid include not accounting for the income threshold and urban areas, overestimating the number of golf courses and players, and underestimating the average number of golf balls lost per player per game.",
+      "category": "framework"
+    },
+    {
+      "q": "How can we adjust for the proportion of players earning ₹15 lakh and above and living in urban areas?",
+      "a": "We can adjust for the proportion of players earning ₹15 lakh and above and living in urban areas by using data from industry reports and market research studies to estimate the proportion of players that meet these criteria.",
+      "category": "math"
+    },
+    {
+      "q": "What is the regulatory backdrop for the golf industry in India?",
+      "a": "The regulatory backdrop for the golf industry in India is relatively relaxed, with golf courses often being part of larger real estate developments and subject to local regulations and zoning laws.",
+      "category": "industry"
+    },
+    {
+      "q": "How can we estimate the average number of golf balls lost per player per game?",
+      "a": "We can estimate the average number of golf balls lost per player per game by using data from golf course staff interviews and industry reports, which suggest that the average number of golf balls lost per player per game can range from 2-5.",
+      "category": "math"
+    },
+    {
+      "q": "What is the market size of the Indian golf industry?",
+      "a": "The market size of the Indian golf industry is around ₹500-₹750 crore, with a growth rate of around 10-15% per year.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the number of golf balls in the air impact the environment?",
+      "a": "The number of golf balls in the air can have a significant impact on the environment, with lost golf balls contributing to pollution and waste in waterways and natural areas.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the income threshold and urban areas when estimating the number of golf players",
+    "Use data from industry reports and market research studies to estimate the proportion of players earning ₹15 lakh and above and living in urban areas",
+    "Account for the frequency of play and its impact on the number of golf balls in the air",
+    "Adjust for the average number of golf balls lost per player per game",
+    "Consider the regulatory backdrop and its impact on the golf industry"
+  ],
+  "sources": [
+    "Industry reports from the Indian Golf Union and the Golf Course Association of India",
+    "Market research studies from firms such as KPMG and Deloitte",
+    "Company filings from golf equipment manufacturers and golf course operators",
+    "Geographic information systems data from the Indian government",
+    "Golf course staff interviews and surveys"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to use a combination of industry knowledge, mathematical modeling, and critical thinking to arrive at a reasonable estimate of the number of golf balls in the air in an average second in India. The case is challenging due to the lack of publicly available data on golf players and courses in India, requiring the candidate to make assumptions and adjustments based on industry trends and benchmarks.",
+  "enriched_at": "2026-05-10T09:15:23.495Z"
+}

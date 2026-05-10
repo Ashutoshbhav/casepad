@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The packaging industry, specifically the sandwich bag segment, is characterized by moderate competition and relatively low margins. Key players focus on optimizing production costs, investing in research and development for innovative products, and maintaining strong relationships with distributors and retailers. Regulatory requirements, such as food safety standards, also play a crucial role. Typical customer behavior involves purchasing sandwich bags based on convenience, price, and brand loyalty.",
+  "real_world_numbers": [
+    {
+      "metric": "Average margin for packaging companies",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global market size for sandwich bags",
+      "value": "USD 1.2-1.5 billion",
+      "source_hint": "market research firms"
+    },
+    {
+      "metric": "Number of major players in the sandwich bag market",
+      "value": "10-15",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Customer lifetime value for a typical sandwich bag brand",
+      "value": "INR 500-1000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average production capacity utilization in the packaging industry",
+      "value": "70-85%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Typical cost of a new machine for producing sandwich bags",
+      "value": "INR 50-100 lakhs",
+      "source_hint": "equipment suppliers"
+    },
+    {
+      "metric": "Average annual demand growth rate for sandwich bags in India",
+      "value": "5-8%",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "New product development success rate in the packaging industry",
+      "value": "20-30%",
+      "source_hint": "industry studies"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the annual profit per bag needed to justify the new machine purchase",
+      "formula": "Annual profit per bag = (New machine cost / Expected annual production volume) + Desired margin per bag",
+      "typical_answer_range": "INR 0.50-2.00"
+    },
+    {
+      "step": "Determine the required demand increase to break even on the new machine investment",
+      "formula": "Required demand increase = (New machine cost / (Current price per bag - Current cost per bag)) / Current annual production volume",
+      "typical_answer_range": "10-25%"
+    },
+    {
+      "step": "Calculate the cannibalization rate of the new 2-in-1 bag product on existing sandwich bag sales",
+      "formula": "Cannibalization rate = (Expected sales of new product / Expected sales of existing product) * 100",
+      "typical_answer_range": "10-30%"
+    },
+    {
+      "step": "Evaluate the sensitivity of the investment decision to changes in production costs or demand growth rates",
+      "formula": "Sensitivity analysis = (Change in annual profit per bag / Change in production cost or demand growth rate) * 100",
+      "typical_answer_range": "5-15%"
+    }
+  ],
+  "common_mistakes": [
+    "Overestimating demand growth rates or market share gains",
+    "Underestimating production costs or cannibalization rates",
+    "Failing to consider regulatory requirements or industry trends",
+    "Not evaluating the sensitivity of the investment decision to key variables",
+    "Ignoring the potential for renting out excess capacity or introducing new products",
+    "Miscalculating the required return on investment for the new machine",
+    "Not considering the impact of the new product on existing sales channels or customer relationships"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the packaging industry in India?",
+      "a": "Sustainability, e-commerce growth, and increasing demand for convenience foods are driving the industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How do companies in the packaging industry typically evaluate new product development opportunities?",
+      "a": "They consider factors like market size, competition, production costs, and potential cannibalization of existing products.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical production costs for sandwich bags in India?",
+      "a": "Production costs can range from INR 0.50 to 1.50 per bag, depending on the material, size, and production volume.",
+      "category": "math"
+    },
+    {
+      "q": "How can companies mitigate the risks associated with introducing new products, like the 2-in-1 bag?",
+      "a": "They can conduct market research, test products with a small group of customers, and monitor sales data to adjust production and marketing strategies.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the regulatory requirements for food packaging in India?",
+      "a": "Companies must comply with food safety standards, such as those set by the Food Safety and Standards Authority of India (FSSAI).",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the client evaluate the potential for renting out excess capacity on the new machine?",
+      "a": "They can research the market demand for sandwich bag production, assess the competition, and consider partnering with other companies to utilize excess capacity.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for evaluating the success of the new 2-in-1 bag product?",
+      "a": "KPIs can include sales revenue, market share, customer satisfaction, and production costs.",
+      "category": "math"
+    },
+    {
+      "q": "How can the client balance the trade-offs between investing in new products, like the 2-in-1 bag, and optimizing existing production processes?",
+      "a": "They can prioritize investments based on market potential, production costs, and strategic alignment with the company's goals.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Consider the client's overall business strategy and how the new machine and 2-in-1 bag product fit into it",
+    "Evaluate the potential for synergies between the new product and existing production processes",
+    "Assess the competitive landscape and how the new product can differentiate the client from competitors"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research firms, such as Euromonitor or Nielsen",
+    "Industry associations, like the Indian Flexible Packaging Association"
+  ],
+  "case_type_notes": "This operations case requires the candidate to analyze production capacity, demand, and profit per bag to determine whether a new machine is a good investment. The introduction of the new 2-in-1 bag product adds complexity, requiring the candidate to consider cannibalization and market potential.",
+  "enriched_at": "2026-05-10T07:43:46.694Z"
+}

@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry in India is highly competitive, with a large number of players operating in the beverage segment. The industry is characterized by low margins, high volumes, and intense competition. Consumers in India are price-sensitive and have a preference for affordable beverages. The regulatory backdrop is governed by the Food Safety and Standards Authority of India (FSSAI), which sets standards for food and beverage products. The industry is also subject to taxes and duties, which can impact profitability.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for FMCG companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian beverage industry",
+      "value": "Rs 1.5-2.0 lakh crore",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of players in the Indian beverage market",
+      "value": "50-70",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer LTV for beverage companies in India",
+      "value": "Rs 500-1000",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Average cost of raw materials for beverage manufacturers in India",
+      "value": "30-40% of revenue",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average packaging cost for beverage manufacturers in India",
+      "value": "10-15% of revenue",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average transportation cost for beverage manufacturers in India",
+      "value": "5-10% of revenue",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Growth rate of the Indian beverage industry",
+      "value": "10-15% per annum",
+      "source_hint": "Statista industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total cost of raw materials",
+      "formula": "Total Cost of Raw Materials = (Cost per unit of raw material) x (Total units of raw material consumed)",
+      "typical_answer_range": "Rs 100-200 crore"
+    },
+    {
+      "step": "Calculate the total cost of packaging",
+      "formula": "Total Cost of Packaging = (Cost per unit of packaging) x (Total units of packaging consumed)",
+      "typical_answer_range": "Rs 20-50 crore"
+    },
+    {
+      "step": "Calculate the total cost of transportation",
+      "formula": "Total Cost of Transportation = (Cost per unit of transportation) x (Total units of transportation consumed)",
+      "typical_answer_range": "Rs 10-20 crore"
+    },
+    {
+      "step": "Calculate the total revenue",
+      "formula": "Total Revenue = (Selling price per unit) x (Total units sold)",
+      "typical_answer_range": "Rs 500-1000 crore"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of taxes and duties on profitability",
+    "Not analyzing the value chain to identify cost-saving opportunities",
+    "Not considering the impact of competition on pricing strategy",
+    "Not analyzing the customer behavior and preferences",
+    "Not considering the impact of regulatory changes on the industry",
+    "Not using real-world benchmarks and industry reports to support analysis",
+    "Not calculating the customer LTV and retention rates"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in the Indian beverage industry?",
+      "a": "The Indian beverage industry is characterized by increasing demand for health and wellness products, growing demand for e-commerce and online sales, and increasing competition from new entrants.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the regulatory backdrop impact the beverage industry in India?",
+      "a": "The regulatory backdrop in India is governed by the FSSAI, which sets standards for food and beverage products. The industry is also subject to taxes and duties, which can impact profitability.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical margins for FMCG companies in India?",
+      "a": "The typical margins for FMCG companies in India are around 8-12%.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the company reduce its packaging costs?",
+      "a": "The company can reduce its packaging costs by optimizing its packaging design, using cheaper materials, and negotiating with suppliers.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key cost components for a beverage manufacturer in India?",
+      "a": "The key cost components for a beverage manufacturer in India are raw materials, packaging, transportation, and labor.",
+      "category": "math"
+    },
+    {
+      "q": "How can the company improve its customer retention rates?",
+      "a": "The company can improve its customer retention rates by offering loyalty programs, providing excellent customer service, and offering a wide range of products.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key competitors in the Indian beverage market?",
+      "a": "The key competitors in the Indian beverage market include PepsiCo, Coca-Cola, and Parle Agro.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can the company optimize its supply chain to reduce costs?",
+      "a": "The company can optimize its supply chain by streamlining its logistics, reducing inventory levels, and negotiating with suppliers.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key risks facing the Indian beverage industry?",
+      "a": "The key risks facing the Indian beverage industry include regulatory changes, increasing competition, and changing consumer preferences.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company use data analytics to improve its operations?",
+      "a": "The company can use data analytics to improve its operations by analyzing sales data, customer data, and supply chain data to make informed decisions.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the value chain to identify cost-saving opportunities",
+    "Use the 4Ps framework to analyze the company's marketing strategy",
+    "Use the SWOT framework to analyze the company's strengths, weaknesses, opportunities, and threats",
+    "Use the Porter's Five Forces framework to analyze the competitive structure of the industry"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Industry associations and trade organizations"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the company's value chain and identify cost-saving opportunities, while also considering the competitive structure of the industry and the regulatory backdrop.",
+  "enriched_at": "2026-05-10T06:02:09.859Z"
+}

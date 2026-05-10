@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The yoga industry in India is highly competitive, with numerous studios and instructors offering a range of classes and styles. Key economics include high demand for weekday evening and weekend morning classes, with average revenue per user (ARPU) ranging from ₹800 to ₹1,200 per month. Regulatory backdrop is relatively minimal, with some studios obtaining certifications from organizations like the Yoga Alliance. Typical customer behavior includes a high propensity to attend classes regularly, with an average customer lifetime value (CLTV) of ₹10,000 to ₹15,000.",
+  "real_world_numbers": [
+    {
+      "metric": "Average yoga studio size",
+      "value": "1,000-2,000 sqft",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical yoga mat dimensions",
+      "value": "6-7ft long, 2-3ft wide",
+      "source_hint": "manufacturer specifications"
+    },
+    {
+      "metric": "Minimum distance between mats",
+      "value": "1-2ft",
+      "source_hint": "safety guidelines"
+    },
+    {
+      "metric": "Average class size",
+      "value": "10-20 students",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Yoga studio market size in India",
+      "value": "₹5,000-10,000 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of yoga studios in India",
+      "value": "5,000-10,000",
+      "source_hint": "directory listings"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for yoga studios",
+      "value": "₹800-1,200 per month",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Customer lifetime value (CLTV) for yoga studios",
+      "value": "₹10,000-15,000",
+      "source_hint": "industry benchmarks"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total area of the studio",
+      "formula": "length × width",
+      "typical_answer_range": "200-300 sqft"
+    },
+    {
+      "step": "Calculate the area of a single yoga mat",
+      "formula": "length × width",
+      "typical_answer_range": "10-15 sqft"
+    },
+    {
+      "step": "Calculate the maximum number of mats that can fit in the studio",
+      "formula": "total area ÷ (mat area + minimum distance between mats)",
+      "typical_answer_range": "10-15 mats"
+    },
+    {
+      "step": "Calculate the wasted space in the studio",
+      "formula": "total area - (number of mats × mat area)",
+      "typical_answer_range": "10-20 sqft"
+    }
+  ],
+  "common_mistakes": [
+    "Not accounting for the minimum distance between mats and walls",
+    "Not considering the instructor's space requirements",
+    "Overestimating the number of mats that can fit in the studio",
+    "Not calculating the wasted space in the studio",
+    "Not researching industry benchmarks for yoga studio sizes and class sizes"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What is the average size of a yoga studio in India?",
+      "a": "1,000-2,000 sqft",
+      "category": "industry"
+    },
+    {
+      "q": "How many yoga studios are there in India?",
+      "a": "5,000-10,000",
+      "category": "industry"
+    },
+    {
+      "q": "What is the typical revenue model for yoga studios?",
+      "a": "Membership-based or class-based",
+      "category": "competitive"
+    },
+    {
+      "q": "How do yoga studios typically market themselves?",
+      "a": "Social media, word-of-mouth, and local advertising",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key factors that affect the demand for yoga classes?",
+      "a": "Time of day, day of the week, and instructor reputation",
+      "category": "industry"
+    },
+    {
+      "q": "How can yoga studios optimize their class schedules to maximize revenue?",
+      "a": "Offering classes during peak hours, using data analytics to optimize scheduling",
+      "category": "math"
+    },
+    {
+      "q": "What are the common pitfalls that yoga studios face when trying to increase class size?",
+      "a": "Overcrowding, inadequate instructor training, and poor customer service",
+      "category": "framework"
+    },
+    {
+      "q": "How can yoga studios use data analytics to improve their operations?",
+      "a": "Tracking attendance, revenue, and customer feedback to inform business decisions",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the spatial constraints of the studio and the minimum distance between mats",
+    "Think about the instructor's role in the class and how it affects the number of mats that can fit",
+    "Research industry benchmarks for yoga studio sizes and class sizes to inform your calculations"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Yoga Alliance certifications",
+    "Indian yoga studio directory listings"
+  ],
+  "case_type_notes": "This operations case requires the candidate to think spatially and consider the constraints of the studio, while also researching industry benchmarks and best practices to inform their calculations.",
+  "enriched_at": "2026-05-10T07:08:49.370Z"
+}

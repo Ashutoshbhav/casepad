@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian fishing industry is a significant sector, with the country being one of the largest producers of fish in the world. The industry is characterized by a large number of small-scale fishermen and a few large-scale commercial operators. The competitive structure of the industry is largely fragmented, with many players operating in different regions. Key economics of the industry include the cost of fuel, labor, and equipment, as well as fluctuations in fish prices. The regulatory backdrop includes laws and regulations related to fishing licenses, quotas, and environmental protection.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for fishing companies in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average annual revenue for a small-scale fishing company in India",
+      "value": "INR 50-100 lakhs",
+      "source_hint": "MSME reports"
+    },
+    {
+      "metric": "Number of fishermen in India",
+      "value": "1.5-2 million",
+      "source_hint": "Ministry of Fisheries data"
+    },
+    {
+      "metric": "Indian fish market size",
+      "value": "INR 1.2-1.5 trillion",
+      "source_hint": "market research studies"
+    },
+    {
+      "metric": "Average cost of a fishing boat in India",
+      "value": "INR 5-10 lakhs",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Fuel cost as a percentage of total cost for fishing companies",
+      "value": "20-30%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average annual catch per fisherman in India",
+      "value": "5-10 tons",
+      "source_hint": "Ministry of Fisheries data"
+    },
+    {
+      "metric": "Growth rate of the Indian fish market",
+      "value": "5-7% per annum",
+      "source_hint": "market research studies"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the revenue decline",
+      "formula": "Revenue decline = (Previous year's revenue - Current year's revenue) / Previous year's revenue",
+      "typical_answer_range": "10-20%"
+    },
+    {
+      "step": "Calculate the cost decline",
+      "formula": "Cost decline = (Previous year's cost - Current year's cost) / Previous year's cost",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Calculate the profit margin",
+      "formula": "Profit margin = (Revenue - Cost) / Revenue",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Calculate the break-even point",
+      "formula": "Break-even point = Fixed costs / (Selling price - Variable costs)",
+      "typical_answer_range": "INR 50-100 lakhs"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of fuel prices on fishing costs",
+    "Not analyzing the product mix and its impact on revenue",
+    "Not looking into the supply chain and potential bottlenecks",
+    "Not considering the regulatory environment and its impact on the industry",
+    "Not calculating the customer acquisition cost and its impact on profitability",
+    "Not analyzing the competition and market trends",
+    "Not considering the potential for vertical integration"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of the Indian fishing industry?",
+      "a": "The key drivers of the Indian fishing industry include the cost of fuel, labor, and equipment, as well as fluctuations in fish prices.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the fishing industry in Goa compare to the rest of India?",
+      "a": "The fishing industry in Goa is characterized by a large number of small-scale fishermen and a few large-scale commercial operators, similar to the rest of India.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical margins for fishing companies in India?",
+      "a": "The typical margins for fishing companies in India are around 8-12%.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the cost of fuel impact the profitability of fishing companies?",
+      "a": "The cost of fuel is a significant component of the total cost of fishing companies, and fluctuations in fuel prices can have a significant impact on profitability.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and challenges facing the Indian fishing industry?",
+      "a": "The Indian fishing industry faces several risks and challenges, including fluctuations in fish prices, changes in government regulations, and environmental concerns.",
+      "category": "industry"
+    },
+    {
+      "q": "How can fishing companies in India improve their profitability?",
+      "a": "Fishing companies in India can improve their profitability by reducing costs, increasing efficiency, and diversifying their product offerings.",
+      "category": "framework"
+    },
+    {
+      "q": "What is the impact of climate change on the Indian fishing industry?",
+      "a": "Climate change can have a significant impact on the Indian fishing industry, including changes in fish populations and distribution, and increased frequency of extreme weather events.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the Indian government support the fishing industry?",
+      "a": "The Indian government provides support to the fishing industry through various schemes and initiatives, including subsidies for fuel and equipment, and funding for research and development.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the opportunities for export-oriented fishing companies in India?",
+      "a": "India has a significant opportunity to export fish and fish products to other countries, particularly in the Middle East and Southeast Asia.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can fishing companies in India improve their sustainability and environmental impact?",
+      "a": "Fishing companies in India can improve their sustainability and environmental impact by adopting sustainable fishing practices, reducing waste, and implementing environmentally-friendly technologies.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the value chain of the fishing company to identify areas for cost reduction and efficiency improvement",
+    "Consider the impact of external factors such as fuel prices and government regulations on the company's profitability",
+    "Look into the product mix and pricing strategy of the company to identify opportunities for revenue growth",
+    "Evaluate the company's supply chain and logistics to identify potential bottlenecks and areas for improvement",
+    "Consider the potential for vertical integration and backward integration to improve profitability"
+  ],
+  "sources": [
+    "Ministry of Fisheries data",
+    "Industry reports and research studies",
+    "Company filings and financial statements",
+    "Market research studies and surveys",
+    "Government websites and publications"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the profitability of a fishing company and identify the key drivers of the decline in profits, while also considering the industry context and external factors that may be impacting the company's performance.",
+  "enriched_at": "2026-05-10T05:36:27.357Z"
+}

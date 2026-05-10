@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian airline industry is highly competitive, with key players such as Indigo, SpiceJet, and Air India. The industry is characterized by low margins, high fuel costs, and fluctuating demand. Regulatory bodies such as the Directorate General of Civil Aviation (DGCA) oversee the industry, ensuring safety and compliance. Typical customer behavior involves price sensitivity and a preference for on-time performance. The industry is also subject to seasonal fluctuations, with peak demand during holidays and festivals.",
+  "real_world_numbers": [
+    {
+      "metric": "Average load factor for Indian airlines",
+      "value": "70-80%",
+      "source_hint": "DGCA reports"
+    },
+    {
+      "metric": "Fuel cost as a percentage of total costs",
+      "value": "30-40%",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Typical margin for Indian airlines",
+      "value": "5-10%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Average fleet size for Indian airlines",
+      "value": "50-100 aircraft",
+      "source_hint": "Company websites"
+    },
+    {
+      "metric": "Customer acquisition cost",
+      "value": "₹500-₹1000",
+      "source_hint": "Marketing reports"
+    },
+    {
+      "metric": "Customer lifetime value",
+      "value": "₹10,000-₹20,000",
+      "source_hint": "Customer retention studies"
+    },
+    {
+      "metric": "Average ticket price",
+      "value": "₹2,000-₹5,000",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Number of airlines operating in India",
+      "value": "10-15",
+      "source_hint": "DGCA reports"
+    },
+    {
+      "metric": "Annual passenger growth rate",
+      "value": "10-15%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Airline industry market size",
+      "value": "₹50,000-₹100,000 crores",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating revenue",
+      "formula": "Revenue = Average ticket price * Number of passengers",
+      "typical_answer_range": "₹5,000-₹20,000 crores"
+    },
+    {
+      "step": "Calculating fuel cost",
+      "formula": "Fuel cost = Fuel price * Fuel consumption",
+      "typical_answer_range": "₹1,000-₹5,000 crores"
+    },
+    {
+      "step": "Calculating load factor",
+      "formula": "Load factor = (Number of passengers / Available seats) * 100",
+      "typical_answer_range": "60-90%"
+    },
+    {
+      "step": "Calculating customer acquisition cost",
+      "formula": "Customer acquisition cost = Marketing expenses / Number of new customers",
+      "typical_answer_range": "₹500-₹2,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of fuel price fluctuations on profitability",
+    "Overlooking the importance of fleet management and aircraft utilization",
+    "Failing to account for seasonal fluctuations in demand",
+    "Not analyzing the competitive landscape and market share",
+    "Ignoring the role of regulatory bodies in shaping the industry",
+    "Not considering the impact of customer retention on profitability",
+    "Failing to calculate the customer lifetime value"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors affecting the profitability of Indian airlines?",
+      "a": "Fuel costs, fleet management, load factor, and competition are key factors affecting profitability.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian airline industry compare to the global industry in terms of profitability?",
+      "a": "The Indian airline industry has lower margins compared to the global industry due to high fuel costs and intense competition.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the implications of the DGCA's regulations on the Indian airline industry?",
+      "a": "The DGCA's regulations aim to ensure safety and compliance, but can also increase costs and reduce profitability for airlines.",
+      "category": "industry"
+    },
+    {
+      "q": "How can SpiceJet improve its fleet management to increase profitability?",
+      "a": "SpiceJet can improve its fleet management by standardizing its fleet, optimizing aircraft utilization, and renegotiating leasing agreements.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and opportunities for SpiceJet in the Indian airline industry?",
+      "a": "Potential risks include intense competition, fuel price fluctuations, and regulatory changes, while opportunities include growing demand, increasing load factors, and improving customer retention.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can SpiceJet use data analytics to improve its operations and increase profitability?",
+      "a": "SpiceJet can use data analytics to optimize routes, schedules, and pricing, as well as to improve customer retention and acquisition.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the Indian airline industry?",
+      "a": "Key KPIs include load factor, passenger yield, revenue per available seat kilometer (RASK), and cost per available seat kilometer (CASK).",
+      "category": "math"
+    },
+    {
+      "q": "How can SpiceJet balance its short-term and long-term goals to achieve sustainable profitability?",
+      "a": "SpiceJet can balance its short-term and long-term goals by prioritizing cost reduction, improving operational efficiency, and investing in customer retention and acquisition strategies.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential strategies for SpiceJet to improve its customer retention and acquisition?",
+      "a": "Potential strategies include loyalty programs, personalized marketing, and improving customer experience through digital channels.",
+      "category": "framework"
+    },
+    {
+      "q": "How can SpiceJet use its brand reputation to increase customer loyalty and retention?",
+      "a": "SpiceJet can use its brand reputation to increase customer loyalty and retention by emphasizing its safety record, on-time performance, and customer service.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the revenue and cost structure of SpiceJet",
+    "Identify areas for cost reduction and operational efficiency improvement",
+    "Develop strategies for improving customer retention and acquisition",
+    "Consider the impact of regulatory changes and industry trends on SpiceJet's operations"
+  ],
+  "sources": [
+    "DGCA reports",
+    "Company filings",
+    "Industry reports",
+    "Marketing reports",
+    "Customer retention studies"
+  ],
+  "case_type_notes": "This case requires a deep understanding of the Indian airline industry, including its competitive landscape, regulatory environment, and key performance indicators. The candidate must be able to analyze the revenue and cost structure of SpiceJet and develop strategies for improving profitability.",
+  "enriched_at": "2026-05-10T06:03:21.861Z"
+}

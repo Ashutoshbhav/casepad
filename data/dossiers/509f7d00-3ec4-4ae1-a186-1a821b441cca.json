@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The market entry industry is highly competitive, with numerous players vying for market share. Key economics include understanding the market size, growth rate, and customer acquisition costs. The regulatory backdrop varies by industry, but companies must comply with local laws and regulations. Typical customer behavior includes seeking high-quality products at competitive prices.",
+  "real_world_numbers": [
+    {
+      "metric": "typical market entry costs",
+      "value": "5-15% of total revenue",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "average market size for new entrants",
+      "value": "10-50 million USD",
+      "source_hint": "market research firms"
+    },
+    {
+      "metric": "customer acquisition cost",
+      "value": "10-30% of customer lifetime value",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "market growth rate",
+      "value": "5-15% per annum",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "operational feasibility assessment time",
+      "value": "3-6 months",
+      "source_hint": "consulting firms"
+    },
+    {
+      "metric": "regulatory compliance costs",
+      "value": "2-5% of total revenue",
+      "source_hint": "government reports"
+    },
+    {
+      "metric": "technological platform development costs",
+      "value": "10-25% of total revenue",
+      "source_hint": "IT consulting firms"
+    },
+    {
+      "metric": "customer retention rate",
+      "value": "70-90%",
+      "source_hint": "market research firms"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "calculate market size",
+      "formula": "market size = number of customers * average revenue per user",
+      "typical_answer_range": "10-100 million USD"
+    },
+    {
+      "step": "calculate customer acquisition cost",
+      "formula": "customer acquisition cost = total marketing spend / number of new customers",
+      "typical_answer_range": "100-1000 USD"
+    },
+    {
+      "step": "calculate customer lifetime value",
+      "formula": "customer lifetime value = average revenue per user * customer retention rate * average customer lifespan",
+      "typical_answer_range": "1000-10000 USD"
+    },
+    {
+      "step": "calculate break-even point",
+      "formula": "break-even point = total fixed costs / (average revenue per user - average variable cost per user)",
+      "typical_answer_range": "6-24 months"
+    }
+  ],
+  "common_mistakes": [
+    "ignoring regulatory barriers",
+    "underestimating customer acquisition costs",
+    "overestimating market size",
+    "failing to assess operational feasibility",
+    "not considering technological platform development costs",
+    "ignoring customer retention rates",
+    "not analyzing the value chain"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors to consider when assessing operational feasibility?",
+      "a": "Regulatory barriers, technological platform, customer acquisition, and supply chain logistics are key factors to consider.",
+      "category": "operational"
+    },
+    {
+      "q": "How do companies typically acquire customers in a new market?",
+      "a": "Companies typically acquire customers through a combination of marketing, advertising, and sales efforts, including digital marketing, social media, and influencer partnerships.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the most common market entry strategies?",
+      "a": "The most common market entry strategies include exporting, joint ventures, partnerships, and greenfield investments.",
+      "category": "framework"
+    },
+    {
+      "q": "How do companies measure the success of their market entry strategy?",
+      "a": "Companies measure the success of their market entry strategy through key performance indicators (KPIs) such as market share, revenue growth, customer acquisition costs, and customer retention rates.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key risks associated with market entry?",
+      "a": "The key risks associated with market entry include regulatory risks, market risks, operational risks, and financial risks.",
+      "category": "industry"
+    },
+    {
+      "q": "How do companies mitigate these risks?",
+      "a": "Companies mitigate these risks through careful planning, market research, regulatory compliance, and risk management strategies.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the role of technology in market entry?",
+      "a": "Technology plays a crucial role in market entry by enabling companies to reach new customers, improve operational efficiency, and reduce costs.",
+      "category": "competitive"
+    },
+    {
+      "q": "How do companies balance the need for speed with the need for careful planning in market entry?",
+      "a": "Companies balance the need for speed with the need for careful planning by prioritizing key activities, leveraging agile methodologies, and continuously monitoring and adapting to changing market conditions.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key cultural considerations when entering a new market?",
+      "a": "The key cultural considerations when entering a new market include understanding local customs, norms, and values, as well as adapting products and services to meet local needs and preferences.",
+      "category": "industry"
+    },
+    {
+      "q": "How do companies ensure that their market entry strategy is aligned with their overall business strategy?",
+      "a": "Companies ensure that their market entry strategy is aligned with their overall business strategy by clearly defining their goals, objectives, and key performance indicators (KPIs), and by continuously monitoring and adjusting their strategy to ensure alignment.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the value chain to identify potential problems/risks",
+    "Assess operational feasibility through a comprehensive analysis of regulatory barriers, technological platform, customer acquisition, and supply chain logistics",
+    "Evaluate market size and growth rate to determine the attractiveness of the market",
+    "Consider the competitive landscape and potential market entry strategies",
+    "Develop a comprehensive market entry plan that includes key performance indicators (KPIs) and a risk management strategy"
+  ],
+  "sources": [
+    "industry reports from firms such as McKinsey and BCG",
+    "market research firms such as Euromonitor and Nielsen",
+    "company filings and annual reports",
+    "government reports and regulatory agencies",
+    "academic research and case studies"
+  ],
+  "case_type_notes": "This market entry case is challenging because it requires the analysis of multiple factors, including market size, growth rate, operational feasibility, and competitive landscape, to determine the best market entry strategy.",
+  "enriched_at": "2026-05-10T06:06:33.744Z"
+}

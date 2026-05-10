@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian e-commerce industry is highly competitive, with key players like Flipkart, Amazon, and Reliance JioMart. The industry is characterized by low margins, high customer acquisition costs, and a regulatory backdrop that emphasizes data protection and consumer rights. Typical customer behavior in Indian e-commerce involves a high preference for cash-on-delivery, free returns, and competitive pricing. The retail industry in India is also witnessing a shift towards online shopping, with the e-commerce market expected to grow to $150 billion by 2025.",
+  "real_world_numbers": [
+    {
+      "metric": "Average order value in Indian e-commerce",
+      "value": "₹1,500-₹2,500",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "E-commerce market size in India",
+      "value": "$50-70 billion",
+      "source_hint": "Statista"
+    },
+    {
+      "metric": "Number of e-commerce companies in India",
+      "value": "5,000-7,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer acquisition cost in Indian e-commerce",
+      "value": "₹500-₹1,000",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average customer lifetime value in Indian e-commerce",
+      "value": "₹5,000-₹10,000",
+      "source_hint": "company reports"
+    },
+    {
+      "metric": "Typical margin in e-commerce logistics",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market share of Flipkart in Indian e-commerce",
+      "value": "30-40%",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Average warehousing expense as a percentage of revenue",
+      "value": "5-8%",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the potential cost savings from backend integration",
+      "formula": "Cost savings = (Current logistics expenses + Current warehousing expenses) x (1 - (1 / (1 + Economies of scale)))",
+      "typical_answer_range": "10-20% of current logistics and warehousing expenses"
+    },
+    {
+      "step": "Estimate the potential revenue increase from frontend integration",
+      "formula": "Revenue increase = (Current revenue x (1 + (Customer response / 100)))",
+      "typical_answer_range": "5-15% of current revenue"
+    },
+    {
+      "step": "Calculate the potential return on investment (ROI) from the integration",
+      "formula": "ROI = (Cost savings + Revenue increase) / (Investment in integration)",
+      "typical_answer_range": "15-30% per annum"
+    },
+    {
+      "step": "Determine the break-even point for the integration investment",
+      "formula": "Break-even point = (Investment in integration) / (Cost savings + Revenue increase)",
+      "typical_answer_range": "6-18 months"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the potential cannibalization of sales between Flipkart, Myntra, and Jabong",
+    "Overestimating the potential economies of scale from backend integration",
+    "Underestimating the complexity of integrating the frontend operations of the three companies",
+    "Not considering the potential impact on customer experience and loyalty",
+    "Not evaluating the potential risks and challenges associated with the integration"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key challenges in integrating the logistics and warehousing operations of Flipkart, Myntra, and Jabong?",
+      "a": "The key challenges include standardizing processes, managing different warehouse management systems, and ensuring seamless communication between the three companies.",
+      "category": "industry"
+    },
+    {
+      "q": "How can we measure the success of the frontend integration pilot study?",
+      "a": "The success of the pilot study can be measured by tracking key metrics such as customer response, revenue increase, and customer retention.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks associated with the integration, and how can we mitigate them?",
+      "a": "The potential risks include cannibalization of sales, loss of customer loyalty, and integration complexities. These risks can be mitigated by conducting thorough market research, developing a robust integration plan, and ensuring effective communication with customers and stakeholders.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the Indian e-commerce industry regulatory backdrop impact the integration?",
+      "a": "The regulatory backdrop emphasizes data protection and consumer rights, which requires the integrated entity to ensure compliance with relevant laws and regulations, such as the Information Technology Act and the Consumer Protection Act.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the potential synergies between Flipkart, Myntra, and Jabong, and how can we leverage them?",
+      "a": "The potential synergies include shared logistics and warehousing, combined marketing efforts, and cross-selling opportunities. These synergies can be leveraged by developing a robust integration plan, standardizing processes, and ensuring effective communication between the three companies.",
+      "category": "competitive"
+    }
+  ],
+  "framework_hints": [
+    "Evaluate the potential economies of scale from backend integration, including logistics and warehousing expenses",
+    "Assess the potential revenue increase from frontend integration, including customer response and loyalty",
+    "Consider the potential risks and challenges associated with the integration, including cannibalization of sales and loss of customer loyalty"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Market research reports from firms like Euromonitor and Nielsen"
+  ],
+  "case_type_notes": "This case requires the candidate to evaluate the opportunity of integrating three e-commerce companies, which involves complex analysis of backend and frontend integration, potential synergies, and risks. The candidate needs to demonstrate a deep understanding of the Indian e-commerce industry, including its competitive structure, key economics, and regulatory backdrop.",
+  "enriched_at": "2026-05-10T06:50:58.328Z"
+}

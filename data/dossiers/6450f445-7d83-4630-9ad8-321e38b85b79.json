@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian beer manufacturing industry is highly competitive, with major players like United Breweries and Anheuser-Busch InBev operating in the market. The industry is subject to various regulations, including excise duties and taxes. Consumers in India tend to prefer strong beers, and the market is dominated by a few large players. The industry's growth is influenced by factors like changing consumer preferences, increasing health consciousness, and government regulations.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for beer manufacturers in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average cost of raw materials for beer manufacturing",
+      "value": "30-40% of total cost",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Labor costs as a percentage of total cost",
+      "value": "15-20%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Overhead costs as a percentage of total cost",
+      "value": "10-15%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian beer industry",
+      "value": "INR 30,000-40,000 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of beer manufacturing companies in India",
+      "value": "50-60",
+      "source_hint": "industry directories"
+    },
+    {
+      "metric": "Average revenue per user for beer manufacturers",
+      "value": "INR 500-700",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer retention rate for beer manufacturers",
+      "value": "60-70%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the total cost of production",
+      "formula": "Total Cost = Raw Materials + Labor + Overhead",
+      "typical_answer_range": "INR 100-150 per unit"
+    },
+    {
+      "step": "Calculating the margin percentage",
+      "formula": "Margin % = (Revenue - Total Cost) / Revenue",
+      "typical_answer_range": "8-12%"
+    },
+    {
+      "step": "Calculating the break-even point",
+      "formula": "Break-Even Point = Fixed Costs / (Selling Price - Variable Costs)",
+      "typical_answer_range": "INR 50-70 million"
+    },
+    {
+      "step": "Calculating the return on investment",
+      "formula": "ROI = (Gain from Investment - Cost of Investment) / Cost of Investment",
+      "typical_answer_range": "15-20%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of excise duties and taxes on the cost structure",
+    "Overlooking the differences in cost structures between small and large manufacturers",
+    "Failing to account for the effect of changing consumer preferences on the industry",
+    "Not analyzing the cost components separately",
+    "Not comparing with international benchmarks",
+    "Not identifying areas for cost reduction",
+    "Not considering the impact of government regulations on the industry"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the growth of the Indian beer industry?",
+      "a": "Changing consumer preferences, increasing health consciousness, and government regulations are key factors driving the growth of the Indian beer industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the cost structure of Indian beer manufacturers compare to international benchmarks?",
+      "a": "The cost structure of Indian beer manufacturers is higher compared to international benchmarks, mainly due to higher raw material and labor costs.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical margins for beer manufacturers in other countries?",
+      "a": "Typical margins for beer manufacturers in other countries range from 10-15%, with some countries having higher margins due to lower costs and higher prices.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the Indian government's taxation policy affect the beer industry?",
+      "a": "The Indian government's taxation policy, including excise duties and taxes, has a significant impact on the beer industry, affecting the cost structure and profitability of manufacturers.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key cost components that contribute to the high cost structure of Indian beer manufacturers?",
+      "a": "Raw materials, labor, and overhead costs are the key cost components that contribute to the high cost structure of Indian beer manufacturers.",
+      "category": "math"
+    },
+    {
+      "q": "How can Indian beer manufacturers reduce their costs and improve profitability?",
+      "a": "Indian beer manufacturers can reduce their costs and improve profitability by optimizing their supply chain, reducing waste, and improving operational efficiency.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the trends in the Indian beer market, and how are they expected to evolve in the future?",
+      "a": "The Indian beer market is expected to grow due to increasing demand for premium and craft beers, with a shift towards healthier and more sustainable options.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the competitive landscape of the Indian beer industry affect the cost structure of manufacturers?",
+      "a": "The competitive landscape of the Indian beer industry, with a few large players dominating the market, affects the cost structure of manufacturers, as they need to invest in marketing and advertising to maintain their market share.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the implications of the 'Make in India' initiative for the Indian beer industry?",
+      "a": "The 'Make in India' initiative is expected to have a positive impact on the Indian beer industry, with increased investment in manufacturing and a focus on quality and sustainability.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can Indian beer manufacturers balance their cost structure with the need to invest in marketing and advertising?",
+      "a": "Indian beer manufacturers can balance their cost structure with the need to invest in marketing and advertising by optimizing their costs, improving operational efficiency, and investing in digital marketing and social media.",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the cost components separately to identify areas for cost reduction",
+    "Compare the cost structure with international benchmarks to identify opportunities for improvement",
+    "Consider the impact of government regulations and taxation policies on the industry",
+    "Evaluate the competitive landscape and its effect on the cost structure of manufacturers",
+    "Assess the trends in the Indian beer market and their implications for manufacturers"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research reports",
+    "Industry directories",
+    "Government publications"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the cost structure of the beer manufacturing company, identify areas for cost reduction, and compare with international benchmarks, all while considering the complexities of the Indian beer industry and the impact of government regulations.",
+  "enriched_at": "2026-05-10T06:00:48.669Z"
+}

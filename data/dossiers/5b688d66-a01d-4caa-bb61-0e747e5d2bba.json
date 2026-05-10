@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The European airline industry is characterized by intense competition, with low margins and high operating costs. The Indian market, on the other hand, is experiencing rapid growth, driven by increasing demand for air travel and government initiatives to improve infrastructure. The Indian aviation market is expected to become the third-largest in the world by 2025, with a projected growth rate of 10-12% per annum. Key players in the Indian market include IndiGo, SpiceJet, and Air India. The regulatory backdrop is governed by the Directorate General of Civil Aviation (DGCA) and the Ministry of Civil Aviation.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for European airlines",
+      "value": "2-5%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Indian aviation market size",
+      "value": " ₹400-500 billion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of passengers in Indian aviation market",
+      "value": "300-350 million",
+      "source_hint": "Airports Authority of India"
+    },
+    {
+      "metric": "Growth rate of Indian aviation market",
+      "value": "10-12% per annum",
+      "source_hint": "ICRA research reports"
+    },
+    {
+      "metric": "Market share of IndiGo in Indian aviation market",
+      "value": "45-50%",
+      "source_hint": "CAPA industry reports"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for Indian airlines",
+      "value": "₹4,000-₹5,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer acquisition cost for Indian airlines",
+      "value": "₹1,500-₹2,500",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for Indian airlines",
+      "value": "₹10,000-₹15,000",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate market size",
+      "formula": "Number of passengers x Average revenue per user (ARPU)",
+      "typical_answer_range": "₹400-500 billion"
+    },
+    {
+      "step": "Determine growth rate",
+      "formula": "(Current year passengers - Previous year passengers) / Previous year passengers",
+      "typical_answer_range": "10-12% per annum"
+    },
+    {
+      "step": "Analyze market share",
+      "formula": "Company's passengers / Total market passengers",
+      "typical_answer_range": "45-50%"
+    },
+    {
+      "step": "Calculate customer acquisition cost",
+      "formula": "Total marketing spend / Number of new customers acquired",
+      "typical_answer_range": "₹1,500-₹2,500"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the regulatory backdrop and its impact on market entry",
+    "Overestimating the market size and growth rate",
+    "Underestimating the competition from existing players",
+    "Not analyzing the customer behavior and preferences in the Indian market",
+    "Not considering the operational costs and infrastructure requirements for market entry",
+    "Not evaluating the potential risks and challenges associated with market entry",
+    "Not developing a comprehensive market entry strategy"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends shaping the Indian aviation market?",
+      "a": "The Indian aviation market is experiencing rapid growth, driven by increasing demand for air travel, government initiatives to improve infrastructure, and the rise of low-cost carriers.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the European airline industry differ from the Indian airline industry?",
+      "a": "The European airline industry is characterized by intense competition, low margins, and high operating costs, whereas the Indian airline industry is experiencing rapid growth, driven by increasing demand and government initiatives.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the major challenges faced by European airlines in the Indian market?",
+      "a": "The major challenges faced by European airlines in the Indian market include intense competition, regulatory hurdles, and infrastructure constraints.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can the client achieve a sustainable growth of 1-2% on their overall revenue by entering the Indian market?",
+      "a": "The client can achieve a sustainable growth of 1-2% on their overall revenue by entering the Indian market by developing a comprehensive market entry strategy, analyzing the customer behavior and preferences, and evaluating the potential risks and challenges associated with market entry.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the Indian aviation market?",
+      "a": "The key performance indicators (KPIs) for the Indian aviation market include passenger growth, revenue growth, market share, and customer satisfaction.",
+      "category": "math"
+    },
+    {
+      "q": "How can the client differentiate themselves from existing players in the Indian market?",
+      "a": "The client can differentiate themselves from existing players in the Indian market by offering unique services, developing a strong brand identity, and providing exceptional customer experience.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with market entry in the Indian aviation market?",
+      "a": "The potential risks and challenges associated with market entry in the Indian aviation market include regulatory hurdles, infrastructure constraints, intense competition, and cultural differences.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can the client mitigate the risks associated with market entry in the Indian aviation market?",
+      "a": "The client can mitigate the risks associated with market entry in the Indian aviation market by developing a comprehensive market entry strategy, evaluating the potential risks and challenges, and establishing partnerships with local players.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Develop a comprehensive market entry strategy",
+    "Analyze the customer behavior and preferences in the Indian market",
+    "Evaluate the potential risks and challenges associated with market entry",
+    "Establish partnerships with local players to mitigate risks"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Airports Authority of India",
+    "ICRA research reports",
+    "CAPA industry reports",
+    "Company filings"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to analyze the Indian aviation market, evaluate the potential risks and challenges, and develop a comprehensive market entry strategy for the European airline client. The candidate should demonstrate an understanding of the industry context, regulatory backdrop, and customer behavior in the Indian market.",
+  "enriched_at": "2026-05-10T06:15:51.788Z"
+}

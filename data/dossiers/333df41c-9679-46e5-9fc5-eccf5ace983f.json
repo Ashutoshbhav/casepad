@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian electric vehicle (EV) market is rapidly growing, driven by government initiatives and declining battery costs. The market is characterized by intense competition among domestic and international players, with key players such as Tata Motors and Mahindra & Mahindra. The government has set ambitious targets for EV adoption, with a focus on public transportation and fleet vehicles. Typical customer behavior in the Indian market is highly price-sensitive, with a strong emphasis on total cost of ownership.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for electric bus manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Indian electric bus market size",
+      "value": "INR 1,500-2,500 crores",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of electric bus manufacturers in India",
+      "value": "10-15",
+      "source_hint": "company directories"
+    },
+    {
+      "metric": "Average cost of an electric bus in India",
+      "value": "INR 80-120 lakhs",
+      "source_hint": "industry publications"
+    },
+    {
+      "metric": "Government subsidy for electric buses",
+      "value": "INR 10-20 lakhs per bus",
+      "source_hint": "government notifications"
+    },
+    {
+      "metric": "Typical range of an electric bus",
+      "value": "150-250 km",
+      "source_hint": "manufacturer specifications"
+    },
+    {
+      "metric": "Battery cost as a percentage of total bus cost",
+      "value": "40-50%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Projected growth rate of Indian electric bus market",
+      "value": "20-30% per annum",
+      "source_hint": "market research reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the total cost of ownership of an electric bus",
+      "formula": "TCO = Purchase Price + Operating Costs - Subsidies",
+      "typical_answer_range": "INR 50-80 lakhs"
+    },
+    {
+      "step": "Determining the break-even point for an electric bus manufacturer",
+      "formula": "Break-even Point = Fixed Costs / (Selling Price - Variable Costs)",
+      "typical_answer_range": "500-1,000 units"
+    },
+    {
+      "step": "Evaluating the return on investment for an electric bus fleet",
+      "formula": "ROI = (Revenue - Costs) / Investment",
+      "typical_answer_range": "10-20% per annum"
+    },
+    {
+      "step": "Calculating the payback period for an electric bus",
+      "formula": "Payback Period = Investment / Annual Savings",
+      "typical_answer_range": "3-5 years"
+    }
+  ],
+  "common_mistakes": [
+    "Underestimating the competition in the Indian electric bus market",
+    "Overlooking the importance of government subsidies and policies",
+    "Failing to consider the total cost of ownership for electric buses",
+    "Not accounting for the high upfront costs of electric buses",
+    "Ignoring the potential for battery technology advancements to impact the market",
+    "Assuming that the Indian market will follow the same trends as developed markets",
+    "Not considering the impact of local content requirements on manufacturing costs"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the growth of the Indian electric bus market?",
+      "a": "Government initiatives, declining battery costs, and increasing environmental awareness are driving the growth of the Indian electric bus market.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian electric bus market differ from other markets?",
+      "a": "The Indian market is characterized by intense competition, high price sensitivity, and a strong emphasis on total cost of ownership.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with entering the Indian electric bus market?",
+      "a": "Risks include intense competition, regulatory uncertainty, and high upfront costs, while challenges include adapting to local market conditions and meeting government requirements.",
+      "category": "framework"
+    },
+    {
+      "q": "How can an international manufacturer customize its electric buses for the Indian market?",
+      "a": "Customization can include adapting to local regulatory requirements, modifying the bus design to suit Indian road conditions, and offering competitive pricing and financing options.",
+      "category": "real-world"
+    },
+    {
+      "q": "What role do government subsidies play in the Indian electric bus market?",
+      "a": "Government subsidies can significantly impact the viability of electric bus projects, and manufacturers should carefully consider these subsidies when evaluating market entry opportunities.",
+      "category": "industry"
+    },
+    {
+      "q": "How can an electric bus manufacturer differentiate itself in the Indian market?",
+      "a": "Differentiation can be achieved through innovative products, competitive pricing, and strong after-sales support, as well as by leveraging partnerships with local players and government agencies.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key performance indicators for an electric bus manufacturer in the Indian market?",
+      "a": "Key performance indicators include sales growth, market share, customer satisfaction, and return on investment, as well as metrics such as range, efficiency, and reliability.",
+      "category": "math"
+    },
+    {
+      "q": "How can an electric bus manufacturer mitigate the risks associated with battery technology advancements?",
+      "a": "Mitigation strategies include investing in research and development, partnering with battery technology leaders, and developing flexible manufacturing processes that can adapt to changing technology trends.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential opportunities for electric bus manufacturers to partner with other players in the Indian market?",
+      "a": "Opportunities include partnering with local manufacturers, technology providers, and government agencies to develop new products, services, and business models.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can an electric bus manufacturer ensure that its products meet Indian regulatory requirements?",
+      "a": "Manufacturers should engage with local regulatory bodies, conduct thorough testing and validation, and adapt their products to meet specific Indian standards and requirements.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Consider the 4 Ps of marketing (product, price, promotion, and place) in the context of the Indian electric bus market",
+    "Analyze the competitive landscape and identify potential partners or acquisition targets",
+    "Evaluate the regulatory environment and potential risks associated with non-compliance",
+    "Develop a comprehensive market entry strategy that addresses local market conditions, customer needs, and competitive dynamics"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Government notifications and policy documents",
+    "Market research reports from firms such as CRISIL and ICRA",
+    "Industry publications such as Autocar Professional and EV Reporter"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to think critically about the Indian electric bus market, considering factors such as government initiatives, competition, and customer behavior. The candidate should demonstrate an understanding of the market dynamics and develop a comprehensive strategy for entering the market.",
+  "enriched_at": "2026-05-10T06:06:42.714Z"
+}

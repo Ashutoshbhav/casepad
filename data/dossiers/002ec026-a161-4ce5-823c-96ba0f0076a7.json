@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The energy industry, particularly the refining sector, is characterized by high capital expenditures, stringent regulatory requirements, and fluctuating global demand. In India, the refining industry is dominated by state-owned enterprises, with a few private players. The sector is subject to various regulations, including environmental and safety standards. Typical customer behavior involves long-term contracts with refineries, with prices linked to global benchmarks. The Indian government has set targets to increase refining capacity to meet growing domestic demand and reduce dependence on imports.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for refineries in India",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average capital expenditure for a refining capacity expansion project",
+      "value": "INR 50,000 - 100,000 crores",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Global refining capacity",
+      "value": "100-120 million barrels per day",
+      "source_hint": "IEA reports"
+    },
+    {
+      "metric": "Indian refining capacity",
+      "value": "250-300 million tonnes per annum",
+      "source_hint": "Ministry of Petroleum and Natural Gas reports"
+    },
+    {
+      "metric": "Average time taken for a refining capacity expansion project",
+      "value": "4-6 years",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Number of refineries in India",
+      "value": "23-25",
+      "source_hint": "Ministry of Petroleum and Natural Gas reports"
+    },
+    {
+      "metric": "Typical debt-to-equity ratio for refining companies in India",
+      "value": "1:1 to 2:1",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average return on investment for refining capacity expansion projects",
+      "value": "12-15%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Indian government's target for refining capacity by 2025",
+      "value": "400-450 million tonnes per annum",
+      "source_hint": "Ministry of Petroleum and Natural Gas reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the required capital expenditure for the expansion project",
+      "formula": "Capital expenditure = (Expansion capacity * Cost per unit of capacity)",
+      "typical_answer_range": "INR 50,000 - 100,000 crores"
+    },
+    {
+      "step": "Determine the potential reduction in project completion time",
+      "formula": "Time reduction = (Original completion time - New completion time)",
+      "typical_answer_range": "6-12 months"
+    },
+    {
+      "step": "Estimate the additional costs required for crashing the processes",
+      "formula": "Additional costs = (Cost of crashing * Number of processes crashed)",
+      "typical_answer_range": "INR 5,000 - 10,000 crores"
+    },
+    {
+      "step": "Calculate the return on investment for the expansion project",
+      "formula": "Return on investment = (Net present value / Capital expenditure)",
+      "typical_answer_range": "12-15%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the regulatory approvals and licenses required for the expansion project",
+    "Underestimating the capital expenditure required for the project",
+    "Not identifying the critical path activities in the project timeline",
+    "Not considering the risks associated with crashing the processes",
+    "Not evaluating the potential impact on the refinery's operations and maintenance costs"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the demand for refining capacity expansion in India?",
+      "a": "The key factors driving the demand for refining capacity expansion in India include growing domestic demand, reducing dependence on imports, and meeting the Indian government's targets for refining capacity.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the refining industry in India compare to the global industry in terms of margins and profitability?",
+      "a": "The refining industry in India has lower margins compared to the global industry due to factors such as higher operating costs, stringent regulations, and competition from private players.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical risks associated with refining capacity expansion projects?",
+      "a": "The typical risks associated with refining capacity expansion projects include regulatory risks, operational risks, financial risks, and environmental risks.",
+      "category": "math"
+    },
+    {
+      "q": "How can the project completion time be reduced without compromising the quality and safety of the expansion project?",
+      "a": "The project completion time can be reduced by identifying the critical path activities, crashing the processes, and allocating additional resources to the project.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the potential benefits of expanding the refining capacity in India?",
+      "a": "The potential benefits of expanding the refining capacity in India include meeting growing domestic demand, reducing dependence on imports, and generating employment opportunities.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the Indian government's policy framework support the refining industry?",
+      "a": "The Indian government's policy framework supports the refining industry through initiatives such as tax incentives, subsidies, and investments in infrastructure development.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key performance indicators for evaluating the success of a refining capacity expansion project?",
+      "a": "The key performance indicators for evaluating the success of a refining capacity expansion project include return on investment, project completion time, and operational efficiency.",
+      "category": "math"
+    },
+    {
+      "q": "How can the environmental impact of the expansion project be mitigated?",
+      "a": "The environmental impact of the expansion project can be mitigated by implementing sustainable practices, reducing emissions, and investing in pollution control technologies.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential challenges faced by refineries in India in terms of raw material sourcing?",
+      "a": "The potential challenges faced by refineries in India in terms of raw material sourcing include dependence on imports, price volatility, and quality variability.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the expansion project be financed, and what are the potential funding options?",
+      "a": "The expansion project can be financed through a combination of debt and equity, with potential funding options including loans, bonds, and private equity investments.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Identify the critical path activities in the project timeline to determine the potential for time reduction",
+    "Evaluate the risks associated with crashing the processes and allocate additional resources accordingly",
+    "Consider the regulatory approvals and licenses required for the expansion project and factor in the potential delays",
+    "Assess the potential impact on the refinery's operations and maintenance costs and develop strategies to mitigate the risks"
+  ],
+  "sources": [
+    "Ministry of Petroleum and Natural Gas reports",
+    "Industry reports and publications",
+    "Company filings and annual reports",
+    "International Energy Agency (IEA) reports",
+    "Statista industry reports"
+  ],
+  "case_type_notes": "This operations case requires the candidate to apply project management principles to reduce the project completion time while considering the regulatory, operational, and financial risks associated with the expansion project. The candidate must demonstrate the ability to analyze complex data, identify critical path activities, and develop strategies to mitigate risks and optimize the project timeline.",
+  "enriched_at": "2026-05-10T06:59:46.960Z"
+}

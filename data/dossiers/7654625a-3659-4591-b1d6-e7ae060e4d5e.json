@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The retail industry in India is highly competitive, with key players like Reliance Retail, Future Group, and D-Mart. The industry is characterized by thin margins, typically ranging from 3-6%, and high inventory turnover rates. Regulatory backdrop includes policies like GST and e-way bills, which have streamlined the supply chain. Typical customer behavior includes a preference for omnichannel shopping experiences and same-day or next-day delivery.",
+  "real_world_numbers": [
+    {
+      "metric": "Average inventory turnover rate",
+      "value": "4-6 times per year",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical margin for retail companies in India",
+      "value": "3-6%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Market size of the Indian retail industry",
+      "value": "USD 850-900 billion",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of retail companies in India",
+      "value": "100,000-200,000",
+      "source_hint": "MSME ministry data"
+    },
+    {
+      "metric": "Customer LTV for e-commerce companies in India",
+      "value": "INR 5,000-10,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average supply chain cost as a percentage of sales",
+      "value": "8-12%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Typical lead time for retail supply chains in India",
+      "value": "2-5 days",
+      "source_hint": "logistics industry reports"
+    },
+    {
+      "metric": "Inventory holding cost as a percentage of inventory value",
+      "value": "15-25%",
+      "source_hint": "supply chain management literature"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total inventory cost",
+      "formula": "Inventory holding cost + Inventory ordering cost + Inventory shortage cost",
+      "typical_answer_range": "INR 50,000-100,000"
+    },
+    {
+      "step": "Determine the optimal order quantity",
+      "formula": "EOQ = sqrt((2 * demand * ordering cost) / holding cost)",
+      "typical_answer_range": "100-500 units"
+    },
+    {
+      "step": "Calculate the supply chain cost as a percentage of sales",
+      "formula": "(Supply chain cost / Sales) * 100",
+      "typical_answer_range": "8-12%"
+    },
+    {
+      "step": "Evaluate the impact of a 10% reduction in lead time on inventory levels",
+      "formula": "New inventory level = Old inventory level * (1 - (lead time reduction / old lead time))",
+      "typical_answer_range": "5-15% reduction"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of seasonality on demand and inventory levels",
+    "Failing to account for the bullwhip effect in supply chain optimization",
+    "Overlooking the importance of supplier selection and management",
+    "Not evaluating the trade-offs between inventory holding costs and stockout costs",
+    "Failing to consider the role of technology, such as RFID and IoT, in supply chain optimization"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key challenges faced by retail companies in India in terms of supply chain management?",
+      "a": "Key challenges include managing inventory levels, reducing lead times, and improving supplier selection and management.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian retail industry's competitive structure impact supply chain optimization?",
+      "a": "The competitive structure of the Indian retail industry, characterized by thin margins and high inventory turnover rates, requires companies to optimize their supply chains to remain competitive.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are some common metrics used to evaluate supply chain performance in the retail industry?",
+      "a": "Common metrics include inventory turnover rate, supply chain cost as a percentage of sales, and lead time.",
+      "category": "math"
+    },
+    {
+      "q": "How can retail companies in India leverage technology to improve their supply chain management?",
+      "a": "Retail companies can leverage technologies like RFID, IoT, and data analytics to improve inventory management, reduce lead times, and enhance supplier selection and management.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are some best practices for implementing a supply chain optimization framework in a retail company?",
+      "a": "Best practices include analyzing the current supply chain, identifying bottlenecks, and implementing changes to improve inventory management and reduce costs.",
+      "category": "framework"
+    },
+    {
+      "q": "How does the Indian government's GST policy impact the retail supply chain?",
+      "a": "The GST policy has streamlined the supply chain by reducing tax complexities and improving logistics efficiency.",
+      "category": "industry"
+    },
+    {
+      "q": "What are some common pitfalls to avoid when implementing a supply chain optimization project in a retail company?",
+      "a": "Common pitfalls include failing to consider the impact of seasonality, overlooking the importance of supplier selection and management, and not evaluating the trade-offs between inventory holding costs and stockout costs.",
+      "category": "common_mistakes"
+    },
+    {
+      "q": "How can retail companies in India measure the effectiveness of their supply chain optimization efforts?",
+      "a": "Retail companies can measure the effectiveness of their supply chain optimization efforts by tracking metrics like inventory turnover rate, supply chain cost as a percentage of sales, and lead time.",
+      "category": "math"
+    },
+    {
+      "q": "What are some emerging trends in retail supply chain management in India?",
+      "a": "Emerging trends include the use of artificial intelligence, blockchain, and the Internet of Things (IoT) to improve supply chain visibility, reduce costs, and enhance customer experience.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can retail companies in India balance the trade-offs between inventory holding costs and stockout costs?",
+      "a": "Retail companies can balance the trade-offs by using inventory optimization techniques, such as the economic order quantity (EOQ) model, and by implementing strategies like drop shipping and just-in-time inventory management.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the current supply chain to identify bottlenecks and areas for improvement",
+    "Implement a supply chain optimization framework that considers the trade-offs between inventory holding costs and stockout costs",
+    "Use data analytics and technology to improve supply chain visibility and reduce costs"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Supply chain management literature",
+    "Logistics industry reports",
+    "MSME ministry data"
+  ],
+  "case_type_notes": "This case requires the candidate to apply supply chain optimization principles to a real-world scenario, considering the complexities of the Indian retail industry and the need to balance competing priorities like inventory holding costs and stockout costs.",
+  "enriched_at": "2026-05-10T07:47:33.099Z"
+}

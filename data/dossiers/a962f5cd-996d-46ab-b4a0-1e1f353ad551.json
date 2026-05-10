@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry, where Mattel operates, is characterized by low margins, high volumes, and intense competition. Key players like Mattel, Hasbro, and LEGO compete for market share in the toy and game sector. The industry is also subject to changing consumer preferences, regulatory pressures, and supply chain disruptions. In India, the FMCG market is expected to grow due to increasing disposable incomes and a rising middle class. Typical customer behavior in this industry involves frequent purchases of low-cost, high-frequency items, with a focus on brand loyalty and product quality.",
+  "real_world_numbers": [
+    {
+      "metric": "Global Toy Market Size",
+      "value": "$90-100 billion",
+      "source_hint": "Euromonitor International reports"
+    },
+    {
+      "metric": "Mattel's Revenue (2020)",
+      "value": "$4.5-5.5 billion",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Average Margin in FMCG Industry",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Number of Employees in Mattel (2020)",
+      "value": "25,000-30,000",
+      "source_hint": "Company website"
+    },
+    {
+      "metric": "Indian FMCG Market Growth Rate",
+      "value": "10-15% per annum",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Barbie Doll Sales (2020)",
+      "value": "10-15 million units",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Marketing Spend as a Percentage of Revenue in FMCG Industry",
+      "value": "5-10%",
+      "source_hint": "Industry benchmarks"
+    },
+    {
+      "metric": "Customer Lifetime Value (CLV) in Toy Industry",
+      "value": "$500-$1000",
+      "source_hint": "Market research studies"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the potential revenue increase from introducing new product lines",
+      "formula": "New Revenue = (Number of new products) * (Average price per product) * (Projected sales volume)",
+      "typical_answer_range": "5-15% increase in revenue"
+    },
+    {
+      "step": "Estimate the return on investment (ROI) for a new marketing campaign",
+      "formula": "ROI = (Gain from investment - Cost of investment) / Cost of investment",
+      "typical_answer_range": "15-25% ROI"
+    },
+    {
+      "step": "Determine the potential cost savings from optimizing supply chain operations",
+      "formula": "Cost savings = (Current costs) - (Optimized costs)",
+      "typical_answer_range": "2-5% reduction in costs"
+    },
+    {
+      "step": "Calculate the potential increase in brand value from public contributions to social causes",
+      "formula": "Brand value increase = (Number of social causes supported) * (Average brand value increase per cause)",
+      "typical_answer_range": "5-10% increase in brand value"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the importance of supply chain optimization in the FMCG industry",
+    "Failing to consider the potential cannibalization of existing products by new product lines",
+    "Underestimating the impact of changing consumer preferences on brand image and marketing strategy",
+    "Not accounting for the potential risks and challenges associated with public contributions to social causes",
+    "Ignoring the role of digital marketing and e-commerce in the toy industry",
+    "Not considering the potential for partnerships and collaborations with other companies or organizations",
+    "Failing to prioritize and focus on the most critical issues and opportunities",
+    "Not developing a clear and actionable plan for implementation and measurement"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends and drivers in the global toy market?",
+      "a": "The global toy market is driven by changing consumer preferences, technological advancements, and increasing demand for educational and interactive toys. Key trends include the rise of e-commerce, digital marketing, and sustainability.",
+      "category": "industry"
+    },
+    {
+      "q": "How does Mattel's brand portfolio compare to its competitors?",
+      "a": "Mattel's brand portfolio includes iconic brands like Barbie, Hot Wheels, and Fisher-Price, which compete with Hasbro's brands like Play-Doh, Nerf, and My Little Pony. Mattel's brand portfolio is diverse and well-established, but faces intense competition in the market.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with introducing new product lines?",
+      "a": "The potential risks and challenges include cannibalization of existing products, increased competition, and potential quality control issues. Additionally, new product lines may require significant investment in marketing, distribution, and supply chain operations.",
+      "category": "math"
+    },
+    {
+      "q": "How can Mattel measure the effectiveness of its public contributions to social causes?",
+      "a": "Mattel can measure the effectiveness of its public contributions by tracking key performance indicators (KPIs) such as brand reputation, customer engagement, and sales lift. Additionally, Mattel can conduct surveys, focus groups, and social media listening to gauge the impact of its social cause initiatives.",
+      "category": "real-world"
+    },
+    {
+      "q": "What role can digital marketing play in the toy industry?",
+      "a": "Digital marketing can play a significant role in the toy industry by providing a platform for brands to engage with customers, build brand awareness, and drive sales. Digital marketing channels like social media, email marketing, and influencer marketing can be effective in reaching parents and children.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Consider a customer-centric approach to new product development, focusing on emerging trends and consumer preferences",
+    "Analyze the competitive landscape and identify opportunities for differentiation and market share growth",
+    "Develop a comprehensive marketing strategy that incorporates digital marketing, social media, and influencer marketing",
+    "Evaluate the potential for partnerships and collaborations with other companies or organizations to drive growth and innovation"
+  ],
+  "sources": [
+    "Euromonitor International reports",
+    "Company filings and annual reports",
+    "Statista industry reports",
+    "Market research studies and surveys",
+    "Industry benchmarks and best practices"
+  ],
+  "case_type_notes": "This case requires a deep understanding of the FMCG industry, consumer behavior, and marketing strategy. The candidate must be able to analyze complex data, identify key trends and drivers, and develop a comprehensive and actionable plan to drive growth and profitability for Mattel.",
+  "enriched_at": "2026-05-08T12:18:29.595Z"
+}

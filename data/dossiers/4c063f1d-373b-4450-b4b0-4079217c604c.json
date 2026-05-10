@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The social media industry, particularly Instagram, is highly competitive with numerous brands and influencers vying for attention. Key economics include the cost of content creation, advertising, and influencer partnerships. Regulatory backdrop involves adhering to Instagram's community guidelines and ensuring brand safety. Typical customer behavior involves scrolling through feeds, engaging with content, and following accounts that resonate with their interests.",
+  "real_world_numbers": [
+    {
+      "metric": "Average Instagram engagement rate",
+      "value": "2-5%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Cost per thousand impressions (CPM) on Instagram",
+      "value": "₹50-₹200",
+      "source_hint": "Digital marketing benchmarks"
+    },
+    {
+      "metric": "Average time spent on Instagram per user",
+      "value": "30-60 minutes",
+      "source_hint": "Social media usage studies"
+    },
+    {
+      "metric": "Number of active Instagram users in India",
+      "value": "100-150 million",
+      "source_hint": "Statista reports"
+    },
+    {
+      "metric": "Typical influencer marketing budget for a small brand",
+      "value": "₹50,000-₹200,000",
+      "source_hint": "Influencer marketing platforms"
+    },
+    {
+      "metric": "Average Instagram follower growth rate for a small brand",
+      "value": "5-15% per month",
+      "source_hint": "Social media analytics tools"
+    },
+    {
+      "metric": "Cost of producing high-quality social media content",
+      "value": "₹5,000-₹50,000 per episode",
+      "source_hint": "Content creation agencies"
+    },
+    {
+      "metric": "Average watch time for an Instagram video",
+      "value": "15-60 seconds",
+      "source_hint": "Instagram Insights"
+    },
+    {
+      "metric": "Number of Instagram accounts with 10,000-100,000 followers",
+      "value": "100,000-500,000",
+      "source_hint": "Social media research studies"
+    },
+    {
+      "metric": "Typical engagement rate for a branded Instagram post",
+      "value": "1-3%",
+      "source_hint": "Branded content benchmarks"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the required growth rate to reach 20,000 followers",
+      "formula": "(20,000 - 7,000) / 7,000",
+      "typical_answer_range": "185-200%"
+    },
+    {
+      "step": "Determining the average engagement rate required to reach the growth goal",
+      "formula": "Desired growth rate / (1 + Average engagement rate)",
+      "typical_answer_range": "2-5%"
+    },
+    {
+      "step": "Estimating the number of episodes required to reach the growth goal",
+      "formula": "Desired growth rate / Average engagement rate per episode",
+      "typical_answer_range": "10-20 episodes"
+    },
+    {
+      "step": "Calculating the total content creation budget required",
+      "formula": "Number of episodes * Cost per episode",
+      "typical_answer_range": "₹50,000-₹1,000,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not understanding the target audience and their preferences",
+    "Lack of clarity in the brand story and messaging",
+    "Insufficient planning for scalability and growth",
+    "Not considering the competitive landscape and unique selling proposition",
+    "Inadequate attention to engagement and retention strategies",
+    "Overemphasis on short-term gains rather than long-term growth",
+    "Failure to measure and track key performance indicators (KPIs)",
+    "Not adapting to changes in the social media landscape and algorithm updates"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in social media marketing that can be leveraged for growth?",
+      "a": "Influencer marketing, user-generated content, and Instagram Reels are some of the key trends that can be leveraged for growth.",
+      "category": "industry"
+    },
+    {
+      "q": "How can we measure the success of our social media campaign?",
+      "a": "Success can be measured by tracking engagement rates, follower growth, and conversions.",
+      "category": "math"
+    },
+    {
+      "q": "What are the most effective ways to increase engagement on Instagram?",
+      "a": "Using relevant hashtags, running contests, and collaborating with influencers are some effective ways to increase engagement.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can we ensure that our content is discoverable on Instagram?",
+      "a": "Using relevant keywords, hashtags, and tagging relevant accounts can help increase discoverability.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key differences between Instagram and other social media platforms?",
+      "a": "Instagram is a visually-driven platform with a focus on aesthetics and community engagement.",
+      "category": "industry"
+    },
+    {
+      "q": "How can we balance the need for creativity with the need for consistency in our content?",
+      "a": "Developing a content calendar and using a mix of evergreen and timely content can help balance creativity and consistency.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the most common mistakes that brands make on social media?",
+      "a": "Not understanding the target audience, lack of consistency, and inadequate engagement are some common mistakes that brands make on social media.",
+      "category": "common_mistakes"
+    },
+    {
+      "q": "How can we use Instagram Stories and Reels to drive engagement?",
+      "a": "Using Instagram Stories and Reels can help drive engagement by providing a behind-the-scenes look, sneak peeks, and exclusive content.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the key metrics that we should be tracking to measure the success of our social media campaign?",
+      "a": "Engagement rates, follower growth, conversions, and return on investment (ROI) are some of the key metrics that should be tracked.",
+      "category": "math"
+    },
+    {
+      "q": "How can we use influencer marketing to reach a wider audience?",
+      "a": "Partnering with influencers who have a relevant audience and using influencer marketing platforms can help reach a wider audience.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the most effective ways to increase our Instagram following?",
+      "a": "Using relevant hashtags, running contests, and collaborating with influencers are some effective ways to increase Instagram following.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can we ensure that our content is accessible and inclusive?",
+      "a": "Using alt text, closed captions, and diverse imagery can help ensure that content is accessible and inclusive.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key differences between organic and paid social media marketing?",
+      "a": "Organic social media marketing focuses on building a community and creating engaging content, while paid social media marketing involves using paid advertising to reach a wider audience.",
+      "category": "industry"
+    },
+    {
+      "q": "How can we use Instagram's features such as IGTV and IG Live to drive engagement?",
+      "a": "Using Instagram's features such as IGTV and IG Live can help drive engagement by providing a more immersive and interactive experience.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the most common challenges that brands face on social media?",
+      "a": "Not understanding the target audience, lack of consistency, and inadequate engagement are some common challenges that brands face on social media.",
+      "category": "common_mistakes"
+    }
+  ],
+  "framework_hints": [
+    "Developing a content calendar to ensure consistency and organization",
+    "Using a mix of evergreen and timely content to balance creativity and relevance",
+    "Creating a unique and compelling brand story to differentiate from competitors",
+    "Leveraging Instagram's features such as Stories, Reels, and IGTV to drive engagement",
+    "Using influencer marketing and user-generated content to reach a wider audience"
+  ],
+  "sources": [
+    "Statista reports on social media usage and trends",
+    "Instagram Insights and analytics tools",
+    "Influencer marketing platforms and industry benchmarks",
+    "Social media research studies and academic papers",
+    "Digital marketing blogs and industry publications"
+  ],
+  "case_type_notes": "This case requires a deep understanding of social media marketing, brand storytelling, and content creation. The challenge lies in developing a scalable and engaging content series that resonates with the target audience and drives growth.",
+  "enriched_at": "2026-05-10T06:06:38.571Z"
+}

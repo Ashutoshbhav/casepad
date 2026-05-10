@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The energy industry, particularly oil transport, is characterized by high volatility due to geopolitical tensions, fluctuating oil prices, and stringent regulatory requirements. Companies in this sector must navigate complex logistical challenges, including transportation costs and infrastructure limitations. In the Indian context, the energy sector is crucial for economic growth, with the government implementing policies to enhance energy security and reduce dependence on imports. The competitive landscape is marked by a mix of state-owned and private players, with companies like Indian Oil Corporation and Reliance Industries being major stakeholders. Typical customer behavior in this industry involves a high degree of price sensitivity and a strong focus on reliability and safety.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for oil transport companies",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average cost of transporting oil per barrel",
+      "value": "0.5-1.5 USD",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Global oil demand",
+      "value": "100-120 million barrels per day",
+      "source_hint": "IEA reports"
+    },
+    {
+      "metric": "Indian oil import bill",
+      "value": "100-150 billion USD per annum",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Number of oil rigs in the Gulf of Mexico",
+      "value": "100-200",
+      "source_hint": "BSEE data"
+    },
+    {
+      "metric": "Average oil price over the last decade",
+      "value": "50-100 USD per barrel",
+      "source_hint": "EIA data"
+    },
+    {
+      "metric": "Transportation costs as a percentage of total oil cost",
+      "value": "5-10%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Customer retention rate in the oil transport industry",
+      "value": "70-90%",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Average contract duration for oil transport services",
+      "value": "1-3 years",
+      "source_hint": "company contracts"
+    },
+    {
+      "metric": "Oil price volatility over the last year",
+      "value": "10-20%",
+      "source_hint": "market data"
+    },
+    {
+      "metric": "Number of major oil transport companies globally",
+      "value": "50-100",
+      "source_hint": "industry directories"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the potential revenue from the contract",
+      "formula": "Volume of oil to be transported * Price per barrel * Margin percentage",
+      "typical_answer_range": "10-50 million USD"
+    },
+    {
+      "step": "Estimate the transportation costs for the contract",
+      "formula": "Distance to be transported * Fuel consumption rate * Fuel price",
+      "typical_answer_range": "1-5 million USD"
+    },
+    {
+      "step": "Determine the break-even point for the contract",
+      "formula": "Fixed costs / (Selling price - Variable costs)",
+      "typical_answer_range": "50-200 days"
+    },
+    {
+      "step": "Calculate the expected return on investment (ROI) for the contract",
+      "formula": "Net profit / Total investment * 100",
+      "typical_answer_range": "10-25%"
+    },
+    {
+      "step": "Assess the potential impact of oil price fluctuations on the contract",
+      "formula": "Sensitivity analysis using historical oil price data",
+      "typical_answer_range": "5-15% change in revenue"
+    },
+    {
+      "step": "Evaluate the effect of changes in transportation costs on the contract",
+      "formula": "Sensitivity analysis using historical transportation cost data",
+      "typical_answer_range": "2-5% change in costs"
+    },
+    {
+      "step": "Calculate the value-at-risk (VaR) for the contract",
+      "formula": "Historical data analysis using probability distributions",
+      "typical_answer_range": "5-10% of contract value"
+    },
+    {
+      "step": "Determine the expected contract duration and potential renewal rates",
+      "formula": "Historical contract data analysis",
+      "typical_answer_range": "1-3 years, 70-90% renewal rate"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking geopolitical risks and their potential impact on the contract",
+    "Underestimating the volatility of oil prices and its effect on revenue",
+    "Failing to consider the regulatory requirements and compliance costs",
+    "Not assessing the creditworthiness of the oil rig company",
+    "Ignoring the potential for changes in transportation costs and their impact on profitability",
+    "Not evaluating the competitive landscape and potential market share",
+    "Overlooking the importance of customer retention and relationship management",
+    "Failing to consider the environmental and social implications of the contract"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors that influence oil prices, and how might they impact the contract?",
+      "a": "Geopolitical events, global demand and supply, and currency fluctuations are key factors. These could impact the contract through price volatility, affecting revenue and profitability.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian government's energy policy impact the oil transport industry?",
+      "a": "The government's policies aim to enhance energy security, reduce imports, and promote renewable energy. This could lead to increased demand for domestic oil transport services and stricter regulatory requirements.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical contract terms for oil transport services, and what are the key negotiation points?",
+      "a": "Contract terms may include volume commitments, pricing mechanisms, and delivery schedules. Key negotiation points could be pricing, payment terms, and liability clauses.",
+      "category": "competitive"
+    },
+    {
+      "q": "How do oil transport companies typically manage their risk exposure to oil price fluctuations?",
+      "a": "Companies may use hedging strategies, such as futures contracts or options, to manage price risk. They may also diversify their customer base and transport volumes to reduce dependence on a single market or customer.",
+      "category": "math"
+    },
+    {
+      "q": "What are the environmental and social implications of oil transport, and how might these impact the contract?",
+      "a": "Oil transport can have significant environmental impacts, such as oil spills and emissions. Social implications may include community disruption and health concerns. These factors could lead to increased regulatory scrutiny, reputational risks, and potential liabilities.",
+      "category": "real-world"
+    },
+    {
+      "q": "How does the oil transport industry's competitive landscape impact contract pricing and terms?",
+      "a": "The industry is characterized by a mix of state-owned and private players, with companies competing on price, service quality, and reliability. This competition can drive down prices and lead to more favorable contract terms for customers.",
+      "category": "competitive"
+    },
+    {
+      "q": "What role do logistics and infrastructure play in the oil transport industry, and how might these impact the contract?",
+      "a": "Logistics and infrastructure are critical components of the oil transport industry, with companies relying on efficient transportation networks, storage facilities, and loading/unloading infrastructure. These factors can impact contract terms, such as delivery schedules and pricing.",
+      "category": "industry"
+    },
+    {
+      "q": "How might changes in global oil demand impact the contract, and what are the key drivers of this demand?",
+      "a": "Changes in global oil demand can impact the contract through price volatility and changes in transport volumes. Key drivers of oil demand include economic growth, population growth, and energy efficiency trends.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical risks associated with oil transport contracts, and how can these be mitigated?",
+      "a": "Typical risks include oil price volatility, transportation costs, and regulatory changes. These can be mitigated through hedging strategies, diversification, and close monitoring of market trends and regulatory developments.",
+      "category": "math"
+    },
+    {
+      "q": "How does the oil rig company's creditworthiness impact the contract, and what are the key factors to consider when assessing creditworthiness?",
+      "a": "The oil rig company's creditworthiness can impact the contract through payment risk and potential default. Key factors to consider when assessing creditworthiness include financial stability, payment history, and industry reputation.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for oil transport companies, and how might these impact the contract?",
+      "a": "KPIs may include transport volumes, revenue growth, and safety performance. These can impact the contract through pricing, payment terms, and liability clauses.",
+      "category": "math"
+    },
+    {
+      "q": "How might the contract be impacted by changes in transportation costs, such as fuel price increases or infrastructure disruptions?",
+      "a": "Changes in transportation costs can impact the contract through reduced profitability or increased prices. Companies may mitigate these risks through fuel hedging, infrastructure investments, or operational efficiencies.",
+      "category": "math"
+    },
+    {
+      "q": "What role do market trends and regulatory developments play in the oil transport industry, and how might these impact the contract?",
+      "a": "Market trends, such as changes in global oil demand or price volatility, can impact the contract through pricing and transport volumes. Regulatory developments, such as changes in safety or environmental regulations, can impact the contract through compliance costs and potential liabilities.",
+      "category": "industry"
+    }
+  ],
+  "framework_hints": [
+    "Consider the geopolitical risks associated with the contract, including trade embargoes and tax law changes",
+    "Analyze the economic risks, such as transportation costs and oil price fluctuations, and their potential impact on the contract",
+    "Evaluate the regulatory requirements and compliance costs associated with the contract",
+    "Assess the creditworthiness of the oil rig company and potential payment risks"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "IEA reports",
+    "EIA data",
+    "BSEE data",
+    "Government statistics",
+    "Industry benchmarks",
+    "Market research reports"
+  ],
+  "case_type_notes": "This operations case requires the candidate to analyze the risks associated with the oil transport contract and recommend a decision. The candidate must consider various factors, including geopolitical risks, economic risks, regulatory requirements, and creditworthiness, to make an informed decision. The case is challenging because it requires the candidate to weigh the potential benefits of the contract against the potential risks and make a decision that balances these factors.",
+  "enriched_at": "2026-05-10T07:18:32.890Z"
+}

@@ -1,0 +1,998 @@
+[enrich] 995 cases to enrich (skipping 5 already up-to-date)
+[1/995] BookMyShow Booking Decline Investigation           ✓ enriched in 150.7s → data/dossiers/3916821b-4473-4826-85ac-cb95878b97c1.json
+[2/995] Airline Food                                       ✓ enriched in 112.2s → data/dossiers/66cfeb5e-5606-4916-88c7-629541bbe269.json
+[3/995] Sugar Cereal                                       ✓ enriched in 42.1s → data/dossiers/dc38c674-5db6-4be2-809f-dbf2210d5b41.json
+[4/995] KPMG International Case Competition                ✓ enriched in 119.2s → data/dossiers/7d39c083-c8da-4270-97ae-a8a1866832cb.json
+[5/995] Chem Co.                                           ✓ enriched in 284.7s → data/dossiers/5edd4111-01b5-4ff5-95ef-ee4cbe412407.json
+[6/995] Mattel                                             ✓ enriched in 128.5s → data/dossiers/f8709fb8-c253-43c2-910b-dcfe5324f5ef.json
+[7/995] Mattel (3)                                         ✓ enriched in 66.0s → data/dossiers/a962f5cd-996d-46ab-b4a0-1e1f353ad551.json
+[8/995] Old Delhi Restaurant                               ✓ enriched in 40.8s → data/dossiers/9c2abf58-209e-479d-80fc-ad8cf50ec502.json
+[9/995] Sheep Auction (VI of VI)                           ✗ cerebras 404: {"message":"Model llama3.1-70b does not exist or you do not have access to it.","type":"not_found_error","param":"model","code":"model_not_found"}
+[10/995] Case 11: A PE and a Soda                           ✓ enriched in 50.2s → data/dossiers/595c52fd-cf04-431a-8832-fea4cb1efabc.json
+[11/995] Regional Jet Market                                ✗ cerebras 404: {"message":"Model llama3.1-70b does not exist or you do not have access to it.","type":"not_found_error","param":"model","code":"model_not_found"}
+[12/995] BankCo Online Banking                              ✓ enriched in 41.1s → data/dossiers/2535d96e-03e7-40a1-a37b-2456338bcd09.json
+[13/995] Sunshine Power                                     ✗ fetch failed
+[14/995] Smart Card Manufacturer (III of III)               ✗ fetch failed
+[15/995] Sports Bar                                         ✗ fetch failed
+[16/995] Bombardier CS300                                   ✗ fetch failed
+[17/995] Polyethylene Resin                                 ✗ fetch failed
+[18/995] Sweet Job Selling Candy                            ✗ fetch failed
+[19/995] Chic Cosmetology University                        ✗ fetch failed
+[20/995] Grad-U-Date                                        ✗ fetch failed
+[21/995] Mumbai Hospital Chain                              ✗ fetch failed
+[22/995] Consolidated Financial Statements Analysis         ✗ fetch failed
+[23/995] A Sticky Paper Situation                           ✗ fetch failed
+[24/995] Beijing International Airport M&A Strategy         ✗ fetch failed
+[25/995] Automobile Parts Manufacturer (II of II)           ✗ fetch failed
+[26/995] Guesstimate: Number of Burgers Sold at a McDonald' ✗ fetch failed
+[27/995] Bain PE Case: Byju's Investment Evaluation         ✗ fetch failed
+[28/995] Estimate the fleet size of Air India               ✗ fetch failed
+[29/995] MIMO Technology                                    ✗ fetch failed
+[30/995] Fast Food Loyalty                                  ✗ fetch failed
+[31/995] Appliance Insurance (I of II)                      ✗ fetch failed
+[32/995] Performance Chemicals                              ✗ fetch failed
+[33/995] A Retail Lending Bank                              ✗ fetch failed
+[34/995] Gas Stations and Convenience Stores                ✗ fetch failed
+[35/995] Harrison Energy EV Goals                           ✗ fetch failed
+[36/995] ShopOn                                             ✗ fetch failed
+[37/995] Security Systems Company Market Entry              ✗ fetch failed
+[38/995] Hepatitis Drug Pricing                             ✗ fetch failed
+[39/995] I-35 IHOP (2)                                      ✗ fetch failed
+[40/995] Mustard Clinic                                     ✗ fetch failed
+[41/995] Bailey Brothers Bancorp                            ✗ fetch failed
+[42/995] WOEM Case: Cake and Clothing Business Profitabilit ✗ fetch failed
+[43/995] Hong Kong Port (II of VII)                         ✗ fetch failed
+[44/995] Polyethylene Resin (2)                             ✗ fetch failed
+[45/995] 6PAQ P.E. Firm                                     ✗ fetch failed
+[46/995] Tacotle                                            ✗ fetch failed
+[47/995] Money Bank Call Center                             ✗ fetch failed
+[48/995] IT Service Company                                 ✗ fetch failed
+[49/995] Trucking (III of III)                              ✗ fetch failed
+[50/995] IIM A Consult Prep Book 2022-23                    ✗ fetch failed
+[51/995] Wildcat Wings                                      ✗ fetch failed
+[52/995] Vitality Insurance                                 ✗ fetch failed
+[53/995] Regional Electric Utility Cost Reduction           ✗ fetch failed
+[54/995] Guesstimate Case                                   ✗ fetch failed
+[55/995] WOEM Performance Evaluation                        ✗ fetch failed
+[56/995] Consumer Product Strategy                          ✗ fetch failed
+[57/995] C.M. Burns Manufacturing Company                   ✗ fetch failed
+[58/995] Allsafe                                            ✗ fetch failed
+[59/995] Argentinean Bank (I of III)                        ✗ fetch failed
+[60/995] HitNot Tires                                       ✗ fetch failed
+[61/995] Footloose                                          ✗ fetch failed
+[62/995] Med-Lines Online Case                              ✗ fetch failed
+[63/995] Case Interview Workbook                            ✗ fetch failed
+[64/995] Security Systems (III of VI)                       ✗ fetch failed
+[65/995] Hong Kong Port (IV of VII)                         ✗ fetch failed
+[66/995] Money in Michigan                                  ✗ fetch failed
+[67/995] Mega Pharma                                        ✗ fetch failed
+[68/995] Sheep Auction (V of VI)                            ✗ fetch failed
+[69/995] Sheep Auction (IV of VI)                           ✗ fetch failed
+[70/995] Termite Control (III of V)                         ✗ fetch failed
+[71/995] Termite Control (V of V)                           ✗ fetch failed
+[72/995] Starchaser                                         ✗ fetch failed
+[73/995] Zoo Co.                                            ✗ fetch failed
+[74/995] Sony Financial Services Segment Debt and Derivativ ✗ fetch failed
+[75/995] Insurance Provider (III of IV)                     ✗ fetch failed
+[76/995] Telecom Service Provider (I of II)                 ✗ fetch failed
+[77/995] Security Systems (IV of VI)                        ✗ fetch failed
+[78/995] Bank Service Strategy                              ✗ fetch failed
+[79/995] Mine in Chile                                      ✗ fetch failed
+[80/995] Telecom Service Provider (II of II)                ✗ fetch failed
+[81/995] Insurance Provider (I of IV)                       ✗ fetch failed
+[82/995] European Motorcycles                               ✗ fetch failed
+[83/995] Bombardier CS300 Outsourcing Decision              ✗ fetch failed
+[84/995] European Telecom Giant                             ✗ fetch failed
+[85/995] Town Mayor                                         ✗ fetch failed
+[86/995] Sugar Reduction Value Assessment                   ✗ fetch failed
+[87/995] New England Retail Bank                            ✗ fetch failed
+[88/995] Smart Card Manufacturer (I of III)                 ✗ fetch failed
+[89/995] Trucking (II of III)                               ✗ fetch failed
+[90/995] Care for the Car                                   ✗ fetch failed
+[91/995] Pharma Co. Performance Evaluation                  ✗ fetch failed
+[92/995] Automobile Manufacturer (II of II)                 ✗ fetch failed
+[93/995] Insurance Provider (IV of IV)                      ✗ fetch failed
+[94/995] Sugar Magnolia Hospital                            ✗ fetch failed
+[95/995] Fast Food Loyalty (2)                              ✗ fetch failed
+[96/995] USA Hospital - Decline in NPS                      ✗ fetch failed
+[97/995] USA Hospital                                       ✗ fetch failed
+[98/995] Argentinean Bank (III of III)                      ✗ fetch failed
+[99/995] Electronics Retailer (III of III)                  ✗ fetch failed
+[100/995] Vitality Insurance, Inc.                           ✗ fetch failed
+[101/995] Food Catering Company - DSO Increase               ✗ fetch failed
+[102/995] Sample Cases Index                                 ✗ fetch failed
+[103/995] Hong Kong Port (III of VII)                        ✗ fetch failed
+[104/995] Hong Kong Port                                     ✗ fetch failed
+[105/995] Health Insurance Profitability Decline             ✗ fetch failed
+[106/995] Termite Control (II of V)                          ✗ fetch failed
+[107/995] Knowledge for Action                               ✗ fetch failed
+[108/995] Hamm's University                                  ✗ fetch failed
+[109/995] Argentinean Bank (II of III)                       ✗ fetch failed
+[110/995] Accounting Policies and Revenue Recognition        ✗ fetch failed
+[111/995] Trucking Company Route Optimization Software Inves ✗ fetch failed
+[112/995] Hong Kong Port (VI of VII)                         ✗ fetch failed
+[113/995] Sony Risk Factors and Forward-Looking Statements   ✗ fetch failed
+[114/995] FoodCo                                             ✗ fetch failed
+[115/995] Competitor Reaction                                ✗ fetch failed
+[116/995] Hong Kong Port (VII of VII)                        ✗ fetch failed
+[117/995] Gift Wrapping Paper Production Comparability Betwe ✗ fetch failed
+[118/995] Sandwich Bags (II of VII)                          ✗ fetch failed
+[119/995] Sandwich Bags (III of VII)                         ✗ fetch failed
+[120/995] Annual Wheat Consumption                           ✗ fetch failed
+[121/995] Ubisoft Financial Statements Analysis              ✗ fetch failed
+[122/995] Gas Stations and Convenience Stores                ✗ fetch failed
+[123/995] Zoo Co                                             ✗ fetch failed
+[124/995] Wine & Co                                          ✗ fetch failed
+[125/995] Case 2: Interviewer intimidating, unclear thought  ✗ fetch failed
+[126/995] 103 of 201                                         ✗ fetch failed
+[127/995] Airport Operator Revenues                          ✗ fetch failed
+[128/995] Sandwich Bags (I of VII)                           ✗ fetch failed
+[129/995] Piano Market Sizing                                ✗ fetch failed
+[130/995] Sheep Auction                                      ✗ fetch failed
+[131/995] Mike Apparel                                       ✗ fetch failed
+[132/995] China’s Cash Cost Curve                            ✗ fetch failed
+[133/995] Gift Wrapping Paper (III of III)                   ✗ fetch failed
+[134/995] Street Sweepers                                    ✗ fetch failed
+[135/995] Smart Card Manufacturer (II of III)                ✗ fetch failed
+[136/995] Thompson Healthcare                                ✗ fetch failed
+[137/995] Sony Financial Services Derivative Instruments and ✗ fetch failed
+[138/995] Case I                                             ✗ fetch failed
+[139/995] GoNet Internet Service Provider                    ✗ fetch failed
+[140/995] So Fresh and So Clean                              ✗ fetch failed
+[141/995] Savvy Shoes                                        ✗ fetch failed
+[142/995] Gumby's Pizza                                      ✗ fetch failed
+[143/995] Institutional Asset Manager Fees                   ✗ fetch failed
+[144/995] Freedom Bikes                                      ✗ fetch failed
+[145/995] Management Consulting Case Study Workbook          ✗ fetch failed
+[146/995] Moscow Cigarette Demand Estimation                 ✗ fetch failed
+[147/995] Supermarket Layout                                 ✗ fetch failed
+[148/995] Insurance Company Growth Strategy                  ✗ fetch failed
+[149/995] PharmaDeliver                                      ✗ fetch failed
+[150/995] Dark Sky Co.                                       ✗ fetch failed
+[151/995] Oxygen Cylinder Supply for Vizag during COVID      ✗ fetch failed
+[152/995] Heartcorp                                          ✗ fetch failed
+[153/995] Private Label Sales                                ✗ fetch failed
+[154/995] Single Cup of Coffee                               ✗ fetch failed
+[155/995] Malaysia in the 1990s (A) - Environmental Criticis ✗ fetch failed
+[156/995] Money Bank Call Center                             ✗ fetch failed
+[157/995] Myntra User Drop-off Analysis                      ✗ fetch failed
+[158/995] Demand for Cigarettes in Moscow                    ✗ fetch failed
+[159/995] Simon-Kucher Case Interview Workshop               ✗ fetch failed
+[160/995] Direct PC Sales Online                             ✗ fetch failed
+[161/995] EPD Performance Decline Diagnosis                  ✗ fetch failed
+[162/995] Swiggy Profitability Gap Diagnosis                 ✗ fetch failed
+[163/995] Sony Group Corporation Financial Disclosures and E ✗ fetch failed
+[164/995] Management Consulting Interview Guide              ✗ fetch failed
+[165/995] Mining in Brazil                                   ✗ fetch failed
+[166/995] Refrigerators in India                             ✗ fetch failed
+[167/995] Case 7: FoodCo                                     ✗ fetch failed
+[168/995] United States Healthcare (II of II)                ✗ fetch failed
+[169/995] Spam Filtering Feature Design and Effectiveness Te ✗ fetch failed
+[170/995] Webpage Access Failure Troubleshooting             ✗ fetch failed
+[171/995] Hot Air Balloons                                   ✗ fetch failed
+[172/995] New York Taxi Driver                               ✗ fetch failed
+[173/995] The Forest Products Industry in Malaysia           ✗ fetch failed
+[174/995] Coffee Shop Purchase                               ✗ fetch failed
+[175/995] Microsoft Product Management Interview Experiences ✗ fetch failed
+[176/995] Autoparts                                          ✗ fetch failed
+[177/995] FitCo Health Insurance Profitability Decline       ✗ fetch failed
+[178/995] Bird Blows Up                                      ✗ fetch failed
+[179/995] Gas Station                                        ✗ fetch failed
+[180/995] Diamonds are Forever                               ✗ fetch failed
+[181/995] Hair Products Company Acquisition                  ✗ fetch failed
+[182/995] Audit of Insurance Policy Liabilities and Deferred ✗ fetch failed
+[183/995] FMCG Revenue-Cost Performance Improvement          ✗ fetch failed
+[184/995] Gas Station Profitability                          ✗ fetch failed
+[185/995] McKinsey Round 1 - Steel Industry M&A and MFI Grow ✗ fetch failed
+[186/995] Baby Helmets                                       ✗ fetch failed
+[187/995] CASE 18                                            ✗ fetch failed
+[188/995] ShoeCo: Declining Profits and Challenging Growth   ✗ fetch failed
+[189/995] Loonilever plc                                     ✗ fetch failed
+[190/995] High Q Plastics                                    ✗ fetch failed
+[191/995] I-35 IHOP (3)                                      ✗ fetch failed
+[192/995] Amazon App Revenue Increase in Apparels Category   ✗ fetch failed
+[193/995] Brazilian Highway Concessions                      ✗ fetch failed
+[194/995] Animal Drug                                        ✗ fetch failed
+[195/995] Unicloth                                           ✗ fetch failed
+[196/995] Unprofitable Potash                                ✗ fetch failed
+[197/995] The Value of Loyalty                               ✗ fetch failed
+[198/995] Big Yellow Buses                                   ✗ fetch failed
+[199/995] Government of Bihar - Mortality Rate Improvement   ✗ fetch failed
+[200/995] Miner's Dilemma                                    ✗ fetch failed
+[201/995] Asian Mobile Service Provider                      ✗ fetch failed
+[202/995] Admedi Co. Case                                    ✗ fetch failed
+[203/995] Electric Car Manufacturer Growth                   ✗ fetch failed
+[204/995] Auto Spare Parts                                   ✗ fetch failed
+[205/995] Non-Profit Revenue Decline                         ✗ fetch failed
+[206/995] Credit Disunion                                    ✗ fetch failed
+[207/995] XYZ Holiday Parks Acquisition Assessment           ✗ fetch failed
+[208/995] Smart Card Manufacturer                            ✗ fetch failed
+[209/995] Gas Liquefaction                                   ✗ fetch failed
+[210/995] Regional Electric Utility Customer Profitability   ✗ fetch failed
+[211/995] Machine Company                                    ✗ fetch failed
+[212/995] Cyclic Menace                                      ✗ fetch failed
+[213/995] To Bar or Not to Bar                               ✗ fetch failed
+[214/995] ISCREAM                                            ✗ fetch failed
+[215/995] Breakeven for Peanut Co. on this investment        ✗ fetch failed
+[216/995] Fabio’s: Hair Salons and Headshots                 ✗ fetch failed
+[217/995] Healthsol Flood Response Strategy                  ✗ fetch failed
+[218/995] Pacific Northwest Telco                            ✗ fetch failed
+[219/995] Fair Enough?                                       ✗ fetch failed
+[220/995] Charcuterie Processor                              ✗ fetch failed
+[221/995] IT Costs                                           ✗ fetch failed
+[222/995] Who Moved My Cheese?                               ✗ fetch failed
+[223/995] Going Green                                        ✗ fetch failed
+[224/995] CFA Institute Research Challenge                   ✗ fetch failed
+[225/995] BE SMART WITH THE SMARTPHONE                       ✗ fetch failed
+[226/995] Farsung Electronics                                ✗ fetch failed
+[227/995] Automobile Manufacturer Revenue Decline            ✗ fetch failed
+[228/995] BudgetAirCo Baggage Fee Case                       ✗ fetch failed
+[229/995] Orange Bank Co                                     ✗ fetch failed
+[230/995] Fancy Fishery                                      ✗ fetch failed
+[231/995] Noble Metals Profitability Improvement             ✗ fetch failed
+[232/995] BudgetAir: A Weighty Decision                      ✗ fetch failed
+[233/995] Screen Co. Intellectual Property Case              ✗ fetch failed
+[234/995] Security Systems                                   ✗ fetch failed
+[235/995] Market Sizing: Solar Lanterns                      ✗ fetch failed
+[236/995] Healthy Foods Co.                                  ✗ fetch failed
+[237/995] Ching’s - Winning in Korean Noodles                ✗ fetch failed
+[238/995] Professor Patrick Noonan's Perspectives on Consult ✗ fetch failed
+[239/995] Maine Apples                                       ✗ fetch failed
+[240/995] Orrington Office Supplies (OOS)                    ✗ fetch failed
+[241/995] Social Costs of a Pothole in Gurgaon               ✗ fetch failed
+[242/995] Car Tires (I of I)                                 ✗ fetch failed
+[243/995] Bell Computer Inc.                                 ✗ fetch failed
+[244/995] Tarrant Fixtures                                   ✗ fetch failed
+[245/995] A+ Airline Co.                                     ✗ fetch failed
+[246/995] Vindaloo Corporation                               ✗ fetch failed
+[247/995] Super Pens (II of II)                              ✗ fetch failed
+[248/995] Instamart Dilemma: Integrate or Spin Off           ✗ fetch failed
+[249/995] Hospitality Co                                     ✗ fetch failed
+[250/995] GoNet Internet Service Provider                    ✗ fetch failed
+[251/995] Rock Energy                                        ✗ fetch failed
+[252/995] HVAC Service Provider Consolidation                ✗ fetch failed
+[253/995] Scaling gradnext - Growth Strategy                 ✗ fetch failed
+[254/995] Ant Financial's Rural Strategy: Providing Inclusiv ✗ fetch failed
+[255/995] Case Interview Frameworks and Clarifying Questions ✗ fetch failed
+[256/995] DigiBooks Inc.                                     ✗ fetch failed
+[257/995] Health Coaches                                     ✗ fetch failed
+[258/995] Salty Sole Shoe Co.                                ✗ fetch failed
+[259/995] Argentinean Bank                                   ✗ fetch failed
+[260/995] Mokobara's Strategic Entry into the Malaysian Mark ✗ fetch failed
+[261/995] Plastic World                                      ✗ fetch failed
+[262/995] Software Product (I of IV)                         ✗ fetch failed
+[263/995] Salesforce Efficiency Framework Analysis           ✗ fetch failed
+[264/995] Gift Wrapping Paper                                ✗ fetch failed
+[265/995] Money Bank Call Center                             ✗ fetch failed
+[266/995] Healthy Foods Co.                                  ✗ fetch failed
+[267/995] Thompson Healthcare                                ✗ fetch failed
+[268/995] Super Pens (I of II)                               ✗ fetch failed
+[269/995] Beyond Vehicles: Revenue Diversification Playbook  ✗ fetch failed
+[270/995] Titleist Golf Balls - Malawi Market Entry          ✗ fetch failed
+[271/995] Beer Industry Profit Decline                       ✗ fetch failed
+[272/995] Sunco, Financial Services                          ✗ fetch failed
+[273/995] Multi-Purpose Tool (II of II)                      ✗ fetch failed
+[274/995] Ant Financial Internationalization Strategy        ✗ fetch failed
+[275/995] ABC Conglomerate                                   ✗ fetch failed
+[276/995] Case Interview Approach Guide                      ✗ fetch failed
+[277/995] Sony Group Corporation Stock Acquisition Rights an ✗ fetch failed
+[278/995] Grocery Deli Company                               ✗ fetch failed
+[279/995] Pharmaceutical Distribution (II of II)             ✗ fetch failed
+[280/995] Asian Paints Home Improvement Diversification      ✗ fetch failed
+[281/995] Oncology Firm                                      ✗ fetch failed
+[282/995] Chem Co. (1)                                       ✗ fetch failed
+[283/995] Travel IT Disruption (2)                           ✗ fetch failed
+[284/995] CASE 1                                             ✗ fetch failed
+[285/995] Major Magazine Publisher                           ✗ fetch failed
+[286/995] Pricing Strategy for Regulus Solar Power Inc.      ✗ fetch failed
+[287/995] IIM A Consult Prep Book 2020-21                    ✗ fetch failed
+[288/995] Ubisoft Executive Compensation Policy (FY26)       ✗ fetch failed
+[289/995] JCL Carpets (3)                                    ✗ fetch failed
+[290/995] Termite Control (IV of V)                          ✗ fetch failed
+[291/995] Admedi Co.                                         ✗ fetch failed
+[292/995] JCL Carpets (2)                                    ✗ fetch failed
+[293/995] Termite Control                                    ✗ fetch failed
+[294/995] Ant Financial (A) - Strategy and Regulatory Naviga ✗ fetch failed
+[295/995] Bain & Company Interview Cases (Priyal Motwani)    ✗ fetch failed
+[296/995] Polyethylene Resin Case                            ✗ fetch failed
+[297/995] Fishing Company                                    ✗ fetch failed
+[298/995] Traditional Kitchen Company Digital Disruption     ✗ fetch failed
+[299/995] Revenue Growth                                     ✗ fetch failed
+[300/995] MIMO Technology (3) - Market Sizing                ✗ fetch failed
+[301/995] IT Conglomerate Attrition Case                     ✗ fetch failed
+[302/995] MIMO Technology (4)                                ✗ fetch failed
+[303/995] Coffee Vending Machine                             ✗ fetch failed
+[304/995] Unicloth                                           ✗ fetch failed
+[305/995] Fast Food Loyalty Program Profitability            ✗ fetch failed
+[306/995] Fast Food Loyalty (1)                              ✗ fetch failed
+[307/995] Total Landed Cost                                  ✗ fetch failed
+[308/995] Retailer Discounting (II of II)                    ✗ fetch failed
+[309/995] Burger Chain Profitability                         ✗ fetch failed
+[310/995] HealthCo Market Entry                              ✗ fetch failed
+[311/995] Bid Strategy for GOT Season 8                      ✗ fetch failed
+[312/995] Asset Holding Company Divestment                   ✗ fetch failed
+[313/995] Federal Motors                                     ✗ fetch failed
+[314/995] Chicago Parking Meter Case                         ✗ fetch failed
+[315/995] No. of Petrol Pumps in Bangalore                   ✗ fetch failed
+[316/995] Tractor Company                                    ✗ fetch failed
+[317/995] Refinery Expansion Project                         ✗ fetch failed
+[318/995] Eye Surgery Equipment Manufacturer M&A             ✗ fetch failed
+[319/995] Estimate the revenue of a typical post office in I ✗ fetch failed
+[320/995] eNP & Co – Retail Company                          ✗ fetch failed
+[321/995] Cost Assumptions                                   ✗ fetch failed
+[322/995] Credit Card Company Profitability                  ✗ fetch failed
+[323/995] Business in Mumbai and the life of an FE           ✗ fetch failed
+[324/995] Estimate the number of heaters sold in India in 20 ✗ fetch failed
+[325/995] Clothing Chain Goes Global and Local               ✗ fetch failed
+[326/995] Ubisoft Universal Registration Document 2022-23    ✗ fetch failed
+[327/995] Ubisoft Financial Statements Excerpt               ✗ fetch failed
+[328/995] Ubisoft Share Capital and Ownership Structure      ✗ fetch failed
+[329/995] Commercial Bank Profitability                      ✗ fetch failed
+[330/995] E-commerce Player E-pharmacy Market Entry          ✗ fetch failed
+[331/995] Square Enix Financial Notes and Accounts Receivabl ✗ fetch failed
+[332/995] Allsafe Insurance M&A Case                         ✗ fetch failed
+[333/995] Hamm's University Profitability Decline            ✗ fetch failed
+[334/995] Switching Costs                                    ✗ fetch failed
+[335/995] Fintech in UAE Market                              ✗ fetch failed
+[336/995] Microsoft Teams Customer Value Proposition         ✗ fetch failed
+[337/995] French Museum                                      ✗ fetch failed
+[338/995] Mega Pharma Store Closure Analysis                 ✗ fetch failed
+[339/995] Chic Cosmetology                                   ✗ fetch failed
+[340/995] CASE 17                                            ✓ enriched in 3.9s → data/dossiers/749c48b1-ad6f-4b55-a13c-b6462f9186e1.json
+[341/995] High Q Plastics                                    ✗ fetch failed
+[342/995] Pharmaceutical Pricing for AIDS Drug in Developing ✗ fetch failed
+[343/995] Anti-Smoking Pills                                 ✗ fetch failed
+[344/995] CPG Company Food Service Growth                    ✗ fetch failed
+[345/995] Kellogg in India                                   ✗ fetch failed
+[346/995] The Vitamin Store                                  ✗ fetch failed
+[347/995] Meditest                                           ✗ fetch failed
+[348/995] Pump Manufacturer                                  ✗ fetch failed
+[349/995] Ferris Wheel                                       ✗ fetch failed
+[350/995] Winter Olympics Bidding                            ✗ fetch failed
+[351/995] Current Revenues and Costs                         ✗ fetch failed
+[352/995] Public Sector Bank Profitability                   ✗ fetch failed
+[353/995] IT Company Talent Management                       ✗ fetch failed
+[354/995] Wildcat Wings                                      ✗ fetch failed
+[355/995] Syzygy Supercomputers                              ✗ fetch failed
+[356/995] Bell Computer Inc.                                 ✗ fetch failed
+[357/995] Gift Wrapping Paper Outsourcing Decision           ✗ fetch failed
+[358/995] After School Programming                           ✗ fetch failed
+[359/995] Primary Investment vs. M&A (Quantitative)          ✗ fetch failed
+[360/995] Retail Bank Private Division Growth                ✗ fetch failed
+[361/995] FMCG: Supply Chain                                 ✗ fetch failed
+[362/995] Food Processing Industry                           ✗ fetch failed
+[363/995] Car Insurance Direct Sales                         ✗ fetch failed
+[364/995] HVAC Service Provider (II of II)                   ✗ fetch failed
+[365/995] Hospitality Co                                     ✗ fetch failed
+[366/995] Guesstimate 4: Estimate the value of a coffin make ✗ fetch failed
+[367/995] Estimate the revenue of tourism in Gujarat in peak ✗ fetch failed
+[368/995] Ad Tech                                            ✗ fetch failed
+[369/995] Potash Corporation Profitability Case              ✗ fetch failed
+[370/995] CASE 14                                            ✗ fetch failed
+[371/995] The Robbery                                        ✗ fetch failed
+[372/995] TV Screens – Supply Chain Pricing                  ✗ fetch failed
+[373/995] Logistics Company Cost Reduction                   ✗ fetch failed
+[374/995] Keeping the Company Intact                         ✗ fetch failed
+[375/995] Logistics Industry                                 ✗ fetch failed
+[376/995] CAE Inc. Growth Strategy                           ✗ fetch failed
+[377/995] Who Needs Flight Simulators?                       ✗ fetch failed
+[378/995] Go Green Strategy                                  ✗ fetch failed
+[379/995] PC Manufacturer Direct Sales Channel Strategy      ✗ fetch failed
+[380/995] Forever Diamond Canadian Market Entry              ✗ fetch failed
+[381/995] Harris's Decision                                  ✗ fetch failed
+[382/995] Zootopia                                           ✗ fetch failed
+[383/995] Job Portal for Migrant Workers in India            ✗ fetch failed
+[384/995] BrowserStack                                       ✗ fetch failed
+[385/995] Unilever Logistics Cost Reduction                  ✗ fetch failed
+[386/995] Sony Group Corporation History and Development     ✗ fetch failed
+[387/995] CFA Institute Research Challenge Guidelines        ✗ fetch failed
+[388/995] Hong Kong Port (V of VII)                          ✗ fetch failed
+[389/995] Multi-Purpose Tool (I of II)                       ✗ fetch failed
+[390/995] Electronics Manufacturing Industry                 ✗ fetch failed
+[391/995] Online Medicine Delivery Market Sizing             ✗ fetch failed
+[392/995] HealthifyMe SignUp                                 ✗ fetch failed
+[393/995] United States Healthcare (I of II)                 ✗ fetch failed
+[394/995] Software Product (II of IV)                        ✗ fetch failed
+[395/995] Software Product (IV of IV)                        ✗ fetch failed
+[396/995] Regulus Solar Power Inc.: Price Demand Elasticitie ✗ fetch failed
+[397/995] Cheesy Situation                                   ✗ fetch failed
+[398/995] Beijing International Airport                      ✗ fetch failed
+[399/995] H Health                                           ✗ fetch failed
+[400/995] GasCo Pipeline Joint Venture                       ✗ fetch failed
+[401/995] Insurance Company Acquisition                      ✗ fetch failed
+[402/995] Buyout PE Fund Investment                          ✗ fetch failed
+[403/995] Software Product (III of IV)                       ✗ fetch failed
+[404/995] Financial Data and Stock Option Disclosures        ✗ fetch failed
+[405/995] Copper Ore Mining Investment                       ✗ fetch failed
+[406/995] Sheep Auction (III of VI)                          ✗ fetch failed
+[407/995] Revenue Estimation for a Retailer with Mall and Fl ✗ fetch failed
+[408/995] ON Court Digital Transformation in Kollam: Overcom ✗ fetch failed
+[409/995] School Buses (I of II)                             ✗ fetch failed
+[410/995] Tissue Paper (I of II)                             ✗ fetch failed
+[411/995] Charcuterie Processor (I of III)                   ✗ fetch failed
+[412/995] The Digital Docket Paradox: Bridging the Chasm Bet ✗ fetch failed
+[413/995] LinkedIn Analysis                                  ✗ fetch failed
+[414/995] School Buses (II of II)                            ✗ fetch failed
+[415/995] Bakery Shop                                        ✗ fetch failed
+[416/995] Vitality Insurance, Inc.                           ✗ fetch failed
+[417/995] Retailer Discounting (I of II)                     ✗ fetch failed
+[418/995] Powder, Energy Bars and Protein Bars Market        ✗ fetch failed
+[419/995] Sony Group Corporation Other Comprehensive Income  ✗ fetch failed
+[420/995] PC Manufacturer Direct Selling Strategy            ✗ fetch failed
+[421/995] Candy Manufacturing                                ✗ fetch failed
+[422/995] Chickflix.com                                      ✗ fetch failed
+[423/995] Business Class Airline                             ✗ fetch failed
+[424/995] Everlasting Light Bulb                             ✗ fetch failed
+[425/995] Mexican Dishes                                     ✗ fetch failed
+[426/995] Wharton Casebook 2017 Case 8                       ✗ fetch failed
+[427/995] YouTube Average Viewing Time                       ✗ fetch failed
+[428/995] Fine China                                         ✗ fetch failed
+[429/995] The End of the Road                                ✗ fetch failed
+[430/995] Byju's Investment Opportunity                      ✗ fetch failed
+[431/995] UPS in Italy                                       ✗ fetch failed
+[432/995] Parking Meter Revenue Estimation                   ✗ fetch failed
+[433/995] Design an enterprise-level chatbot                 ✗ fetch failed
+[434/995] AirJet Inc. Profitability Strategy                 ✗ fetch failed
+[435/995] Bun on the Run                                     ✗ fetch failed
+[436/995] NDL Startup Funding Diagnosis                      ✗ fetch failed
+[437/995] Circuit Boards                                     ✗ fetch failed
+[438/995] Software Product                                   ✗ fetch failed
+[439/995] Gas Station Profitability Analysis                 ✗ fetch failed
+[440/995] Estimate Sales of EV Passenger Vehicles in 2030    ✗ fetch failed
+[441/995] Ubisoft Corporate History and Financial Highlights ✗ fetch failed
+[442/995] Improving Profitability                            ✗ fetch failed
+[443/995] ISP Market Entry in Africa                         ✗ fetch failed
+[444/995] HUL Logistics Cost Reduction                       ✗ fetch failed
+[445/995] Marketing Budget Allocation for Premium Cadbury Ch ✗ fetch failed
+[446/995] Improving Profitability - Clothing Company         ✗ fetch failed
+[447/995] Tulsa Hotel - OK or not OK?                        ✗ fetch failed
+[448/995] Graphical Interpretation: Introduction             ✗ fetch failed
+[449/995] Airport Profitability                              ✗ fetch failed
+[450/995] New Product Development                            ✗ fetch failed
+[451/995] IT Services                                        ✗ fetch failed
+[452/995] U.S. Shoe Manufacturing                            ✗ fetch failed
+[453/995] Private Equity                                     ✗ fetch failed
+[454/995] Shoe Manufacturing Location Decision               ✗ fetch failed
+[455/995] Chicago Parking Meter Revenue Estimation           ✗ fetch failed
+[456/995] Graphical Interpretation Case                      ✗ fetch failed
+[457/995] Personal Interviews                                ✗ fetch failed
+[458/995] Consulting Interview Book (Excerpt)                ✗ fetch failed
+[459/995] Consulting Career Meaning and Interview Process    ✗ fetch failed
+[460/995] Level Loading vs Seniority                         ✗ fetch failed
+[461/995] Supermarket Chain Revenue Improvement              ✗ fetch failed
+[462/995] Field Engineer Attrition in Mumbai                 ✗ fetch failed
+[463/995] Primary Investment vs. M&A (Qualitative)           ✗ fetch failed
+[464/995] Ubisoft Board of Directors and Corporate Governanc ✗ fetch failed
+[465/995] SLS Offshore Attrition Case                        ✗ fetch failed
+[466/995] Netflix Adoption Rate in India                     ✗ fetch failed
+[467/995] SLS High Attrition Case                            ✗ fetch failed
+[468/995] Airport Case                                       ✗ fetch failed
+[469/995] Electric Charging Stations Guesstimate             ✗ fetch failed
+[470/995] Sony Group Revenue and Contract Balances (Financia ✗ fetch failed
+[471/995] Sony Group Corporation Financial Data (Fiscal Year ✗ fetch failed
+[472/995] SLC Airport Passenger Estimation                   ✗ fetch failed
+[473/995] Human Capital Case                                 ✗ fetch failed
+[474/995] Strategic Portfolio Assessment                     ✗ fetch failed
+[475/995] Allentown Materials Corporation: The Electronic Pr ✗ fetch failed
+[476/995] Sizing the US market for snacking almonds          ✗ fetch failed
+[477/995] Human Capital Case: Acquisition Integration        ✗ fetch failed
+[478/995] Yermakov Local Fashion Training                    ✗ fetch failed
+[479/995] Portfolio Restructuring                            ✗ fetch failed
+[480/995] Free Trade vs. Protectionism Decision              ✗ fetch failed
+[481/995] Google Search Ads Spam Clicks                      ✗ fetch failed
+[482/995] Pharma Company Outsourcing                         ✗ fetch failed
+[483/995] Waltham&Rose Human Capital Case                    ✗ fetch failed
+[484/995] Data Request Brainstorm                            ✗ fetch failed
+[485/995] Total Landed Cost - Sourcing Decision for Shoes    ✗ fetch failed
+[486/995] Indian Airlines Company                            ✗ fetch failed
+[487/995] Sports Team Valuation Case                         ✗ fetch failed
+[488/995] Medical Device Co. BloodStopper Cost Breakdown     ✗ fetch failed
+[489/995] China's Iron Ore Cash Cost Curve Analysis          ✗ fetch failed
+[490/995] Prisoner's Dilemma Payoff Matrix Analysis          ✗ fetch failed
+[491/995] Purchasing Your Coffee Maker                       ✗ fetch failed
+[492/995] Edible Oil Manufacturer                            ✗ fetch failed
+[493/995] Food Catering Company DSO Investigation            ✗ fetch failed
+[494/995] Candy Manufacturing                                ✗ fetch failed
+[495/995] Synergy Analysis for Baseball Team Acquisition     ✗ fetch failed
+[496/995] National Park Service Ranger Retention             ✗ fetch failed
+[497/995] Late Partner                                       ✗ fetch failed
+[498/995] Ranger Retention Cost Analysis                     ✗ fetch failed
+[499/995] National Park Ranger Retention Brainstorming       ✗ fetch failed
+[500/995] Chickflix.com                                      ✗ fetch failed
+[501/995] Penn & Teller Show Profitability                   ✗ fetch failed
+[502/995] Improving Tourism Revenues                         ✗ fetch failed
+[503/995] Design an app for regional music promotion         ✗ fetch failed
+[504/995] Economic Impact of a Sporting Event                ✗ fetch failed
+[505/995] Caesars P&T Show Replacement Decision              ✗ fetch failed
+[506/995] University Apartments                              ✗ fetch failed
+[507/995] Home Inspectors Expansion                          ✗ fetch failed
+[508/995] Pharmaceutical Industry                            ✗ fetch failed
+[509/995] Middle East Nationalisation Policy – Consulting Im ✗ fetch failed
+[510/995] EnerForce Acquisition Case                         ✗ fetch failed
+[511/995] SKP Screen Sales Volume & Discounting Analysis     ✗ fetch failed
+[512/995] Value Chain Cost Structure Analysis                ✗ fetch failed
+[513/995] Home Inspection Co.                                ✗ fetch failed
+[514/995] Big School Bus Company                             ✗ fetch failed
+[515/995] Swiggy Profitability and Strategic Analysis        ✗ fetch failed
+[516/995] University Bank                                    ✗ fetch failed
+[517/995] PwC India Case: Procurement at ISB & FMCG Supply C ✗ fetch failed
+[518/995] Medical Device Co. & Spongy's Deal                 ✗ fetch failed
+[519/995] Discount/Volume Curve Analysis                     ✗ fetch failed
+[520/995] Don Rogers' Leadership and Organizational Changes  ✗ fetch failed
+[521/995] Pricing of Apartments in a New Housing Complex     ✗ fetch failed
+[522/995] Vivid TV Screen Pricing Case                       ✗ fetch failed
+[523/995] Vivid Customer Feedback Analysis                   ✗ fetch failed
+[524/995] Market Entry Analysis of Colorado                  ✗ fetch failed
+[525/995] Packard Electric RIM Grommet Development Decision  ✗ fetch failed
+[526/995] Gas Station Profit Decline                         ✗ fetch failed
+[527/995] Case II                                            ✗ fetch failed
+[528/995] Telecom Service Provider Churn Rate Reduction      ✗ fetch failed
+[529/995] Telecom Service Provider Customer Retention        ✗ fetch failed
+[530/995] Sony Group Partial Spin-off of Financial Services  ✗ fetch failed
+[531/995] Cost Analysis for Retail Stores                    ✗ fetch failed
+[532/995] BMW PLANT SETUP                                    ✗ fetch failed
+[533/995] Cow Feed Pricing Case                              ✗ fetch failed
+[534/995] Product Manager Career Path                        ✗ fetch failed
+[535/995] Movin’ on Out: Local Co. Clothing                  ✗ fetch failed
+[536/995] Too Dollar Store                                   ✗ fetch failed
+[537/995] Candy Manufacturing Profitability Analysis         ✗ fetch failed
+[538/995] Bike DVD Rental Service in NYC                     ✗ fetch failed
+[539/995] Allentown Materials Corporation EPD: New Product D ✗ fetch failed
+[540/995] The Coffee Grind                                   ✗ fetch failed
+[541/995] Division Poor Performance Diagnosis                ✗ fetch failed
+[542/995] Security Systems (II of VI)                        ✗ fetch failed
+[543/995] Sony Group Corporation Financial Disclosures on Ac ✗ fetch failed
+[544/995] Big Truck Company                                  ✗ fetch failed
+[545/995] Candy Manufacturing Profitability                  ✗ fetch failed
+[546/995] Design a security system for Satya Nadella’s house ✗ fetch failed
+[547/995] LOW-MID RANGE AIR CARRIER                          ✗ fetch failed
+[548/995] On-Site Service Execution                          ✗ fetch failed
+[549/995] Unit Profitability Conclusion - Offshoring Manufac ✗ fetch failed
+[550/995] Chickflix.com Pricing Case                         ✗ fetch failed
+[551/995] Chickflix.com Profitability Decline                ✗ fetch failed
+[552/995] Favorite App Analysis                              ✗ fetch failed
+[553/995] Palm Beach Capital Cruise Line Acquisition         ✗ fetch failed
+[554/995] Hotel and Hospitality Performance Metrics          ✗ fetch failed
+[555/995] Oil and Gas                                        ✗ fetch failed
+[556/995] Airline Industry Performance Metrics               ✗ fetch failed
+[557/995] Vidi-Games                                         ✗ fetch failed
+[558/995] Insurance in Financial Services                    ✗ fetch failed
+[559/995] Private Equity Fund Acquisition                    ✗ fetch failed
+[560/995] Cost Assumptions (2 of 2)                          ✗ fetch failed
+[561/995] Big School Bus Company                             ✗ fetch failed
+[562/995] American Beauty Company - Market Share Calculation ✗ fetch failed
+[563/995] American Beauty Company                            ✗ fetch failed
+[564/995] Appliance Insurance (II of II)                     ✗ fetch failed
+[565/995] Consulting Firm Utilization Analysis               ✗ fetch failed
+[566/995] Cab Call Drop Issue                                ✗ fetch failed
+[567/995] National Business Case Study Competition           ✗ fetch failed
+[568/995] Infrastructure Industry Performance Metrics        ✗ fetch failed
+[569/995] Case 9: Calling the TTC                            ✗ fetch failed
+[570/995] Big School Bus Company: Extracting More Value      ✗ fetch failed
+[571/995] Automotive Performance Metrics                     ✗ fetch failed
+[572/995] Beer Manufacturing Company – Cost Structure        ✗ fetch failed
+[573/995] Product Manager Role                               ✗ fetch failed
+[574/995] Skedasky Farms                                     ✗ fetch failed
+[575/995] Sugar Reduction Value Case                         ✗ fetch failed
+[576/995] Yermakov Human Capital Case                        ✗ fetch failed
+[577/995] FMCG Performance Metrics                           ✗ fetch failed
+[578/995] Retail                                             ✗ fetch failed
+[579/995] Sugar Reduction Value Assessment                   ✗ fetch failed
+[580/995] EPC Client - Solar Manufacturing Market Entry      ✗ fetch failed
+[581/995] Sponge Iron Manufacturer                           ✗ fetch failed
+[582/995] Hospitality Industry                               ✗ fetch failed
+[583/995] Malaysia in the 1990s (A)                          ✗ fetch failed
+[584/995] Price for My Prize?                                ✗ fetch failed
+[585/995] Fruit Juice Manufacturer                           ✗ fetch failed
+[586/995] Battery Manufacturer                               ✗ fetch failed
+[587/995] Revolutionary Teleportation Device                 ✗ fetch failed
+[588/995] What About the Leftovers?                          ✗ fetch failed
+[589/995] Flipkart Medium-Term Growth Strategy               ✗ fetch failed
+[590/995] Polyethylene Resin (4)                             ✗ fetch failed
+[591/995] Guesstimates Compilation (Gold Flake, Crows, Multi ✗ fetch failed
+[592/995] Urea Manufacturer Revenue Decline                  ✗ fetch failed
+[593/995] Portable BP Machine Manufacturer                   ✗ fetch failed
+[594/995] SHARE IITK Global Case Competition: Emotion-Aware  ✗ fetch failed
+[595/995] 100 Ball Cricket Game                              ✗ fetch failed
+[596/995] Textile Business Owner                             ✗ fetch failed
+[597/995] Public Sector Bank Profitability Decline           ✗ fetch failed
+[598/995] Avaan Product Catalogue                            ✗ fetch failed
+[599/995] Hepatitis Drug Pricing                             ✗ fetch failed
+[600/995] How many passengers does the SLC Airport handle an ✗ fetch failed
+[601/995] Russian Heavy Truck Manufacturer                   ✗ fetch failed
+[602/995] Outsourcing/Offshoring                             ✗ fetch failed
+[603/995] Smyth & Company Credit Risk Assessment             ✗ fetch failed
+[604/995] Consulting at UCLA Anderson                        ✗ fetch failed
+[605/995] Chinese Cars                                       ✗ fetch failed
+[606/995] Steel Manufacturer Performance Improvement         ✗ fetch failed
+[607/995] Clairvoyance 2026: Healthsol Disaster Response Str ✗ fetch failed
+[608/995] Squash Balls                                       ✗ fetch failed
+[609/995] Rogers's Leadership and EPD Performance Problem    ✗ fetch failed
+[610/995] Food Catering Company - Increase in Days Sales Out ✗ fetch failed
+[611/995] Hugo Noos Online Expansion                         ✗ fetch failed
+[612/995] Clairvoyance 2026: Healthsol Disaster Response Str ✗ fetch failed
+[613/995] Airlines Industry Overview                         ✗ fetch failed
+[614/995] Smyth & Company Financing Decision                 ✗ fetch failed
+[615/995] The Coffee Grind                                   ✗ fetch failed
+[616/995] Packard Electric RIM Grommet Decision              ✗ fetch failed
+[617/995] Packard Electric RIM Grommet Development           ✗ fetch failed
+[618/995] Report on Pricing Strategies for Regulus Solar Pow ✗ fetch failed
+[619/995] Human Capital Case Framework                       ✗ fetch failed
+[620/995] Electronic Products Division (EPD) Performance Dec ✗ fetch failed
+[621/995] Argentina Sovereign Debt Repudiation Evaluation    ✗ fetch failed
+[622/995] Malaysia's Development Strategy Evaluation         ✗ fetch failed
+[623/995] Estimating Instagram Uploads in India              ✗ fetch failed
+[624/995] Oil Distributor – Interview Transcript             ✗ fetch failed
+[625/995] Waltham&Rose Training Methodologies                ✗ fetch failed
+[626/995] Tackling Case Analysis                             ✗ fetch failed
+[627/995] Framework and Clarifying Questions                 ✗ fetch failed
+[628/995] Don Rogers' Leadership at Electronic Products Divi ✗ fetch failed
+[629/995] Malaysia in the 1990s (A) Development Strategy Eva ✗ fetch failed
+[630/995] General Motors: Packard Electric Division - RIM Gr ✗ fetch failed
+[631/995] General Motors: Packard Electric Division          ✗ fetch failed
+[632/995] Allentown Materials Corporation: EPD Conflict and  ✗ fetch failed
+[633/995] Allentown Materials Corporation: Electronic Produc ✗ fetch failed
+[634/995] Allentown Materials Corporation: New Product Devel ✗ fetch failed
+[635/995] Paint Pricing                                      ✗ fetch failed
+[636/995] Matt's Coffee Maker Decision                       ✗ fetch failed
+[637/995] Square Enix Holdings Corporate Governance Structur ✗ fetch failed
+[638/995] ChocolateCo: Profits are not so sweet              ✗ fetch failed
+[639/995] CarPool: Expansion across the Pond                 ✗ fetch failed
+[640/995] CruiseLine Co. Acquisition                         ✗ fetch failed
+[641/995] Guesstimating Number of Parking Slots at Navi Mumb ✗ fetch failed
+[642/995] Bank Robber                                        ✗ fetch failed
+[643/995] Hair Products Private Equity Case                  ✗ fetch failed
+[644/995] The Philadelphia Zoo Buys a Panda                  ✗ fetch failed
+[645/995] ChocolateCo Project                                ✗ fetch failed
+[646/995] Waltham&Rose Case                                  ✗ fetch failed
+[647/995] Oil Manufacturer                                   ✗ fetch failed
+[648/995] Squash Balls Sold in India                         ✗ fetch failed
+[649/995] Fabio's: Hair Salons and Headshots                 ✗ fetch failed
+[650/995] Palm Beach Capital: Cruise Line Acquisition        ✗ fetch failed
+[651/995] Local Co. Clothing Offshoring                      ✗ fetch failed
+[652/995] BudgetAirCo Baggage Fee                            ✗ fetch failed
+[653/995] Helicopter Market                                  ✗ fetch failed
+[654/995] Milk Required by Each Coffee Shop in Connaught Pla ✗ fetch failed
+[655/995] Hospitality Industry Overview                      ✗ fetch failed
+[656/995] Middle East Nationalisation Policy – Consulting Im ✗ fetch failed
+[657/995] Defending Swiggy's Margin: Two AI Threats          ✗ fetch failed
+[658/995] Closing Swiggy's Order Frequency Gap               ✗ fetch failed
+[659/995] Number of flights taking off from Delhi per week   ✗ fetch failed
+[660/995] Prosperity Pitch: The 'Weave UP' Strategic Framewo ✗ fetch failed
+[661/995] Heavy Things Fitness: Declining Membership Analysi ✗ fetch failed
+[662/995] ReStrategize for Hippo                             ✗ fetch failed
+[663/995] Mokobara Malaysia Market Entry                     ✗ fetch failed
+[664/995] Ant Financial International Expansion Strategy     ✗ fetch failed
+[665/995] Number of Ola and Uber Cabs Running in Delhi NCR p ✗ fetch failed
+[666/995] Market Size of Healthy Biscuit Industry in India   ✗ fetch failed
+[667/995] Product Proposal Template                          ✗ fetch failed
+[668/995] Uttar Pradesh Textile Sector Revitalization        ✗ fetch failed
+[669/995] Ant Financial (A)                                  ✗ fetch failed
+[670/995] Revenue of a Salon per Year                        ✗ fetch failed
+[671/995] Ant Financial's Internationalization: Serving Chin ✗ fetch failed
+[672/995] Ant Financial's Internationalization: Replicating  ✗ fetch failed
+[673/995] Ant Financial's Credit Profiling: Zhima Credit and ✗ fetch failed
+[674/995] Ant Financial's Processing Capabilities and Risk M ✗ fetch failed
+[675/995] Number of Orders Placed on Swiggy in Delhi in a Da ✗ fetch failed
+[676/995] Heavy Things Fitness: Targeting Gen X and Y Custom ✗ fetch failed
+[677/995] The Curious Case of the Rubber Factory             ✗ fetch failed
+[678/995] Ant Financial's MYbank: 3-1-0 Loan System for Smal ✗ fetch failed
+[679/995] Electronics Retailer (II of III)                   ✗ fetch failed
+[680/995] New Heritage Doll Company: Capital Budgeting       ✗ fetch failed
+[681/995] Drop in profits of a fishing company               ✓ enriched in 4.2s → data/dossiers/3aa35af4-92e8-44ed-a894-e6a597919d68.json
+[682/995] Alpha Sports Team Investment                       ✓ enriched in 3.5s → data/dossiers/ab59f069-7b50-4d96-830e-9683819f48ec.json
+[683/995] Book Retailer                                      ✗ cerebras 404: {"message":"Model llama3.1-70b does not exist or you do not have access to it.","type":"not_found_error","param":"model","code":"model_not_found"}
+[684/995] Health Insurance Profitability Decline             ✓ enriched in 6.3s → data/dossiers/aa4d1e59-0828-4325-a3a0-33b0048461ae.json
+[685/995] Gridlock: India’s Integrated Energy Transition Cha ✓ enriched in 4.6s → data/dossiers/337e28c5-3a95-4385-b249-638aae3b485c.json
+[686/995] Number of Credit Cards in India                    ✓ enriched in 128.0s → data/dossiers/76566924-6a22-4627-926f-7a60b23e21ae.json
+[687/995] Gumby's Pizza                                      ✓ enriched in 5.3s → data/dossiers/676661c7-e964-4031-a5a8-4cc300a50866.json
+[688/995] Low-Cost Airline Operator                          ✓ enriched in 4.7s → data/dossiers/30fad9d0-627d-4158-848f-171c2571d4c1.json
+[689/995] Beer Manufacturing Company                         ✓ enriched in 3.7s → data/dossiers/6450f445-7d83-4630-9ad8-321e38b85b79.json
+[690/995] Oncology Firm Profitability                        ✓ enriched in 4.0s → data/dossiers/c266eed8-e1ff-4b01-ac67-aaca5be945f8.json
+[691/995] Telecom Billing Process                            ✓ enriched in 51.6s → data/dossiers/f32911f3-13f7-4870-abd7-cdd1aeffd9aa.json
+[692/995] Urea Manufacturer                                  ✓ enriched in 4.8s → data/dossiers/2459d976-6ff3-4171-a24e-6963d3c51607.json
+[693/995] Outstanding Education Loans in India               ✓ enriched in 3.8s → data/dossiers/52c30a21-0b23-4854-b85e-44e9260383aa.json
+[694/995] Market Size of Fantasy Sports in India             ✓ enriched in 3.9s → data/dossiers/4a8427a0-52c9-47fe-b9e2-f1caf7fce836.json
+[695/995] Oil Distributor                                    ✓ enriched in 4.7s → data/dossiers/6fbfc330-76f0-4039-be52-f62ef730feb1.json
+[696/995] Urea Manufacturer Profitability                    ✓ enriched in 4.6s → data/dossiers/4de89b05-b4d2-4374-bb72-7715fea0622c.json
+[697/995] Beverage Manufacturer                              ✓ enriched in 3.8s → data/dossiers/d064779d-902a-4c3d-8831-85e63971429f.json
+[698/995] Revenue of a Delhi-Gurgaon Toll Plaza in a Day     ✓ enriched in 59.1s → data/dossiers/dd653323-a1d7-464f-8119-668bb34b925d.json
+[699/995] Beer Manufacturer Cost Reduction                   ✓ enriched in 4.6s → data/dossiers/d80c2113-d71a-44a1-9579-7f350c6e8c48.json
+[700/995] Public Sector Bank                                 ✓ enriched in 4.1s → data/dossiers/c7f00219-c7c8-4385-ac21-21797f2b6f8a.json
+[701/995] SpiceJet Profitability                             ✓ enriched in 4.1s → data/dossiers/ad42fa12-0ba2-4ab5-9848-aa45380247b4.json
+[702/995] Textile Company                                    ✓ enriched in 3.7s → data/dossiers/cbe03764-03d2-4bba-a0ce-c0f084eba062.json
+[703/995] Market Size of Tyre Industry in India per Year     ✓ enriched in 4.4s → data/dossiers/781a169e-4eb8-4cf0-8a60-5d2975b7b59f.json
+[704/995] Product Pe Charcha: Job Portal for Migrant Workers ✓ enriched in 27.4s → data/dossiers/2ac0d72d-0fc2-4ade-b6cc-c3671a7fa928.json
+[705/995] Textile Company Return on Capital                  ✓ enriched in 4.5s → data/dossiers/76b45c95-d108-459b-bbd9-77e3f071173e.json
+[706/995] Integrated Steel Manufacturer                      ✓ enriched in 3.8s → data/dossiers/974fac9a-c10a-4f0f-9d48-1501637c87c8.json
+[707/995] To Buy or Not to Buy – The Case of Home Art Store  ✓ enriched in 5.8s → data/dossiers/c9a4734f-4948-49be-bc00-e6fdb653ee69.json
+[708/995] Meal Coupon Company                                ✓ enriched in 5.1s → data/dossiers/2b021f2f-b960-4bce-b6cf-0d41d622e92a.json
+[709/995] Strategic Management Master Compendium: The Consul ✓ enriched in 32.5s → data/dossiers/e9876d9a-e37c-4f60-b409-3ac7bef0609f.json
+[710/995] Steel Industry                                     ✓ enriched in 4.5s → data/dossiers/4dbbc6cc-aad3-4488-bb96-286fa159195a.json
+[711/995] Restaurant Profitability                           ✓ enriched in 3.8s → data/dossiers/ea05b5f0-bc22-421e-bccf-edc261972c16.json
+[712/995] Client Card Company                                ✓ enriched in 4.5s → data/dossiers/ef4e90d7-cb31-49b6-bd73-f50da0ddc299.json
+[713/995] Insurance company                                  ✓ enriched in 4.2s → data/dossiers/e36f41a2-dd55-40ad-9b41-553d6b15c55b.json
+[714/995] Insurance Market Entry                             ✓ enriched in 83.8s → data/dossiers/fb34bd54-d6cf-47d2-9063-203ee439d46a.json
+[715/995] Market Entry                                       ✓ enriched in 3.8s → data/dossiers/509f7d00-3ec4-4ae1-a186-1a821b441cca.json
+[716/995] Nuvie Social Growth Challenge                      ✓ enriched in 4.8s → data/dossiers/4c063f1d-373b-4450-b4b0-4079217c604c.json
+[717/995] Electric buses                                     ✓ enriched in 4.1s → data/dossiers/333df41c-9679-46e5-9fc5-eccf5ace983f.json
+[718/995] Seat Manufacturer Cost Reduction                   ✓ enriched in 5.0s → data/dossiers/8181564d-a51b-4bec-aeb4-9d4d34b398f0.json
+[719/995] Retirement benefits policy                         ✓ enriched in 37.2s → data/dossiers/a5eb8d8a-0b1a-46d7-9192-cb0a48f3ba75.json
+[720/995] New Product Launch                                 ✓ enriched in 69.4s → data/dossiers/9290ef95-efcc-4ed6-8f50-692e50bd1dff.json
+[721/995] Helicopter Service                                 ✓ enriched in 68.3s → data/dossiers/19ff3f61-a3ff-46ca-a3f5-dd1070f07355.json
+[722/995] Strategic Audit: The Guardian (2008) - Transition  ✓ enriched in 83.1s → data/dossiers/b5f5fab1-deed-4386-9a60-0485839f4e8e.json
+[723/995] European Airline Expansion                         ✓ enriched in 104.5s → data/dossiers/f0ab679a-ce2f-4484-8175-7601fe3cbab7.json
+[724/995] Surya Electrical Company                           ✓ enriched in 100.5s → data/dossiers/4cf055bd-b912-4bc5-aecd-f5ccf029c269.json
+[725/995] European Airline                                   ✓ enriched in 81.0s → data/dossiers/5b688d66-a01d-4caa-bb61-0e747e5d2bba.json
+[726/995] Cow Feed Pricing                                   ✓ enriched in 71.6s → data/dossiers/523631cd-c812-41c5-ad8c-959d261cf3e6.json
+[727/995] Fintech Market Entry in UAE                        ✓ enriched in 161.3s → data/dossiers/82f377d0-532e-47cf-88c8-0f553836a839.json
+[728/995] Weekly Revenue from Food Stalls in a Delhi Mall Fo ✓ enriched in 198.5s → data/dossiers/68dfcc33-ad3c-4025-bb81-0eeaec06adfa.json
+[729/995] Ubisoft Financial Statements Analysis              ✓ enriched in 91.6s → data/dossiers/fbafecbe-7f0f-412b-826b-176115f15b2f.json
+[730/995] Elevator Manufacturer Competitive Response         ✓ enriched in 54.6s → data/dossiers/84141be0-6c74-4b44-ae7d-72b7ed734250.json
+[731/995] Asset Management Performance Metrics               ✓ enriched in 85.7s → data/dossiers/b357d1a3-5222-4e00-9a5b-2e749d1cd558.json
+[732/995] Fortune 500 Client Attrition                       ✓ enriched in 187.7s → data/dossiers/307a4924-28f3-442d-97ed-1ef3fce2c809.json
+[733/995] Maple Tree Accessory Shop                          ✓ enriched in 83.5s → data/dossiers/3e530c02-f5f1-473d-aac1-231890c9a8c2.json
+[734/995] Amount of Paint Required to Paint a Car            ✓ enriched in 67.6s → data/dossiers/7bcb1702-032c-49c6-941f-98f75b4be2a1.json
+[735/995] Scaling General Trade Growth at Technosport        ✓ enriched in 41.2s → data/dossiers/abcdc881-b837-4ca7-af72-7397e507e7e4.json
+[736/995] Wool Yarn Manufacturer Growth Strategy             ✓ enriched in 106.1s → data/dossiers/c8c9016e-e5c7-4add-a09d-de01839de2eb.json
+[737/995] Virtual Reality                                    ✓ enriched in 73.2s → data/dossiers/133753f1-2d13-4011-9245-ea925c8d466f.json
+[738/995] Cab Driver                                         ✓ enriched in 73.6s → data/dossiers/bec6382d-1801-481f-b8a1-03b2a90cf840.json
+[739/995] Indian Oil and Gas Company Growth Strategy         ✓ enriched in 145.6s → data/dossiers/90ad5bc9-8e32-4a94-bc92-217e10fc5b97.json
+[740/995] Residential Complex Pricing                        ✓ enriched in 94.9s → data/dossiers/c107ced9-1919-4bc6-86f4-4f19b2c8a3e0.json
+[741/995] Packaging Manufacturer                             ✓ enriched in 4.5s → data/dossiers/6783bc33-6273-4f17-ac2f-be96fe721edc.json
+[742/995] Digitization of Indian General Trade for Activewea ✓ enriched in 125.9s → data/dossiers/9ab987c5-6166-4241-8379-c6d9a0714022.json
+[743/995] Consulting Interview Book - Resources and Evaluati ✓ enriched in 100.1s → data/dossiers/534fbccf-e930-46e7-99fc-f7f76adc57a7.json
+[744/995] Light Bulb Pricing                                 ✓ enriched in 146.3s → data/dossiers/7ed63c59-414d-4181-b662-63cee0a42bf9.json
+[745/995] General Trade                                      ✓ enriched in 99.3s → data/dossiers/e6e76f7c-9727-423c-9ce1-9e8613722e90.json
+[746/995] Horizontal Integration in E-commerce               ✓ enriched in 94.1s → data/dossiers/97a33630-94f7-4917-9a1a-d37d74734204.json
+[747/995] Threat of New Entrant                              ✓ enriched in 132.2s → data/dossiers/4fb21add-958c-4cc1-a7d9-40691daf6c72.json
+[748/995] McKinsey & Company Interview Experiences with Solu ✓ enriched in 71.4s → data/dossiers/61af96d8-26ed-4484-8ef0-d26fb576b961.json
+[749/995] MIMO Technology (8)                                ✓ enriched in 31.7s → data/dossiers/e9456db0-bbaf-4fe6-b135-659b39fee9f2.json
+[750/995] Acquisition of a Payment Service Provider          ✓ enriched in 110.1s → data/dossiers/b027539e-cdeb-429d-9c0d-edd48507cbbd.json
+[751/995] Expansion of Refining Capacity                     ✓ enriched in 183.2s → data/dossiers/002ec026-a161-4ce5-823c-96ba0f0076a7.json
+[752/995] Declining Response in a Competition                ✓ enriched in 92.8s → data/dossiers/a31c9794-f52f-48a7-b8f0-5a54e0bcd504.json
+[753/995] Cyclicity in Malaria Medicine Prices               ✗ cerebras 404: {"message":"Model llama3.1-70b does not exist or you do not have access to it.","type":"not_found_error","param":"model","code":"model_not_found"}
+[754/995] Guesstimate 3: Estimate the annual revenue of a mu ✓ enriched in 72.9s → data/dossiers/f29610f0-2d28-4078-bc03-f3add4b01680.json
+[755/995] Orange Yoga Studio: Increase Class Size            ✓ enriched in 74.1s → data/dossiers/887dda52-07d0-4949-a0f8-2f2182b56a2b.json
+[756/995] Guesstimate 1: Estimate the annual demand for Gold ✓ enriched in 141.3s → data/dossiers/0773dc4d-6f2e-4cf8-b858-63e69d05e5e4.json
+[757/995] Guesstimate 2: Estimate the number of crows in Ahm ✓ enriched in 116.1s → data/dossiers/2fec2896-15d4-4311-81fe-5a74c8a4da1e.json
+[758/995] Formula 1                                          ✓ enriched in 41.9s → data/dossiers/91dcb899-f3a9-4dcb-9599-23cd79f39d45.json
+[759/995] Karate the next Cricket                            ✓ enriched in 88.7s → data/dossiers/d7b3b09f-ba04-4eb9-9a0e-8d159efbbcb5.json
+[760/995] Oil Transport Contract                             ✓ enriched in 195.5s → data/dossiers/f7d9cd45-aa93-4f89-9448-fcac0a9dce51.json
+[761/995] Expenditure Incurred by Government of India in Lok ✓ enriched in 131.1s → data/dossiers/8435dfe4-529b-4a5d-993b-54cc75671d5b.json
+[762/995] Airline Operator Profitability Case                ✓ enriched in 86.6s → data/dossiers/9e0413fe-c0b8-4ba0-bac8-7432f50395de.json
+[763/995] Go Green strategy for an Indian Airlines Company   ✓ enriched in 154.5s → data/dossiers/8dc78c4b-d2ad-479b-879f-f214fb1e4497.json
+[764/995] Reducing Spoilage Rate in FMCG                     ✓ enriched in 122.7s → data/dossiers/6f73748a-fc99-4c8f-880b-b70b02442af4.json
+[765/995] Acquisition Opportunity in Online Payments         ✓ enriched in 112.1s → data/dossiers/fdb05858-c4b2-4957-bb52-1daabc8a238c.json
+[766/995] Global Cement Manufacturer Capacity Expansion in I ✓ enriched in 142.6s → data/dossiers/6608123f-658b-4b9c-8b2b-ca14e9ad9119.json
+[767/995] Italian Paper                                      ✓ enriched in 155.9s → data/dossiers/6ac16254-31a8-4c56-93c3-49c6f354d817.json
+[768/995] Alpha Buys Baseball Team                           ✓ enriched in 95.5s → data/dossiers/e47fd2fc-043c-4b98-9d23-08677dcbc333.json
+[769/995] Cycles in West Bengal                              ✓ enriched in 132.9s → data/dossiers/424e0b8d-d645-4d62-aa82-84a38cc4a13f.json
+[770/995] Consult Club IIM Ahmedabad Case Book 2020-21       ✓ enriched in 92.2s → data/dossiers/f3157936-d409-4d2e-9e8e-c2b7f155e8ce.json
+[771/995] Healthcare Market Entry                            ✓ enriched in 135.5s → data/dossiers/ba97f4d0-cd61-4b65-b8ec-21e44b09d06a.json
+[772/995] Sandwich Bags (IV of VII)                          ✓ enriched in 152.2s → data/dossiers/6138eb3c-cc75-4e30-b016-d8a29c99ff04.json
+[773/995] Telecom Market Analysis                            ✓ enriched in 28.2s → data/dossiers/1e160369-a3ec-410e-ac38-015309b2159d.json
+[774/995] Drug pricing – Interview transcript                ✓ enriched in 24.3s → data/dossiers/16bf85c4-3d38-4657-b98f-7ff203757d83.json
+[775/995] Retail Supply Chain Optimization                   ✓ enriched in 173.8s → data/dossiers/7654625a-3659-4591-b1d6-e7ae060e4d5e.json
+[776/995] Hospital Operations Improvement                    ✗ cerebras 404: {"message":"Model llama3.1-70b does not exist or you do not have access to it.","type":"not_found_error","param":"model","code":"model_not_found"}
+[777/995] Guesstimate the number of golf balls in the air in ✓ enriched in 4.3s → data/dossiers/2ea54a5f-550d-4f29-9d1c-f0cabfb6499a.json
+[778/995] Revenue of a Dentist in Delhi per day              ✗ fetch failed
+[779/995] Gee & Gee’s House of Brands                        ✗ fetch failed
+[780/995] Banking Profitability Decline and Alcohol Manufact ✗ fetch failed
+[781/995] Increase sales through market expansion for a yarn ✗ fetch failed
+[782/995] Estimate the number of Zoom users in India post-CO ✗ fetch failed
+[783/995] Estimate the number of Credit Cards issued in Indi ✗ fetch failed
+[784/995] Sample Numerical Solution (3 of 3) - Wharton Caseb ✗ fetch failed
+[785/995] Going Green                                        ✗ fetch failed
+[786/995] Square Enix Annual Report 2025 - Health and Produc ✗ fetch failed
+[787/995] Estimate the number of sanitary pads used in India ✗ fetch failed
+[788/995] Estimate the weekly usage of shampoo in Mumbai     ✗ fetch failed
+[789/995] Estimate the revenue of Maggi in Delhi during Lock ✗ fetch failed
+[790/995] Estimate the number of face masks used over a race ✗ fetch failed
+[791/995] Telecom Service Provider                           ✗ fetch failed
+[792/995] Estimate the annual revenue of a multiplex         ✗ fetch failed
+[793/995] Public Sector Bank - Loan Improvement Process      ✗ fetch failed
+[794/995] Project Chanakya: The 'Desi' Contextual Intelligen ✗ fetch failed
+[795/995] Institutional Asset Manager Fees                   ✗ fetch failed
+[796/995] Estimate the number of crows in Ahmedabad          ✗ fetch failed
+[797/995] Estimate the daily revenue of an airport           ✗ fetch failed
+[798/995] Product Manager Roles and Skills Overview          ✗ fetch failed
+[799/995] Estimate the yearly revenue of an IPL team         ✗ fetch failed
+[800/995] Estimate the monthly electricity consumption (resi ✗ fetch failed
+[801/995] Estimate the monthly mobile data usage (GB) in 202 ✗ fetch failed
+[802/995] Estimate the total length of barbed wire used in I ✗ fetch failed
+[803/995] Estimate the profit made by SBI branch in IIMA Cam ✗ fetch failed
+[804/995] Estimate the number of emails flowing though IIMA  ✗ fetch failed
+[805/995] SpiceJet vs Indigo – Profitability Analysis        ✗ fetch failed
+[806/995] Golf balls in the air in an average second in Indi ✗ fetch failed
+[807/995] Calculate the annual market for medical X-ray mach ✗ fetch failed
+[808/995] Airlines Industry                                  ✗ fetch failed
+[809/995] Automobile Industry                                ✗ fetch failed
+[810/995] Cement Industry                                    ✗ fetch failed
+[811/995] Acing the Shortlist Dinners                        ✗ fetch failed
+[812/995] Market Entry                                       ✗ fetch failed
+[813/995] Consulting Career Overview and Hiring Process      ✗ fetch failed
+[814/995] Energy, Oil & Gas Industry                         ✗ fetch failed
+[815/995] Profitability                                      ✗ fetch failed
+[816/995] Financial Services - Asset Management              ✗ fetch failed
+[817/995] E-Commerce Industry                                ✗ fetch failed
+[818/995] Cab Aggregator EV Market Entry                     ✗ fetch failed
+[819/995] Market Entry in Natural Gas Production             ✗ fetch failed
+[820/995] IT Costs                                           ✗ fetch failed
+[821/995] Pricing                                            ✗ fetch failed
+[822/995] UCLA Anderson Consulting Overview                  ✗ fetch failed
+[823/995] Salesforce Effectiveness                           ✗ fetch failed
+[824/995] Asset Management in Financial Services             ✗ fetch failed
+[825/995] Mergers & Acquisitions                             ✗ fetch failed
+[826/995] Digital Payments in Financial Services             ✗ fetch failed
+[827/995] Textile Retail Profitability Case                  ✗ fetch failed
+[828/995] Healthcare Services Industry                       ✗ fetch failed
+[829/995] Iron and Steel Industry                            ✗ fetch failed
+[830/995] Hospitality Industry                               ✗ fetch failed
+[831/995] IT and ITeS Industry                               ✗ fetch failed
+[832/995] Financial Services Company Insurance Market Entry  ✗ fetch failed
+[833/995] AllHealthy CRM                                     ✗ fetch failed
+[834/995] Pharmaceutical Industry                            ✗ fetch failed
+[835/995] Airport Operator Revenue Decline                   ✗ fetch failed
+[836/995] Aerated Drinks Manufacturer Profitability          ✗ fetch failed
+[837/995] Pharma Company Profitability                       ✗ fetch failed
+[838/995] Airline Company Profitability                      ✗ fetch failed
+[839/995] Biscuit Manufacturer Profitability                 ✗ fetch failed
+[840/995] Cricket Bat Manufacturer Australian Market Entry   ✗ fetch failed
+[841/995] Number of Bollywood Movies Released in India per Y ✗ fetch failed
+[842/995] Coyotes Case                                       ✗ fetch failed
+[843/995] Industry Overview: Iron & Steel, IT/ITeS, and Logi ✗ fetch failed
+[844/995] Pharma Company Acquisition                         ✗ fetch failed
+[845/995] E-pharmacy Market Entry                            ✗ fetch failed
+[846/995] FMCG Company Diaper Market Entry                   ✗ fetch failed
+[847/995] Cloud Computing Overview                           ✗ fetch failed
+[848/995] Diaper Market Entry                                ✗ fetch failed
+[849/995] Air Conditioner Market Estimation                  ✗ fetch failed
+[850/995] Medical Representative Productivity Improvement    ✗ fetch failed
+[851/995] Paper Cup Manufacturer Competition                 ✗ fetch failed
+[852/995] Robbery Location Decision                          ✗ fetch failed
+[853/995] Bollywood Actress Blackmail                        ✗ fetch failed
+[854/995] Optical Lens Manufacturer Market Entry             ✗ fetch failed
+[855/995] Market Size for an Alco-Beverage Firm in Mumbai    ✗ fetch failed
+[856/995] Credit Card Company Profitability                  ✗ fetch failed
+[857/995] Increasing Women's Contribution to World GDP       ✗ fetch failed
+[858/995] Regulus Solar Power Inc.: Price Demand Elasticitie ✗ fetch failed
+[859/995] Battery Manufacturing Company Digitalization       ✗ fetch failed
+[860/995] AR/VR Industry Overview and Technology             ✗ fetch failed
+[861/995] Coal Power Plant Digitization                      ✗ fetch failed
+[862/995] Restaurant Chain Cost Optimization                 ✗ fetch failed
+[863/995] Assam Mortality Rate Analysis                      ✗ fetch failed
+[864/995] Vaccination Rollout Plan                           ✗ fetch failed
+[865/995] Lithium Mine Acquisition                           ✗ fetch failed
+[866/995] Aditya Birla Health Insurance Break-Even Analysis  ✗ fetch failed
+[867/995] Number of Wine Bottles Sold in India per Year      ✗ fetch failed
+[868/995] ShadiGhar.Com - India's First AI Wedding Planning  ✗ fetch failed
+[869/995] Product Management Book Description                ✗ fetch failed
+[870/995] Rupida Disease Eradication                         ✗ fetch failed
+[871/995] Digitalization of Battery Manufacturing            ✗ fetch failed
+[872/995] Optical Lens Manufacturing                         ✗ fetch failed
+[873/995] Number of Red Cars in Delhi                        ✗ fetch failed
+[874/995] The Tightest Ship in the Shipping Business         ✗ fetch failed
+[875/995] Tamil Nadu Global Capacity Centres                 ✗ fetch failed
+[876/995] Big Bang Streaming Rights                          ✗ fetch failed
+[877/995] Plastic Pipes Manufacturer                         ✗ fetch failed
+[878/995] 2-Wheeler Manufacturer                             ✗ fetch failed
+[879/995] Lubricant Company                                  ✗ fetch failed
+[880/995] Steel Manufacturer Profitability                   ✗ fetch failed
+[881/995] Number of Students Using Metro to Commute to North ✗ fetch failed
+[882/995] JioSaavn Family Music Plan Pricing Strategy        ✗ fetch failed
+[883/995] Bank Profitability                                 ✗ fetch failed
+[884/995] Global Capacity Centers                            ✗ fetch failed
+[885/995] Test Prep Market Sizing                            ✗ fetch failed
+[886/995] Acquired Company Growth                            ✗ fetch failed
+[887/995] Beverage Manufacturer Profitability Decline        ✗ fetch failed
+[888/995] Dinner Plates in Mumbai                            ✗ fetch failed
+[889/995] Loyalty Program Cost Estimation                    ✗ fetch failed
+[890/995] Sports Nutrition Company Market Size               ✗ fetch failed
+[891/995] Pricing a Diabetes Cure                            ✗ fetch failed
+[892/995] Uber Sales Decline                                 ✗ fetch failed
+[893/995] Iron and Steel Company Profitability               ✗ fetch failed
+[894/995] IT Services Company Acquisition                    ✗ fetch failed
+[895/995] Sandwich Delight: A Fresh Opportunity or a Risky G ✗ fetch failed
+[896/995] Number of Flights at Delhi Airport in a Day        ✗ fetch failed
+[897/995] Cement Manufacturer                                ✗ fetch failed
+[898/995] Count the Fries?                                   ✗ fetch failed
+[899/995] India's Full Potential                             ✗ fetch failed
+[900/995] Estimate Number of Vehicles in Gachibowli          ✗ fetch failed
+[901/995] BITSoM Consulting Casebook 2023-2024               ✗ fetch failed
+[902/995] Square Enix Executive Remuneration Policy          ✗ fetch failed
+[903/995] Consumer Goods Company Market Share                ✗ fetch failed
+[904/995] Diesel 3-Wheeler Dealer Sales Decline              ✗ fetch failed
+[905/995] ISP Entry into African Market                      ✗ fetch failed
+[906/995] Air India Operating Profits                        ✗ fetch failed
+[907/995] Sponge Iron Business                               ✗ fetch failed
+[908/995] Bullet Train Ticket Pricing                        ✗ fetch failed
+[909/995] Three-Wheeler Market Entry                         ✗ fetch failed
+[910/995] Banking Profitability Decline & Credit Card Attrit ✗ fetch failed
+[911/995] Market Entry for Innovative Product                ✗ fetch failed
+[912/995] Reducing Packaging Costs                           ✗ fetch failed
+[913/995] Apparel Manufacturer Profitability                 ✗ fetch failed
+[914/995] GST Compliance Issues                              ✗ fetch failed
+[915/995] Size of Advertising Market on Non-Traditional Plat ✗ fetch failed
+[916/995] Botox Launch for Migraine Treatment                ✗ fetch failed
+[917/995] Air India Profitability                            ✗ fetch failed
+[918/995] Mobile Handset Market Entry                        ✗ fetch failed
+[919/995] Amazon Daily Orders Guesstimate                    ✗ fetch failed
+[920/995] Amazon Product Launch                              ✗ fetch failed
+[921/995] Shared Services Centre Setup                       ✗ fetch failed
+[922/995] Gachibowli Vehicle Estimation                      ✗ fetch failed
+[923/995] Portable BP Machine Manufacturer                   ✗ fetch failed
+[924/995] Insurance Provider                                 ✗ fetch failed
+[925/995] Syzygy Supercomputers                              ✗ fetch failed
+[926/995] Pension Fund Risk Assessment                       ✗ fetch failed
+[927/995] Teleportation Monetization                         ✗ fetch failed
+[928/995] Rotisserie Ranch                                   ✗ fetch failed
+[929/995] National Parks Service Ranger Retention Costs      ✗ fetch failed
+[930/995] Square Enix Holdings Corporate Profile and History ✗ fetch failed
+[931/995] Human Capital Case - Work Streams                  ✗ fetch failed
+[932/995] Monthly Revenue of Sarvana Bhavana Restaurant      ✗ fetch failed
+[933/995] Great Burger (McKinsey)                            ✗ fetch failed
+[934/995] Number of SRCC Students Traveling by Metro Daily   ✗ fetch failed
+[935/995] Augmented Reality                                  ✗ fetch failed
+[936/995] Medical Devices Co. BloodStopper Deal              ✗ fetch failed
+[937/995] Music Retailer Loyalty (II of II)                  ✗ fetch failed
+[938/995] Product Management Role                            ✗ fetch failed
+[939/995] Google's Dual Advantage Dilemma in the Age of AI S ✗ fetch failed
+[940/995] Medical Device Co. and Spongy's Deal               ✗ fetch failed
+[941/995] Senior Associate at BCG                            ✗ fetch failed
+[942/995] Volume of Paint Required to Paint an Airbus 620    ✗ fetch failed
+[943/995] Fruit Juice Manufacturer                           ✗ fetch failed
+[944/995] Animal Drug Market Entry                           ✗ fetch failed
+[945/995] Wine & Co.                                         ✗ fetch failed
+[946/995] BloodStopper and Sponge Combined Product Pricing   ✗ fetch failed
+[947/995] Design an effective disaster management system for ✗ fetch failed
+[948/995] Market Size of Quick Commerce in India             ✗ fetch failed
+[949/995] 100 Ball Cricket Game                              ✗ fetch failed
+[950/995] Orange Retailer Co.                                ✗ fetch failed
+[951/995] Big Data and Design Thinking for COVID-19          ✗ fetch failed
+[952/995] Vivid Value Chain Cost Structure Analysis          ✗ fetch failed
+[953/995] AR-VR Market Growth                                ✗ fetch failed
+[954/995] Big Data Management                                ✗ fetch failed
+[955/995] After School Programming                           ✗ fetch failed
+[956/995] Vivid Sales Volume & Discounting                   ✗ fetch failed
+[957/995] Sponge Iron Manufacturer & Integrated Steel Player ✗ fetch failed
+[958/995] Vidi-Games                                         ✗ fetch failed
+[959/995] Number of Teacups Consumed in Delhi in One Day     ✗ fetch failed
+[960/995] Increasing User Engagement at Gaana                ✗ fetch failed
+[961/995] Old Delhi Restaurant                               ✗ fetch failed
+[962/995] Bank Service Strategy                              ✗ fetch failed
+[963/995] Potential Revenue Size of Michigan Market          ✗ fetch failed
+[964/995] Augmented Reality vs Virtual Reality               ✗ fetch failed
+[965/995] Introduction to Machine Learning                   ✗ fetch failed
+[966/995] Wellington Equestrian Festival                     ✗ fetch failed
+[967/995] Product Management Key Concepts & Terminologies    ✗ fetch failed
+[968/995] Product Design Frameworks: CIRCLES                 ✗ fetch failed
+[969/995] Market Entry Analysis of Michigan                  ✗ fetch failed
+[970/995] Skedasky Farms                                     ✗ fetch failed
+[971/995] Annual Revenue of a Laundry Service in Delhi       ✗ fetch failed
+[972/995] Steel Pipe Manufacturer Cost Optimization          ✗ fetch failed
+[973/995] Heavy Things Fitness Conversion to Fast Classes    ✗ fetch failed
+[974/995] Capital Investment for Utility                     ✗ fetch failed
+[975/995] Tulsa Hotel - Average Revenue Calculation          ✗ fetch failed
+[976/995] Number of Chairs in Households of Delhi            ✗ fetch failed
+[977/995] Shermer Pharma                                     ✗ fetch failed
+[978/995] H Health Profit Decline                            ✗ fetch failed
+[979/995] Sony Group Corporation Annual Report on Form 20-F  ✗ fetch failed
+[980/995] RCA Cases: Increase in Ola cancellations           ✗ fetch failed
+[981/995] App Analysis: Kindle App                           ✗ fetch failed
+[982/995] Key Tech Products: Facebook                        ✗ fetch failed
+[983/995] App Analysis: Duolingo App                         ✗ fetch failed
+[984/995] Sony Group Corporation Accounting Policies for Inv ✗ fetch failed
+[985/995] Sony Group Corporation Accounting Policies         ✗ fetch failed
+[986/995] Square Enix Holdings Corporate Information         ✗ fetch failed
+[987/995] Agile Methodology                                  ✗ fetch failed
+[988/995] Low-Mid Range Air Carrier                          ✗ fetch failed
+[989/995] Improving WhatsApp                                 ✗ fetch failed
+[990/995] Types of Product Managers                          ✗ fetch failed
+[991/995] Product Management Role                            ✗ fetch failed
+[992/995] Cloud Computing                                    ✗ fetch failed
+[993/995] Internet of Things (IoT)                           ✗ fetch failed
+[994/995] Go-to-market strategy for Facebook's fitness app   ✗ fetch failed
+[995/995] Pricing strategy for a subscription-based product  ✗ fetch failed
+
+[enrich] DONE: 105 succeeded, 890 failed (out of 995)

@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The oil distribution industry in India is highly competitive, with numerous players operating across the country. The industry is characterized by low margins, with typical profit margins ranging between 2-5% for petrol pumps. The regulatory backdrop is complex, with the government controlling fuel prices and imposing various taxes. Customer behavior is largely driven by convenience, price, and service quality.",
+  "real_world_numbers": [
+    {
+      "metric": "Average daily sales per petrol pump",
+      "value": "Rs 5-7 lakhs",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Typical margin for petrol pumps",
+      "value": "2-5%",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Number of petrol pumps in India",
+      "value": "65,000-70,000",
+      "source_hint": "Government data"
+    },
+    {
+      "metric": "Market size of the oil distribution industry in India",
+      "value": "Rs 5-6 lakh crores",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Customer retention rate for petrol pumps",
+      "value": "60-80%",
+      "source_hint": "Market research"
+    },
+    {
+      "metric": "Average customer spend per visit",
+      "value": "Rs 500-700",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Employee cost as a percentage of revenue for petrol pumps",
+      "value": "10-15%",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Marketing spend as a percentage of revenue for petrol pumps",
+      "value": "2-5%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Inventory turnover ratio for petrol pumps",
+      "value": "10-15 times",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Average debt-to-equity ratio for petrol pumps",
+      "value": "0.5-1.5",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the revenue from fuel sales",
+      "formula": "Revenue = (Average daily sales per petrol pump * Number of days in a month) * Margin",
+      "typical_answer_range": "Rs 1-2 crores per month"
+    },
+    {
+      "step": "Calculating the revenue from non-fuel sales",
+      "formula": "Revenue = (Average customer spend per visit * Number of customers per day * Number of days in a month) * Margin",
+      "typical_answer_range": "Rs 10-20 lakhs per month"
+    },
+    {
+      "step": "Calculating the employee cost as a percentage of revenue",
+      "formula": "Employee cost percentage = (Employee cost / Revenue) * 100",
+      "typical_answer_range": "10-15%"
+    },
+    {
+      "step": "Calculating the marketing spend as a percentage of revenue",
+      "formula": "Marketing spend percentage = (Marketing spend / Revenue) * 100",
+      "typical_answer_range": "2-5%"
+    },
+    {
+      "step": "Calculating the inventory turnover ratio",
+      "formula": "Inventory turnover ratio = Cost of goods sold / Average inventory",
+      "typical_answer_range": "10-15 times"
+    },
+    {
+      "step": "Calculating the debt-to-equity ratio",
+      "formula": "Debt-to-equity ratio = Total debt / Total equity",
+      "typical_answer_range": "0.5-1.5"
+    },
+    {
+      "step": "Calculating the customer retention rate",
+      "formula": "Customer retention rate = (Number of customers retained / Total number of customers) * 100",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Calculating the average customer spend per visit",
+      "formula": "Average customer spend per visit = Total revenue from non-fuel sales / Total number of customers",
+      "typical_answer_range": "Rs 500-700"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of government-controlled fuel prices on profitability",
+    "Overlooking the importance of location in determining petrol pump profitability",
+    "Not accounting for the high employee costs in the oil distribution industry",
+    "Failing to consider the marketing spend required to attract and retain customers",
+    "Not analyzing the inventory turnover ratio and its impact on profitability",
+    "Not calculating the debt-to-equity ratio and its impact on the company's financial health",
+    "Not considering the customer retention rate and its impact on revenue",
+    "Not analyzing the average customer spend per visit and its impact on revenue"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors that affect the profitability of a petrol pump?",
+      "a": "The key factors that affect the profitability of a petrol pump include location, price, service quality, employee costs, marketing spend, and inventory management.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the government's control over fuel prices impact the profitability of petrol pumps?",
+      "a": "The government's control over fuel prices can significantly impact the profitability of petrol pumps, as it can limit their ability to adjust prices in response to changes in costs or market conditions.",
+      "category": "industry"
+    },
+    {
+      "q": "What are some common pitfalls that petrol pumps face in terms of inventory management?",
+      "a": "Common pitfalls that petrol pumps face in terms of inventory management include overstocking, understocking, and poor inventory turnover ratios.",
+      "category": "industry"
+    },
+    {
+      "q": "How can petrol pumps increase their revenue from non-fuel sales?",
+      "a": "Petrol pumps can increase their revenue from non-fuel sales by offering a range of products and services, such as food and beverages, car washes, and convenience store items.",
+      "category": "competitive"
+    },
+    {
+      "q": "What is the average debt-to-equity ratio for petrol pumps in India?",
+      "a": "The average debt-to-equity ratio for petrol pumps in India is around 0.5-1.5.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can petrol pumps improve their customer retention rates?",
+      "a": "Petrol pumps can improve their customer retention rates by offering loyalty programs, providing high-quality service, and maintaining a clean and well-maintained facility.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are some common mistakes that petrol pumps make in terms of marketing?",
+      "a": "Common mistakes that petrol pumps make in terms of marketing include failing to target their marketing efforts effectively, not tracking the effectiveness of their marketing spend, and not adjusting their marketing strategy in response to changes in the market.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can petrol pumps reduce their employee costs?",
+      "a": "Petrol pumps can reduce their employee costs by implementing efficient staffing models, providing training to employees to improve productivity, and offering competitive salaries and benefits.",
+      "category": "math"
+    },
+    {
+      "q": "What is the average inventory turnover ratio for petrol pumps in India?",
+      "a": "The average inventory turnover ratio for petrol pumps in India is around 10-15 times.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can petrol pumps improve their inventory turnover ratios?",
+      "a": "Petrol pumps can improve their inventory turnover ratios by implementing just-in-time inventory management systems, reducing inventory levels, and improving supply chain efficiency.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are some common pitfalls that petrol pumps face in terms of financial management?",
+      "a": "Common pitfalls that petrol pumps face in terms of financial management include poor cash flow management, inadequate budgeting, and failure to monitor and control expenses.",
+      "category": "math"
+    },
+    {
+      "q": "How can petrol pumps improve their financial management?",
+      "a": "Petrol pumps can improve their financial management by implementing robust financial planning and budgeting systems, monitoring and controlling expenses, and maintaining a strong cash flow position.",
+      "category": "math"
+    },
+    {
+      "q": "What is the average customer spend per visit for petrol pumps in India?",
+      "a": "The average customer spend per visit for petrol pumps in India is around Rs 500-700.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can petrol pumps increase their average customer spend per visit?",
+      "a": "Petrol pumps can increase their average customer spend per visit by offering a range of products and services, providing high-quality service, and maintaining a clean and well-maintained facility.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are some common mistakes that petrol pumps make in terms of customer service?",
+      "a": "Common mistakes that petrol pumps make in terms of customer service include failing to provide prompt and courteous service, not maintaining a clean and well-maintained facility, and not offering a range of products and services.",
+      "category": "competitive"
+    }
+  ],
+  "framework_hints": [
+    "Consider the location of the petrol pump and its impact on profitability",
+    "Analyze the revenue streams from fuel and non-fuel sales",
+    "Evaluate the employee costs and marketing spend as a percentage of revenue",
+    "Assess the inventory management practices and their impact on profitability",
+    "Consider the debt-to-equity ratio and its impact on the company's financial health"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Government data",
+    "Industry associations",
+    "Market research reports"
+  ],
+  "case_type_notes": "This case is challenging because it requires the candidate to analyze the profitability of a petrol pump and identify areas for improvement, while also considering the complex regulatory backdrop and competitive landscape of the oil distribution industry in India.",
+  "enriched_at": "2026-05-10T06:02:01.505Z"
+}

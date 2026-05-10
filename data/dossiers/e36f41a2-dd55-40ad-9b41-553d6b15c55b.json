@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian insurance industry is highly competitive, with both public and private players. The home insurance segment is relatively underpenetrated, with a large potential for growth. Regulatory bodies such as IRDAI play a crucial role in shaping the industry. Typical customer behavior in India tends to prioritize life and health insurance over home insurance. The industry is expected to grow due to increasing awareness and government initiatives.",
+  "real_world_numbers": [
+    {
+      "metric": "Home insurance penetration in India",
+      "value": "0.5-1.5%",
+      "source_hint": "IRDAI reports"
+    },
+    {
+      "metric": "Average annual premium for home insurance in India",
+      "value": "₹8,000-₹15,000",
+      "source_hint": "Industry surveys"
+    },
+    {
+      "metric": "Market size of the Indian insurance industry",
+      "value": "₹7-10 lakh crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of insurance companies in India",
+      "value": "50-60",
+      "source_hint": "IRDAI website"
+    },
+    {
+      "metric": "Growth rate of the Indian insurance industry",
+      "value": "10-15% per annum",
+      "source_hint": "IBEF reports"
+    },
+    {
+      "metric": "Customer retention rate in the Indian insurance industry",
+      "value": "70-80%",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Average claim settlement ratio for home insurance in India",
+      "value": "80-90%",
+      "source_hint": "IRDAI reports"
+    },
+    {
+      "metric": "Typical margin for home insurance companies in India",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculating the potential market size for home insurance in India",
+      "formula": "Total number of households in India * Average annual premium for home insurance",
+      "typical_answer_range": "₹5,000-15,000 crores"
+    },
+    {
+      "step": "Determining the required marketing budget for market entry",
+      "formula": "Estimated customer acquisition cost * Number of target customers",
+      "typical_answer_range": "₹50-200 crores"
+    },
+    {
+      "step": "Evaluating the break-even point for the home insurance business",
+      "formula": "Total investment / (Average premium * Number of policies sold)",
+      "typical_answer_range": "2-5 years"
+    },
+    {
+      "step": "Calculating the potential revenue from home insurance in the first year",
+      "formula": "Number of policies sold * Average annual premium",
+      "typical_answer_range": "₹500-2,000 crores"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the regulatory environment in India",
+    "Underestimating the competition in the home insurance market",
+    "Not segmenting the target market effectively",
+    "Overlooking the importance of customer retention",
+    "Not having a clear distribution strategy",
+    "Not considering the impact of natural disasters on home insurance claims",
+    "Not evaluating the potential for bundling home insurance with other products"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the growth of the Indian insurance industry?",
+      "a": "Increasing awareness, government initiatives, and a growing middle-class population are driving the growth of the Indian insurance industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the home insurance market in India differ from other countries?",
+      "a": "The home insurance market in India is relatively underpenetrated, with a large potential for growth, and is characterized by a high proportion of informal housing and a lack of standardization in construction practices.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical customer pain points in the Indian home insurance market?",
+      "a": "Customers in India often face difficulties in claims settlement, high premiums, and a lack of awareness about home insurance products.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company leverage its existing presence in the health and life insurance segments to enter the home insurance market?",
+      "a": "The company can leverage its existing distribution network, customer base, and brand reputation to enter the home insurance market.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key regulatory requirements for home insurance companies in India?",
+      "a": "Home insurance companies in India are required to comply with IRDAI regulations, including solvency margin requirements, claims settlement ratios, and customer protection guidelines.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company measure the success of its market entry strategy?",
+      "a": "The company can measure the success of its market entry strategy by tracking key performance indicators such as customer acquisition costs, retention rates, and revenue growth.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with entering the home insurance market in India?",
+      "a": "The company may face risks such as intense competition, regulatory challenges, and natural disasters, which can impact claims settlement and revenue growth.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company differentiate its home insurance products from those of its competitors?",
+      "a": "The company can differentiate its home insurance products by offering customized policies, flexible premium payment options, and enhanced customer service.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential opportunities for bundling home insurance with other products?",
+      "a": "The company can bundle home insurance with other products such as life insurance, health insurance, and investment products to offer a comprehensive financial protection package to customers.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the company use data analytics to improve its home insurance business?",
+      "a": "The company can use data analytics to improve risk assessment, claims settlement, and customer targeting, and to develop more effective marketing and pricing strategies.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the competitive landscape of the home insurance market in India",
+    "Evaluate the company's strengths and weaknesses in relation to the home insurance market",
+    "Assess the potential for partnerships or collaborations to enhance market entry",
+    "Develop a comprehensive marketing and distribution strategy for the home insurance product",
+    "Consider the potential for digital channels to enhance customer engagement and sales"
+  ],
+  "sources": [
+    "IRDAI reports",
+    "Statista industry reports",
+    "Company filings",
+    "Industry surveys",
+    "IBEF reports"
+  ],
+  "case_type_notes": "This market entry case requires the candidate to think strategically about how to leverage the company's existing strengths to enter a new market, while also considering the competitive landscape, regulatory environment, and customer needs.",
+  "enriched_at": "2026-05-10T06:05:06.208Z"
+}

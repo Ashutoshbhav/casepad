@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The European low-cost airline industry is highly competitive, with key players such as Ryanair and EasyJet. The industry is characterized by low margins, with typical operating margins ranging from 5-15%. Regulatory backdrop includes strict EU regulations on passenger rights and environmental concerns. Typical customer behavior involves high price sensitivity and a preference for convenient, online booking processes.",
+  "real_world_numbers": [
+    {
+      "metric": "Average load factor for low-cost airlines in Europe",
+      "value": "80-90%",
+      "source_hint": "IATA reports"
+    },
+    {
+      "metric": "Typical margin for low-cost airlines",
+      "value": "5-15%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of low-cost airlines operating in Europe",
+      "value": "10-15",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average ticket price for low-cost airlines in Europe",
+      "value": "€50-€150",
+      "source_hint": "company websites"
+    },
+    {
+      "metric": "Fuel cost as a percentage of total costs for low-cost airlines",
+      "value": "30-40%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Labor cost as a percentage of total costs for low-cost airlines",
+      "value": "20-30%",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average aircraft utilization for low-cost airlines",
+      "value": "10-12 hours per day",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Typical customer acquisition cost for low-cost airlines",
+      "value": "€5-€15",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer retention rate for low-cost airlines",
+      "value": "20-30%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for low-cost airlines",
+      "value": "€50-€100",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of passengers carried by low-cost airlines in Europe per year",
+      "value": "100-200 million",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the break-even load factor",
+      "formula": "Break-even load factor = (Fixed costs / (Variable costs + Revenue per seat))",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Determine the revenue per available seat kilometer (RASK)",
+      "formula": "RASK = Total revenue / Total available seat kilometers",
+      "typical_answer_range": "€0.05-€0.15"
+    },
+    {
+      "step": "Calculate the cost per available seat kilometer (CASK)",
+      "formula": "CASK = Total costs / Total available seat kilometers",
+      "typical_answer_range": "€0.04-€0.12"
+    },
+    {
+      "step": "Analyze the impact of a 10% increase in fuel prices on profitability",
+      "formula": "ΔProfit = (Fuel cost * ΔFuel price) / Total revenue",
+      "typical_answer_range": "-5% to -10%"
+    },
+    {
+      "step": "Calculate the customer lifetime value (CLV)",
+      "formula": "CLV = (Average revenue per user * Customer retention rate) / (1 - Customer retention rate)",
+      "typical_answer_range": "€100-€500"
+    },
+    {
+      "step": "Determine the optimal ticket pricing strategy",
+      "formula": "Optimal price = (Marginal revenue / Marginal cost) * Elasticity of demand",
+      "typical_answer_range": "€50-€150"
+    },
+    {
+      "step": "Calculate the return on investment (ROI) for a potential expansion into new routes",
+      "formula": "ROI = (Gain from investment - Cost of investment) / Cost of investment",
+      "typical_answer_range": "10-20%"
+    },
+    {
+      "step": "Analyze the impact of a 5% increase in labor costs on profitability",
+      "formula": "ΔProfit = (Labor cost * ΔLabor cost) / Total revenue",
+      "typical_answer_range": "-2% to -5%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of fuel price volatility on profitability",
+    "Overlooking the importance of customer retention and loyalty programs",
+    "Failing to account for the competitive landscape and market share",
+    "Not analyzing the cost structure and identifying areas for cost reduction",
+    "Ignoring the regulatory backdrop and potential environmental concerns",
+    "Not considering the potential for ancillary revenue streams",
+    "Failing to calculate the break-even load factor and RASK",
+    "Not analyzing the impact of changes in demand on profitability"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the low-cost airline industry in Europe?",
+      "a": "The key factors driving the low-cost airline industry in Europe include low margins, high competition, and strict EU regulations.",
+      "category": "industry"
+    },
+    {
+      "q": "How do low-cost airlines typically generate revenue?",
+      "a": "Low-cost airlines typically generate revenue through ticket sales, ancillary services such as baggage fees and food sales, and advertising.",
+      "category": "revenue"
+    },
+    {
+      "q": "What are the main cost components for low-cost airlines?",
+      "a": "The main cost components for low-cost airlines include fuel, labor, and aircraft maintenance.",
+      "category": "cost"
+    },
+    {
+      "q": "How do low-cost airlines manage their fuel costs?",
+      "a": "Low-cost airlines manage their fuel costs through fuel hedging, fuel-efficient aircraft, and optimizing flight routes.",
+      "category": "cost"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for low-cost airlines?",
+      "a": "The key performance indicators (KPIs) for low-cost airlines include load factor, RASK, CASK, and customer satisfaction.",
+      "category": "performance"
+    },
+    {
+      "q": "How do low-cost airlines differentiate themselves from traditional airlines?",
+      "a": "Low-cost airlines differentiate themselves from traditional airlines through their low fares, simplified service offerings, and efficient operations.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges facing low-cost airlines?",
+      "a": "The potential risks and challenges facing low-cost airlines include fuel price volatility, competition, regulatory changes, and economic downturns.",
+      "category": "risk"
+    },
+    {
+      "q": "How do low-cost airlines approach customer service and experience?",
+      "a": "Low-cost airlines approach customer service and experience through self-service check-in, online booking, and limited in-flight amenities.",
+      "category": "customer"
+    },
+    {
+      "q": "What are the opportunities for growth and expansion in the low-cost airline industry?",
+      "a": "The opportunities for growth and expansion in the low-cost airline industry include expanding into new routes, increasing aircraft utilization, and developing new revenue streams.",
+      "category": "growth"
+    },
+    {
+      "q": "How do low-cost airlines measure and manage their environmental impact?",
+      "a": "Low-cost airlines measure and manage their environmental impact through reducing fuel consumption, implementing sustainable practices, and offsetting carbon emissions.",
+      "category": "sustainability"
+    },
+    {
+      "q": "What are the key trends shaping the future of the low-cost airline industry?",
+      "a": "The key trends shaping the future of the low-cost airline industry include digitalization, sustainability, and changing consumer behavior.",
+      "category": "trend"
+    },
+    {
+      "q": "How do low-cost airlines approach innovation and technology adoption?",
+      "a": "Low-cost airlines approach innovation and technology adoption through investing in digital platforms, mobile apps, and data analytics.",
+      "category": "innovation"
+    },
+    {
+      "q": "What are the implications of Brexit on the low-cost airline industry in Europe?",
+      "a": "The implications of Brexit on the low-cost airline industry in Europe include changes in regulations, tariffs, and border controls.",
+      "category": "regulatory"
+    },
+    {
+      "q": "How do low-cost airlines manage their relationships with airports and other stakeholders?",
+      "a": "Low-cost airlines manage their relationships with airports and other stakeholders through negotiation, partnership, and collaboration.",
+      "category": "stakeholder"
+    },
+    {
+      "q": "What are the opportunities for low-cost airlines to expand into new markets and regions?",
+      "a": "The opportunities for low-cost airlines to expand into new markets and regions include emerging economies, new routes, and partnerships with other airlines.",
+      "category": "expansion"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the revenue streams and cost structure of the low-cost airline",
+    "Identify the key drivers of profitability and areas for cost reduction",
+    "Consider the competitive landscape and market share",
+    "Evaluate the impact of fuel price volatility and other external factors on profitability",
+    "Develop a comprehensive plan to improve profitability and competitiveness"
+  ],
+  "sources": [
+    "IATA reports",
+    "Company filings",
+    "Industry reports",
+    "EU regulations",
+    "Airline industry publications"
+  ],
+  "case_type_notes": "This case is challenging because it requires a deep understanding of the low-cost airline industry, including its competitive structure, key economics, and regulatory backdrop. The candidate must be able to analyze the revenue streams and cost structure of the airline, identify areas for improvement, and develop a comprehensive plan to improve profitability and competitiveness.",
+  "enriched_at": "2026-05-10T06:00:44.960Z"
+}

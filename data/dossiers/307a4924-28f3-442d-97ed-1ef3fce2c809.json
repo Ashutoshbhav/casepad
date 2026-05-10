@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The consulting industry is highly competitive, with numerous players competing for clients across various segments. The small business segment is particularly challenging due to its fragmented nature and low margins. Typical consulting firms operating in this space have to balance their service offerings with the limited budgets of small businesses. Regulatory requirements, such as data protection and compliance, also play a crucial role in this industry. Customer behavior is often driven by the need for specialized expertise and cost-effectiveness.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for consulting services",
+      "value": "8-15%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Average client acquisition cost",
+      "value": "₹50,000 - ₹1,50,000",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Market size of the small business consulting market in India",
+      "value": "₹5,000 crores - ₹10,000 crores",
+      "source_hint": "Market research studies"
+    },
+    {
+      "metric": "Client retention rate for consulting services",
+      "value": "60-80%",
+      "source_hint": "Industry benchmarks"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for small business consulting services",
+      "value": "₹20,000 - ₹50,000",
+      "source_hint": "Company reports"
+    },
+    {
+      "metric": "Number of small businesses in India",
+      "value": "5 million - 6 million",
+      "source_hint": "Government statistics"
+    },
+    {
+      "metric": "Growth rate of the consulting industry in India",
+      "value": "10-15% per annum",
+      "source_hint": "Industry forecasts"
+    },
+    {
+      "metric": "Average customer lifetime value (CLV) for small business consulting services",
+      "value": "₹1,00,000 - ₹3,00,000",
+      "source_hint": "Company data"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total revenue from small business clients",
+      "formula": "Number of clients * Average revenue per user (ARPU)",
+      "typical_answer_range": "₹100 crores - ₹500 crores"
+    },
+    {
+      "step": "Determine the client acquisition cost as a percentage of revenue",
+      "formula": "Client acquisition cost / Total revenue * 100",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Calculate the client retention rate",
+      "formula": "Number of retained clients / Total number of clients * 100",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Estimate the potential revenue loss due to attrition",
+      "formula": "Number of lost clients * Average revenue per user (ARPU)",
+      "typical_answer_range": "₹20 crores - ₹100 crores"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the fragmented nature of the small business segment",
+    "Overlooking the importance of cost-effectiveness in consulting services for small businesses",
+    "Failing to account for regulatory requirements in the consulting industry",
+    "Not calculating the client lifetime value (CLV) and its impact on revenue",
+    "Ignoring the potential revenue loss due to attrition",
+    "Not analyzing the competitive landscape of the consulting industry",
+    "Failing to identify the root causes of client attrition"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the typical pain points of small businesses in India?",
+      "a": "Small businesses in India often face challenges such as limited access to finance, inadequate infrastructure, and difficulty in complying with regulatory requirements.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the consulting industry in India differ from that in other countries?",
+      "a": "The consulting industry in India is characterized by a large number of small and medium-sized enterprises (SMEs) and a growing demand for specialized consulting services.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key factors that influence client retention in the consulting industry?",
+      "a": "Client retention in the consulting industry is influenced by factors such as the quality of services, communication, and cost-effectiveness.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can the client measure the effectiveness of their consulting services?",
+      "a": "The client can measure the effectiveness of their consulting services by tracking key performance indicators (KPIs) such as client satisfaction, revenue growth, and return on investment (ROI).",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential consequences of not addressing client attrition?",
+      "a": "If left unaddressed, client attrition can lead to significant revenue loss, damage to reputation, and decreased competitiveness in the market.",
+      "category": "framework"
+    },
+    {
+      "q": "How can the client use data analytics to improve their consulting services?",
+      "a": "The client can use data analytics to gain insights into client behavior, preferences, and pain points, and to develop targeted marketing strategies and personalized services.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the emerging trends in the consulting industry in India?",
+      "a": "Emerging trends in the consulting industry in India include the increasing demand for digital transformation, sustainability, and social responsibility.",
+      "category": "industry"
+    },
+    {
+      "q": "How can the client balance the trade-off between service quality and cost-effectiveness?",
+      "a": "The client can balance the trade-off between service quality and cost-effectiveness by optimizing their service delivery models, investing in technology, and developing strategic partnerships.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key risks associated with client attrition?",
+      "a": "The key risks associated with client attrition include revenue loss, damage to reputation, and decreased competitiveness in the market.",
+      "category": "framework"
+    },
+    {
+      "q": "How can the client develop a comprehensive strategy to address client attrition?",
+      "a": "The client can develop a comprehensive strategy to address client attrition by conducting a root cause analysis, developing targeted marketing strategies, and implementing process improvements.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the client's value proposition and competitive advantage",
+    "Assess the client's service delivery model and operational efficiency",
+    "Evaluate the client's marketing and sales strategies",
+    "Develop a customer retention strategy"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Market research studies",
+    "Government statistics",
+    "Industry forecasts"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the client's business and develop a comprehensive strategy to address client attrition, which is a critical issue in the consulting industry. The candidate must demonstrate their ability to think critically, analyze data, and develop effective solutions to complex business problems.",
+  "enriched_at": "2026-05-10T06:30:02.699Z"
+}

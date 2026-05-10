@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Fast-Moving Consumer Goods (FMCG) industry, where Mattel operates, is characterized by high competition, low margins, and a focus on branding and marketing. Key players in the industry include Procter & Gamble, Unilever, and Nestle. The industry is subject to changing consumer preferences, regulatory pressures, and supply chain disruptions. In the Indian context, the FMCG industry is expected to grow due to increasing demand from a growing middle class.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for FMCG companies",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global toy market size",
+      "value": "$90-100 billion",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Number of competitors in the global toy market",
+      "value": "500-700",
+      "source_hint": "industry directories"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for toy companies",
+      "value": "$500-$1000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average price of a Barbie doll",
+      "value": "$10-$20",
+      "source_hint": "e-commerce websites"
+    },
+    {
+      "metric": "Market share of Mattel in the global toy market",
+      "value": "10-15%",
+      "source_hint": "market research reports"
+    },
+    {
+      "metric": "Revenue growth rate for the FMCG industry",
+      "value": "5-7% per annum",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Average advertising spend as a percentage of revenue for FMCG companies",
+      "value": "5-10%",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the revenue decline in the Barbie segment",
+      "formula": "Revenue decline = (Previous year's revenue - Current year's revenue) / Previous year's revenue",
+      "typical_answer_range": "-5% to -10%"
+    },
+    {
+      "step": "Determine the driving factor of the decline (P vs Q)",
+      "formula": "If Price (P) is the driver, then Quantity (Q) should remain constant, and vice versa",
+      "typical_answer_range": "N/A"
+    },
+    {
+      "step": "Calculate the impact of a price increase on revenue",
+      "formula": "New revenue = Old revenue + (Price increase percentage * Old revenue)",
+      "typical_answer_range": "5-10% increase"
+    },
+    {
+      "step": "Calculate the impact of a quantity decrease on revenue",
+      "formula": "New revenue = Old revenue - (Quantity decrease percentage * Old revenue)",
+      "typical_answer_range": "-5% to -10% decrease"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of changing consumer preferences on the Barbie segment",
+    "Failing to account for the competitive landscape in the global toy market",
+    "Not analyzing the supply chain and manufacturing costs for Mattel",
+    "Overlooking the importance of branding and marketing in the FMCG industry",
+    "Not calculating the customer lifetime value (CLV) for Mattel's products"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key trends in the global toy market that could be impacting Mattel's profitability?",
+      "a": "The global toy market is experiencing a shift towards online sales, sustainability, and educational toys. These trends could be impacting Mattel's profitability.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the competitive landscape in the FMCG industry impact Mattel's pricing strategy?",
+      "a": "The competitive landscape in the FMCG industry is highly competitive, with many players competing for market share. This could lead to price wars, which could impact Mattel's profitability.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the typical margins for FMCG companies, and how does Mattel compare?",
+      "a": "The typical margins for FMCG companies are between 8-12%. Mattel's margins are likely to be within this range, but could be impacted by various factors such as pricing strategy and supply chain costs.",
+      "category": "math"
+    },
+    {
+      "q": "How could Mattel use data analytics to improve its profitability?",
+      "a": "Mattel could use data analytics to improve its profitability by analyzing customer behavior, optimizing pricing and inventory management, and identifying areas for cost reduction.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the regulatory pressures that Mattel faces in the FMCG industry?",
+      "a": "Mattel faces regulatory pressures such as compliance with safety standards, environmental regulations, and advertising regulations. These pressures could impact Mattel's profitability.",
+      "category": "industry"
+    },
+    {
+      "q": "How could Mattel's supply chain and manufacturing costs be impacting its profitability?",
+      "a": "Mattel's supply chain and manufacturing costs could be impacting its profitability by increasing costs and reducing margins. Mattel could consider optimizing its supply chain and manufacturing processes to reduce costs.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) that Mattel should use to measure its profitability?",
+      "a": "Mattel should use KPIs such as revenue growth, margin expansion, and return on investment (ROI) to measure its profitability.",
+      "category": "math"
+    },
+    {
+      "q": "How could Mattel's branding and marketing strategy be impacting its profitability?",
+      "a": "Mattel's branding and marketing strategy could be impacting its profitability by increasing brand awareness and driving sales. Mattel could consider optimizing its branding and marketing strategy to improve its profitability.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and opportunities for Mattel in the Indian market?",
+      "a": "The Indian market presents opportunities for growth due to increasing demand from a growing middle class. However, there are also risks such as competition from local players and regulatory pressures.",
+      "category": "industry"
+    },
+    {
+      "q": "How could Mattel use customer lifetime value (CLV) analysis to improve its profitability?",
+      "a": "Mattel could use CLV analysis to identify high-value customers and develop targeted marketing strategies to retain them. This could lead to increased revenue and profitability.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the revenue decline in the Barbie segment using a price-quantity framework",
+    "Consider the competitive landscape in the global toy market and its impact on Mattel's pricing strategy",
+    "Evaluate the supply chain and manufacturing costs for Mattel and identify areas for cost reduction"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings (e.g. 10-K reports)",
+    "Market research reports (e.g. Euromonitor, Nielsen)"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the profitability of Mattel and identify the driving factors of the decline in the Barbie segment. The candidate should consider the competitive landscape, supply chain and manufacturing costs, and branding and marketing strategy to develop a comprehensive solution.",
+  "enriched_at": "2026-05-08T12:17:23.594Z"
+}

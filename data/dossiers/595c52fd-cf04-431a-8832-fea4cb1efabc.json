@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The private equity (PE) and soda industries are distinct, with PE firms investing in various sectors and soda manufacturers operating in the consumer goods space. The PE industry is characterized by high-stakes investments and rigorous due diligence, while the soda industry is marked by intense competition and shifting consumer preferences. In India, the PE industry has grown significantly, with investments totaling over $40 billion in 2020. The soda industry, meanwhile, has seen a decline in sales due to increasing health consciousness and government regulations.",
+  "real_world_numbers": [
+    {
+      "metric": "Average PE fund size",
+      "value": "$500 million - $1 billion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global soda market size",
+      "value": "$400 billion - $500 billion",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Typical PE investment holding period",
+      "value": "5-7 years",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Soda industry profit margin",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of PE firms in India",
+      "value": "150-200",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "Average soda consumption per capita in India",
+      "value": "10-15 liters per year",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "PE industry deal volume in India",
+      "value": "500-700 deals per year",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Soda industry advertising spend",
+      "value": "$5 billion - $10 billion",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "PE firm staff-to-investment ratio",
+      "value": "1:10 - 1:20",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Soda industry production volume",
+      "value": "50 billion - 70 billion liters per year",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the total addressable market for a PE firm investing in the soda industry",
+      "formula": "Market size x Target market share",
+      "typical_answer_range": "10-50 billion"
+    },
+    {
+      "step": "Estimate the potential return on investment for a PE firm investing in a soda manufacturer",
+      "formula": "Exit valuation / Entry valuation - 1",
+      "typical_answer_range": "20-50%"
+    },
+    {
+      "step": "Determine the break-even point for a new soda product launch",
+      "formula": "Fixed costs / (Selling price - Variable costs)",
+      "typical_answer_range": "6-18 months"
+    },
+    {
+      "step": "Calculate the potential market share gain for a soda manufacturer through a PE-backed acquisition",
+      "formula": "Acquired company market share x Synergy factor",
+      "typical_answer_range": "5-15%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the differences in industry dynamics between PE and soda",
+    "Failing to account for regulatory risks in the soda industry",
+    "Underestimating the importance of brand loyalty in the soda market",
+    "Not considering the potential for cannibalization of existing products",
+    "Ignoring the impact of changing consumer preferences on soda sales",
+    "Assuming a linear relationship between investment size and return",
+    "Not accounting for the time value of money in investment calculations"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key differences in investment strategies between PE firms and venture capital firms?",
+      "a": "PE firms typically invest in mature companies with established cash flows, while venture capital firms invest in early-stage companies with high growth potential.",
+      "category": "industry"
+    },
+    {
+      "q": "How do soda manufacturers adapt to changing consumer preferences, such as the shift towards low-calorie or sustainable products?",
+      "a": "Soda manufacturers have responded by introducing new product lines, such as low-calorie or natural sodas, and investing in marketing campaigns to promote these products.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical due diligence steps involved in a PE investment in a soda manufacturer?",
+      "a": "Due diligence typically involves a review of the target company's financials, operations, management team, and market position, as well as an assessment of potential risks and opportunities.",
+      "category": "competitive"
+    },
+    {
+      "q": "How do PE firms measure the success of their investments in the soda industry?",
+      "a": "PE firms typically measure success through metrics such as internal rate of return (IRR), return on investment (ROI), and multiple of invested capital (MOIC).",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with investing in the soda industry?",
+      "a": "Potential risks include regulatory changes, shifting consumer preferences, and intense competition, while challenges may include managing a large and complex supply chain and maintaining brand loyalty.",
+      "category": "industry"
+    },
+    {
+      "q": "Can you walk me through a hypothetical example of a PE firm investing in a soda manufacturer?",
+      "a": "For example, a PE firm might invest $100 million in a soda manufacturer, with the goal of expanding the company's product line and increasing its market share, and then exiting the investment through an initial public offering (IPO) or sale to a strategic acquirer.",
+      "category": "real-world"
+    },
+    {
+      "q": "How do soda manufacturers balance the need for profitability with the need for sustainability and social responsibility?",
+      "a": "Soda manufacturers have implemented various initiatives, such as reducing water usage, increasing recycling rates, and promoting healthy lifestyles, to balance profitability with sustainability and social responsibility.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) used to evaluate the success of a soda manufacturer?",
+      "a": "KPIs may include metrics such as revenue growth, profit margin, market share, and customer satisfaction.",
+      "category": "math"
+    },
+    {
+      "q": "Can you discuss the role of digital marketing in the soda industry?",
+      "a": "Digital marketing plays a crucial role in the soda industry, as companies use social media, online advertising, and other digital channels to engage with customers, promote products, and build brand awareness.",
+      "category": "industry"
+    },
+    {
+      "q": "How do PE firms approach the issue of corporate governance in their portfolio companies?",
+      "a": "PE firms typically work closely with the management teams of their portfolio companies to implement best practices in corporate governance, such as establishing independent boards of directors and implementing robust risk management systems.",
+      "category": "competitive"
+    }
+  ],
+  "framework_hints": [
+    "Consider the intersection of the PE and soda industries, including the potential for PE firms to invest in soda manufacturers and the implications for the soda industry",
+    "Analyze the competitive landscape of the soda industry, including the market position of major players and the potential for new entrants",
+    "Evaluate the potential for PE firms to create value in their portfolio companies, including through operational improvements, strategic acquisitions, and exits"
+  ],
+  "sources": [
+    "Industry reports from firms such as Euromonitor and Nielsen",
+    "Company filings and financial statements",
+    "Market research studies and surveys",
+    "News articles and industry publications, such as Forbes and Bloomberg",
+    "Academic studies and research papers on the PE and soda industries"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to think creatively and make connections between the PE and soda industries, while also demonstrating a strong understanding of industry dynamics, financial metrics, and investment strategies.",
+  "enriched_at": "2026-05-08T12:20:01.091Z"
+}

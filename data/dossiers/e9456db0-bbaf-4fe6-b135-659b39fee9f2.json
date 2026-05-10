@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The US mobile market is characterized by intense competition among four major carriers: AT&T, Sprint, T-Mobile, and Verizon. The market is subject to regulatory oversight by the Federal Communications Commission (FCC), which impacts pricing, spectrum allocation, and network expansion. Typical customer behavior involves a high propensity to switch carriers in pursuit of better coverage, pricing, and data speeds. The tech industry, particularly the mobile segment, is driven by rapid innovation, including advancements in MIMO (Multiple-Input Multiple-Output) technology, which enhances network capacity and speed.",
+  "real_world_numbers": [
+    {
+      "metric": "Average Revenue Per User (ARPU)",
+      "value": "$40-$60 per month",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "US mobile market size",
+      "value": "300-400 million subscribers",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Mobile data traffic growth rate",
+      "value": "20-30% annually",
+      "source_hint": "market research firms"
+    },
+    {
+      "metric": "Typical margin for mobile carriers",
+      "value": "15-25%",
+      "source_hint": "financial analyst estimates"
+    },
+    {
+      "metric": "Number of mobile carriers in the US",
+      "value": "4-6 major players",
+      "source_hint": "FCC reports"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for mobile subscribers",
+      "value": "$1,000-$2,000",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "MIMO technology adoption rate",
+      "value": "50-70% of new mobile devices",
+      "source_hint": "tech industry reports"
+    },
+    {
+      "metric": "Capital expenditure (CapEx) for mobile carriers",
+      "value": "15-20% of revenue",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate market share",
+      "formula": "(carrier subscribers / total US mobile subscribers) * 100",
+      "typical_answer_range": "10-40%"
+    },
+    {
+      "step": "Determine revenue growth rate",
+      "formula": "(current revenue - previous revenue) / previous revenue",
+      "typical_answer_range": "5-15%"
+    },
+    {
+      "step": "Estimate customer acquisition cost (CAC)",
+      "formula": "total marketing spend / number of new subscribers",
+      "typical_answer_range": "$100-$300"
+    },
+    {
+      "step": "Calculate return on investment (ROI) for MIMO technology deployment",
+      "formula": "(incremental revenue - deployment cost) / deployment cost",
+      "typical_answer_range": "10-50%"
+    }
+  ],
+  "common_mistakes": [
+    "Overlooking the impact of regulatory changes on the mobile market",
+    "Failing to account for the effects of MIMO technology on network capacity and speed",
+    "Ignoring the competitive dynamics among carriers",
+    "Not considering the varying customer needs and preferences",
+    "Miscalculating market share and revenue growth rates",
+    "Underestimating the importance of customer retention and CLV",
+    "Overestimating the ROI of MIMO technology deployment"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of the US mobile market?",
+      "a": "Competition among carriers, regulatory oversight, and technological advancements like MIMO",
+      "category": "industry"
+    },
+    {
+      "q": "How does MIMO technology impact network capacity and speed?",
+      "a": "MIMO enhances network capacity and speed by allowing for multiple data streams to be transmitted simultaneously",
+      "category": "tech"
+    },
+    {
+      "q": "What are the typical customer needs and preferences in the US mobile market?",
+      "a": "Customers prioritize coverage, pricing, data speeds, and device selection",
+      "category": "industry"
+    },
+    {
+      "q": "How do carriers differentiate themselves in a competitive market?",
+      "a": "Carriers differentiate themselves through pricing, coverage, data speeds, and value-added services",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with MIMO technology deployment?",
+      "a": "Risks include high deployment costs, potential interference issues, and the need for compatible devices",
+      "category": "tech"
+    },
+    {
+      "q": "How can carriers measure the effectiveness of their MIMO technology deployment?",
+      "a": "Carriers can measure effectiveness through metrics like network speed, capacity, and customer satisfaction",
+      "category": "math"
+    },
+    {
+      "q": "What are the implications of the US mobile market for Indian telecom operators?",
+      "a": "Indian operators can learn from the competitive dynamics, regulatory environment, and technological advancements in the US market",
+      "category": "real-world"
+    },
+    {
+      "q": "How can carriers balance the need for investment in MIMO technology with the need to control costs?",
+      "a": "Carriers can balance investment and cost control through phased deployment, partnerships, and careful resource allocation",
+      "category": "framework"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the competitive landscape and market structure",
+    "Assess the impact of MIMO technology on network capacity and speed",
+    "Evaluate the customer needs and preferences in the US mobile market",
+    "Consider the regulatory environment and potential changes"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "FCC reports and filings",
+    "Company 10-K filings and annual reports",
+    "Market research firms like IDC and Gartner"
+  ],
+  "case_type_notes": "This market entry case requires candidates to analyze the competitive dynamics, technological advancements, and regulatory environment in the US mobile market, and to develop a strategic plan for a carrier to effectively deploy MIMO technology and gain market share.",
+  "enriched_at": "2026-05-10T06:54:53.597Z"
+}

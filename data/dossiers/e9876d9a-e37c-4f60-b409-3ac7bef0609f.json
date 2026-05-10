@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The search engine industry is highly competitive, with low barriers to entry and high rivalry among existing players. The rise of AI-based search technologies has further intensified competition, with new entrants like Perplexity challenging incumbents like Google. The industry is characterized by high fixed costs, primarily due to the need for significant investments in technology and data infrastructure. Regulatory bodies have also started to take notice, with potential implications for industry structure and profitability. Typical customer behavior in this industry is highly price-sensitive, with users often switching between search engines based on factors like relevance, speed, and user experience.",
+  "real_world_numbers": [
+    {
+      "metric": "Average cost per search",
+      "value": "0.05-0.15 USD",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Global search engine market size",
+      "value": "150-200 billion USD",
+      "source_hint": "market research firms"
+    },
+    {
+      "metric": "Number of search engine competitors",
+      "value": "10-20 major players",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Customer lifetime value (CLV) for search engines",
+      "value": "10-50 USD",
+      "source_hint": "academic studies"
+    },
+    {
+      "metric": "Typical margin for search engine companies",
+      "value": "15-30%",
+      "source_hint": "financial statements"
+    },
+    {
+      "metric": "Investment in AI research and development",
+      "value": "5-10 billion USD",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of users switching to AI-based search engines",
+      "value": "10-30% of total users",
+      "source_hint": "market research firms"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for search engines",
+      "value": "10-50 USD",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the cost parity with new tech",
+      "formula": "Cost per search (new tech) = Total cost (new tech) / Total searches (new tech)",
+      "typical_answer_range": "0.01-0.10 USD"
+    },
+    {
+      "step": "Determine the impact of AI on industry structure",
+      "formula": "Change in industry structure = (New entrants + New substitutes) / (Barriers to entry + Supplier power)",
+      "typical_answer_range": "10-50% change"
+    },
+    {
+      "step": "Evaluate the value of VRIO resources in the AI era",
+      "formula": "Value of VRIO resources = (Value + Rarity + Inimitability + Organization) / 4",
+      "typical_answer_range": "0.5-1.5"
+    },
+    {
+      "step": "Assess the effectiveness of government policy in creating new barriers",
+      "formula": "Effectiveness of government policy = (New barriers / Total barriers) * (Industry profitability / Average profitability)",
+      "typical_answer_range": "10-50% increase in profitability"
+    }
+  ],
+  "common_mistakes": [
+    "Overemphasizing the importance of inimitability in the face of changing industry structure",
+    "Failing to consider the impact of AI on the value chain and cost parity",
+    "Ignoring the role of government policy in shaping industry structure and profitability",
+    "Underestimating the threat of new entrants and substitutes in the AI era",
+    "Not considering the potential for a dual approach to strategy, combining both cost leadership and differentiation"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key characteristics of the search engine industry, and how do they impact competition?",
+      "a": "The search engine industry is highly competitive, with low barriers to entry and high rivalry among existing players. The rise of AI-based search technologies has further intensified competition.",
+      "category": "industry"
+    },
+    {
+      "q": "How do AI-based search engines like Perplexity challenge traditional search engines like Google?",
+      "a": "AI-based search engines challenge traditional search engines by offering improved relevance, speed, and user experience, while also potentially disrupting the traditional business model of search engines.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the implications of the VRIO framework for Google's strategy in the face of AI-based search?",
+      "a": "The VRIO framework suggests that Google's resources, such as its massive web-crawl index, may lose value in the face of AI-based search. Google must therefore redesign its value chain to achieve cost parity with new tech.",
+      "category": "framework"
+    },
+    {
+      "q": "How can government policy be used to create new barriers to entry in the search engine industry?",
+      "a": "Government policy can be used to create new barriers to entry in the search engine industry by implementing regulations that favor established players, such as AI safety regulations that only big firms can afford.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and benefits of a dual approach to strategy, combining both cost leadership and differentiation?",
+      "a": "A dual approach to strategy can offer both cost leadership and differentiation benefits, but it also carries risks, such as increased complexity and potential trade-offs between the two strategies.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Consider the impact of AI on the five forces of industry structure, including the threat of new entrants, rivalry, substitutes, supplier power, and buyer power",
+    "Evaluate the value of VRIO resources in the AI era, including the value, rarity, inimitability, and organization of resources",
+    "Assess the potential for a dual approach to strategy, combining both cost leadership and differentiation"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Academic studies on the search engine industry"
+  ],
+  "case_type_notes": "This case is challenging because it requires the application of multiple frameworks, including Porter's Five Forces and the VRIO framework, to a complex and dynamic industry. The rise of AI-based search technologies adds an additional layer of complexity, requiring the consideration of new entrants, substitutes, and potential disruptions to the traditional business model.",
+  "enriched_at": "2026-05-10T06:04:49.186Z"
+}

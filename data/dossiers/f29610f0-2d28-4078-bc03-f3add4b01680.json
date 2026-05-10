@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian multiplex industry is a growing market with increasing demand for cinematic experiences. The industry is characterized by a mix of national and regional players, with key players like PVR and Inox Leisure dominating the market. The average ticket price in India ranges from ₹150 to ₹300, and the industry is subject to regulations like entertainment tax. Typical customer behavior includes a preference for weekend shows and a growing demand for premium formats like 3D and IMAX.",
+  "real_world_numbers": [
+    {
+      "metric": "Average ticket price in India",
+      "value": "₹150-₹300",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Number of multiplex screens in India",
+      "value": "2,500-3,000",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average daily footfall per screen",
+      "value": "200-300",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Average revenue per user (ARPU) for food and beverage",
+      "value": "₹100-₹200",
+      "source_hint": "company reports"
+    },
+    {
+      "metric": "Market size of the Indian multiplex industry",
+      "value": "₹10,000-₹15,000 crores",
+      "source_hint": "industry research"
+    },
+    {
+      "metric": "Growth rate of the Indian multiplex industry",
+      "value": "10-15%",
+      "source_hint": "industry forecasts"
+    },
+    {
+      "metric": "Average occupancy rate for multiplexes in India",
+      "value": "20-30%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Contribution of food and beverage to total revenue",
+      "value": "20-30%",
+      "source_hint": "company filings"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate average daily revenue per screen",
+      "formula": "Average ticket price * Average daily footfall per screen",
+      "typical_answer_range": "₹30,000-₹90,000"
+    },
+    {
+      "step": "Calculate total annual revenue",
+      "formula": "Average daily revenue per screen * Number of screens * Number of days in a year",
+      "typical_answer_range": "₹1,000-₹5,000 crores"
+    },
+    {
+      "step": "Calculate revenue from food and beverage",
+      "formula": "Average revenue per user (ARPU) for food and beverage * Average daily footfall per screen",
+      "typical_answer_range": "₹20,000-₹60,000"
+    },
+    {
+      "step": "Calculate total revenue with food and beverage contribution",
+      "formula": "Total annual revenue + Revenue from food and beverage",
+      "typical_answer_range": "₹1,200-₹6,000 crores"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the contribution of food and beverage to total revenue",
+    "Not accounting for variations in average ticket price and footfall across different regions and days",
+    "Using outdated or incorrect industry benchmarks",
+    "Not considering the impact of external factors like entertainment tax and regulations on revenue",
+    "Not breaking down the calculation into smaller, manageable steps"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of revenue growth in the Indian multiplex industry?",
+      "a": "The key drivers of revenue growth in the Indian multiplex industry include increasing demand for cinematic experiences, growing demand for premium formats, and expansion into new markets.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the average ticket price in India compare to other countries?",
+      "a": "The average ticket price in India is relatively lower compared to other countries, with prices ranging from ₹150 to ₹300.",
+      "category": "industry"
+    },
+    {
+      "q": "What is the market share of the top multiplex players in India?",
+      "a": "The top multiplex players in India, such as PVR and Inox Leisure, account for a significant market share, with PVR having around 25-30% market share.",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the revenue from food and beverage contribute to the total revenue of a multiplex?",
+      "a": "The revenue from food and beverage contributes around 20-30% to the total revenue of a multiplex, with the average revenue per user (ARPU) for food and beverage ranging from ₹100 to ₹200.",
+      "category": "math"
+    },
+    {
+      "q": "What are the key risks and challenges facing the Indian multiplex industry?",
+      "a": "The key risks and challenges facing the Indian multiplex industry include increasing competition, regulatory changes, and external factors like entertainment tax.",
+      "category": "industry"
+    },
+    {
+      "q": "How can a multiplex increase its average revenue per user (ARPU) for food and beverage?",
+      "a": "A multiplex can increase its average revenue per user (ARPU) for food and beverage by offering premium food and beverage options, improving the overall customer experience, and implementing effective pricing strategies.",
+      "category": "real-world"
+    },
+    {
+      "q": "What is the impact of external factors like entertainment tax on the revenue of a multiplex?",
+      "a": "External factors like entertainment tax can have a significant impact on the revenue of a multiplex, with taxes ranging from 10-20% of the total revenue.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can a multiplex optimize its pricing strategy to maximize revenue?",
+      "a": "A multiplex can optimize its pricing strategy by analyzing customer demand, competitor pricing, and market trends, and implementing dynamic pricing strategies to maximize revenue.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the average daily revenue per screen as a key driver of total revenue",
+    "Break down the calculation into smaller, manageable steps, including average ticket price, average daily footfall per screen, and number of screens and days in a year",
+    "Account for the contribution of food and beverage to total revenue, including average revenue per user (ARPU) for food and beverage"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company 10-K filings",
+    "Industry research reports",
+    "News articles and publications"
+  ],
+  "case_type_notes": "This estimation case requires the candidate to apply mathematical concepts and industry knowledge to estimate the annual revenue of a multiplex. The candidate should be able to break down the calculation into smaller, manageable steps and account for various factors that impact revenue, including average ticket price, average daily footfall per screen, and food and beverage contribution.",
+  "enriched_at": "2026-05-10T07:07:35.270Z"
+}

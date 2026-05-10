@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian cement industry is a highly competitive market with over 500 million tons of installed capacity. The industry is characterized by low margins, typically ranging from 8-12%, and is heavily influenced by government regulations and infrastructure development. The demand for cement is driven by the construction and infrastructure sectors, with the Indian government's focus on developing roads, highways, and affordable housing. The industry is also subject to environmental regulations, with a growing emphasis on sustainable and eco-friendly cement production.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for Indian cement manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Market size of the Indian cement industry",
+      "value": "500-600 million tons",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Number of cement manufacturers in India",
+      "value": "100-150",
+      "source_hint": "industry associations"
+    },
+    {
+      "metric": "Average cost per ton of cement in India",
+      "value": "₹3,500-₹4,500",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Time to construct a new cement plant in India",
+      "value": "3-5 years",
+      "source_hint": "company announcements"
+    },
+    {
+      "metric": "Projected growth rate of the Indian cement industry",
+      "value": "5-7% per annum",
+      "source_hint": "industry forecasts"
+    },
+    {
+      "metric": "Customer retention rate for Indian cement manufacturers",
+      "value": "70-80%",
+      "source_hint": "market surveys"
+    },
+    {
+      "metric": "Average debt-to-equity ratio for Indian cement manufacturers",
+      "value": "1:1 to 1.5:1",
+      "source_hint": "financial statements"
+    },
+    {
+      "metric": "Return on equity (ROE) for Indian cement manufacturers",
+      "value": "12-15%",
+      "source_hint": "industry benchmarks"
+    },
+    {
+      "metric": "Capacity utilization rate for Indian cement manufacturers",
+      "value": "70-80%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the industry utilization rate by region",
+      "formula": "Market size / Total installed capacity",
+      "typical_answer_range": "60-80%"
+    },
+    {
+      "step": "Determine the growth rate of market and planned capacity additions",
+      "formula": "((Current year market size - Previous year market size) / Previous year market size) * 100",
+      "typical_answer_range": "5-10% per annum"
+    },
+    {
+      "step": "Extrapolate growth rates to find the region where demand exceeds supply",
+      "formula": "Market size / Total installed capacity > 1",
+      "typical_answer_range": "1.1-1.3"
+    },
+    {
+      "step": "Perform a cost-benefit analysis for building or buying capacity",
+      "formula": "Net present value (NPV) = ∑ (CFt / (1 + r)^t)",
+      "typical_answer_range": "₹100-₹500 crores"
+    },
+    {
+      "step": "Calculate the NPV of the acquisition option",
+      "formula": "NPV = ∑ (CFt / (1 + r)^t)",
+      "typical_answer_range": "₹200-₹1,000 crores"
+    },
+    {
+      "step": "Compare the NPV of building and buying capacity",
+      "formula": "NPV build - NPV buy",
+      "typical_answer_range": "-₹100 to ₹500 crores"
+    },
+    {
+      "step": "Determine the payback period for building or buying capacity",
+      "formula": "Payback period = Total investment / Annual cash flow",
+      "typical_answer_range": "3-7 years"
+    },
+    {
+      "step": "Calculate the internal rate of return (IRR) for building or buying capacity",
+      "formula": "IRR = Rate at which NPV equals zero",
+      "typical_answer_range": "12-18%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the regional differences in demand and supply",
+    "Overlooking the impact of government regulations on the industry",
+    "Not accounting for the time and cost of constructing a new cement plant",
+    "Failing to perform a thorough cost-benefit analysis of building or buying capacity",
+    "Not considering the potential for acquisitions to generate immediate profits",
+    "Underestimating the importance of customer retention and loyalty in the cement industry",
+    "Not analyzing the debt-to-equity ratio and ROE of Indian cement manufacturers",
+    "Failing to calculate the capacity utilization rate and its impact on profitability"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of demand for cement in India?",
+      "a": "The demand for cement in India is driven by the construction and infrastructure sectors, with the Indian government's focus on developing roads, highways, and affordable housing.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian cement industry compare to the global industry in terms of size and growth rate?",
+      "a": "The Indian cement industry is one of the largest in the world, with a size of over 500 million tons and a growth rate of 5-7% per annum.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical profit margins for Indian cement manufacturers?",
+      "a": "The typical profit margins for Indian cement manufacturers range from 8-12%.",
+      "category": "competitive"
+    },
+    {
+      "q": "How does the cost of production vary across different regions in India?",
+      "a": "The cost of production varies across different regions in India, with factors such as transportation costs, labor costs, and raw material costs influencing the overall cost.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key regulatory challenges facing the Indian cement industry?",
+      "a": "The Indian cement industry faces regulatory challenges such as environmental regulations, labor laws, and taxation policies.",
+      "category": "regulatory"
+    },
+    {
+      "q": "How does the Indian cement industry compare to other industries in terms of debt-to-equity ratio and ROE?",
+      "a": "The Indian cement industry has a debt-to-equity ratio of 1:1 to 1.5:1 and an ROE of 12-15%, which is comparable to other industries.",
+      "category": "financial"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with building or buying capacity in the Indian cement industry?",
+      "a": "The potential risks and challenges associated with building or buying capacity in the Indian cement industry include regulatory risks, construction risks, and market risks.",
+      "category": "math"
+    },
+    {
+      "q": "How can a company determine the optimal location for a new cement plant in India?",
+      "a": "A company can determine the optimal location for a new cement plant in India by analyzing factors such as market demand, raw material availability, transportation costs, and regulatory environment.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for the Indian cement industry?",
+      "a": "The key performance indicators (KPIs) for the Indian cement industry include capacity utilization rate, profit margin, debt-to-equity ratio, and ROE.",
+      "category": "industry"
+    },
+    {
+      "q": "How can a company measure the success of its capacity expansion strategy in the Indian cement industry?",
+      "a": "A company can measure the success of its capacity expansion strategy in the Indian cement industry by tracking KPIs such as capacity utilization rate, profit margin, and market share.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential opportunities for growth and expansion in the Indian cement industry?",
+      "a": "The potential opportunities for growth and expansion in the Indian cement industry include increasing demand from the construction and infrastructure sectors, growing demand for sustainable and eco-friendly cement, and expanding into new markets.",
+      "category": "industry"
+    },
+    {
+      "q": "How can a company stay competitive in the Indian cement industry?",
+      "a": "A company can stay competitive in the Indian cement industry by focusing on cost reduction, improving efficiency, investing in research and development, and expanding its product offerings.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with acquisitions in the Indian cement industry?",
+      "a": "The potential risks and challenges associated with acquisitions in the Indian cement industry include regulatory risks, integration risks, and market risks.",
+      "category": "math"
+    },
+    {
+      "q": "How can a company determine the optimal acquisition target in the Indian cement industry?",
+      "a": "A company can determine the optimal acquisition target in the Indian cement industry by analyzing factors such as market share, profit margin, debt-to-equity ratio, and ROE.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key considerations for a company considering an acquisition in the Indian cement industry?",
+      "a": "The key considerations for a company considering an acquisition in the Indian cement industry include regulatory approvals, integration costs, and market risks.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Consider the industry size, growth rate, and profit margins when evaluating the attractiveness of the Indian cement industry",
+    "Analyze the competition market share and planned capacity additions to determine the optimal location for a new cement plant",
+    "Evaluate the regulations and news snippets to understand the potential risks and challenges associated with building or buying capacity in the Indian cement industry",
+    "Perform a cost-benefit analysis to determine the optimal strategy for building or buying capacity",
+    "Consider the potential for acquisitions to generate immediate profits and improve market share"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings and annual reports",
+    "Industry associations and trade publications",
+    "Market research and surveys",
+    "Government reports and regulatory filings"
+  ],
+  "case_type_notes": "This case requires the candidate to evaluate the attractiveness of the Indian cement industry and determine the optimal strategy for building or buying capacity. The candidate must consider factors such as industry size, growth rate, profit margins, competition, regulations, and market risks to make an informed decision.",
+  "enriched_at": "2026-05-10T07:31:02.490Z"
+}

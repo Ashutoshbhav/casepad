@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian banking industry is highly competitive, with over 20 public and private sector banks operating in the country. The Reserve Bank of India (RBI) regulates the industry, and banks typically offer a range of deposit products, including savings and checking accounts, to attract customers. The average Indian consumer holds multiple bank accounts, and the choice between a savings and checking account depends on factors such as interest rates, fees, and convenience. The banking industry in India has seen significant growth in recent years, driven by increasing financial inclusion and digital adoption. Key players in the industry include State Bank of India, HDFC Bank, and ICICI Bank.",
+  "real_world_numbers": [
+    {
+      "metric": "Average savings account balance in India",
+      "value": "₹50,000 - ₹100,000",
+      "source_hint": "RBI data"
+    },
+    {
+      "metric": "Average checking account balance in India",
+      "value": "₹20,000 - ₹50,000",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Typical interest rate on savings accounts in India",
+      "value": "3.5% - 5.5% per annum",
+      "source_hint": "Bank websites"
+    },
+    {
+      "metric": "Typical interest rate on checking accounts in India",
+      "value": "0% - 2% per annum",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Average customer acquisition cost for banks in India",
+      "value": "₹500 - ₹1,000",
+      "source_hint": "Marketing industry reports"
+    },
+    {
+      "metric": "Average annual maintenance fee for checking accounts in India",
+      "value": "₹500 - ₹1,500",
+      "source_hint": "Bank websites"
+    },
+    {
+      "metric": "Average annual maintenance fee for savings accounts in India",
+      "value": "₹0 - ₹500",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Typical customer lifetime value (CLV) for banks in India",
+      "value": "₹5,000 - ₹20,000",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Average number of transactions per month for checking accounts in India",
+      "value": "10 - 50",
+      "source_hint": "Banking industry reports"
+    },
+    {
+      "metric": "Average number of transactions per month for savings accounts in India",
+      "value": "1 - 10",
+      "source_hint": "Banking industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the average annual revenue from a checking account",
+      "formula": "Average balance x Interest rate",
+      "typical_answer_range": "₹400 - ₹1,000"
+    },
+    {
+      "step": "Calculate the average annual revenue from a savings account",
+      "formula": "Average balance x Interest rate",
+      "typical_answer_range": "₹1,750 - ₹5,500"
+    },
+    {
+      "step": "Calculate the lifetime profit of a checking account",
+      "formula": "Average annual revenue x Customer lifetime (in years) - Customer acquisition cost",
+      "typical_answer_range": "₹2,000 - ₹10,000"
+    },
+    {
+      "step": "Calculate the lifetime profit of a savings account",
+      "formula": "Average annual revenue x Customer lifetime (in years) - Customer acquisition cost",
+      "typical_answer_range": "₹5,000 - ₹20,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of customer acquisition costs on lifetime profit",
+    "Not accounting for differences in average balances and interest rates between checking and savings accounts",
+    "Not calculating the lifetime profit of each account type separately",
+    "Not considering the potential for cross-selling and upselling of other banking products",
+    "Not accounting for regulatory requirements and industry trends"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the typical characteristics of a checking account versus a savings account in the Indian banking industry?",
+      "a": "Checking accounts typically have lower average balances and higher transaction volumes, while savings accounts have higher average balances and lower transaction volumes.",
+      "category": "industry"
+    },
+    {
+      "q": "How do banks in India typically acquire new customers, and what are the associated costs?",
+      "a": "Banks in India typically acquire new customers through a combination of online and offline marketing channels, with associated costs ranging from ₹500 to ₹1,000 per customer.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key factors that influence a customer's decision to choose a checking account versus a savings account?",
+      "a": "Key factors include interest rates, fees, convenience, and customer service.",
+      "category": "industry"
+    },
+    {
+      "q": "How do regulatory requirements impact the pricing and profitability of checking and savings accounts in India?",
+      "a": "Regulatory requirements, such as the RBI's guidelines on interest rates and fees, can impact the pricing and profitability of checking and savings accounts in India.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential opportunities for cross-selling and upselling of other banking products to checking and savings account customers?",
+      "a": "Potential opportunities include selling credit cards, personal loans, and investment products to customers.",
+      "category": "competitive"
+    },
+    {
+      "q": "How do banks in India measure the success of their checking and savings account products, and what are the key performance indicators (KPIs)?",
+      "a": "Banks in India typically measure the success of their checking and savings account products using KPIs such as customer acquisition costs, customer retention rates, and revenue growth.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with offering checking and savings accounts in the Indian banking industry?",
+      "a": "Potential risks and challenges include regulatory risks, competitive risks, and operational risks.",
+      "category": "industry"
+    },
+    {
+      "q": "How do demographic trends, such as the increasing use of digital banking channels, impact the demand for checking and savings accounts in India?",
+      "a": "Demographic trends, such as the increasing use of digital banking channels, can impact the demand for checking and savings accounts in India, with younger customers more likely to prefer digital channels.",
+      "category": "real-world"
+    },
+    {
+      "q": "What are the potential opportunities for banks in India to differentiate their checking and savings account products and gain a competitive advantage?",
+      "a": "Potential opportunities include offering unique features, such as higher interest rates or lower fees, and providing excellent customer service.",
+      "category": "competitive"
+    },
+    {
+      "q": "How do banks in India use data analytics and customer insights to improve the profitability of their checking and savings account products?",
+      "a": "Banks in India use data analytics and customer insights to improve the profitability of their checking and savings account products by segmenting customers, identifying high-value customers, and offering targeted marketing campaigns.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Consider the customer lifecycle and how it impacts the profitability of checking and savings accounts",
+    "Analyze the competitive landscape and how it impacts the pricing and profitability of checking and savings accounts",
+    "Evaluate the regulatory requirements and how they impact the pricing and profitability of checking and savings accounts",
+    "Assess the potential opportunities for cross-selling and upselling of other banking products to checking and savings account customers",
+    "Consider the impact of demographic trends, such as the increasing use of digital banking channels, on the demand for checking and savings accounts"
+  ],
+  "sources": [
+    "RBI data and reports",
+    "Banking industry reports and research studies",
+    "Bank websites and marketing materials",
+    "Financial news articles and publications",
+    "Statista industry reports and data"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the profitability of checking and savings accounts in the Indian banking industry, considering factors such as customer acquisition costs, average balances, interest rates, and regulatory requirements. The candidate must also evaluate the competitive landscape and identify potential opportunities for cross-selling and upselling of other banking products.",
+  "enriched_at": "2026-05-08T12:20:42.970Z"
+}

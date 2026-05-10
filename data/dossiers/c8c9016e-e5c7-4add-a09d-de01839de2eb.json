@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The wool yarn manufacturing industry in India is a highly fragmented market with a large number of small and medium-sized enterprises. The industry is characterized by a seasonal demand and production pattern, with peak demand during the winter months. The market is also influenced by factors such as raw material prices, government policies, and consumer preferences. Key players in the industry include textile mills, handicraft producers, and exporters. The industry has a significant impact on the rural economy, with many farmers and artisans dependent on it for their livelihood.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for wool yarn manufacturers",
+      "value": "8-12%",
+      "source_hint": "Industry reports"
+    },
+    {
+      "metric": "Market size of the Indian wool yarn industry",
+      "value": "INR 10,000-15,000 crores",
+      "source_hint": "Statista industry reports"
+    },
+    {
+      "metric": "Number of wool yarn manufacturers in India",
+      "value": "500-700",
+      "source_hint": "Government databases"
+    },
+    {
+      "metric": "Average annual growth rate of the Indian wool yarn industry",
+      "value": "5-7%",
+      "source_hint": "Company filings"
+    },
+    {
+      "metric": "Customer retention rate for wool yarn manufacturers",
+      "value": "70-80%",
+      "source_hint": "Industry surveys"
+    },
+    {
+      "metric": "Average order value for wool yarn manufacturers",
+      "value": "INR 50,000-100,000",
+      "source_hint": "Company reports"
+    },
+    {
+      "metric": "Inventory turnover ratio for wool yarn manufacturers",
+      "value": "4-6",
+      "source_hint": "Industry benchmarks"
+    },
+    {
+      "metric": "Debt-to-equity ratio for wool yarn manufacturers",
+      "value": "0.5-1.5",
+      "source_hint": "Financial databases"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the required annual growth rate to achieve 5x revenue growth in 5 years",
+      "formula": "(5x)^1/5 - 1",
+      "typical_answer_range": "25-30%"
+    },
+    {
+      "step": "Determine the increase in market share required to achieve the growth target",
+      "formula": "(Target revenue / Current revenue) * (1 / Current market share)",
+      "typical_answer_range": "20-25%"
+    },
+    {
+      "step": "Estimate the potential revenue from entering new markets",
+      "formula": "New market size * Target market share",
+      "typical_answer_range": "INR 500-1000 crores"
+    },
+    {
+      "step": "Calculate the required increase in production capacity to meet the growth target",
+      "formula": "(Target revenue / Current revenue) * (1 / Current production capacity)",
+      "typical_answer_range": "20-30%"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the seasonal nature of the demand and production pattern",
+    "Overestimating the potential for increasing market share in a highly fragmented market",
+    "Underestimating the competition from new entrants and existing players",
+    "Not accounting for the impact of raw material price fluctuations on profitability",
+    "Failing to consider the regulatory environment and government policies affecting the industry"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key factors driving the demand for wool yarn in India?",
+      "a": "The demand for wool yarn in India is driven by factors such as consumer preferences, government policies, and the growth of the textile industry.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the seasonal nature of the demand and production pattern affect the business?",
+      "a": "The seasonal nature of the demand and production pattern affects the business by creating fluctuations in revenue and profitability, and requiring the company to manage inventory and production capacity accordingly.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the potential risks and challenges associated with entering new markets?",
+      "a": "The potential risks and challenges associated with entering new markets include competition from existing players, regulatory hurdles, and the need to establish a new distribution network and customer base.",
+      "category": "math"
+    },
+    {
+      "q": "How can the company leverage its market leadership position to achieve the growth target?",
+      "a": "The company can leverage its market leadership position by investing in brand building, expanding its distribution network, and developing new products and services to meet the evolving needs of its customers.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) that the company should track to measure its progress towards the growth target?",
+      "a": "The company should track KPIs such as revenue growth, market share, customer acquisition and retention, and production capacity utilization to measure its progress towards the growth target.",
+      "category": "real-world"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the company's value chain to identify opportunities for cost reduction and efficiency improvement",
+    "Assess the company's competitive position and identify potential areas for differentiation",
+    "Evaluate the potential for expanding the company's product offerings and services to meet the evolving needs of its customers"
+  ],
+  "sources": [
+    "Statista industry reports",
+    "Company filings",
+    "Government databases",
+    "Industry surveys",
+    "Financial databases"
+  ],
+  "case_type_notes": "This case requires the candidate to think strategically about how to achieve a challenging growth target in a highly fragmented and competitive market. The candidate must consider a range of factors, including the company's competitive position, the market demand and supply dynamics, and the potential risks and challenges associated with entering new markets.",
+  "enriched_at": "2026-05-10T06:35:01.056Z"
+}

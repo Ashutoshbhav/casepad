@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "industry_primer": "The Indian urea manufacturing industry is a highly competitive and standardized market, with key players competing on price and volume. The industry is subject to government regulations and subsidies, which can impact profitability. Typical customers are farmers and agricultural businesses, who are price-sensitive and influenced by seasonal demand. The industry is also affected by global market trends and fluctuations in raw material prices.",
+  "real_world_numbers": [
+    {
+      "metric": "Typical margin for Indian urea manufacturers",
+      "value": "8-12%",
+      "source_hint": "industry reports"
+    },
+    {
+      "metric": "Indian urea market size",
+      "value": "30-40 million tons per annum",
+      "source_hint": "government statistics"
+    },
+    {
+      "metric": "Number of major urea manufacturers in India",
+      "value": "10-15",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Average price of urea in India",
+      "value": "Rs 250-350 per bag",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Customer retention rate for urea manufacturers",
+      "value": "70-80%",
+      "source_hint": "industry surveys"
+    },
+    {
+      "metric": "Average annual revenue for a leading Indian urea manufacturer",
+      "value": "Rs 5,000-7,000 crores",
+      "source_hint": "company filings"
+    },
+    {
+      "metric": "Growth rate of the Indian urea market",
+      "value": "2-4% per annum",
+      "source_hint": "market research"
+    },
+    {
+      "metric": "Raw material cost as a percentage of total cost",
+      "value": "60-70%",
+      "source_hint": "industry reports"
+    }
+  ],
+  "expected_math": [
+    {
+      "step": "Calculate the impact of a 10% decrease in quantity demanded on revenue",
+      "formula": "Revenue = Price x Quantity",
+      "typical_answer_range": "8-12% decrease in revenue"
+    },
+    {
+      "step": "Determine the break-even point for a promotional scheme",
+      "formula": "Break-even point = Fixed costs / (Selling price - Variable costs)",
+      "typical_answer_range": "Rs 50-100 per bag"
+    },
+    {
+      "step": "Evaluate the effect of a 5% increase in raw material costs on profitability",
+      "formula": "Profit = Revenue - Total costs",
+      "typical_answer_range": "2-5% decrease in profitability"
+    },
+    {
+      "step": "Calculate the customer lifetime value (CLV) for a typical customer",
+      "formula": "CLV = Average order value x Purchase frequency x Customer lifespan",
+      "typical_answer_range": "Rs 5,000-10,000"
+    }
+  ],
+  "common_mistakes": [
+    "Not considering the impact of government regulations and subsidies on the industry",
+    "Overlooking the effect of global market trends on raw material prices",
+    "Failing to account for seasonal fluctuations in demand",
+    "Not evaluating the competitiveness of the industry and the company's market position",
+    "Ignoring the potential for promotional schemes to increase revenue",
+    "Not calculating the break-even point for a promotional scheme",
+    "Failing to consider the impact of raw material cost fluctuations on profitability"
+  ],
+  "anticipated_questions": [
+    {
+      "q": "What are the key drivers of demand for urea in India?",
+      "a": "The key drivers of demand for urea in India are agricultural production, government subsidies, and seasonal fluctuations.",
+      "category": "industry"
+    },
+    {
+      "q": "How does the Indian government's subsidy policy impact the urea industry?",
+      "a": "The Indian government's subsidy policy can impact the urea industry by influencing the price of urea and the profitability of manufacturers.",
+      "category": "industry"
+    },
+    {
+      "q": "What are the typical marketing strategies used by urea manufacturers in India?",
+      "a": "Typical marketing strategies used by urea manufacturers in India include promotional schemes, advertising, and distribution partnerships.",
+      "category": "competitive"
+    },
+    {
+      "q": "How can a urea manufacturer in India increase its market share?",
+      "a": "A urea manufacturer in India can increase its market share by improving its distribution network, offering competitive pricing, and providing high-quality products.",
+      "category": "competitive"
+    },
+    {
+      "q": "What are the key challenges faced by urea manufacturers in India?",
+      "a": "The key challenges faced by urea manufacturers in India include intense competition, fluctuating raw material prices, and government regulations.",
+      "category": "industry"
+    },
+    {
+      "q": "How can a urea manufacturer in India measure the effectiveness of its promotional schemes?",
+      "a": "A urea manufacturer in India can measure the effectiveness of its promotional schemes by tracking sales data, customer feedback, and market research.",
+      "category": "math"
+    },
+    {
+      "q": "What are the potential risks and opportunities associated with expanding into new markets?",
+      "a": "The potential risks associated with expanding into new markets include increased competition, regulatory challenges, and logistical complexities. The potential opportunities include increased revenue, market share, and brand recognition.",
+      "category": "real-world"
+    },
+    {
+      "q": "How can a urea manufacturer in India balance its short-term and long-term goals?",
+      "a": "A urea manufacturer in India can balance its short-term and long-term goals by prioritizing profitability, investing in research and development, and developing a strategic plan.",
+      "category": "framework"
+    },
+    {
+      "q": "What are the key performance indicators (KPIs) for a urea manufacturer in India?",
+      "a": "The key performance indicators (KPIs) for a urea manufacturer in India include revenue growth, profitability, market share, and customer satisfaction.",
+      "category": "math"
+    }
+  ],
+  "framework_hints": [
+    "Analyze the industry structure and competitive landscape",
+    "Evaluate the company's pricing strategy and promotional schemes",
+    "Assess the impact of government regulations and subsidies on the industry",
+    "Develop a strategic plan to increase revenue and profitability"
+  ],
+  "sources": [
+    "Industry reports from CRISIL and ICRA",
+    "Company filings and annual reports",
+    "Government statistics and policy documents",
+    "Market research reports from Euromonitor and Nielsen"
+  ],
+  "case_type_notes": "This case requires the candidate to analyze the industry context, evaluate the company's strategies, and develop a solution to address the decline in revenue. The candidate should demonstrate an understanding of the Indian urea manufacturing industry, its competitive landscape, and the key drivers of demand.",
+  "enriched_at": "2026-05-10T06:02:06.061Z"
+}
