@@ -17,6 +17,8 @@ import { buildRegistry, toSystemPromptBlock as registryBlock, checkDraftAgainstR
 import { findArithmeticError, regenHintForArithmeticError } from '@/lib/case-state/arithmetic-verifier';
 import { renderRecentTurnAwareness, findRepeatedPhrase, regenHintForPhraseRepeat } from '@/lib/groq/recent-turn-context';
 import { renderDossierBlock, dossierIsUsable, loadDossier } from '@/lib/groq/dossier-context';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { embedWatermark } from '@/lib/security/watermark';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -61,6 +63,52 @@ export async function POST(req: NextRequest) {
   // explicit and surfaces a clean 403 instead of a silent 404 if RLS drifts.
   const { data: { user: authUser } } = await supabase.auth.getUser();
   if (!authUser) return new Response('unauthorized', { status: 401 });
+
+  // 2026-05-12 — anti-scrape: per-user_id rate limit on chat. Real cohort
+  // candidates type 1-3 messages/min. 30/min is well above natural use but
+  // throttles authenticated scrapers iterating cases. Sliding 60s window.
+  // Returns 429 with retry-after so legitimate retries still recover.
+  const rlByUser = checkRateLimit(`chat:user:${authUser.id}`, 30, 60_000);
+  if (!rlByUser.ok) {
+    console.warn(`[chat] rate-limit user=${authUser.id} retry=${rlByUser.retryAfterSec}s`);
+    return new Response(
+      JSON.stringify({
+        error: 'rate_limited',
+        retry_after_sec: rlByUser.retryAfterSec,
+        message: 'You\'re sending messages faster than a real interview pace. Wait a moment.',
+      }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': String(rlByUser.retryAfterSec),
+        },
+      }
+    );
+  }
+
+  // Anti-scrape: per-session_id rate limit. Even within the per-user budget,
+  // hammering a single session signals automated turn-by-turn scraping. 10
+  // messages/min on a single session is the practical ceiling for a thinking
+  // candidate; scrapers usually do 20+. Same sliding-window pattern.
+  const rlBySession = checkRateLimit(`chat:session:${sessionId}`, 10, 60_000);
+  if (!rlBySession.ok) {
+    console.warn(`[chat] rate-limit session=${sessionId} retry=${rlBySession.retryAfterSec}s`);
+    return new Response(
+      JSON.stringify({
+        error: 'rate_limited',
+        retry_after_sec: rlBySession.retryAfterSec,
+        message: 'Slow down — a real interview doesn\'t go this fast.',
+      }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': String(rlBySession.retryAfterSec),
+        },
+      }
+    );
+  }
 
   const { data: session, error: sErr } = await supabase
     .from('sessions')
@@ -390,6 +438,11 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          // 2026-05-12 — embed steganographic watermark before shipping.
+          // Invisible to readers; identifies the leaking account if a
+          // transcript shows up externally. See src/lib/security/watermark.ts.
+          full = embedWatermark(full, authUser.id);
+
           controller.enqueue(encoder.encode(full));
         } catch (err) {
           // P0-3: Never poison the transcript with "[Service is busy...]" text.
@@ -399,7 +452,7 @@ export async function POST(req: NextRequest) {
           // error string masquerading as the prior interviewer turn.
           errored = true;
           console.warn(`[chat] all providers failed: ${(err as Error).message.slice(0, 120)}; using static fallback`);
-          full = staticChatTurnFallback(transcriptIn.length);
+          full = embedWatermark(staticChatTurnFallback(transcriptIn.length), authUser.id);
           controller.enqueue(encoder.encode(full));
         }
       } else {
@@ -440,6 +493,12 @@ export async function POST(req: NextRequest) {
           if (!verdict.ok) {
             console.warn(`[guardrail:monitor] turn failed: ${describeFailure(verdict.failure)}`);
           }
+        }
+        // Note: monitor mode streams deltas live to client BEFORE we can
+        // watermark, so we only watermark the persisted transcript copy.
+        // Better defense for monitor mode = use gate (default) which buffers.
+        if (!errored && full) {
+          full = embedWatermark(full, authUser.id);
         }
       }
 
