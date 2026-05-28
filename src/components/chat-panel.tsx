@@ -7,6 +7,50 @@ import { DisperseParticles } from './disperse-particles';
 import { MicButton } from './mic-button';
 import { InlineSubmitCTA } from './inline-submit-cta';
 import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
+
+// "Ash is thinking" indicator — three animated dots rendered when the
+// interviewer turn is streaming but hasn't produced text yet. Until this
+// existed, the brief 200-800ms window between user-send and first-token
+// showed only a muted "…" character, which felt static and dead.
+// Replacing it with an animated indicator makes the interview feel live
+// (the #1 cohort complaint per Ash 2026-05-29 was "doesn't feel like a
+// real interview").
+function TypingIndicator() {
+  return (
+    <span
+      aria-label="Ash is thinking"
+      role="status"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        height: '1em',
+        verticalAlign: 'middle',
+      }}
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 9999,
+            background: 'var(--color-text-muted)',
+            animation: `chat-typing-bounce 1.2s ease-in-out ${i * 0.16}s infinite`,
+            display: 'inline-block',
+          }}
+        />
+      ))}
+      <style jsx>{`
+        @keyframes chat-typing-bounce {
+          0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+          30% { transform: translateY(-4px); opacity: 0.95; }
+        }
+      `}</style>
+    </span>
+  );
+}
 // Shared with /api/chat — DO NOT duplicate the strings here. The route handler
 // detects verbatim copy-pastes of these templates and nudges the candidate
 // for original thinking; both ends MUST read from the same source.
@@ -442,6 +486,8 @@ export function ChatPanel({
                     ) : (
                       m.content
                     )
+                  ) : isStreamingNow ? (
+                    <TypingIndicator />
                   ) : (
                     <span style={{ color: 'var(--color-text-muted)' }}>…</span>
                   )}
@@ -470,6 +516,8 @@ export function ChatPanel({
                   ) : (
                     m.content
                   )
+                ) : isStreamingNow ? (
+                  <TypingIndicator />
                 ) : (
                   <span style={{ color: 'var(--color-text-muted)' }}>…</span>
                 )}

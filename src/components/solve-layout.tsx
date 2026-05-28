@@ -3,32 +3,32 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ChatPanel } from './chat-panel';
-import { CheatSheetPanel } from './cheat-sheet-panel';
 import { IssueTreePanel } from './issue-tree-panel';
 import { AshMark } from './ash-mark';
-import { SheetDrawer } from './sheet-drawer';
 import { useAsteriskScene, useAsteriskPaused } from '@/hooks/use-asterisk-scene';
-import { useAsteriskSceneStore } from '@/lib/stores/asterisk-scene';
 import { EASE, DURATION, INSTANT } from '@/lib/motion-tokens';
 import { SubmitForScoringButton } from './submit-for-scoring-button';
 import { XpTicker } from './xp-ticker';
 import { NotebookPaper } from './solve/notebook-paper';
 import { RoughUnderline } from './solve/rough-underline';
 
-// Solve-page main layout — header + body + drawer.
+// Solve-page main layout — header + body.
 //
-// Desktop: header (glyph + title + cheat-sheet button + end-session button)
-//          body = chat (left ~50%) | tree (right ~50%), no card chrome.
-//          Cheat sheet lives in a right-side drawer (toggled from header).
+// Desktop: header (glyph + title + submit button)
+//          body = chat (left ~50%) | issue tree (right ~50%), no card chrome.
 //
 // Mobile:  header is the same.
-//          body = single panel via tab toggle (chat | tree | sheet) with the
+//          body = single panel via tab toggle (chat | tree) with the
 //          existing liquid-tutor cross-fade between tabs.
 //
-// Cheat-sheet panel is ALWAYS mounted (translateX off-screen on desktop when
-// drawer is closed) so its supabase realtime subscription survives a close.
+// 2026-05-29: the cheat-sheet drawer was removed from the UI. The cohort
+// flagged the side-drawer as breaking conversation flow, and the issue
+// tree already surfaces the candidate's live reasoning (framework +
+// numbers committed + decisions). /api/cheatsheet + the cheat_sheets
+// table continue to run in the background — the data still feeds the
+// evaluator at end-of-session — only the UI surface is gone.
 
-type Tab = 'chat' | 'tree' | 'sheet';
+type Tab = 'chat' | 'tree';
 
 function difficultyDotCount(d: string): number {
   if (d === 'easy') return 1;
@@ -134,7 +134,6 @@ export function SolveLayout({
   const reduced = useReducedMotion();
   const [mobileTab, setMobileTab] = useState<Tab>('chat');
   const [treeRefresh, setTreeRefresh] = useState(0);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [is3DEligible, setIs3DEligible] = useState(false);
   const [streaming, setStreaming] = useState(false);
   // Lifted up from ChatPanel — drives toolbar submit-button disabled state.
@@ -172,29 +171,6 @@ export function SolveLayout({
 
   const onTurnComplete = () => setTreeRefresh((n) => n + 1);
 
-  // Drawer-open ↔ aiState='listening'. While the cheat sheet is open
-  // Ash "steps aside" so the user can study; when it closes we step the
-  // asterisk back to idle. Higher-priority states (approving / celebrating)
-  // are protected by the priority gate; the explicit force=true close-out
-  // only fires if we're actually still in 'listening'.
-  useEffect(() => {
-    if (!drawerOpen) return;
-    try {
-      const setAiState = useAsteriskSceneStore.getState().setAiState;
-      setAiState('listening');
-      return () => {
-        try {
-          const cur = useAsteriskSceneStore.getState().aiState;
-          if (cur === 'listening') setAiState('idle', { force: true });
-        } catch (e) {
-          console.warn('[solve-layout] setAiState(idle) failed:', e);
-        }
-      };
-    } catch (e) {
-      console.warn('[solve-layout] setAiState(listening) failed:', e);
-    }
-  }, [drawerOpen]);
-
   // Eligibility mirror — for the 2D fallback only. Eligible clients let
   // the persistent layout-level canvas paint the corner asterisk; we
   // leave a 36px placeholder in the header to preserve alignment.
@@ -226,17 +202,16 @@ export function SolveLayout({
         />
       );
     }
-    if (t === 'tree') {
-      return (
-        <IssueTreePanel
-          sessionId={sessionId}
-          refreshTrigger={treeRefresh}
-          committedRootId={committedRootId}
-          onCommitRoot={setCommittedRootId}
-        />
-      );
-    }
-    return <CheatSheetPanel sessionId={sessionId} initial={initialCs} />;
+    // 'tree' is the only remaining non-chat tab. Cheat-sheet drawer was
+    // removed 2026-05-29 — issue tree carries the live-reasoning surface.
+    return (
+      <IssueTreePanel
+        sessionId={sessionId}
+        refreshTrigger={treeRefresh}
+        committedRootId={committedRootId}
+        onCommitRoot={setCommittedRootId}
+      />
+    );
   };
 
   return (
@@ -293,17 +268,6 @@ export function SolveLayout({
               source of truth at submit. This is the gamified "your turn
               registered" feedback to fix cohort signal "AI feels boring". */}
           <XpTicker messages={messagesArr} />
-          {/* Cheat sheet toggle — hidden on mobile (mobile uses tab toggle).
-              Hover state via CSS class (ghost-btn) rather than JS to avoid
-              style-mutation churn under fast pointer moves. */}
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            className="ghost-btn ghost-btn--accent hidden md:inline-flex font-mono text-[10px] uppercase tracking-[0.14em] px-3 py-1.5 rounded"
-            data-tour="solve-sheet-toggle"
-          >
-            Cheat sheet
-          </button>
           <SubmitForScoringButton
             sessionId={sessionId}
             endSessionAction={endSessionAction}
@@ -329,9 +293,10 @@ export function SolveLayout({
         />
       )}
 
-      {/* Mobile tab toggle (hidden md+) */}
+      {/* Mobile tab toggle (hidden md+) — chat | tree. 'sheet' tab dropped
+          2026-05-29 along with the cheat-sheet drawer surface. */}
       <div className="md:hidden flex">
-        {(['chat', 'tree', 'sheet'] as const).map((t) => {
+        {(['chat', 'tree'] as const).map((t) => {
           const active = mobileTab === t;
           return (
             <button
@@ -414,17 +379,6 @@ export function SolveLayout({
         </div>
       </div>
 
-      {/* Desktop drawer — Cheat sheet slides in from the right. The
-          CheatSheetPanel is mounted inside the drawer; its supabase
-          subscription only fires while the drawer is open, but its initial
-          server-rendered state is preserved across opens. */}
-      <SheetDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        title="Cheat sheet"
-      >
-        <CheatSheetPanel sessionId={sessionId} initial={initialCs} />
-      </SheetDrawer>
     </>
   );
 }
