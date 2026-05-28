@@ -68,13 +68,21 @@ export function GoogleSignInButton({ returnTo }: { returnTo?: string }) {
         onClick={onClick}
         disabled={pending}
         aria-label="Sign in with Google"
+        className="casepad-google-btn"
         style={{
           width: '100%',
+          // Eggshell-on-eggshell would vanish — use clean white so the
+          // Google glyph reads and the button has a clear edge against
+          // the card surface (#fdfcfc).
           background: '#FFFFFF',
           color: '#323234',
-          padding: '12px 16px',
-          borderRadius: 6,
-          border: '1px solid #323234',
+          padding: '11px 20px',
+          // Pill to match the email submit button (Section 4.4 shape
+          // consistency lock — one radius system per surface).
+          borderRadius: 9999,
+          // Chalk hairline, not a heavy ink border — matches the
+          // ElevenLabs anchor's "single 0.5px inset hairline" treatment.
+          border: '1px solid #e5e5e5',
           cursor: pending ? 'wait' : 'pointer',
           fontFamily: 'var(--font-body)',
           fontSize: 13,
@@ -86,11 +94,34 @@ export function GoogleSignInButton({ returnTo }: { returnTo?: string }) {
           justifyContent: 'center',
           gap: 10,
           opacity: pending ? 0.6 : 1,
+          // Same transition discipline as the email submit: exact
+          // properties only (never `all`), strong ease-out cubic, sub-200ms.
+          transition:
+            'border-color 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 120ms cubic-bezier(0.23, 1, 0.32, 1)',
+          willChange: 'transform',
         }}
       >
         <GoogleGlyph />
         <span>{pending ? 'Redirecting to Google…' : 'Continue with Google'}</span>
       </button>
+      <style jsx>{`
+        @media (hover: hover) and (pointer: fine) {
+          .casepad-google-btn:hover {
+            border-color: #323234;
+          }
+        }
+        .casepad-google-btn:active {
+          transform: scale(0.97);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .casepad-google-btn {
+            transition: none;
+          }
+          .casepad-google-btn:active {
+            transform: none;
+          }
+        }
+      `}</style>
       {error && (
         <div
           role="alert"

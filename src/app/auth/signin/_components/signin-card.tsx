@@ -1,10 +1,33 @@
 // Signin card — drops into HUPR's hero floating-right-card slot.
 //
-// Wraps the existing `directSignIn` server action. Behavior identical to
-// the previous signin form: server action mints a session immediately if
-// the email is on the allowlist, otherwise redirects with ?error=. The
-// only thing that changes is the visual treatment — pure HUPR (#FFFFFF
-// card on photo bg, #323234 ink, IBM Plex Mono input + button).
+// Anchored to the Refero ElevenLabs treatment ("architect's blueprint on warm
+// vellum") for the visual reskin shipped 2026-05-29:
+//   - eggshell card surface (#fdfcfc, not pure white) so the card lifts off
+//     HUPR's hero photo background by warmth, not by a heavy drop-shadow
+//   - 0.5px inset hairline + 1px outer for the card chrome; zero drop-shadow
+//   - chalk dividers (#e5e5e5), gravel secondary text (#777169) — warm stone,
+//     not the cold rgba grays that read as "AI default"
+//   - input is transparent with a 1px border-bottom only and 0px radius
+//   - both CTAs are obsidian pills (9999px) using HUPR's existing #323234 ink
+//     (not pure black; preserves cross-surface ink consistency)
+//
+// Type stays HUPR (IBM Plex Mono body + Montserrat 700 eyebrow). No font
+// swap. The single eyebrow on this card is the cap allowed by impeccable's
+// eyebrow restraint rule (max 1 per card / per 3 sections); no others
+// stacked anywhere else on the page.
+//
+// Em-dashes are banned everywhere on visible copy (taste-skill 9.G) — the
+// previous copy used them in two places, both rewritten as separate
+// sentences with periods.
+//
+// Motion: deliberately minimal per the anchor (zero motion / restraint is
+// the point). The narrow motion that DOES exist (button press feedback,
+// input focus) follows Emil's craft rules: exact transition properties
+// (never `transition: all`), strong cubic-bezier ease-out, sub-200ms,
+// scale(0.97) on :active, and a `prefers-reduced-motion` no-op so the
+// transitions disable for sensitive users. Hover-only states are gated
+// behind `(hover: hover) and (pointer: fine)` so touch devices don't
+// trigger false hover from a tap.
 
 import { directSignIn } from '@/server-actions/direct-signin';
 import { GoogleSignInButton } from '@/components/auth/google-signin-button';
@@ -13,7 +36,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   'missing-email': 'Please enter your email.',
   'invalid-email': 'That doesn’t look like a valid email.',
   'link-mint-failed': 'Couldn’t prepare your sign-in. Try again in a moment.',
-  'verify-failed': 'Sign-in failed. Try again — if this keeps happening, ping the admin.',
+  'verify-failed': 'Sign-in failed. Try again, or ping the admin if it keeps happening.',
   'expired': 'Your session expired. Sign in again to pick up where you left off.',
   'exchange': 'Sign-in link is invalid or expired. Try entering your email again.',
   'otp': 'Sign-in code is invalid or expired. Try entering your email again.',
@@ -33,20 +56,26 @@ export function SignInCard({
 
   return (
     <div
+      className="casepad-signin-card"
       style={{
-        background: '#FFFFFF',
+        background: '#fdfcfc',
         padding: '2rem',
         borderRadius: 4,
         color: '#323234',
+        // Hairline float — no drop-shadow. 0.5px inset gives the card a
+        // crisp interior edge; the outer 1px shadow gives it just enough
+        // separation from the hero photo behind it.
+        boxShadow:
+          '0 0 0 0.5px rgba(0, 0, 0, 0.075) inset, 0 0 1px 0 rgba(0, 0, 0, 0.4)',
       }}
     >
       <h2
         style={{
           fontFamily: 'var(--font-body)',
-          fontWeight: 400,
-          fontSize: 12,
+          fontWeight: 500,
+          fontSize: 11,
           textTransform: 'uppercase',
-          letterSpacing: '0.04em',
+          letterSpacing: '0.18em',
           color: '#323234',
           margin: 0,
         }}
@@ -56,8 +85,8 @@ export function SignInCard({
       <hr
         style={{
           border: 0,
-          borderTop: '1px solid #323234',
-          margin: '8px 0 20px',
+          borderTop: '1px solid #e5e5e5',
+          margin: '10px 0 18px',
           width: '100%',
         }}
       />
@@ -66,15 +95,15 @@ export function SignInCard({
           fontFamily: 'var(--font-body)',
           fontSize: 14,
           lineHeight: 1.55,
-          color: '#323234',
+          color: '#777169',
           margin: 0,
         }}
       >
-        Continue with Google, or enter your email below. Either way you&apos;re
-        in immediately — no magic link, no password.
+        Continue with Google, or enter your email below. Either way you&apos;re in
+        immediately. No magic link, no password.
       </p>
 
-      <div style={{ marginTop: 18 }}>
+      <div style={{ marginTop: 20 }}>
         <GoogleSignInButton returnTo={returnTo} />
       </div>
 
@@ -83,30 +112,31 @@ export function SignInCard({
           display: 'flex',
           alignItems: 'center',
           gap: 12,
-          margin: '18px 0 4px',
-          color: 'rgba(50,50,52,0.55)',
+          margin: '20px 0 6px',
+          color: '#777169',
           fontFamily: 'var(--font-body)',
-          fontSize: 11,
+          fontSize: 10,
           textTransform: 'uppercase',
-          letterSpacing: '0.12em',
+          letterSpacing: '0.18em',
         }}
         aria-hidden="true"
       >
-        <span style={{ flex: 1, height: 1, background: 'rgba(50,50,52,0.18)' }} />
+        <span style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
         <span>or email</span>
-        <span style={{ flex: 1, height: 1, background: 'rgba(50,50,52,0.18)' }} />
+        <span style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
       </div>
 
       {showSessionExpired && (
         <div
           style={{
-            marginTop: 16,
-            padding: 12,
-            border: '1px solid #323234',
+            marginTop: 14,
+            padding: '10px 12px',
+            border: '1px solid #e5e5e5',
+            background: 'rgba(50, 50, 52, 0.03)',
             fontFamily: 'var(--font-body)',
             fontSize: 11,
             textTransform: 'uppercase',
-            letterSpacing: '0.04em',
+            letterSpacing: '0.06em',
             color: '#323234',
             borderRadius: 3,
           }}
@@ -115,7 +145,7 @@ export function SignInCard({
         </div>
       )}
 
-      <form action={directSignIn} className="mt-5 space-y-3">
+      <form action={directSignIn} className="mt-4 space-y-3">
         <input
           name="email"
           type="email"
@@ -126,50 +156,58 @@ export function SignInCard({
           placeholder="you@school.edu"
           required
           autoFocus
-          className="w-full"
+          className="casepad-signin-input w-full"
           style={{
-            background: '#f4f4f4',
-            border: '1px solid #e8e8e8',
-            padding: '12px 14px',
+            background: 'transparent',
+            border: 0,
+            borderBottom: '1px solid #e5e5e5',
+            padding: '10px 2px',
             fontFamily: 'var(--font-body)',
             fontSize: 14,
             color: '#323234',
-            borderRadius: 3,
+            borderRadius: 0,
             outline: 'none',
-            // textTransform removed: emails display as the user typed them.
           }}
         />
         {returnTo && <input type="hidden" name="return_to" value={returnTo} />}
         <button
           type="submit"
-          className="hupr-anim-btn w-full"
+          className="casepad-signin-submit w-full"
           style={{
             background: '#323234',
             color: '#FFFFFF',
-            padding: '12px 16px',
-            borderRadius: 6,
+            padding: '11px 20px',
+            borderRadius: 9999,
             border: 0,
             cursor: 'pointer',
             fontFamily: 'var(--font-body)',
             fontSize: 12,
             textTransform: 'uppercase',
-            letterSpacing: '0.06em',
+            letterSpacing: '0.14em',
+            fontWeight: 500,
+            // Specify exact properties per Emil's "never transition: all"
+            // rule. Background + transform only — both are GPU-cheap and
+            // both will be the only properties actually changing.
+            transition:
+              'background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 120ms cubic-bezier(0.23, 1, 0.32, 1)',
+            willChange: 'transform',
           }}
         >
-          <span className="top">Sign in</span>
-          <span className="btm">Sign in</span>
+          Sign in
         </button>
         {errMsg && (
           <div
+            role="alert"
             style={{
-              padding: 10,
+              padding: '8px 10px',
               border: '1px solid #b33c3c',
               color: '#b33c3c',
               fontFamily: 'var(--font-body)',
               fontSize: 11,
               textTransform: 'uppercase',
-              letterSpacing: '0.04em',
+              letterSpacing: '0.06em',
               borderRadius: 3,
+              background: 'rgba(179, 60, 60, 0.04)',
             }}
           >
             {errMsg}
@@ -177,17 +215,15 @@ export function SignInCard({
         )}
       </form>
 
-      {/* Allowlist-mode footer removed 2026-05-29 — open signup is now
-          the default behaviour (ALLOWLIST_MODE=open), so directing
-          new users to "ask the admin" was misleading. */}
-
       <div
         style={{
-          marginTop: 10,
+          marginTop: 14,
           fontFamily: 'var(--font-body)',
           fontSize: 10,
           lineHeight: 1.6,
-          color: 'rgba(50,50,52,0.55)',
+          color: '#777169',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
         }}
       >
         By signing in, you agree to the{' '}
@@ -199,6 +235,46 @@ export function SignInCard({
         </a>
         .
       </div>
+
+      {/*
+        Scoped CSS for :hover, :active, :focus, and ::placeholder states
+        that inline styles can't express. Wrapped in
+        @media (prefers-reduced-motion: no-preference) so users with
+        reduced-motion preferences get instant transitions with no
+        animation (still keeps the visual change, just no easing).
+        Hover gated behind (hover: hover) so a tap on a touch device
+        doesn't latch a hover state. */}
+      <style jsx>{`
+        .casepad-signin-input::placeholder {
+          color: #777169;
+          opacity: 1;
+        }
+        .casepad-signin-input:focus {
+          border-bottom-color: #323234;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .casepad-signin-input {
+            transition: border-bottom-color 180ms cubic-bezier(0.23, 1, 0.32, 1);
+          }
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .casepad-signin-submit:hover {
+            background-color: #1f1f21;
+          }
+        }
+        .casepad-signin-submit:active {
+          transform: scale(0.97);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .casepad-signin-submit {
+            transition: none;
+          }
+          .casepad-signin-submit:active {
+            transform: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }
+
