@@ -120,8 +120,7 @@ export default async function AllowlistPage() {
               display: 'inline-block',
             }}
           >
-            <span className="top">Add</span>
-            <span className="btm">Add</span>
+            Add
           </button>
         </form>
 

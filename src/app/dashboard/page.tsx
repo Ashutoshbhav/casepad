@@ -752,8 +752,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 display: 'inline-block',
               }}
             >
-              <span className="top">Wander the library →</span>
-              <span className="btm">Wander the library →</span>
+              Wander the library →
             </span>
           </div>
         </div>
@@ -1026,8 +1025,7 @@ function TodaysCaseCard({
               display: 'inline-block',
             }}
           >
-            <span className="top">{cta.label}</span>
-            <span className="btm">{cta.label}</span>
+            {cta.label}
           </Link>
         )}
       </div>
@@ -1123,8 +1121,7 @@ function EmptyTodaysCaseCard() {
           textDecoration: 'none',
         }}
       >
-        <span className="top">Pick your first case →</span>
-        <span className="btm">Pick your first case →</span>
+        Pick your first case →
       </Link>
     </div>
   );

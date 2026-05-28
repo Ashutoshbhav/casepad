@@ -72,8 +72,7 @@ export function HomeHeroCard() {
             textDecoration: 'none',
           }}
         >
-          <span className="top">Sign in to begin</span>
-          <span className="btm">Sign in to begin</span>
+          Sign in to begin
         </Link>
         <Link
           href="#tracks"

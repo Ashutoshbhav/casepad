@@ -499,8 +499,7 @@ function AskTheCheatSheet({ track, weakestDims }: { track: Track; weakestDims: s
           display: 'inline-block',
         }}
       >
-        <span className="top">{loading ? 'Thinking…' : 'Ask'}</span>
-        <span className="btm">{loading ? 'Thinking…' : 'Ask'}</span>
+        {loading ? 'Thinking…' : 'Ask'}
       </button>
       {a && (
         <div

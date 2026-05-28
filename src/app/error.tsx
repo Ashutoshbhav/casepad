@@ -98,8 +98,7 @@ ${error.stack?.split('\n').slice(0, 8).join('\n') ?? '(no stack)'}`}
               display: 'inline-block',
             }}
           >
-            <span className="top">Try again</span>
-            <span className="btm">Try again</span>
+            Try again
           </button>
           <Link
             href="/cases"

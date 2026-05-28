@@ -335,8 +335,7 @@ export function BehavioralDrillClient() {
                   opacity: loading || response.trim().length < 50 ? 0.5 : 1,
                 }}
               >
-                <span className="top">{loading ? 'Scoring…' : 'Get feedback'}</span>
-                <span className="btm">{loading ? 'Scoring…' : 'Get feedback'}</span>
+                {loading ? 'Scoring…' : 'Get feedback'}
               </button>
               <span
                 style={{

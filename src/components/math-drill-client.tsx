@@ -216,8 +216,7 @@ export function MathDrillClient() {
               display: 'inline-block',
             }}
           >
-            <span className="top">Start drilling →</span>
-            <span className="btm">Start drilling →</span>
+            Start drilling →
           </button>
         )}
 
@@ -291,8 +290,7 @@ export function MathDrillClient() {
                     letterSpacing: '0.06em',
                   }}
                 >
-                  <span className="top">Check</span>
-                  <span className="btm">Check</span>
+                  Check
                 </button>
               </div>
             )}
@@ -337,8 +335,7 @@ export function MathDrillClient() {
                     letterSpacing: '0.06em',
                   }}
                 >
-                  <span className="top">Next →</span>
-                  <span className="btm">Next →</span>
+                  Next →
                 </button>
               </div>
             )}
@@ -409,8 +406,7 @@ export function MathDrillClient() {
                     letterSpacing: '0.06em',
                   }}
                 >
-                  <span className="top">Next →</span>
-                  <span className="btm">Next →</span>
+                  Next →
                 </button>
               </div>
             )}

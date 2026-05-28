@@ -140,8 +140,7 @@ export function HomeHero() {
               fontWeight: 700,
             }}
           >
-            <span className="top">Sign in to begin →</span>
-            <span className="btm">Sign in to begin →</span>
+            Sign in to begin →
           </Link>
           <Link
             href="#tracks"
@@ -160,8 +159,7 @@ export function HomeHero() {
               textDecoration: 'none',
             }}
           >
-            <span className="top">See how it works</span>
-            <span className="btm">See how it works</span>
+            See how it works
           </Link>
         </div>
       </div>

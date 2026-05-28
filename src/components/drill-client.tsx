@@ -124,8 +124,7 @@ export function DrillClient() {
               self-rate vs the ideal recovery.
             </p>
             <button onClick={next} className="hupr-anim-btn" style={primaryBtn}>
-              <span className="top">Start drill →</span>
-              <span className="btm">Start drill →</span>
+              Start drill →
             </button>
           </div>
         )}
@@ -253,8 +252,7 @@ export function DrillClient() {
                   {current.ideal_recovery}
                 </p>
                 <button onClick={next} className="hupr-anim-btn" style={primaryBtn}>
-                  <span className="top">Next curveball →</span>
-                  <span className="btm">Next curveball →</span>
+                  Next curveball →
                 </button>
               </div>
             )}

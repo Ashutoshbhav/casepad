@@ -164,8 +164,7 @@ export default async function DrillsIndexPage() {
                     display: 'inline-block',
                   }}
                 >
-                  <span className="top">Start →</span>
-                  <span className="btm">Start →</span>
+                  Start →
                 </span>
               </div>
             </div>

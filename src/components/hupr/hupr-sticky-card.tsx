@@ -140,8 +140,7 @@ export function HuprStickyCard({
                   display: 'inline-block',
                 }}
               >
-                <span className="top">{cta.label}</span>
-                <span className="btm">{cta.label}</span>
+                {cta.label}
               </span>
             </div>
           )}

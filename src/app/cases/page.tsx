@@ -301,8 +301,7 @@ export default async function CasesPage({
                     textDecoration: 'none',
                   }}
                 >
-                  <span className="top">Solve this case</span>
-                  <span className="btm">Solve this case</span>
+                  Solve this case
                 </a>
               </div>
             </div>

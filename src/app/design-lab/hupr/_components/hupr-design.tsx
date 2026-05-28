@@ -279,23 +279,14 @@ function HuprStyles() {
         transform: translateY(0);
       }
 
-      .hupr-anim-btn {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-      }
-      .hupr-anim-btn .top,
-      .hupr-anim-btn .btm {
-        display: block;
-        transition: transform .3s cubic-bezier(.34,.7,.27,1);
-      }
-      .hupr-anim-btn .btm {
-        position: absolute;
-        inset: 0;
-        transform: translateY(100%);
-      }
-      .hupr-anim-btn:hover .top { transform: translateY(-100%); }
-      .hupr-anim-btn:hover .btm { transform: translateY(0); }
+      /* .hupr-anim-btn — slide-up text effect retired 2026-05-29.
+         The previous scoped rules below defined a top/btm slide animation
+         that left the .btm span visible as a ghost overlay on hover,
+         producing a duplicate-text effect across the whole site (CasePad
+         wordmark in nav, "Learn more", "Read more"). The simpler
+         opacity + 1px lift hover defined in src/app/globals.css now owns
+         this class; the .btm spans have been removed from the JSX below
+         in the same commit. */
 
       .hupr-page-transition {
         position: fixed;
@@ -467,8 +458,7 @@ function Header({
                   color: '#FFFFFF',
                 }}
               >
-                <span className="top">CasePad</span>
-                <span className="btm">CasePad</span>
+                CasePad
               </a>
               <p
                 className="hidden lg:block"
@@ -783,8 +773,7 @@ function Hero({ rightCard }: { rightCard?: ReactNode }) {
                   textDecoration: 'none',
                 }}
               >
-                <span className="top">Learn more</span>
-                <span className="btm">Learn more</span>
+                Learn more
               </a>
             </div>
           </div>
@@ -1211,8 +1200,7 @@ function News() {
                         textDecoration: 'none',
                       }}
                     >
-                      <span className="top">Read more</span>
-                      <span className="btm">Read more</span>
+                      Read more
                     </a>
                   </div>
                 </div>

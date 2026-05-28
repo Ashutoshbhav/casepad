@@ -408,8 +408,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               display: 'inline-block',
             }}
           >
-            <span className="top">Set anticipation →</span>
-            <span className="btm">Set anticipation →</span>
+            Set anticipation →
           </Link>
           <Link
             href="/cases"
