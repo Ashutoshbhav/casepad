@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { completeChat } from '@/lib/llm-router';
+import { gateRequest } from '@/lib/api/gate';
 
 export async function POST(req: NextRequest) {
+  // Auth + per-user rate-limit. Pre-launch this route was open + uncapped —
+  // a single anonymous caller could burn Groq quota by hammering it.
+  const gate = await gateRequest({ routeName: 'behavioral-feedback', perUserPerMinute: 30 });
+  if (!gate.ok) return gate.response;
+
   let body: any;
   try {
     body = await req.json();

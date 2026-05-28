@@ -2,10 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { completeChat } from '@/lib/llm-router';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { tavilySearch } from '@/lib/research/tavily';
+import { gateRequest } from '@/lib/api/gate';
 
 // Q&A endpoint — answers questions using the track's frameworks/math/recovery
 // content + light web research, grounded in user's weak-area history.
 export async function POST(req: NextRequest) {
+  // Auth + rate-limit. This route fires both Groq AND a Tavily web search
+  // per call — among the most expensive on the surface. Pre-launch it had
+  // no auth gate at all (free Tavily quota at risk).
+  const gate = await gateRequest({ routeName: 'ask-cheatsheet', perUserPerMinute: 30 });
+  if (!gate.ok) return gate.response;
+
   let body: any;
   try { body = await req.json(); }
   catch { return NextResponse.json({ error: 'invalid JSON body' }, { status: 400 }); }

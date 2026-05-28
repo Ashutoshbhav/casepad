@@ -2,8 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { completeChat } from '@/lib/llm-router';
 import { buildCheatSheetExtractionMessages } from '@/lib/groq/cheatsheet';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { CheatSheetState } from '@/lib/types/domain';
+import { gateRequest } from '@/lib/api/gate';
 
 export const runtime = 'nodejs';
 
@@ -29,7 +29,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'userQuestion or interviewerAnswer too large (>10000 chars)' }, { status: 413 });
   }
 
-  const supabase = await createSupabaseServerClient();
+  // Auth + rate-limit. This route is called per chat-turn (cheatsheet
+  // extraction fires after every interviewer reply), so the per-user cap
+  // is high but the per-session cap is tight to stop a single rogue tab
+  // from compounding the chat-route's cost with extra Groq calls.
+  const gate = await gateRequest({
+    routeName: 'cheatsheet', perUserPerMinute: 60,
+    sessionId, perSessionPerMinute: 30,
+  });
+  if (!gate.ok) return gate.response;
+  const { supabase } = gate;
 
   // Fetch the session's recent transcript so the extractor sees
   // multi-turn framework/hypothesis statements, not just the latest pair.

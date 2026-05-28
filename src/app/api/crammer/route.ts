@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { generatePreCaseCrammer } from '@/lib/groq/pre-case-crammer';
 import type { Track } from '@/lib/tracks';
+import { gateRequest } from '@/lib/api/gate';
 
 // Generates (or returns cached) pre-case crammer for the given case.
 // Pulls user's preferred_track + their weakest dimensions across last 10
@@ -16,9 +16,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'caseId (string, ≤100 chars) required' }, { status: 400 });
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // Tight rate-limit: each call may trigger Tavily web research +
+  // Groq generation, both billed by usage. 10/min is well above natural
+  // pre-interview prep but caps drain risk if an account is compromised.
+  const gate = await gateRequest({ routeName: 'crammer', perUserPerMinute: 10 });
+  if (!gate.ok) return gate.response;
+  const { user, supabase } = gate;
 
   const { data: caseRow } = await supabase
     .from('cases')

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { completeChat } from '@/lib/llm-router';
 import { tavilySearch } from '@/lib/research/tavily';
 import { TRACKS, type Track } from '@/lib/tracks';
+import { gateRequest } from '@/lib/api/gate';
 
 // Generates a Company-Specific Pre-Interview Pack: pulls Glassdoor/WSO/PrepLounge
 // reports for the firm, identifies recent case archetypes, surfaces user's
@@ -28,9 +28,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'round must be a string ≤200 chars' }, { status: 400 });
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // 3 Tavily queries + 1 Groq generation per call — heaviest route on the
+  // surface. Tight 10/min user cap to protect the 1000-query Tavily quota.
+  const gate = await gateRequest({ routeName: 'company-pack', perUserPerMinute: 10 });
+  if (!gate.ok) return gate.response;
+  const { user } = gate;
 
   const track: Track = (user.user_metadata?.preferred_track as Track) || 'consulting';
   const def = TRACKS[track];

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { gateRequest } from '@/lib/api/gate';
 
 export async function POST(req: NextRequest) {
   let body: any;
@@ -23,9 +23,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'freeText too large (>5000 chars)' }, { status: 413 });
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // Light route (DB insert only) but still protect against signup-bot
+  // flooding the table. 20/min/user is well above natural use.
+  const gate = await gateRequest({ routeName: 'session-feedback', perUserPerMinute: 20 });
+  if (!gate.ok) return gate.response;
+  const { user, supabase } = gate;
 
   const { error } = await supabase
     .from('session_feedback')

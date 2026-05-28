@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { gateRequest } from '@/lib/api/gate';
 
 // Cohort spike-library annotations. Scope is "framework:Profitability" or
 // "case:<uuid>" or "track:consulting" — flexible. Anyone can read, only
@@ -43,9 +44,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'body too large (>5000 chars)' }, { status: 413 });
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  // POST adds a cohort note — capped 20/min to prevent spam-flooding the
+  // shared library. (GET is intentionally rate-limit-free since it's a
+  // pure read against an RLS-protected table.)
+  const gate = await gateRequest({ routeName: 'cohort-notes', perUserPerMinute: 20 });
+  if (!gate.ok) return gate.response;
+  const { user, supabase } = gate;
 
   const { data, error } = await supabase
     .from('cohort_notes')

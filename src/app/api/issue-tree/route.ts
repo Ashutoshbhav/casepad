@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { extractIssueTree, type IssueTree } from '@/lib/groq/issue-tree';
+import { gateRequest } from '@/lib/api/gate';
 
 // POST /api/issue-tree
 //
@@ -31,9 +31,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "mode must be 'get'|'extract'|'save'" }, { status: 400 });
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'not authenticated' }, { status: 401 });
+  // Mixed mode (get/extract/save) — the 'extract' branch fires a Groq
+  // call, the others are cheap DB reads. 30/min covers active panel use.
+  const gate = await gateRequest({ routeName: 'issue-tree', perUserPerMinute: 30 });
+  if (!gate.ok) return gate.response;
+  const { user, supabase } = gate;
 
   // Confirm the session belongs to the user
   const { data: session } = await withRetry(() =>

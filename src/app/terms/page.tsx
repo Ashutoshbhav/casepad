@@ -13,9 +13,10 @@ export default function TermsPage() {
         <div>
           <h2 className="text-base font-semibold text-zinc-100 mb-1.5">1. Access</h2>
           <p>
-            CasePad is a private, allowlist-only application. You may use it only if your email
-            address has been explicitly added to the allowlist by the application&apos;s administrator.
-            Sharing your access with anyone not on the allowlist is prohibited.
+            CasePad is currently free to use for case-interview practice. Access may be open to
+            any verified email (public mode) or restricted to an admin-managed allowlist
+            (cohort mode) depending on the current launch phase. Either way, please don&apos;t
+            share your account credentials with anyone else.
           </p>
         </div>
 

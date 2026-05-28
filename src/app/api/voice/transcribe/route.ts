@@ -12,7 +12,7 @@
 // GROQ_API_KEY already set in .env.local for the chat path.
 
 import { NextRequest } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { gateRequest } from '@/lib/api/gate';
 
 export const runtime = 'nodejs'; // Edge has flakier multipart-streaming on large blobs.
 
@@ -35,16 +35,9 @@ function jsonError(status: number, error: string, extra?: Record<string, unknown
 export async function POST(req: NextRequest) {
   const startedAt = Date.now();
 
-  // 1. Auth gate. We don't need the user object — just confirm a session
-  //    exists. This prevents anonymous abuse of our Groq quota.
-  const supabase = await createSupabaseServerClient();
-  const { data: userData, error: authErr } = await supabase.auth.getUser();
-  if (authErr || !userData?.user) {
-    return jsonError(401, 'unauthorized');
-  }
-
-  // 2. Parse multipart. NextRequest.formData() is the simplest path; for
-  //    25 MB blobs it stays well within Node's memory budget on Vercel.
+  // 1. Parse multipart FIRST so we can read sessionId before rate-limiting.
+  //    NextRequest.formData() is the simplest path; for 25 MB blobs it
+  //    stays well within Node's memory budget on Vercel.
   let form: FormData;
   try {
     form = await req.formData();
@@ -69,6 +62,18 @@ export async function POST(req: NextRequest) {
     typeof sessionIdRaw === 'string' && sessionIdRaw.length <= 100
       ? sessionIdRaw
       : null;
+
+  // 2. Auth + dual-axis rate limit. Groq Whisper has a 7,200 audio-sec/hr
+  //    free-tier cap shared across all users — heavy throttling per-user
+  //    AND per-session prevents a single rogue tab from draining it.
+  const gate = await gateRequest({
+    routeName: 'voice-transcribe', perUserPerMinute: 30,
+    sessionId: sessionId ?? undefined, perSessionPerMinute: 15,
+  });
+  if (!gate.ok) {
+    // Convert NextResponse → plain Response shape used by this route.
+    return gate.response;
+  }
 
   // 3. Forward to Groq. We rebuild a fresh FormData rather than passing the
   //    incoming one — Groq is strict about field names + filename hints, and
