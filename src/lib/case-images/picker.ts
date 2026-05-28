@@ -1,0 +1,82 @@
+// Case-image picker.
+//
+// Returns a `/public`-relative image path for a given case. Two-tier lookup:
+//
+//   1. PRIMARY — `/case-photos/cases/{caseId}.jpg` (generated per-case via
+//      Pollinations.ai Flux, see scripts/qa/generate-case-images.ts). One
+//      unique relevant image per case_id.
+//
+//   2. FALLBACK — one of the 147 photos already in `/case-photos/case-NNN.jpg`,
+//      picked deterministically by FNV-1a hash on case_id so the same case
+//      always lands on the same fallback photo. Used while the generation
+//      script is still running OR if a specific case's generation failed.
+//
+// We don't check fs.exists from this module — it's used in both server and
+// client components. Instead, the file path is computed deterministically;
+// the browser/Next will serve whichever file exists. If the primary 404s,
+// the fallback path is returned via a separate call from the renderer's
+// onError handler.
+//
+// Why two functions (primary + fallback) instead of one with fs.exists?
+// - Server Components could check fs, but every case-row would mean a
+//   stat call. At 1,165 rows that's noticeable I/O on every page load.
+// - Browser can't check fs at all.
+// - <img onError> is free and works in both worlds.
+
+const FALLBACK_PHOTO_COUNT = 147; // case-000.jpg through case-146.jpg
+
+/**
+ * FNV-1a 32-bit hash. Same algo as hupr-case-row.tsx's caseNumber so
+ * fallback assignments feel consistent with the rest of the UI surface.
+ */
+function fnv1a(input: string): number {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return hash >>> 0;
+}
+
+/**
+ * Primary image path for a case. The renderer should use this as the
+ * <img src> first. If the file doesn't exist (generation pending /
+ * failed), the renderer's onError handler should swap to
+ * caseImageFallback(caseId).
+ *
+ * Path is always `/case-photos/cases/{caseId}.jpg` — webp because the
+ * generation script converts Pollinations PNG → WebP for ~70% size
+ * savings. Stable per case_id forever once generated.
+ */
+export function caseImagePrimary(caseId: string): string {
+  // Defensive — the caller is trusted (Supabase row) but defense-in-depth
+  // against path traversal if the contract ever leaks. Allow UUID chars
+  // only.
+  if (!/^[a-z0-9-]+$/i.test(caseId)) {
+    return caseImageFallback(caseId);
+  }
+  return `/case-photos/cases/${caseId}.jpg`;
+}
+
+/**
+ * Deterministic fallback path. Always succeeds because the 147 files are
+ * pre-shipped in the repo. Hash-bucketed so the same case_id always
+ * resolves to the same fallback photo.
+ *
+ * Future improvement: bucket by case_type so e.g. all profitability
+ * cases pick from a "finance-y" subset of the 147 (requires manual
+ * tagging of the existing photos). For v1 we accept random-within-pool
+ * since fallback is the temporary state.
+ */
+export function caseImageFallback(caseId: string): string {
+  const idx = fnv1a(caseId) % FALLBACK_PHOTO_COUNT;
+  return `/case-photos/case-${String(idx).padStart(3, '0')}.jpg`;
+}
+
+/**
+ * Convenience wrapper — returns the primary path. Use this in components.
+ * The component's <img onError> should swap to the fallback.
+ */
+export function caseImageFor(caseId: string): string {
+  return caseImagePrimary(caseId);
+}

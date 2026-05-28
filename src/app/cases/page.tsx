@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { CaseFilters } from '@/components/case-filters';
+import { CaseSearch } from '@/components/case-search';
 import { CasesTour } from '@/components/cases-tour';
 import { TutorialLaunchLink } from '@/components/tutorial-launch-link';
 import { CasesLoadMore } from '@/components/cases-load-more';
@@ -10,6 +11,7 @@ import { STARTER_CASE_IDS } from '@/lib/starter-cases';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 import { HuprCaseRow, type HuprCaseRowData } from '@/components/hupr/hupr-case-row';
 import { HuprStickyCard, HuprStickyCardStack } from '@/components/hupr/hupr-sticky-card';
+import { caseImageFor } from '@/lib/case-images/picker';
 
 export const dynamic = 'force-dynamic';
 
@@ -174,7 +176,12 @@ export default async function CasesPage({
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `url(/case-photos/case-007.jpg)`,
+              // Hero photo for the featured case — uses the per-case picker.
+              // If the generated webp doesn't exist yet, the underlying
+              // cognac band (parent section background) shows through. CSS
+              // background-image comma-syntax LAYERS, not falls back, so we
+              // only specify one URL.
+              backgroundImage: `url(${caseImageFor(heroCase.id)})`,
               backgroundSize: 'cover',
               backgroundPosition: '50% 50%',
               filter: 'brightness(0.72) saturate(0.88)',
@@ -519,6 +526,21 @@ export default async function CasesPage({
               {(sp.type ? mainRows.length : trackTotal).toLocaleString()}{sp.type ? ` ${sp.type.replace(/_/g, ' ')}` : ' total'}
             </span>
           </div>
+          <CaseSearch />
+          {sp.q && (
+            <div
+              className="mb-6"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                color: 'var(--color-text-muted)',
+              }}
+            >
+              {mainRows.length} match{mainRows.length === 1 ? '' : 'es'} for &ldquo;{sp.q}&rdquo;
+            </div>
+          )}
           <CasesLoadMore totalLibrarySize={trackTotal}>
             {mainRows.map((c, i) => (
               <div key={c.id} data-tour={i === 0 && !showFeatured ? 'cases-card' : undefined}>

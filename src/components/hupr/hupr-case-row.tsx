@@ -1,9 +1,15 @@
-// HUPR news-pair row for the cases library — typographic placard on the
-// left (case_type-themed colored band with mono case-number eyebrow + label),
+// HUPR news-pair row for the cases library — per-case photo placard on the
+// left (case-type-themed gradient + mono case-number eyebrow + label overlay),
 // title + meta + Moderustic excerpt on the right. Hairline divider between
-// rows. No decorative photos — the typography is the visual.
+// rows.
+//
+// Photo lookup: `caseImageFor(caseId)` returns the per-case Pollinations-
+// generated path. If it 404s (generation pending), <img onError> swaps to
+// the deterministic fallback from the bundled 147 photos. Either way the
+// placard is never empty.
 
 import { CaseListLink } from '../case-list-link';
+import { caseImageFor, caseImageFallback } from '@/lib/case-images/picker';
 
 // Case-type → HUPR earth-tone background mapping. Matches the /cases sticky
 // browse-by-type cards so the same case_type carries the same color across
@@ -94,38 +100,80 @@ export function HuprCaseRow({
       }}
     >
       <div className="flex flex-col sm:flex-row gap-5">
-        {/* Left placard — typographic billboard, case-type-themed. */}
+        {/* Left placard — case photo with case-type-themed gradient overlay.
+            The image fills the placard; the gradient + eyebrow + case-type
+            label sit on top. Matches the hero treatment used on /cases. */}
         <div className="w-full sm:w-3/12 flex-shrink-0">
           <div
-            className="relative overflow-hidden flex flex-col justify-between p-4"
+            className="relative overflow-hidden p-4"
             style={{
               aspectRatio: '4 / 2.8',
-              background: bg,
+              background: bg, // shows through if image fails entirely
               color: fg,
             }}
           >
-            <div
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                fontWeight: 400,
+            {/* Per-case photo — Pollinations-generated to be relevant. The
+                <img> covers the placard. onError swaps to the deterministic
+                fallback from /public/case-photos/case-NNN.jpg when the
+                primary path 404s (generation not yet complete). loading
+                lazy because below-the-fold cards are common in long lists. */}
+            <img
+              src={caseImageFor(c.id)}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              onError={(e) => {
+                const el = e.currentTarget;
+                const fallback = caseImageFallback(c.id);
+                if (el.src.endsWith(fallback)) return; // already fell back
+                el.src = fallback;
               }}
-            >
-              N° {String(caseNumber).padStart(2, '0')}
-            </div>
-            <div
-              className="uppercase"
+              className="absolute inset-0 w-full h-full object-cover"
               style={{
-                fontFamily: 'var(--font-headline)',
-                fontWeight: 700,
-                fontSize: 20,
-                lineHeight: 1.05,
-                letterSpacing: '-0.005em',
+                filter: 'brightness(0.72) saturate(0.88)',
+                opacity: 0.95,
+                mixBlendMode: 'multiply',
               }}
-            >
-              {c.case_type.replace('_', ' ')}
+            />
+            {/* Soft top→bottom gradient so the eyebrow + label have contrast
+                against any photo behind them. Same shape as the /cases hero
+                overlay for visual consistency. */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.0) 45%, rgba(0,0,0,0.0) 60%, rgba(0,0,0,0.55) 100%)',
+              }}
+              aria-hidden="true"
+            />
+            {/* Eyebrow + label sit on top, same positions as before. */}
+            <div className="relative h-full flex flex-col justify-between">
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  fontWeight: 400,
+                  color: '#FFFFFF',
+                }}
+              >
+                N° {String(caseNumber).padStart(2, '0')}
+              </div>
+              <div
+                className="uppercase"
+                style={{
+                  fontFamily: 'var(--font-headline)',
+                  fontWeight: 700,
+                  fontSize: 20,
+                  lineHeight: 1.05,
+                  letterSpacing: '-0.005em',
+                  color: '#FFFFFF',
+                }}
+              >
+                {c.case_type.replace('_', ' ')}
+              </div>
             </div>
           </div>
         </div>
