@@ -6,6 +6,8 @@ import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
+import { OutcomeNudgeCard } from '@/components/outcome-nudge-card';
+import { isMissingTable } from '@/lib/supabase/missing-table';
 
 export const dynamic = 'force-dynamic';
 
@@ -127,11 +129,41 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       return { data: null };
     }
   })();
-  const [, { data: allSessions }, dailyAssignment] = await Promise.all([
-    expirePromise,
-    sessionsListPromise,
-    dailyAssignmentPromise,
-  ]);
+  // Outcome-nudge eligibility read. Independent of everything above, so it
+  // belongs in the same Promise.all (the file's documented convention) — not
+  // a serial blocking await. withRetry never throws; we inspect `error` and
+  // treat the expected "table not created yet" (42P01) as silent fail-open,
+  // surfacing anything else like the sibling branches do.
+  const recentOutcomePromise = (async (): Promise<boolean> => {
+    try {
+      const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+      const { data, error } = await withRetry(() =>
+        supabase
+          .from('interview_outcomes')
+          .select('id')
+          .eq('user_id', user.id)
+          .gte('created_at', since)
+          .limit(1)
+      );
+      if (error) {
+        if (!isMissingTable(error)) {
+          console.warn('[dashboard] recent-outcome fetch failed:', error);
+        }
+        return false;
+      }
+      return Array.isArray(data) && data.length > 0;
+    } catch (e) {
+      console.warn('[dashboard] recent-outcome fetch threw:', e);
+      return false;
+    }
+  })();
+  const [, { data: allSessions }, dailyAssignment, hasRecentOutcome] =
+    await Promise.all([
+      expirePromise,
+      sessionsListPromise,
+      dailyAssignmentPromise,
+      recentOutcomePromise,
+    ]);
 
   const sessions = trackFilter
     ? (allSessions ?? []).filter((s: any) => s.track === trackFilter)
@@ -279,6 +311,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     assignmentSession?.status === 'in_progress' ? assignmentSession : null;
   const assignmentCompleted = assignmentSession?.status === 'completed';
 
+  // Outcome-capture nudge: shown when the user has actually practiced
+  // (≥1 completed session) and hasn't logged a real-interview outcome in the
+  // last 14 days (hasRecentOutcome resolved in the Promise.all above; fails
+  // open to false so the nudge still shows pre-migration).
+  const showOutcomeNudge = allCompleted.length >= 1 && !hasRecentOutcome;
+
   return (
     <main
       className="min-h-screen"
@@ -367,6 +405,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           )}
         </div>
       </article>
+
+      {showOutcomeNudge && <OutcomeNudgeCard />}
 
       <div className="px-4 sm:px-8 py-12 max-w-5xl mx-auto">
 
