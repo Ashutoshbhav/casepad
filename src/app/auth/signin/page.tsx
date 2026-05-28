@@ -13,7 +13,9 @@
 // previous signin (email-only allowlist; mints session immediately on
 // match; redirects with ?error= on failure).
 
+import { redirect } from 'next/navigation';
 import { HuprDesign } from '@/app/design-lab/hupr/_components/hupr-design';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SignInCard } from './_components/signin-card';
 
 export default async function SignInPage({
@@ -23,6 +25,29 @@ export default async function SignInPage({
 }) {
   const sp = await searchParams;
   const showSessionExpired = sp.error === 'expired' || !!sp.return_to;
+
+  // If the visitor is already signed in, bounce them straight to /dashboard.
+  // Pre-2026-05-29 the signin page rendered for everyone, so users who
+  // clicked the logo (which took them to `/`, then "Sign in" in that menu)
+  // would see an empty form and think "wait, I'm already signed in" before
+  // re-submitting. The proxy doesn't gate /auth/* (matcher excludes it),
+  // so the redirect lives here at the page level instead.
+  //
+  // Honors a `return_to` query param so a deep-link recovery flow doesn't
+  // dump the user on /dashboard when they were trying to reach a specific
+  // page that bounced them through signin.
+  const supabase = await createSupabaseServerClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    const safeReturnTo =
+      sp.return_to &&
+      sp.return_to.startsWith('/') &&
+      !sp.return_to.startsWith('//') &&
+      !sp.return_to.startsWith('/auth')
+        ? sp.return_to
+        : null;
+    redirect(safeReturnTo ?? '/dashboard');
+  }
 
   return (
     <HuprDesign

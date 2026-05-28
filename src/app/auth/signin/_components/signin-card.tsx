@@ -7,6 +7,7 @@
 // card on photo bg, #323234 ink, IBM Plex Mono input + button).
 
 import { directSignIn } from '@/server-actions/direct-signin';
+import { GoogleSignInButton } from '@/components/auth/google-signin-button';
 
 const ERROR_MESSAGES: Record<string, string> = {
   'missing-email': 'Please enter your email.',
@@ -69,9 +70,32 @@ export function SignInCard({
           margin: 0,
         }}
       >
-        Cohort access — enter the email on the allowlist and we’ll sign you in
-        immediately. No magic link. No password.
+        Continue with Google, or enter your email below. Either way you&apos;re
+        in immediately — no magic link, no password.
       </p>
+
+      <div style={{ marginTop: 18 }}>
+        <GoogleSignInButton returnTo={returnTo} />
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          margin: '18px 0 4px',
+          color: 'rgba(50,50,52,0.55)',
+          fontFamily: 'var(--font-body)',
+          fontSize: 11,
+          textTransform: 'uppercase',
+          letterSpacing: '0.12em',
+        }}
+        aria-hidden="true"
+      >
+        <span style={{ flex: 1, height: 1, background: 'rgba(50,50,52,0.18)' }} />
+        <span>or email</span>
+        <span style={{ flex: 1, height: 1, background: 'rgba(50,50,52,0.18)' }} />
+      </div>
 
       {showSessionExpired && (
         <div
@@ -153,18 +177,9 @@ export function SignInCard({
         )}
       </form>
 
-      <div
-        style={{
-          marginTop: 16,
-          fontFamily: 'var(--font-body)',
-          fontSize: 11,
-          lineHeight: 1.6,
-          color: 'rgba(50,50,52,0.65)',
-        }}
-      >
-        Not on the allowlist? Ask the admin (your cohort lead) to add your
-        email at <span style={{ color: '#323234' }}>/admin/allowlist</span>.
-      </div>
+      {/* Allowlist-mode footer removed 2026-05-29 — open signup is now
+          the default behaviour (ALLOWLIST_MODE=open), so directing
+          new users to "ask the admin" was misleading. */}
 
       <div
         style={{

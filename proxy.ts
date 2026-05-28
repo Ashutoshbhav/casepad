@@ -33,6 +33,18 @@ export async function proxy(req: NextRequest) {
     url.pathname = '/auth/signin';
     return NextResponse.redirect(url);
   }
+
+  // Signed-in users should not land back on the marketing page — every
+  // path into `/` (the logo, deep-linking from outside, a stale bookmark)
+  // would otherwise show them a hero with a "Sign in" CTA in the menu
+  // and no sign-out drawer (the global TopNav is hidden on `/` to keep
+  // the marketing layout clean). Redirect them home to /dashboard.
+  if (user && path === '/') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
+  }
+
   return res;
 }
 
