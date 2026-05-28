@@ -538,3 +538,56 @@ code, pre, kbd, samp {
     animation-delay: 0s !important;
   }
 }
+
+/* =============================================================================
+ * /auth/signin SignInCard reskin (ElevenLabs anchor, 2026-05-29).
+ *
+ * Lives here because the SignInCard is a Server Component and cannot import
+ * styled-jsx; rules that need :hover / :active / :focus / ::placeholder
+ * pseudo-classes have to live in a real stylesheet. The matching
+ * GoogleSignInButton is a Client Component but its rules live here too for
+ * cross-file consistency, so the whole card surface uses one source of
+ * truth.
+ *
+ * Emil-style motion discipline: exact transition properties (never `all`),
+ * strong cubic-bezier ease-out, sub-200ms durations, scale(0.97) on
+ * :active, hover gated behind (hover: hover) and (pointer: fine), and a
+ * (prefers-reduced-motion: reduce) gate that disables both the
+ * transition and the active scale.
+ * ========================================================================== */
+
+.casepad-signin-input::placeholder {
+  color: #777169;
+  opacity: 1;
+}
+.casepad-signin-input:focus {
+  border-bottom-color: #323234;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .casepad-signin-input {
+    transition: border-bottom-color 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .casepad-signin-submit:hover {
+    background-color: #1f1f21;
+  }
+  .casepad-google-btn:hover {
+    border-color: #323234;
+  }
+}
+.casepad-signin-submit:active,
+.casepad-google-btn:active {
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .casepad-signin-submit,
+  .casepad-google-btn {
+    transition: none;
+  }
+  .casepad-signin-submit:active,
+  .casepad-google-btn:active {
+    transform: none;
+  }
+}

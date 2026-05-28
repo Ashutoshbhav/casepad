@@ -104,24 +104,8 @@ export function GoogleSignInButton({ returnTo }: { returnTo?: string }) {
         <GoogleGlyph />
         <span>{pending ? 'Redirecting to Google…' : 'Continue with Google'}</span>
       </button>
-      <style jsx>{`
-        @media (hover: hover) and (pointer: fine) {
-          .casepad-google-btn:hover {
-            border-color: #323234;
-          }
-        }
-        .casepad-google-btn:active {
-          transform: scale(0.97);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .casepad-google-btn {
-            transition: none;
-          }
-          .casepad-google-btn:active {
-            transform: none;
-          }
-        }
-      `}</style>
+      {/* :hover / :active styles live in src/app/globals.css under the
+          "SignInCard reskin" block for cross-file consistency. */}
       {error && (
         <div
           role="alert"

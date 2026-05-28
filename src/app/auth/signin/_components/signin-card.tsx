@@ -237,43 +237,10 @@ export function SignInCard({
       </div>
 
       {/*
-        Scoped CSS for :hover, :active, :focus, and ::placeholder states
-        that inline styles can't express. Wrapped in
-        @media (prefers-reduced-motion: no-preference) so users with
-        reduced-motion preferences get instant transitions with no
-        animation (still keeps the visual change, just no easing).
-        Hover gated behind (hover: hover) so a tap on a touch device
-        doesn't latch a hover state. */}
-      <style jsx>{`
-        .casepad-signin-input::placeholder {
-          color: #777169;
-          opacity: 1;
-        }
-        .casepad-signin-input:focus {
-          border-bottom-color: #323234;
-        }
-        @media (prefers-reduced-motion: no-preference) {
-          .casepad-signin-input {
-            transition: border-bottom-color 180ms cubic-bezier(0.23, 1, 0.32, 1);
-          }
-        }
-        @media (hover: hover) and (pointer: fine) {
-          .casepad-signin-submit:hover {
-            background-color: #1f1f21;
-          }
-        }
-        .casepad-signin-submit:active {
-          transform: scale(0.97);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .casepad-signin-submit {
-            transition: none;
-          }
-          .casepad-signin-submit:active {
-            transform: none;
-          }
-        }
-      `}</style>
+        :hover / :active / :focus / ::placeholder rules live in
+        src/app/globals.css (the SignInCard is a Server Component and
+        cannot use styled-jsx). Search for "SignInCard reskin" in that
+        file for the matching CSS. */}
     </div>
   );
 }
