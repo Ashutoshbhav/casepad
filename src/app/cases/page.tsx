@@ -50,6 +50,11 @@ export default async function CasesPage({
         .from('cases')
         .select('id,title,industry,case_type,difficulty,source,problem_statement')
         .contains('tracks', [activeTrack])
+        // Cohort listing must NEVER include user-submitted (BYOC) rows —
+        // those are private to their owner. is_user_case defaults to false
+        // for all rows ingested before migration 0015, so this filter is a
+        // no-op until BYOC traffic exists, but is required for correctness.
+        .eq('is_user_case', false)
         .order('created_at', { ascending: false })
         .limit(60);
       if (sp.industry) query = query.eq('industry', sp.industry);
@@ -119,7 +124,8 @@ export default async function CasesPage({
     (await supabase
       .from('cases')
       .select('id', { count: 'exact', head: true })
-      .contains('tracks', [activeTrack])).count ?? 0;
+      .contains('tracks', [activeTrack])
+      .eq('is_user_case', false)).count ?? 0;
   const isSparse = isNonConsulting && trackTotal < SPARSE_TRACK_THRESHOLD;
   const { data: fallbackRows } = isSparse
     ? await withRetry(() => {
@@ -127,6 +133,7 @@ export default async function CasesPage({
           .from('cases')
           .select('id,title,industry,case_type,difficulty,source,problem_statement')
           .contains('tracks', ['consulting'])
+          .eq('is_user_case', false)
           .order('created_at', { ascending: false })
           .limit(30);
         if (sp.industry) q = q.eq('industry', sp.industry);
@@ -197,13 +204,25 @@ export default async function CasesPage({
             }}
           />
 
-          <header className="absolute top-0 left-0 right-0 z-10 flex items-baseline justify-between px-6 sm:px-12 py-6 sm:py-8">
+          <header className="absolute top-0 left-0 right-0 z-10 flex items-baseline justify-between px-6 sm:px-12 py-6 sm:py-8 gap-3">
             <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>
               Cases · {TRACKS[activeTrack].label}
             </span>
-            <TutorialLaunchLink className="hupr-mono-eyebrow underline">
-              <span style={{ color: '#FFFFFF' }}>Take me through a case →</span>
-            </TutorialLaunchLink>
+            <div className="flex items-baseline gap-5">
+              {/* BYOC entry — solves "I want to drill X but it's not in the
+                  library" without diluting the cohort listing. Custom cases
+                  stay private to the user (RLS + is_user_case filter). */}
+              <a
+                href="/cases/new"
+                className="hupr-mono-eyebrow underline"
+                style={{ color: '#FFFFFF' }}
+              >
+                + Bring your own case
+              </a>
+              <TutorialLaunchLink className="hupr-mono-eyebrow underline">
+                <span style={{ color: '#FFFFFF' }}>Take me through a case →</span>
+              </TutorialLaunchLink>
+            </div>
           </header>
 
           <div
@@ -315,9 +334,14 @@ export default async function CasesPage({
                   {TRACKS[activeTrack].label}
                 </h1>
               </div>
-              <TutorialLaunchLink className="hupr-mono-eyebrow underline">
-                Take me through a case →
-              </TutorialLaunchLink>
+              <div className="flex items-baseline gap-5">
+                <a href="/cases/new" className="hupr-mono-eyebrow underline">
+                  + Bring your own case
+                </a>
+                <TutorialLaunchLink className="hupr-mono-eyebrow underline">
+                  Take me through a case →
+                </TutorialLaunchLink>
+              </div>
             </div>
           </div>
         </header>
