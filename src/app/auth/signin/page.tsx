@@ -14,8 +14,9 @@
 // match; redirects with ?error= on failure).
 
 import { redirect } from 'next/navigation';
+import { HuprDesign } from '@/app/design-lab/hupr/_components/hupr-design';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { LaunchLanding } from './_components/launch-landing';
+import { SignInCard } from './_components/signin-card';
 
 export default async function SignInPage({
   searchParams,
@@ -49,10 +50,20 @@ export default async function SignInPage({
   }
 
   return (
-    <LaunchLanding
-      errorCode={sp.error}
-      returnTo={sp.return_to}
-      showSessionExpired={showSessionExpired}
+    <HuprDesign
+      eyebrow="Cohort · May 2026"
+      menuLinks={[
+        { label: 'How it works', href: '#tracks' },
+        { label: 'Cohort', href: '#spheres' },
+        { label: 'News', href: '#news' },
+      ]}
+      heroRightCard={
+        <SignInCard
+          errorCode={sp.error}
+          returnTo={sp.return_to}
+          showSessionExpired={showSessionExpired}
+        />
+      }
     />
   );
 }
