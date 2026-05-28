@@ -91,9 +91,10 @@ describe('logInterviewOutcome — validation', () => {
       outcome: 'offered',
     });
     expect(res.ok).toBe(false);
-    if (!res.ok) {
-      expect(res.reason).toBe('invalid');
+    if (!res.ok && res.reason === 'invalid') {
       expect(res.message).toMatch(/future/i);
+    } else {
+      expect.fail(`expected invalid+future, got ${JSON.stringify(res)}`);
     }
   });
 
@@ -138,7 +139,7 @@ describe('logInterviewOutcome — validation', () => {
   });
 
   it('IST regression: tomorrow + offered IS still rejected (sanity check the fix did not over-correct)', async () => {
-    // The fix added a 1-day grace window. Tomorrow + offered should STILL
+    // The fix added a 1-day grace window. Two days out + offered should STILL
     // fail validation — we only want the grace to cover the timezone-shift
     // edge case, not to permit logging tomorrow's interview as already-
     // offered.
@@ -149,9 +150,10 @@ describe('logInterviewOutcome — validation', () => {
       outcome: 'offered',
     });
     expect(res.ok).toBe(false);
-    if (!res.ok) {
-      expect(res.reason).toBe('invalid');
+    if (!res.ok && res.reason === 'invalid') {
       expect(res.message).toMatch(/future/i);
+    } else {
+      expect.fail(`expected invalid+future, got ${JSON.stringify(res)}`);
     }
   });
 
