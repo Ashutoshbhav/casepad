@@ -500,13 +500,13 @@ function Header({
                   {open ? 'Close' : 'Menu'}
                 </span>
                 <span
-                  className="flex flex-col gap-1 items-end"
+                  className="flex flex-col gap-[6px] items-end"
                   style={{ width: 40 }}
                 >
                   <span
                     style={{
                       width: 40,
-                      height: 2,
+                      height: 3,
                       background: '#323234',
                       transformOrigin: 'left',
                       transition: 'all .3s',
@@ -516,7 +516,7 @@ function Header({
                   <span
                     style={{
                       width: 40,
-                      height: 2,
+                      height: 3,
                       background: '#323234',
                       transformOrigin: 'left',
                       transition: 'all .3s',
@@ -666,6 +666,14 @@ function Hero({ rightCard }: { rightCard?: ReactNode }) {
           left: 0,
           right: 0,
           pointerEvents: 'none',
+          // Soft fade at left/right edges so marquee letters dissolve into
+          // the photo rather than hard-clipping mid-glyph at the viewport
+          // boundary. Width of fade scales with viewport so it stays
+          // proportional on mobile + ultrawide.
+          WebkitMaskImage:
+            'linear-gradient(to right, transparent 0, black 6vw, black calc(100% - 6vw), transparent 100%)',
+          maskImage:
+            'linear-gradient(to right, transparent 0, black 6vw, black calc(100% - 6vw), transparent 100%)',
         }}
       >
         <div className="hupr-marquee items-center">
@@ -1330,7 +1338,7 @@ function Footer() {
           </div>
 
           <div className="w-full xl:w-3/12 pt-10 lg:pt-0">
-            <h3 className="hupr-mono-eyebrow">Cohort</h3>
+            <h3 className="hupr-mono-eyebrow">Get started</h3>
             <hr
               style={{
                 border: 0,
@@ -1349,13 +1357,13 @@ function Footer() {
                   margin: 0,
                 }}
               >
-                Apply for the next cohort
+                Sign in to begin
               </h3>
               <div className="py-4">
                 <a
                   href="/auth/signin"
                   className="hupr-btn-square"
-                  aria-label="Apply"
+                  aria-label="Sign in"
                 >
                   <span className="arrow" aria-hidden>↗</span>
                   <span
@@ -1368,7 +1376,7 @@ function Footer() {
                       paddingTop: 56,
                     }}
                   >
-                    Apply
+                    Sign in
                   </span>
                 </a>
               </div>

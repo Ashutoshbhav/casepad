@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen p-4 sm:p-8 max-w-3xl mx-auto text-zinc-200">
-      <Link href="/auth/signin" className="text-sm text-zinc-500 hover:text-zinc-300">← back to sign in</Link>
-      <h1 className="text-2xl sm:text-3xl font-semibold mt-3 mb-2">Terms of Use</h1>
-      <p className="text-xs text-zinc-500 mb-8">Last updated: 2026-05-03</p>
+    <main className="min-h-screen p-4 sm:p-8 max-w-3xl mx-auto text-zinc-700">
+      <Link href="/auth/signin" className="text-sm text-zinc-600 hover:text-zinc-900">← back to sign in</Link>
+      <h1 className="text-2xl sm:text-3xl font-semibold mt-3 mb-2 text-zinc-900">Terms of Use</h1>
+      <p className="text-xs text-zinc-600 mb-8">Last updated: 2026-05-03</p>
 
       <section className="space-y-6 text-sm leading-relaxed">
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">1. Access</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">1. Access</h2>
           <p>
             CasePad is currently free to use for case-interview practice. Access may be open to
             any verified email (public mode) or restricted to an admin-managed allowlist
@@ -21,7 +21,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">2. Personal use only</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">2. Personal use only</h2>
           <p>
             You may use CasePad to practice case interviews for your own preparation. You may not
             use the service for commercial purposes, to train other AI models, or to provide
@@ -30,7 +30,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">3. No copying or replication</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">3. No copying or replication</h2>
           <p>
             The application&apos;s code, prompts, scoring rubrics, case dataset, frameworks, math
             drills, behavioral questions, and overall design are the exclusive intellectual
@@ -41,7 +41,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">4. No scraping</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">4. No scraping</h2>
           <p>
             Automated probing, bulk extraction of cases, or any sustained programmatic crawl of
             this application is prohibited. Such activity may constitute unauthorized access
@@ -50,7 +50,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">5. Privacy</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">5. Privacy</h2>
           <p>
             Your session transcripts, scores, and notes are visible only to you and to the
             application administrator. They are not shared with other cohort members. The
@@ -59,7 +59,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">6. No warranty</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">6. No warranty</h2>
           <p>
             The service is provided &quot;as is&quot;. The author makes no guarantees about
             availability, accuracy of AI-generated feedback, or fitness for any particular
@@ -68,7 +68,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">7. Termination</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">7. Termination</h2>
           <p>
             The administrator may remove your access at any time, for any reason, by removing
             your email from the allowlist.

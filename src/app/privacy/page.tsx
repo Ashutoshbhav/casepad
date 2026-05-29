@@ -10,16 +10,16 @@ import Link from 'next/link';
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen p-4 sm:p-8 max-w-3xl mx-auto text-zinc-200">
-      <Link href="/auth/signin" className="text-sm text-zinc-500 hover:text-zinc-300">
+    <main className="min-h-screen p-4 sm:p-8 max-w-3xl mx-auto text-zinc-700">
+      <Link href="/auth/signin" className="text-sm text-zinc-600 hover:text-zinc-900">
         ← back to sign in
       </Link>
-      <h1 className="text-2xl sm:text-3xl font-semibold mt-3 mb-2">Privacy Policy</h1>
-      <p className="text-xs text-zinc-500 mb-8">Last updated: 2026-05-29</p>
+      <h1 className="text-2xl sm:text-3xl font-semibold mt-3 mb-2 text-zinc-900">Privacy Policy</h1>
+      <p className="text-xs text-zinc-600 mb-8">Last updated: 2026-05-29</p>
 
       <section className="space-y-6 text-sm leading-relaxed">
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">1. What we collect</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">1. What we collect</h2>
           <ul className="list-disc pl-5 space-y-1.5">
             <li>
               <strong>Account info:</strong> your email address (via OAuth from your sign-in
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">
             2. What we don&apos;t collect
           </h2>
           <ul className="list-disc pl-5 space-y-1.5">
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">3. Where it&apos;s stored</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">3. Where it&apos;s stored</h2>
           <p>
             Your account data and practice transcripts are stored in Supabase Postgres,
             US-East region. Authentication is handled by Supabase Auth. All connections use HTTPS;
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">
             4. Who else sees your data
           </h2>
           <p>
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">5. Cookies</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">5. Cookies</h2>
           <p>
             We use exactly one category of cookies: Supabase Auth session cookies, set when you
             sign in. They keep you logged in across page refreshes. We don&apos;t use any analytics,
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">6. Retention</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">6. Retention</h2>
           <p>
             We keep your account data and transcripts for as long as your account is active. If
             you stop using CasePad and want your data removed, see section 7 below.
@@ -105,7 +105,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">
             7. Your rights (India DPDP Act + general)
           </h2>
           <ul className="list-disc pl-5 space-y-1.5">
@@ -126,12 +126,12 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">8. Contact</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">8. Contact</h2>
           <p>
             For privacy questions, data export, or deletion requests: email{' '}
             <a
               href="mailto:ashutosh.25011@ssb.scaler.com"
-              className="underline hover:text-zinc-100"
+              className="underline hover:text-zinc-900"
             >
               ashutosh.25011@ssb.scaler.com
             </a>
@@ -140,7 +140,7 @@ export default function PrivacyPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-zinc-100 mb-1.5">9. Changes to this policy</h2>
+          <h2 className="text-base font-semibold text-zinc-900 mb-1.5">9. Changes to this policy</h2>
           <p>
             If we materially change this policy, we&apos;ll update the &quot;Last updated&quot;
             date at the top and email signed-in users about the change before it takes effect.
@@ -148,8 +148,8 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      <div className="mt-12 pt-6 border-t border-zinc-800 text-xs text-zinc-500">
-        <Link href="/terms" className="hover:text-zinc-300">
+      <div className="mt-12 pt-6 border-t border-zinc-300 text-xs text-zinc-600">
+        <Link href="/terms" className="hover:text-zinc-900">
           ← View Terms of Use
         </Link>
       </div>
