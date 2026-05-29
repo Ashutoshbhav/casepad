@@ -61,13 +61,6 @@ export function CaseFilters() {
           <option value="">All difficulties</option>
           {DIFFS.map((i) => <option key={i} value={i}>{i}</option>)}
         </select>
-        <input
-          type="text"
-          placeholder="Search title…"
-          defaultValue={params.get('q') ?? ''}
-          onChange={(e) => setParam('q', e.target.value)}
-          className="bg-zinc-900 border border-zinc-800 rounded px-3 py-1.5 text-sm flex-1 min-w-[200px]"
-        />
       </div>
     </div>
   );
