@@ -9,7 +9,7 @@
 // placard is never empty.
 
 import { CaseListLink } from '../case-list-link';
-import { caseImageFor, caseImageFallback } from '@/lib/case-images/picker';
+import { CaseRowImage } from './case-row-image';
 
 // Case-type → HUPR earth-tone background mapping. Matches the /cases sticky
 // browse-by-type cards so the same case_type carries the same color across
@@ -117,25 +117,7 @@ export function HuprCaseRow({
                 fallback from /public/case-photos/case-NNN.jpg when the
                 primary path 404s (generation not yet complete). loading
                 lazy because below-the-fold cards are common in long lists. */}
-            <img
-              src={caseImageFor(c.id)}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              decoding="async"
-              onError={(e) => {
-                const el = e.currentTarget;
-                const fallback = caseImageFallback(c.id);
-                if (el.src.endsWith(fallback)) return; // already fell back
-                el.src = fallback;
-              }}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                filter: 'brightness(0.72) saturate(0.88)',
-                opacity: 0.95,
-                mixBlendMode: 'multiply',
-              }}
-            />
+            <CaseRowImage caseId={c.id} />
             {/* Soft top→bottom gradient so the eyebrow + label have contrast
                 against any photo behind them. Same shape as the /cases hero
                 overlay for visual consistency. */}
