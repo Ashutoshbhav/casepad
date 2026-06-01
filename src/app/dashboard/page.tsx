@@ -364,13 +364,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {/* STICKY CARD 1 — Today's case. Sand band. The single most important
           surface on dashboard, gets pole position. */}
       <article
-        className="sticky px-4 sm:px-8 py-12 lg:py-16"
+        className="px-4 sm:px-8 py-12 lg:py-16"
         style={{
           background: 'var(--hupr-sand)',
           color: '#FFFFFF',
-          top: 0,
-          zIndex: 1,
-          minHeight: '70vh',
         }}
         data-tour="todays-case"
       >
@@ -496,13 +493,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* STICKY CARD 2 — This Week. Sage band. */}
       <article
-        className="sticky -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 mb-0"
+        className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 mb-0"
         style={{
           background: 'var(--hupr-sage)',
           color: '#FFFFFF',
-          top: 60,
-          zIndex: 2,
-          minHeight: '60vh',
         }}
       >
         <div className="max-w-5xl mx-auto">
@@ -571,13 +565,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* STICKY CARD 3 — Recent reps. Slate band. */}
       <article
-        className="sticky -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 mb-0"
+        className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 mb-0"
         style={{
           background: 'var(--hupr-slate)',
           color: '#FFFFFF',
-          top: 120,
-          zIndex: 3,
-          minHeight: '60vh',
         }}
       >
         <div className="max-w-5xl mx-auto">
@@ -694,13 +685,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {/* STICKY CARD 4 — Library. Terra band. CTA-only. */}
       <a
         href="/cases"
-        className="sticky block -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 transition-opacity hover:opacity-95 mb-12"
+        className="block -mx-4 sm:-mx-8 px-4 sm:px-8 py-12 lg:py-16 transition-opacity hover:opacity-95 mb-12"
         style={{
           background: 'var(--hupr-terra)',
           color: '#FFFFFF',
-          top: 180,
-          zIndex: 4,
-          minHeight: '50vh',
           textDecoration: 'none',
         }}
       >
