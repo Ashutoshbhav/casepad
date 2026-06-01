@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { TRACKS, type Track } from '@/lib/tracks';
 import { CheatsheetTabs } from '@/components/cheatsheet-tabs';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
@@ -7,21 +7,22 @@ import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 export const dynamic = 'force-dynamic';
 
 export default async function CheatsheetPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  const user = session.user;
+  const { supabase, user } = await requireUser();
 
   const track: Track = (user.user_metadata?.preferred_track as Track) || 'consulting';
 
-  // Pull last 10 completed sessions for the weakness-indexed view
-  const { data: sessions } = await supabase
-    .from('sessions')
-    .select('score_breakdown, ended_at, track')
-    .eq('user_id', user.id)
-    .eq('status', 'completed')
-    .order('ended_at', { ascending: false })
-    .limit(10);
+  // Pull last 10 completed sessions for the weakness-indexed view.
+  // withRetry never throws, so a DB blip degrades to an empty list (handled
+  // by `sessions || []` below) instead of crashing the whole cheat sheet.
+  const { data: sessions } = await withRetry(() =>
+    supabase
+      .from('sessions')
+      .select('score_breakdown, ended_at, track')
+      .eq('user_id', user.id)
+      .eq('status', 'completed')
+      .order('ended_at', { ascending: false })
+      .limit(10)
+  );
 
   const def = TRACKS[track];
 

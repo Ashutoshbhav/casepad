@@ -1,15 +1,14 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import type { User } from '@supabase/supabase-js';
+import { requireUser } from '@/lib/supabase/require-user';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
 // Admin activity — HUPR mono. Service-role read of every cohort session.
 
 export default async function AdminActivityPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  if (session.user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
+  const { user } = await requireUser();
+  if (user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
     return (
       <main
         className="min-h-screen p-12 max-w-2xl mx-auto"
@@ -32,17 +31,21 @@ export default async function AdminActivityPage() {
     );
   }
 
+  // withRetry never throws — any single read failing degrades to an empty
+  // list (via the `?? []` below) instead of crashing the whole dashboard.
   const admin = createSupabaseAdminClient();
 
   const [sessionsRes, usersRes, allowlistRes, feedbackRes] = await Promise.all([
-    admin
-      .from('sessions')
-      .select('id, user_id, case_id, status, score, started_at, ended_at, track, transcript, cases(title, case_type)')
-      .order('started_at', { ascending: false })
-      .limit(500),
-    admin.auth.admin.listUsers({ perPage: 200 }),
-    admin.from('email_allowlist').select('email, added_at').order('added_at', { ascending: false }),
-    admin.from('session_feedback').select('session_id, sentiment, free_text, created_at').order('created_at', { ascending: false }).limit(20),
+    withRetry(() =>
+      admin
+        .from('sessions')
+        .select('id, user_id, case_id, status, score, started_at, ended_at, track, transcript, cases(title, case_type)')
+        .order('started_at', { ascending: false })
+        .limit(500)
+    ),
+    withRetry<{ users: User[] }>(() => admin.auth.admin.listUsers({ perPage: 200 }) as any),
+    withRetry(() => admin.from('email_allowlist').select('email, added_at').order('added_at', { ascending: false })),
+    withRetry(() => admin.from('session_feedback').select('session_id, sentiment, free_text, created_at').order('created_at', { ascending: false }).limit(20)),
   ]);
 
   const allSessions = sessionsRes.data ?? [];

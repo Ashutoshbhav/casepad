@@ -34,7 +34,16 @@ export default async function CasesPage({
 }: { searchParams: Promise<{ industry?: string; type?: string; difficulty?: string; q?: string; track?: string; all?: string }> }) {
   const sp = await searchParams;
   const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  // Never-fail: getSession is a raw await — a transient network reject (not a
+  // PostgREST {error}) would throw and 500 the page. Catch → treat as no
+  // session → redirect to signin instead of crashing.
+  let session = null;
+  try {
+    const { data } = await supabase.auth.getSession();
+    session = data.session;
+  } catch (e) {
+    console.error('[cases] getSession failed:', e);
+  }
   if (!session) redirect('/auth/signin');
   const user = session.user;
   const userTrack: Track = (user?.user_metadata?.preferred_track as Track) || 'consulting';
@@ -120,12 +129,24 @@ export default async function CasesPage({
   const mainRows = visibleRows.filter((r) => !heroIdSet.has(r.id));
 
   const isNonConsulting = activeTrack !== 'consulting';
-  const trackTotal =
-    (await supabase
-      .from('cases')
-      .select('id', { count: 'exact', head: true })
-      .contains('tracks', [activeTrack])
-      .eq('is_user_case', false)).count ?? 0;
+  // Never-fail: this count was previously a raw, unguarded await — a transient
+  // network reject (not a PostgREST {error}) would throw and 500 the whole
+  // page. This was the intermittent /cases crash. withRetry never throws
+  // (returns {data,error}); the try/catch is belt-and-suspenders so any blip
+  // degrades trackTotal to 0 rather than killing the render.
+  let trackTotal = 0;
+  try {
+    const res = (await withRetry(() =>
+      supabase
+        .from('cases')
+        .select('id', { count: 'exact', head: true })
+        .contains('tracks', [activeTrack])
+        .eq('is_user_case', false)
+    )) as { count?: number | null };
+    trackTotal = res.count ?? 0;
+  } catch (e) {
+    console.error('[cases] trackTotal count failed:', e);
+  }
   const isSparse = isNonConsulting && trackTotal < SPARSE_TRACK_THRESHOLD;
   const { data: fallbackRows } = isSparse
     ? await withRetry(() => {

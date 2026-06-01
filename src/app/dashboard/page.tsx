@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { ScoreCurve } from '@/components/score-curve';
 import { TRACK_LIST, TRACKS, type Track } from '@/lib/tracks';
@@ -71,10 +70,7 @@ function pickGreeting(args: {
 }
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ track?: string }> }) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  const user = session.user;
+  const { supabase, user } = await requireUser();
 
   const sp = await searchParams;
   const validTracks = TRACK_LIST as readonly string[];

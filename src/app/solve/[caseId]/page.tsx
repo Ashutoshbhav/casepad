@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { SolveLayout } from '@/components/solve-layout';
 import { InSolveHintPanel } from '@/components/in-solve-hint-panel';
@@ -18,10 +18,7 @@ export default async function SolvePage({
   const { caseId } = await params;
   const { session: sessionParam, tutorial } = await searchParams;
   const isTutorial = tutorial === '1';
-  const supabase = await createSupabaseServerClient();
-  const { data: { session: authSession } } = await supabase.auth.getSession();
-  if (!authSession) redirect('/auth/signin');
-  const user = authSession.user;
+  const { supabase, user } = await requireUser();
 
   // Defensive guard: if no ?session= param, hand off to startSession which
   // performs its own redirect. The redirect throws a NEXT_REDIRECT signal; we

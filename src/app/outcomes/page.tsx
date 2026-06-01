@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { withRetry } from '@/lib/supabase/with-retry';
 import { isMissingTable } from '@/lib/supabase/missing-table';
 import { InterviewOutcomeForm } from '@/components/interview-outcome-form';
@@ -34,12 +33,7 @@ function fmtDate(iso: string): string {
 }
 
 export default async function OutcomesPage() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  const user = session.user;
+  const { supabase, user } = await requireUser();
 
   // Fail open: if migration 0014 isn't applied yet, the table is missing —
   // render the page with an empty history rather than crashing. withRetry

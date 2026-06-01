@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 
 // Drills index — three short-form practice modes outside the case arena.
@@ -34,9 +33,7 @@ const DRILLS = [
 ];
 
 export default async function DrillsIndexPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
+  await requireUser();
 
   return (
     <main

@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import type { User } from '@supabase/supabase-js';
+import { requireUser } from '@/lib/supabase/require-user';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
 // Per-user drill-in — HUPR mono. Service-role read of every session this user
@@ -8,10 +9,8 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
 export default async function UserActivityPage({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  if (session.user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
+  const { user: adminUser } = await requireUser();
+  if (adminUser.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
     return (
       <main className="min-h-screen p-12" style={{ background: 'var(--color-bg-canvas)' }}>
         <Link href="/cases" className="hupr-mono-eyebrow underline">← back to cases</Link>
@@ -31,15 +30,19 @@ export default async function UserActivityPage({ params }: { params: Promise<{ u
     );
   }
 
+  // withRetry never throws — a read failing degrades to an empty result
+  // (handled by the `?? []` / `?.user` guards below) instead of crashing.
   const admin = createSupabaseAdminClient();
   const [userRes, sessionsRes, feedbackRes] = await Promise.all([
-    admin.auth.admin.getUserById(userId),
-    admin
-      .from('sessions')
-      .select('id, case_id, status, score, score_breakdown, started_at, ended_at, track, transcript, issue_tree, cases(title, case_type, difficulty)')
-      .eq('user_id', userId)
-      .order('started_at', { ascending: false }),
-    admin.from('session_feedback').select('session_id, sentiment, free_text, created_at').limit(50),
+    withRetry<{ user: User | null }>(() => admin.auth.admin.getUserById(userId) as any),
+    withRetry(() =>
+      admin
+        .from('sessions')
+        .select('id, case_id, status, score, score_breakdown, started_at, ended_at, track, transcript, issue_tree, cases(title, case_type, difficulty)')
+        .eq('user_id', userId)
+        .order('started_at', { ascending: false })
+    ),
+    withRetry(() => admin.from('session_feedback').select('session_id, sentiment, free_text, created_at').limit(50)),
   ]);
 
   const user = userRes.data?.user;
@@ -195,7 +198,7 @@ export default async function UserActivityPage({ params }: { params: Promise<{ u
                           color: 'var(--color-text-primary)',
                         }}
                       >
-                        {s.status === 'completed' ? `${s.score}/100` : s.status.replace('_', ' ')}
+                        {s.status === 'completed' ? `${s.score ?? '—'}/100` : (s.status ?? 'unknown').replace('_', ' ')}
                       </div>
                     </div>
                   </summary>

@@ -1,13 +1,9 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { ReplayTourButton } from '@/components/replay-tour-button';
 
 export default async function HowItWorksPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  const user = session.user;
+  await requireUser();
 
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">

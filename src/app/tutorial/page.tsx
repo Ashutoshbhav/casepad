@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { TUTORIAL_MENU } from '@/lib/starter-cases';
 
 // Tutorial menu — first-time users land here when clicking "Take me through
@@ -10,9 +9,7 @@ import { TUTORIAL_MENU } from '@/lib/starter-cases';
 // (InvestCo) without context.
 
 export default async function TutorialPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
+  await requireUser();
 
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">

@@ -1,15 +1,12 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
 // Admin hub — HUPR mono. Only visible to ADMIN_EMAIL.
 
 export default async function AdminHubPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  const user = session.user;
+  const { user } = await requireUser();
 
   if (user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
     return (
@@ -34,16 +31,18 @@ export default async function AdminHubPage() {
     );
   }
 
+  // withRetry never throws — a DB blip degrades each count to 0 (via the
+  // `?? 0` below) instead of crashing the admin hub.
   const admin = createSupabaseAdminClient();
   const [allowlistRes, casesRes, sessionsRes] = await Promise.all([
-    admin.from('email_allowlist').select('email', { count: 'exact', head: true }),
-    admin.from('cases').select('id', { count: 'exact', head: true }),
-    admin.from('sessions').select('id', { count: 'exact', head: true }),
+    withRetry(() => admin.from('email_allowlist').select('email', { count: 'exact', head: true })),
+    withRetry(() => admin.from('cases').select('id', { count: 'exact', head: true })),
+    withRetry(() => admin.from('sessions').select('id', { count: 'exact', head: true })),
   ]);
 
-  const allowlistCount = allowlistRes.count ?? 0;
-  const caseCount = casesRes.count ?? 0;
-  const sessionCount = sessionsRes.count ?? 0;
+  const allowlistCount = (allowlistRes as { count?: number | null }).count ?? 0;
+  const caseCount = (casesRes as { count?: number | null }).count ?? 0;
+  const sessionCount = (sessionsRes as { count?: number | null }).count ?? 0;
 
   return (
     <main

@@ -1,16 +1,11 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
 import { UserCaseForm } from '@/components/user-case-form';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewCasePage() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
+  await requireUser();
 
   return (
     <main className="px-4 sm:px-8 py-12 lg:py-16">

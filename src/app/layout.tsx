@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Montserrat, IBM_Plex_Mono, Moderustic } from 'next/font/google';
 import './globals.css';
 import { ConnectionBanner } from '@/components/connection-banner';
@@ -77,6 +77,11 @@ export const metadata: Metadata = {
     title: 'CasePad',
     statusBarStyle: 'black-translucent',
   },
+};
+
+// Next.js 16 moved themeColor out of `metadata` into its own `viewport`
+// export. Keeping it here silences the build warning on every page.
+export const viewport: Viewport = {
   themeColor: '#000000',
 };
 

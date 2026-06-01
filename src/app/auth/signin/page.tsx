@@ -15,7 +15,7 @@
 
 import { redirect } from 'next/navigation';
 import { HuprDesign } from '@/app/design-lab/hupr/_components/hupr-design';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getOptionalUser } from '@/lib/supabase/require-user';
 import { SignInCard } from './_components/signin-card';
 
 export default async function SignInPage({
@@ -36,8 +36,9 @@ export default async function SignInPage({
   // Honors a `return_to` query param so a deep-link recovery flow doesn't
   // dump the user on /dashboard when they were trying to reach a specific
   // page that bounced them through signin.
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  // getOptionalUser never throws — a transient auth blip renders the
+  // signed-out landing page instead of crashing the public entry point.
+  const { session } = await getOptionalUser();
   if (session) {
     const safeReturnTo =
       sp.return_to &&

@@ -1,14 +1,11 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requireUser } from '@/lib/supabase/require-user';
+import { withRetry } from '@/lib/supabase/with-retry';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { addEmailToAllowlist, removeEmailFromAllowlist } from '@/server-actions/manage-allowlist';
 
 export default async function AllowlistPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/auth/signin');
-  const user = session.user;
+  const { user } = await requireUser();
   if (user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
     return (
       <main className="p-12" style={{ background: 'var(--color-bg-canvas)' }}>
@@ -27,11 +24,15 @@ export default async function AllowlistPage() {
       </main>
     );
   }
+  // withRetry never throws — a DB blip degrades `rows` to null (rendered as
+  // the empty state below) instead of crashing the allowlist page.
   const admin = createSupabaseAdminClient();
-  const { data: rows } = await admin
-    .from('email_allowlist')
-    .select('*')
-    .order('added_at', { ascending: false });
+  const { data: rows } = await withRetry(() =>
+    admin
+      .from('email_allowlist')
+      .select('*')
+      .order('added_at', { ascending: false })
+  );
 
   return (
     <main
