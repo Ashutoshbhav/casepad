@@ -2,11 +2,14 @@ import { completeChat } from '../llm-router';
 import { researchCase } from '../research/tavily';
 import { staticWalkthroughFallback } from './static-fallbacks';
 import { renderDossierBlock, dossierIsUsable } from './dossier-context';
+import { renderPlaybook } from './ideal-answer-playbooks';
 
 // Bump when the generator's prompt/inputs change materially. The debrief
 // regenerates any cached walkthrough whose generator_version is below this,
 // so stale generic walkthroughs get replaced on the next view.
-export const WALKTHROUGH_GENERATOR_VERSION = 2;
+// v2: dossier + case-type framework anchor. v3: full 21-playbook synthesis
+// (anatomy + spike moves + anti-slop + L0-L4 depth) injected per case type.
+export const WALKTHROUGH_GENERATOR_VERSION = 3;
 
 // Canonical case types (mirror cases.case_type) → the framework a top
 // candidate would actually use. Fixes the "Porter's 5 Forces on a
@@ -85,6 +88,10 @@ export async function generateIdealWalkthrough(
       ? (opts.caseType as CaseType)
       : inferCaseType(title, problemStatement);
   const frameworkHint = frameworkHintForCaseType(caseType);
+  // The distilled top-candidate playbook for this case type (framework +
+  // anatomy + spike moves + common mistakes + checklist) plus the always-on
+  // expert-answer principles (L0-L4 depth, anti-slop, India grounding).
+  const playbookBlock = renderPlaybook(caseType);
 
   // The per-case dossier is the deep, expert-level knowledge (real numbers,
   // common mistakes, anticipated Q&A). Feeding it in is the single biggest
@@ -129,6 +136,7 @@ Output JSON only with this exact schema:
 }
 
 Rules:
+- PLAYBOOK ADHERENCE: a TOP-CANDIDATE PLAYBOOK + EXPERT-ANSWER PRINCIPLES are given in the user message. Match that quality bar exactly — hit the L0→L4 depth, include the spike moves, avoid the listed common mistakes, and obey the ANTI-SLOP bans (no ungrounded "synergy/leverage/holistic", no hedging, every number sourced or labeled ESTIMATE).
 - CASE-TYPE ANCHOR (most important): a CASE TYPE + the correct framework for it is given below. Build the issue_tree on THAT framework. Treat the "IDEAL STRUCTURE (casebook hint)" as a loose hint only — if it names a framework that does not fit the case type (e.g. Porter's 5 Forces on a profitability case), IGNORE it and use the correct one.
 - issue_tree decomposes the root question into MECE branches with concrete subnodes.
 - hypothesis_tree.primary is the candidate's initial hypothesis (one sentence). supporting are 2-4 sub-hypotheses to test.
@@ -158,6 +166,8 @@ ${problemStatement}
 CASE TYPE: ${caseType}
 CORRECT FRAMEWORK FOR THIS CASE TYPE (anchor the issue_tree on this):
 ${frameworkHint}
+
+${playbookBlock}
 
 IDEAL STRUCTURE (casebook hint — may be mislabeled; defer to the case-type anchor above):
 ${JSON.stringify(idealStructure, null, 2)}
