@@ -13,6 +13,7 @@
 // opener/transcripts. No real individual is impersonated.
 
 import { TRACKS, type Track } from '@/lib/tracks';
+import { TRACK_PLAYBOOKS } from './track-playbooks';
 
 export type PersonaTone =
   | 'warm-but-rigorous'
@@ -32,8 +33,12 @@ export interface InterviewerPersona {
   tone: PersonaTone;
   /** Top graded dimensions for this track — what the interviewer pushes on. */
   probesFor: string[];
-  /** L4 "spike" moves that mark a top candidate (from the track's killer_phrases). */
+  /** L4 "spike" moves that mark a top candidate. */
   spikeMoves: string[];
+  /** Verbatim-style lines this interviewer actually uses (realism). */
+  tells: string[];
+  /** Instant-rejection behaviors the interviewer penalizes. */
+  redFlags: string[];
 }
 
 // Persona identity per track. Substance (probesFor / spikeMoves) is derived
@@ -111,11 +116,15 @@ export function personaForTrack(track: Track | string | null | undefined): Inter
     track && (track as Track) in IDENTITY ? (track as Track) : 'consulting';
   const id = IDENTITY[key];
   const def = TRACKS[key];
+  const pb = TRACK_PLAYBOOKS[key];
   return {
     track: key,
     ...id,
     probesFor: topDimensions(key, 4),
-    spikeMoves: def?.killer_phrases?.slice(0, 3) ?? [],
+    // Research-grounded spike moves win; fall back to the track's killer_phrases.
+    spikeMoves: (pb?.spikeMoves?.length ? pb.spikeMoves : def?.killer_phrases ?? []).slice(0, 3),
+    tells: pb?.tells?.slice(0, 5) ?? [],
+    redFlags: pb?.redFlags?.slice(0, 3) ?? [],
   };
 }
 
@@ -128,8 +137,16 @@ export function personaForTrack(track: Track | string | null | undefined): Inter
 export function personaPromptBlock(p: InterviewerPersona): string {
   const probes = p.probesFor.map((d) => `  - ${d}`).join('\n');
   const spikes = p.spikeMoves.length
-    ? p.spikeMoves.map((s) => `  - "${s}"`).join('\n')
+    ? p.spikeMoves.map((s) => `  - ${s}`).join('\n')
     : '  (none specific)';
+  const tellsBlock = p.tells.length
+    ? `\n\n== HOW YOU ACTUALLY TALK (real lines from interviewers in this track — use sparingly, vary them, never two in a row) ==
+${p.tells.map((t) => `  - ${t}`).join('\n')}`
+    : '';
+  const redFlagsBlock = p.redFlags.length
+    ? `\n\n== INSTANT RED FLAGS — silently penalize these, don't coach them away ==
+${p.redFlags.map((r) => `  - ${r}`).join('\n')}`
+    : '';
   return `You are ${p.name}, ${p.role} at ${p.firm}, running a live interview.
 ${p.experienceLine}
 
@@ -137,5 +154,5 @@ ${p.experienceLine}
 ${probes}
 
 == WHAT A TOP ("spike") CANDIDATE SOUNDS LIKE — reward moves like these, don't hand them over ==
-${spikes}`;
+${spikes}${tellsBlock}${redFlagsBlock}`;
 }

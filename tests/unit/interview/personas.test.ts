@@ -44,4 +44,11 @@ describe('personaPromptBlock', () => {
     expect(block).toContain('Technical Accuracy');
     expect(block).toContain('spike');
   });
+
+  it('surfaces research-grounded tells + red flags for tracks with a playbook', () => {
+    const block = personaPromptBlock(personaForTrack('ib_pe_vc'));
+    expect(block).toContain('HOW YOU ACTUALLY TALK');
+    expect(block).toContain('Walk me through a DCF');
+    expect(block).toContain('INSTANT RED FLAGS');
+  });
 });

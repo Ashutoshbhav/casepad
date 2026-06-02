@@ -18,6 +18,7 @@
 
 import type { Track } from '@/lib/tracks';
 import type { CaseType } from '@/lib/groq/walkthrough';
+import { stageNoteFor } from './track-playbooks';
 
 export type Stage =
   | 'scoping' // clarifying the prompt, understanding the objective
@@ -160,6 +161,19 @@ function pickStage(
  * the rubric it's scored against. Kept short — the base prompt is already large.
  */
 export function stageDirective(stage: Stage, ctx: StageContext): string {
+  const base = baseStageDirective(stage, ctx);
+  // Append track-specific, research-grounded guidance for this stage (real
+  // interviewer behavior per track). Fail-safe: returns '' when none applies.
+  let note = '';
+  try {
+    note = stageNoteFor(ctx.track, stage, ctx.isEstimation);
+  } catch {
+    note = '';
+  }
+  return note ? `${base}\n${note}` : base;
+}
+
+function baseStageDirective(stage: Stage, ctx: StageContext): string {
   const head = `== CURRENT STAGE: ${stage.toUpperCase()} ==`;
   switch (stage) {
     case 'scoping':

@@ -114,4 +114,14 @@ describe('stageDirective', () => {
     const est = stageDirective('quant', { ...ctx, isEstimation: true });
     expect(est.toLowerCase()).toContain('estimation');
   });
+
+  it('appends track-specific research notes (e.g. McKinsey interviewer-led in scoping)', () => {
+    const d = stageDirective('scoping', ctx); // consulting
+    expect(d).toMatch(/interviewer-led/i);
+  });
+
+  it('uses the guesstimate discipline at the quant stage for estimation cases', () => {
+    const d = stageDirective('quant', { track: 'pm', caseType: 'estimation', isEstimation: true });
+    expect(d.toLowerCase()).toMatch(/lowest-weighted|sanity|order of magnitude/);
+  });
 });
