@@ -41,6 +41,47 @@ describe('validateScore — total integrity', () => {
   });
 });
 
+describe('validateScore — estimation grounding (lever B)', () => {
+  const pmRaw = {
+    product_sense: 20,
+    estimation: 15, // full weight
+    strategy: 12,
+    metrics: 12,
+    communication: 12,
+    design_sense: 8,
+    prioritization: 4,
+    strengths: [],
+    gaps: [],
+    spike_moments: [],
+  };
+
+  it('caps the Estimation dimension when the candidate blurted a number', () => {
+    const signals: CandidateSignals = {
+      mathErrors: [],
+      estimation: { active: true, structuredFirst: false, sanityChecked: false, blurtedNumber: true },
+    };
+    const out = validateScore(pmRaw, 'pm', signals, false);
+    expect(out.estimation).toBeLessThanOrEqual(9); // floor(0.6 * 15)
+    expect((out.gaps as string[]).some((g) => /without structuring/i.test(g))).toBe(true);
+  });
+
+  it('does NOT penalize a well-structured, sanity-checked estimate', () => {
+    const signals: CandidateSignals = {
+      mathErrors: [],
+      estimation: { active: true, structuredFirst: true, sanityChecked: true, blurtedNumber: false },
+    };
+    const out = validateScore(pmRaw, 'pm', signals, false);
+    expect(out.estimation).toBe(15); // untouched
+    expect((out.strengths as string[]).some((s) => /sanity-checked/i.test(s))).toBe(true);
+  });
+
+  it('never grades the final number — proximity is not a signal', () => {
+    // No estimation signal at all → behaves exactly as before.
+    const out = validateScore(pmRaw, 'pm', { mathErrors: [] }, false);
+    expect(out.estimation).toBe(15);
+  });
+});
+
 describe('validateScore — verdict logic', () => {
   it('marks STRONG when total>=75 AND a spike exists with no below-3', () => {
     const out = validateScore(strongRaw, 'consulting', NO_SIGNALS, false);

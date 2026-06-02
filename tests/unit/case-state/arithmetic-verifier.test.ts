@@ -53,6 +53,39 @@ describe('findArithmeticError', () => {
     // Should be the first one (200 × 200)
     expect(err!.expression).toMatch(/200\s*[×x*]\s*200/);
   });
+
+  // --- Wave 2 lever B: additive operators + percent parsing ---
+
+  it('catches an addition error (audit gap — + was silently skipped)', () => {
+    const err = findArithmeticError('Total cost is 40 + 35 = 80.');
+    expect(err).not.toBeNull();
+    expect(err!.correct_result).toBe(75);
+  });
+
+  it('passes correct addition', () => {
+    expect(findArithmeticError('40 + 35 = 75')).toBeNull();
+  });
+
+  it('catches a subtraction error', () => {
+    const err = findArithmeticError('Profit is $200M - $130M = $80M.');
+    expect(err).not.toBeNull();
+    expect(err!.correct_result).toBeCloseTo(70_000_000);
+  });
+
+  it('passes correct subtraction (incl. unicode minus)', () => {
+    expect(findArithmeticError('200 − 130 = 70')).toBeNull();
+  });
+
+  it('parses percent as a fraction in a guesstimate chain (no false flag)', () => {
+    // 10% × 1.25M = 125K is CORRECT once % is read as 0.10.
+    expect(findArithmeticError('10% × 1.25M = 125K')).toBeNull();
+  });
+
+  it('catches a wrong percent computation', () => {
+    const err = findArithmeticError('20% × 500 = 200');
+    expect(err).not.toBeNull();
+    expect(err!.correct_result).toBeCloseTo(100);
+  });
 });
 
 describe('regenHintForArithmeticError', () => {

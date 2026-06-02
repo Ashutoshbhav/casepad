@@ -9,6 +9,7 @@ import { buildInterviewerMessages, type BuildInterviewerOpts } from '@/lib/groq/
 import { inferStage, stageDirective } from '@/lib/interview/stage-machine';
 import { personaForTrack } from '@/lib/interview/personas';
 import { inferCaseType, type CaseType } from '@/lib/groq/walkthrough';
+import { extractEstimationState, renderEstimationStateBlock } from '@/lib/case-state/estimation-state';
 import type { Track } from '@/lib/tracks';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isCannedTemplate } from '@/lib/canned-templates';
@@ -208,6 +209,11 @@ export async function POST(req: NextRequest) {
   // (consulting persona, no stage directive). This wires INTO the never-fail
   // NSM — it can only add signal, never block a turn. (FORTRESS.)
   let interviewerOpts: BuildInterviewerOpts = {};
+  // Guesstimate engine (Wave 2 lever B): when a sizing thread is active, this
+  // block tells the interviewer the candidate's estimation behavior so it
+  // applies the guesstimate playbook (demand the logic, force a sanity-check,
+  // catch a blurted number). Computed fail-open; '' when no thread.
+  let estimationBlock = '';
   try {
     const track = ((session as any).track as Track) || 'consulting';
     const rawCaseType = (caseRow as any).case_type as CaseType | null | undefined;
@@ -221,12 +227,28 @@ export async function POST(req: NextRequest) {
       persona: personaForTrack(track),
       stageDirective: stageDirective(stage, ctx),
     };
+    const estState = extractEstimationState(withUser as any, {
+      caseType,
+      isEstimation: ctx.isEstimation,
+    });
+    estimationBlock = renderEstimationStateBlock(estState);
   } catch (stageErr) {
-    console.warn(`[chat] stage/persona inference skipped: ${(stageErr as Error).message}`);
+    console.warn(`[chat] stage/persona/estimation inference skipped: ${(stageErr as Error).message}`);
     interviewerOpts = {};
+    estimationBlock = '';
   }
 
   const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any, interviewerOpts);
+
+  // Inject the estimation-state block (fail-open) at the high-attention end of
+  // the system prompt when a sizing thread is active.
+  try {
+    if (estimationBlock && messages.length > 0 && messages[0].role === 'system') {
+      messages[0] = { ...messages[0], content: messages[0].content + estimationBlock };
+    }
+  } catch {
+    // never block a turn on estimation injection
+  }
 
   // Detect verbatim coaching-template pastes. Append a one-turn directive to
   // the system prompt so Ash gently pushes for original thinking. We mutate

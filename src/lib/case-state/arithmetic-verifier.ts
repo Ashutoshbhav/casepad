@@ -32,9 +32,13 @@ export interface ArithmeticError {
 function parseExpression(text: string): { a: number; op: string; b: number; stated: number; raw: string }[] {
   const expressions: { a: number; op: string; b: number; stated: number; raw: string }[] = [];
 
-  // Pattern: number op number = number, with optional currency / scale on each
-  // We're permissive on whitespace and operators
-  const re = /(\$?[\d,]+(?:\.\d+)?[KMB]?)\s*([×x*/÷])\s*(\$?[\d,]+(?:\.\d+)?[KMB]?)\s*[=≈]\s*(\$?[\d,]+(?:\.\d+)?[KMB]?)/gi;
+  // Pattern: number op number = number, with optional currency / scale / % on each
+  // We're permissive on whitespace and operators. Operators include + and −
+  // (the audit flagged that additive cost-bucket errors went uncaught) and the
+  // unicode minus (−) / hyphen variants. Each operand may carry a trailing %
+  // (parsed as ÷100 by parseScaledNumber) so guesstimate chains like
+  // "10% × 1.25M = 125K" verify correctly instead of false-flagging.
+  const re = /(\$?[\d,]+(?:\.\d+)?\s*(?:[KMB]|%)?)\s*([×x*/÷+\-−])\s*(\$?[\d,]+(?:\.\d+)?\s*(?:[KMB]|%)?)\s*[=≈]\s*(\$?[\d,]+(?:\.\d+)?\s*(?:[KMB]|%)?)/gi;
 
   let m;
   while ((m = re.exec(text)) !== null) {
@@ -50,18 +54,25 @@ function parseExpression(text: string): { a: number; op: string; b: number; stat
 }
 
 function parseScaledNumber(s: string): number {
-  let cleaned = s.replace(/[$,]/g, '');
+  let cleaned = s.replace(/[$,\s]/g, '');
   let multiplier = 1;
-  const last = cleaned.slice(-1).toUpperCase();
-  if (last === 'K') {
-    multiplier = 1_000;
+  // Percent FIRST: "10%" means 0.10, not 10. Without this, any % operand
+  // false-flags (e.g. "50% × 200 = 100" would compute 50×200).
+  if (cleaned.endsWith('%')) {
+    multiplier = 0.01;
     cleaned = cleaned.slice(0, -1);
-  } else if (last === 'M') {
-    multiplier = 1_000_000;
-    cleaned = cleaned.slice(0, -1);
-  } else if (last === 'B') {
-    multiplier = 1_000_000_000;
-    cleaned = cleaned.slice(0, -1);
+  } else {
+    const last = cleaned.slice(-1).toUpperCase();
+    if (last === 'K') {
+      multiplier = 1_000;
+      cleaned = cleaned.slice(0, -1);
+    } else if (last === 'M') {
+      multiplier = 1_000_000;
+      cleaned = cleaned.slice(0, -1);
+    } else if (last === 'B') {
+      multiplier = 1_000_000_000;
+      cleaned = cleaned.slice(0, -1);
+    }
   }
   const n = parseFloat(cleaned);
   return Number.isFinite(n) ? n * multiplier : NaN;
@@ -76,6 +87,11 @@ function compute(a: number, op: string, b: number): number {
     case '/':
     case '÷':
       return b !== 0 ? a / b : NaN;
+    case '+':
+      return a + b;
+    case '-':
+    case '−': // unicode minus
+      return a - b;
     default:
       return NaN;
   }
