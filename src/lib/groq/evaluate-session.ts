@@ -1,11 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { completeChat } from '../llm-router';
 import { withRetry } from '../supabase/with-retry';
-import { buildEvaluatorMessages } from './evaluator';
 import { buildTrackEvaluatorMessages } from './track-evaluator';
 import { staticEvaluatorBreakdown } from './static-fallbacks';
 import type { Track } from '../tracks';
 import { logFailure } from '../observability/log-failure';
+import { validateScore, extractCandidateMathSignals, candidateTurnCount } from '../eval/score-validator';
 
 export interface EvaluateResult {
   ok: boolean;
@@ -45,28 +45,23 @@ export async function evaluateSession(
   const startMs = new Date(session.started_at).getTime();
   const elapsedSec = Math.round((Date.now() - startMs) / 1000);
 
-  // Track-aware scoring: prefer session.track, fall back to user's preferred_track.
-  // If neither is set, use the legacy generic evaluator for backward compat.
-  const track: Track | null = (session.track as Track) || null;
+  // Track-aware scoring. Everything now goes through the per-track rubric — the
+  // legacy 3-dim generic evaluator (evaluator.ts) is retired here because it
+  // wrote a DIFFERENT shape to the same score_breakdown column, which corrupted
+  // weak-spot analytics (audit H2). Null track defaults to consulting.
+  const effTrack: Track = (session.track as Track) || 'consulting';
   const cs = (cheatSheet ?? {
     framework: null, hypothesis: null, key_numbers: [],
     decisions: [], next_steps: [], manual_notes: null, locked_fields: [],
   }) as any;
 
-  const messages = track
-    ? buildTrackEvaluatorMessages(
-        track,
-        session.transcript as any,
-        (caseRow?.ideal_structure ?? {}) as any,
-        cs,
-        elapsedSec,
-      )
-    : buildEvaluatorMessages(
-        session.transcript as any,
-        (caseRow?.ideal_structure ?? {}) as any,
-        cs,
-        elapsedSec,
-      );
+  const messages = buildTrackEvaluatorMessages(
+    effTrack,
+    session.transcript as any,
+    (caseRow?.ideal_structure ?? {}) as any,
+    cs,
+    elapsedSec,
+  );
 
   let breakdown: any;
   let usedFallback = false;
@@ -81,15 +76,39 @@ export async function evaluateSession(
       breakdown = JSON.parse(raw || '{}');
     } catch {
       console.warn('[evaluate] LLM output unparseable, using static fallback');
-      breakdown = staticEvaluatorBreakdown(track);
+      breakdown = staticEvaluatorBreakdown(effTrack);
       usedFallback = true;
     }
   } catch (err) {
     // All providers failed — degrade gracefully so /debrief still renders.
     console.warn('[evaluate] all LLM providers failed, using static fallback:', (err as Error).message);
     void logFailure('evaluate', err, { sessionId, detail: 'all LLM providers failed during scoring; used static fallback breakdown' });
-    breakdown = staticEvaluatorBreakdown(track);
+    breakdown = staticEvaluatorBreakdown(effTrack);
     usedFallback = true;
+  }
+
+  // Wave 2 (2026-06-02): validate + finalize the score in CODE. The LLM only
+  // PROPOSES per-dimension scores + evidence; we recompute the total, clamp
+  // each dimension to its weight, ground the quant dimension in a deterministic
+  // candidate-math check, and compute the verdict (reject / pass / strong /
+  // insufficient) — instead of trusting the model's self-reported total.
+  // The static fallback is a degraded estimate, so we stamp it but skip the
+  // strict reject logic (mark insufficient). See src/lib/eval/score-validator.ts.
+  let validated: Record<string, unknown>;
+  if (usedFallback) {
+    validated = {
+      ...breakdown,
+      track: effTrack,
+      scheme: 'track-v2',
+      rubric_version: 2,
+      fallback_used: true,
+      verdict: 'insufficient',
+    };
+  } else {
+    const transcript = session.transcript as { role: string; content: string }[];
+    const signals = extractCandidateMathSignals(transcript);
+    const tooShort = candidateTurnCount(transcript) < 2;
+    validated = validateScore(breakdown, effTrack, signals, tooShort);
   }
 
   // P0-5 + P0-7: retry the final write. Score persistence is NSM-critical —
@@ -100,8 +119,8 @@ export async function evaluateSession(
     supabase
       .from('sessions')
       .update({
-        score: breakdown.total ?? 0,
-        score_breakdown: breakdown,
+        score: (validated.total as number) ?? 0,
+        score_breakdown: validated,
         ended_at: new Date().toISOString(),
         status: 'completed',
       })
@@ -113,8 +132,8 @@ export async function evaluateSession(
     // Return the breakdown anyway so /debrief can render — but mark as not persisted
     // so the user can re-trigger evaluation. The 503 status signals "scoring done,
     // persistence failed — retry-able"; endSession will surface this to the user.
-    return { ok: false, status: 503, body: { error: 'persistence failed', breakdown, fallback_used: usedFallback } };
+    return { ok: false, status: 503, body: { error: 'persistence failed', breakdown: validated, fallback_used: usedFallback } };
   }
 
-  return { ok: true, status: 200, body: breakdown };
+  return { ok: true, status: 200, body: validated };
 }
