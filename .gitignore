@@ -55,3 +55,7 @@ scripts/ux-audit-output.json
 supabase/.temp/
 
 .vercel
+
+# local tooling artifacts
+.pm-gate.log
+.devils-advocate/
