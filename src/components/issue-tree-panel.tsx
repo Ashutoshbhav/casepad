@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import type { IssueTree, TreeNode } from '@/lib/groq/issue-tree';
+import { RoughRect } from '@/components/solve/rough-rect';
 
 // IssueTreePanel — renders the AI-inferred tree, lets user edit nodes
 // inline, drag-drop to re-parent, and re-run extraction. The tree is
@@ -163,6 +164,21 @@ export function IssueTreePanel({
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => onDrop(e, n.id)}
       >
+        <RoughRect
+          stroke={isActive
+            ? 'var(--color-accent)'
+            : isRoot
+              ? 'var(--color-accent-bright)'
+              : 'var(--color-border)'}
+          strokeWidth={isRoot ? 1.8 : 1.3}
+          roughness={1.5}
+          bowing={1.1}
+          fill={isActive ? 'rgba(217, 119, 87, 0.08)' : 'var(--color-bg-elevated)'}
+          fillStyle="solid"
+          padding={0}
+          className="org-card inline-block align-top"
+          style={{ minWidth: 110, maxWidth: 240 }}
+        >
         <div
           draggable
           onDragStart={(e) => onDragStart(e, n.id)}
@@ -170,20 +186,8 @@ export function IssueTreePanel({
             setActiveId(n.id);
             if (isRoot) commitRoot(n.id);
           }}
-          className="group org-card relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md cursor-pointer transition-colors"
-          style={{
-            background: isActive
-              ? 'rgba(217, 119, 87, 0.08)'
-              : 'var(--color-bg-elevated)',
-            border: `1px solid ${isActive
-              ? 'var(--color-accent)'
-              : isRoot
-                ? 'var(--color-accent-bright)'
-                : 'var(--color-border)'}`,
-            color: 'var(--color-text-primary)',
-            minWidth: 110,
-            maxWidth: 240,
-          }}
+          className="group relative inline-flex items-center gap-1.5 px-2.5 py-1.5 cursor-pointer w-full"
+          style={{ color: 'var(--color-text-primary)' }}
         >
           {/* Level badge — top-left of the card. L0 coral, L1+ muted. */}
           <span
@@ -249,6 +253,7 @@ export function IssueTreePanel({
             ×
           </button>
         </div>
+        </RoughRect>
 
         {n.hypothesis && (
           <div
