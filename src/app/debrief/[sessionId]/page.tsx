@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ScoreBar } from '@/components/score-bar';
 import { ScoreReveal } from '@/components/score-reveal';
+import { TRACKS } from '@/lib/tracks';
 import { CompletionBanner } from '@/components/completion-banner';
 import { totalXp } from '@/lib/xp-heuristics';
 import { streakDaysFromTimestamps } from '@/lib/streak-copy';
@@ -142,6 +143,29 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   const b = (session.score_breakdown ?? {}) as any;
   const usedFallback = b?.fallback_used === true;
 
+  // Wave 2: render the REAL per-track rubric dimensions (was hardcoded to the
+  // legacy Structure/Insight/Speed, which showed 0s for every track session).
+  // track-v2 breakdowns carry `track` + `scheme`; legacy rows fall back.
+  const trackDef =
+    b?.scheme === 'track-v2' && b?.track && TRACKS[b.track as Track]
+      ? TRACKS[b.track as Track]
+      : null;
+  const dimKey = (d: string) => d.toLowerCase().replace(/\s+/g, '_');
+  const scoreDims = trackDef
+    ? trackDef.rubric.map((r) => ({ label: r.dimension, value: Number(b[dimKey(r.dimension)] ?? 0), max: r.weight }))
+    : [
+        { label: 'Structure', value: Number(b.structure ?? 0), max: 40 },
+        { label: 'Insight', value: Number(b.insight ?? 0), max: 40 },
+        { label: 'Speed', value: Number(b.speed ?? 0), max: 20 },
+      ];
+  const verdict: string | null = typeof b?.verdict === 'string' ? b.verdict : null;
+  const below3: string[] = Array.isArray(b?.below_3_flags) ? b.below_3_flags : [];
+  const VERDICT_META: Record<string, { label: string; color: string }> = {
+    strong: { label: 'Strong — offer-level', color: 'var(--color-accent-bright, var(--color-accent))' },
+    pass: { label: 'Pass', color: 'var(--color-accent)' },
+    reject: { label: 'Below bar', color: 'var(--color-signal-danger)' },
+  };
+
   // COMPLETION-BANNER DATA — XP from this session's transcript + streak +
   // total cases done. All single-shot queries; failures degrade silently
   // (banner shows zeros rather than crashing the page).
@@ -227,6 +251,30 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       />
       <ScoreReveal score={session.score ?? 0} outOf={100} />
 
+      {verdict && VERDICT_META[verdict] && !usedFallback && (
+        <div className="mt-4 flex items-center gap-3 flex-wrap">
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              textTransform: 'uppercase',
+              letterSpacing: '0.14em',
+              padding: '4px 10px',
+              borderRadius: 3,
+              border: `1px solid ${VERDICT_META[verdict].color}`,
+              color: VERDICT_META[verdict].color,
+            }}
+          >
+            {VERDICT_META[verdict].label}
+          </span>
+          {verdict === 'reject' && below3.length > 0 && (
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-muted)' }}>
+              below the bar on: {below3.join(', ')}
+            </span>
+          )}
+        </div>
+      )}
+
       {(usedFallback || walkthroughFallback) && (
         <div
           className="mb-6 p-3 mt-6"
@@ -244,27 +292,16 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
 
       <section className="grid md:grid-cols-2 gap-6 mb-8 mt-8">
         <div className="space-y-3">
-          <ScoreBar
-            label="Structure"
-            value={b.structure ?? 0}
-            max={40}
-            staggerIndex={0}
-            startDelay={1.2}
-          />
-          <ScoreBar
-            label="Insight"
-            value={b.insight ?? 0}
-            max={40}
-            staggerIndex={1}
-            startDelay={1.2}
-          />
-          <ScoreBar
-            label="Speed"
-            value={b.speed ?? 0}
-            max={20}
-            staggerIndex={2}
-            startDelay={1.2}
-          />
+          {scoreDims.map((d, i) => (
+            <ScoreBar
+              key={d.label}
+              label={d.label}
+              value={d.value}
+              max={d.max}
+              staggerIndex={i}
+              startDelay={1.2}
+            />
+          ))}
         </div>
         <div className="space-y-6">
           <div>
