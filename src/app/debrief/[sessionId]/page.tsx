@@ -10,7 +10,8 @@ import { totalXp } from '@/lib/xp-heuristics';
 import { streakDaysFromTimestamps } from '@/lib/streak-copy';
 import { IdealStructureTree } from '@/components/ideal-structure-tree';
 import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
-import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
+import { generateIdealWalkthrough, WALKTHROUGH_GENERATOR_VERSION } from '@/lib/groq/walkthrough';
+import { loadDossier } from '@/lib/groq/dossier-context';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
@@ -70,7 +71,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   try {
     const r = await supabase
       .from('cases')
-      .select('id, title, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
+      .select('id, title, case_type, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
       .eq('id', session.case_id)
       .single();
     caseRow = r.data;
@@ -101,14 +102,20 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
     : null;
 
   // Lazy-generate the ideal walkthrough on first debrief view, then cache.
+  // Regenerate if the cached one predates the current generator (so stale
+  // generic walkthroughs get replaced with the dossier-grounded, case-type-
+  // anchored version on next view).
   let walkthrough = caseRow?.ideal_walkthrough as any;
-  if (caseRow && !walkthrough) {
+  const walkthroughStale = !!walkthrough && (walkthrough.generator_version ?? 1) < WALKTHROUGH_GENERATOR_VERSION;
+  if (caseRow && (!walkthrough || walkthroughStale)) {
     try {
+      const dossier = await loadDossier(caseRow.id);
       walkthrough = await generateIdealWalkthrough(
         caseRow.title,
         caseRow.problem_statement || '',
         caseRow.ideal_structure || {},
-        (caseRow.interviewer_notes as any[]) || []
+        (caseRow.interviewer_notes as any[]) || [],
+        { caseType: (caseRow as any).case_type, dossier }
       );
       if (walkthrough) {
         try {
