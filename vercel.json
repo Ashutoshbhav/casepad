@@ -9,6 +9,7 @@
     "src/app/api/issue-tree/route.ts": { "maxDuration": 30 },
     "src/app/api/voice/transcribe/route.ts": { "maxDuration": 30 },
     "src/app/api/company-pack/route.ts": { "maxDuration": 60 },
-    "src/app/api/behavioral-feedback/route.ts": { "maxDuration": 30 }
+    "src/app/api/behavioral-feedback/route.ts": { "maxDuration": 30 },
+    "src/app/api/walkthrough/route.ts": { "maxDuration": 60 }
   }
 }

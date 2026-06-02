@@ -1,5 +1,14 @@
 # CasePad — Session State Snapshot
 
+> ## ✅ WAVE 2 (lever 1: ideal-answer) SHIPPED — 2026-06-03 (merged `feat/wave2-ideal-answer` → `main`, deployed)
+> Scoring rebuild + ideal-answer upgrade are live. **Scoring:** code-computed verdict (`score-validator.ts`) recomputes totals, clamps dims, caps quant on candidate math errors — LLM score no longer trusted blindly. **Ideal answer:** dossier-grounded + case-type-anchored generation, 21-playbook synthesis, deep recursive **hand-drawn (rough.js) issue tree** with per-node assumption notes; stale Porter's-5-Forces box removed. **Live /solve tree** restyled to match (RoughRect cards, interactivity kept). **Deploy-safety:** walkthrough generation moved OUT of the page render into async `POST /api/walkthrough` (gated, `maxDuration=60`, stale-while-revalidate via `IdealWalkthroughLoader`) — fixes the 60-95s page-render timeout; fails soft. **Watch-item:** if a single generation exceeds 60s on prod it fails-soft → check `nsm_failures` for `route='walkthrough'`; tune = timebox Tavily / trim tokens. **Wave 2 remaining:** B (guesstimate engine), C (interviewer stage machine + per-track personas).
+
+> ## ⚠️ OPEN REMINDER (2026-06-02): PUBLISH THE GOOGLE APP BEFORE INVITING THE COHORT
+> Auth is now Google-only and the Google app is in **TESTING mode** — only test-user emails can log in. **Before inviting the cohort**, go to Google Cloud Console → project **CasePad** → **Google Auth Platform → Audience → Publish app** (or add their emails as Test users). Until then, only Ash (a test user) can log in via Google. Remove this banner once published.
+
+> ## ✅ WAVE 1 SHIPPED — 2026-06-02 (commit `e9c0979`, deployed to prod)
+> Launch-blockers from `docs/BACKEND-AUDIT-2026-06-02.md` closed: **C1** Google-only auth (account-takeover hole removed; email signin gone, `directSignIn` stubbed) · **C3** chat cost caps (capped `alreadyDisclosed` + regen budget=2) · **C4** `nsm_failures` telemetry (migration 0016 applied) · **H4** privacy region → Mumbai · **C5** RLS verified already sound. **Next = Wave 2: solving-engine rebuild** (see `docs/superpowers/specs/2026-06-02-solving-engine-redesign.md` + `docs/research/case-sources/`). Reskin branch `feat/solve-dashboard-reskin` still parked.
+
 **Saved:** 2026-05-29 (post-crash recovery session)
 **Trigger word:** `PAD` — say it in any new session to surface this state
 **Project root:** `C:\Users\Ashutosh Bhavale\Documents\casepad`

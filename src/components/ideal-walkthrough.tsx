@@ -1,4 +1,5 @@
 import type { IdealWalkthrough } from '@/lib/groq/walkthrough';
+import { IssueTreeSketch } from './issue-tree-sketch';
 
 export function IdealWalkthroughView({ w }: { w: IdealWalkthrough }) {
   return (
@@ -6,19 +7,7 @@ export function IdealWalkthroughView({ w }: { w: IdealWalkthrough }) {
       <section>
         <h3 className="text-sm font-semibold text-zinc-300 mb-2">Issue tree</h3>
         <div className="rounded border border-zinc-800 p-4 text-sm">
-          <div className="text-zinc-200 font-medium mb-3">{w.issue_tree.root_question}</div>
-          <ul className="space-y-2">
-            {w.issue_tree.branches.map((b, i) => (
-              <li key={i}>
-                <div className="text-zinc-300">├─ <span className="text-emerald-300">{b.node}</span></div>
-                <ul className="ml-6 mt-1 space-y-0.5">
-                  {b.subnodes.map((s, j) => (
-                    <li key={j} className="text-zinc-400">└─ {s}</li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+          <IssueTreeSketch root={w.issue_tree.root_question} branches={w.issue_tree.branches as unknown} />
         </div>
       </section>
 

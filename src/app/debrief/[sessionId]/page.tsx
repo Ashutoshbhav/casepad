@@ -1,16 +1,14 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ScoreBar } from '@/components/score-bar';
 import { ScoreReveal } from '@/components/score-reveal';
 import { TRACKS } from '@/lib/tracks';
 import { CompletionBanner } from '@/components/completion-banner';
 import { totalXp } from '@/lib/xp-heuristics';
 import { streakDaysFromTimestamps } from '@/lib/streak-copy';
-import { IdealStructureTree } from '@/components/ideal-structure-tree';
-import { IdealWalkthroughView } from '@/components/ideal-walkthrough';
-import { generateIdealWalkthrough } from '@/lib/groq/walkthrough';
+import { IdealWalkthroughLoader } from '@/components/ideal-walkthrough-loader';
+import { WALKTHROUGH_GENERATOR_VERSION } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
@@ -70,7 +68,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   try {
     const r = await supabase
       .from('cases')
-      .select('id, title, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
+      .select('id, title, case_type, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
       .eq('id', session.case_id)
       .single();
     caseRow = r.data;
@@ -100,29 +98,13 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       })()
     : null;
 
-  // Lazy-generate the ideal walkthrough on first debrief view, then cache.
-  let walkthrough = caseRow?.ideal_walkthrough as any;
-  if (caseRow && !walkthrough) {
-    try {
-      walkthrough = await generateIdealWalkthrough(
-        caseRow.title,
-        caseRow.problem_statement || '',
-        caseRow.ideal_structure || {},
-        (caseRow.interviewer_notes as any[]) || []
-      );
-      if (walkthrough) {
-        try {
-          const admin = createSupabaseAdminClient();
-          await admin.from('cases').update({ ideal_walkthrough: walkthrough }).eq('id', caseRow.id);
-        } catch (e) {
-          console.warn('[debrief] walkthrough cache write failed:', e);
-        }
-      }
-    } catch (e) {
-      console.warn('[debrief] generateIdealWalkthrough failed:', e);
-      walkthrough = null;
-    }
-  }
+  // Walkthrough is generated CLIENT-SIDE via /api/walkthrough so a 60-95s LLM
+  // generation never blocks (or times out) the page render. Here we only read
+  // the cache + whether it's current; <IdealWalkthroughLoader> fetches or
+  // regenerates as needed after the page paints.
+  const cachedWalkthrough = (caseRow?.ideal_walkthrough as any) ?? null;
+  const walkthroughFresh =
+    !!cachedWalkthrough && (cachedWalkthrough.generator_version ?? 1) >= WALKTHROUGH_GENERATOR_VERSION;
 
   // Defensive double-gate alongside localStorage: if a feedback row already
   // exists for this session, suppress the modal even on a fresh device. Uses
@@ -199,7 +181,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       console.warn('[debrief] streak fetch failed:', e);
     }
   }
-  const walkthroughFallback = (walkthrough as any)?.fallback_used === true;
+  const walkthroughFallback = (cachedWalkthrough as any)?.fallback_used === true;
 
   return (
     <main
@@ -337,29 +319,29 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         </div>
       </section>
 
+      {/* The stale casebook ideal_structure box (often mislabeled, e.g. "Porter's
+          5 Forces" on a profit case) is gone — the walkthrough's correct,
+          case-type-anchored issue tree below replaces it. The walkthrough is
+          loaded/regenerated client-side so this page never blocks on the LLM. */}
       <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
-        <span className="hupr-mono-eyebrow">Ideal structure</span>
-        <hr className="hupr-hairline mb-4" />
-        <IdealStructureTree s={(caseRow?.ideal_structure ?? {}) as any} />
+        <span className="hupr-mono-eyebrow">How a top candidate would solve this</span>
+        <hr className="hupr-hairline" />
+        <p
+          className="mt-3 mb-5"
+          style={{
+            fontFamily: 'var(--font-accent)',
+            fontSize: 14,
+            color: 'var(--color-text-muted)',
+          }}
+        >
+          Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.
+        </p>
+        <IdealWalkthroughLoader
+          sessionId={sessionId}
+          initial={cachedWalkthrough}
+          initialFresh={walkthroughFresh}
+        />
       </section>
-
-      {walkthrough && (
-        <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
-          <span className="hupr-mono-eyebrow">How a top candidate would solve this</span>
-          <hr className="hupr-hairline" />
-          <p
-            className="mt-3 mb-5"
-            style={{
-              fontFamily: 'var(--font-accent)',
-              fontSize: 14,
-              color: 'var(--color-text-muted)',
-            }}
-          >
-            Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.
-          </p>
-          <IdealWalkthroughView w={walkthrough} />
-        </section>
-      )}
 
       {/* TOMORROW — anticipation outro. Routes to /dashboard (set anticipation),
           not /cases. The library is still reachable via the secondary link below. */}
