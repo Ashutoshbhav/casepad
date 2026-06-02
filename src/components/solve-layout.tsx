@@ -228,8 +228,11 @@ export function SolveLayout({
                       // so a positioned z-0 sibling stacks above them) — that's
                       // why the page looked blank. -1 puts it behind everything.
           pointerEvents: 'none',
+          // Warm interview-room wash you can actually feel: a soft pool of warm
+          // light up top (the table) over a calm cream room, deepening slightly
+          // at the edges. Dark text keeps full contrast on cream.
           background:
-            'radial-gradient(110% 75% at 50% -8%, var(--hupr-cream) 0%, var(--color-bg-canvas) 68%)',
+            'radial-gradient(120% 80% at 50% -6%, var(--hupr-cream) 0%, var(--hupr-cream) 34%, var(--hupr-sand) 140%)',
         }}
       />
       {/* HEADER — minimal chrome, glyph + title + tools. */}
