@@ -24,7 +24,7 @@ export async function resetSession(sessionId: string) {
   // Confirm ownership before reset (prevents abuse via crafted form posts).
   const { data: session } = await supabase
     .from('sessions')
-    .select('id, user_id, case_id')
+    .select('id, user_id, case_id, track')
     .eq('id', sessionId)
     .eq('user_id', user.id)
     .maybeSingle();
@@ -49,6 +49,7 @@ export async function resetSession(sessionId: string) {
           content: await generateOpener({
             caseTitle: caseRow.title,
             problemStatement: caseRow.problem_statement,
+            track: (session.track as any) || undefined,
           }),
           timestamp: new Date().toISOString(),
         },

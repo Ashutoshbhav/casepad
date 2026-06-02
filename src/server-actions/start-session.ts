@@ -83,6 +83,11 @@ export async function startSession(caseId: string) {
     }
   }
 
+  // The user's preferred track. Tags the session so the track-aware evaluator
+  // scores it on the right rubric — AND so the opening turn is delivered by the
+  // matching interviewer persona (consulting EM / PM / IB VP / etc.).
+  const track = user.user_metadata?.preferred_track || 'consulting';
+
   // Generate the interviewer's first turn BEFORE inserting the session row,
   // so the row is created with a populated transcript. generateOpener has its
   // own multi-layer fallback (Groq 8b → 4-layer fortress → static), so it
@@ -91,16 +96,13 @@ export async function startSession(caseId: string) {
     caseTitle: caseRow.title,
     problemStatement: caseRow.problem_statement,
     priorSession,
+    track,
   });
   const openerTurn = {
     role: 'interviewer' as const,
     content: opener,
     timestamp: new Date().toISOString(),
   };
-
-  // Tag the session with the user's preferred track so the track-aware
-  // evaluator scores it on the right rubric.
-  const track = user.user_metadata?.preferred_track || 'consulting';
   // P0-6: retry the session insert. Without this, a transient Supabase 503 at
   // session-creation time would prevent the user from starting a case at all —
   // a hard NSM blocker. withRetry handles 5xx/429/network with exponential

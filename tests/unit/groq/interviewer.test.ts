@@ -72,12 +72,25 @@ describe('buildInterviewerMessages', () => {
     expect(msgs[0].content).toMatch(/yield/i);
   });
 
-  it('includes the few-shot examples block with bad and Ash labels', () => {
+  it('includes the few-shot examples block with bad and interviewer labels', () => {
     const msgs = buildInterviewerMessages(sampleCase as any, [], []);
     const sys = msgs[0].content;
     expect(sys).toContain('EXAMPLES');
     expect(sys).toContain('BAD (chatbot)');
-    expect(sys).toContain('ASH:');
+    expect(sys).toContain('✅ YOU:');
+  });
+
+  it('defaults to the consulting persona and can take a stage directive', () => {
+    const msgs = buildInterviewerMessages(sampleCase as any, [], [], {
+      stageDirective: '== CURRENT STAGE: SYNTHESIS ==\nTime to land it.',
+    });
+    const sys = msgs[0].content;
+    // consulting persona identity is present by default
+    expect(sys).toContain('Bain & Company');
+    // the stage directive is appended (high-attention end zone)
+    expect(sys).toContain('CURRENT STAGE: SYNTHESIS');
+    // and it sits at the very end of the system prompt
+    expect(sys.trimEnd().endsWith('Time to land it.')).toBe(true);
   });
 
   it('locks FEED DATA to the trigger-keyword gate (no leak-by-structure)', () => {
