@@ -9,7 +9,9 @@ import { renderPlaybook } from './ideal-answer-playbooks';
 // so stale generic walkthroughs get replaced on the next view.
 // v2: dossier + case-type framework anchor. v3: full 21-playbook synthesis
 // (anatomy + spike moves + anti-slop + L0-L4 depth) injected per case type.
-export const WALKTHROUGH_GENERATOR_VERSION = 3;
+// v4: deep recursive issue tree (3-5 levels) instead of a flat 2-level skeleton.
+// v5: per-node "note" (the assumption/reasoning for exploring/prioritizing it).
+export const WALKTHROUGH_GENERATOR_VERSION = 5;
 
 // Canonical case types (mirror cases.case_type) → the framework a top
 // candidate would actually use. Fixes the "Porter's 5 Forces on a
@@ -48,10 +50,18 @@ export function frameworkHintForCaseType(t: CaseType): string {
   }
 }
 
+// A recursive issue-tree node — supports 3-5 levels of real depth (was a flat
+// 2-level node→subnodes[] before, which made every tree look tiny).
+export interface IssueNode {
+  label: string;
+  note?: string; // short assumption/reasoning: WHY a top candidate explores or prioritizes this node
+  children?: IssueNode[];
+}
+
 export interface IdealWalkthrough {
   issue_tree: {
     root_question: string;
-    branches: { node: string; subnodes: string[] }[];
+    branches: IssueNode[];
   };
   hypothesis_tree: {
     primary: string;
@@ -119,7 +129,7 @@ Output JSON only with this exact schema:
 {
   "issue_tree": {
     "root_question": string,
-    "branches": [{"node": string, "subnodes": [string]}]
+    "branches": [{"label": string, "note": string, "children": [{"label": string, "note": string, "children": [{"label": string, "note": string}]}]}]
   },
   "hypothesis_tree": {
     "primary": string,
@@ -138,7 +148,8 @@ Output JSON only with this exact schema:
 Rules:
 - PLAYBOOK ADHERENCE: a TOP-CANDIDATE PLAYBOOK + EXPERT-ANSWER PRINCIPLES are given in the user message. Match that quality bar exactly — hit the L0→L4 depth, include the spike moves, avoid the listed common mistakes, and obey the ANTI-SLOP bans (no ungrounded "synergy/leverage/holistic", no hedging, every number sourced or labeled ESTIMATE).
 - CASE-TYPE ANCHOR (most important): a CASE TYPE + the correct framework for it is given below. Build the issue_tree on THAT framework. Treat the "IDEAL STRUCTURE (casebook hint)" as a loose hint only — if it names a framework that does not fit the case type (e.g. Porter's 5 Forces on a profitability case), IGNORE it and use the correct one.
-- issue_tree decomposes the root question into MECE branches with concrete subnodes.
+- issue_tree: build a DEEP, tailored tree using nested "children" — 3-4 top-level MECE branches, each decomposed 2-3 further levels deep (go DEEPEST on the branch you suspect drives the answer; asymmetric depth is correct). Every node must be a DRIVER of its parent (not a container), concrete and specific to THIS case. Aim for ~12-20 total nodes across the tree, not a 4-node skeleton. A leaf node has no "children".
+- EVERY node MUST also carry a short "note" (≤12 words): the ASSUMPTION or reasoning a top candidate would voice for exploring or PRIORITIZING that node over its siblings — e.g. on "Volume": "price is contract-fixed this year, so the drop is volume-led". The notes are the teaching — they show WHY the candidate dug here, not just what. Ground each note in case data / the dossier where possible.
 - hypothesis_tree.primary is the candidate's initial hypothesis (one sentence). supporting are 2-4 sub-hypotheses to test.
 - Thinking levels go from coarse to fine:
   - L0: one-sentence final recommendation
