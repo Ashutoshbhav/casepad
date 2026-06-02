@@ -223,7 +223,10 @@ export function SolveLayout({
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 0,
+          zIndex: -1, // BEHIND all content. An opaque z-index:0 fixed layer was
+                      // painting OVER the chat / prompt / tree (those are static,
+                      // so a positioned z-0 sibling stacks above them) — that's
+                      // why the page looked blank. -1 puts it behind everything.
           pointerEvents: 'none',
           background:
             'radial-gradient(110% 75% at 50% -8%, var(--hupr-cream) 0%, var(--color-bg-canvas) 68%)',
