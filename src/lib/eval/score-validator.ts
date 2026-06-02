@@ -24,6 +24,17 @@ export type Verdict = 'strong' | 'pass' | 'reject' | 'insufficient';
 export interface CandidateSignals {
   /** Deterministic arithmetic errors found in the CANDIDATE's own turns. */
   mathErrors: { evidence: string }[];
+  /**
+   * Estimation-thread behavior (Wave 2 lever B). Present only on sizing cases.
+   * Grades estimation on STRUCTURE + SANITY-CHECK — never on the final number's
+   * proximity (per the interview-dynamics research).
+   */
+  estimation?: {
+    active: boolean;
+    structuredFirst: boolean;
+    sanityChecked: boolean;
+    blurtedNumber: boolean;
+  };
 }
 
 // Dimension-key convention MUST match track-evaluator.ts:
@@ -108,6 +119,14 @@ export function validateScore(
     if (hasMathError && quantDim && dim.dimension === quantDim) {
       v = Math.min(v, Math.floor(0.5 * dim.weight));
     }
+    // Estimation grounding: blurting a number with no structure caps the quant
+    // dimension (the canonical guesstimate fail). Conservative — only lowers,
+    // never raises, and stacks under the stricter math-error cap above.
+    if (signals.estimation?.active && quantDim && dim.dimension === quantDim) {
+      if (signals.estimation.blurtedNumber) {
+        v = Math.min(v, Math.floor(0.6 * dim.weight));
+      }
+    }
 
     out[key] = v;
     total += v;
@@ -123,14 +142,37 @@ export function validateScore(
       `Arithmetic error in your own numbers: ${signals.mathErrors.map((e) => e.evidence).slice(0, 2).join('; ')}`
     );
   }
-  out.strengths = strengths;
+  // Estimation feedback (sizing cases only). Grades process, not the number.
+  const est = signals.estimation;
+  if (est?.active) {
+    if (est.blurtedNumber) {
+      gaps.unshift('Jumped to a number without structuring the estimate — lay out the decomposition and state each assumption before computing.');
+    } else if (!est.sanityChecked) {
+      gaps.unshift('Never sanity-checked the estimate — gut-check the order of magnitude (e.g. collapse it to a per-capita / per-household number).');
+    }
+    if (est.structuredFirst && est.sanityChecked) {
+      strengths.unshift('Structured the estimate before computing and sanity-checked the result.');
+    }
+  }
+  out.strengths = strengths.slice(0, 6);
   out.gaps = gaps.slice(0, 8);
   out.spike_moments = Array.isArray(r.spike_moments) ? (r.spike_moments as string[]).filter(Boolean) : [];
 
   const insufficient = tooShort || r.insufficient_data === true;
   out.insufficient_data = insufficient;
   out.below_3_flags = below3;
-  out.signals = { candidate_math_errors: signals.mathErrors.map((e) => e.evidence) };
+  out.signals = {
+    candidate_math_errors: signals.mathErrors.map((e) => e.evidence),
+    ...(est?.active
+      ? {
+          estimation: {
+            structured_first: est.structuredFirst,
+            sanity_checked: est.sanityChecked,
+            blurted_number: est.blurtedNumber,
+          },
+        }
+      : {}),
+  };
 
   // Verdict — computed in CODE, not trusted from the LLM.
   let verdict: Verdict;

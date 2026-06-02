@@ -6,6 +6,8 @@ import { staticEvaluatorBreakdown } from './static-fallbacks';
 import type { Track } from '../tracks';
 import { logFailure } from '../observability/log-failure';
 import { validateScore, extractCandidateMathSignals, candidateTurnCount } from '../eval/score-validator';
+import { extractEstimationState, estimationSignals } from '../case-state/estimation-state';
+import { inferCaseType, type CaseType } from './walkthrough';
 
 export interface EvaluateResult {
   ok: boolean;
@@ -35,7 +37,7 @@ export async function evaluateSession(
   }
 
   const { data: caseRow } = await withRetry(() =>
-    supabase.from('cases').select('ideal_structure').eq('id', session.case_id).single()
+    supabase.from('cases').select('ideal_structure, title, problem_statement, case_type').eq('id', session.case_id).single()
   );
 
   const { data: cheatSheet } = await withRetry(() =>
@@ -107,6 +109,30 @@ export async function evaluateSession(
   } else {
     const transcript = session.transcript as { role: string; content: string }[];
     const signals = extractCandidateMathSignals(transcript);
+    // Estimation signals (sizing cases) — fail-open: any issue leaves scoring
+    // exactly as it was (math-only). Grades process, not the final number.
+    try {
+      const rawCaseType = (caseRow as any)?.case_type as CaseType | null | undefined;
+      const caseType: CaseType =
+        rawCaseType && rawCaseType !== 'unknown'
+          ? rawCaseType
+          : inferCaseType((caseRow as any)?.title || '', (caseRow as any)?.problem_statement || '');
+      const estState = extractEstimationState(transcript as any, {
+        caseType,
+        isEstimation: caseType === 'estimation',
+      });
+      if (estState.active) {
+        const es = estimationSignals(estState);
+        signals.estimation = {
+          active: es.active,
+          structuredFirst: es.structuredFirst,
+          sanityChecked: es.sanityChecked,
+          blurtedNumber: es.blurtedNumber,
+        };
+      }
+    } catch (estErr) {
+      console.warn(`[evaluate] estimation signals skipped: ${(estErr as Error).message}`);
+    }
     const tooShort = candidateTurnCount(transcript) < 2;
     validated = validateScore(breakdown, effTrack, signals, tooShort);
   }
