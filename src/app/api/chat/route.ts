@@ -5,7 +5,11 @@
 
 import { NextRequest } from 'next/server';
 import { streamChat } from '@/lib/llm-router';
-import { buildInterviewerMessages } from '@/lib/groq/interviewer';
+import { buildInterviewerMessages, type BuildInterviewerOpts } from '@/lib/groq/interviewer';
+import { inferStage, stageDirective } from '@/lib/interview/stage-machine';
+import { personaForTrack } from '@/lib/interview/personas';
+import { inferCaseType, type CaseType } from '@/lib/groq/walkthrough';
+import type { Track } from '@/lib/tracks';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isCannedTemplate } from '@/lib/canned-templates';
 import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '@/lib/groq/guardrails';
@@ -113,7 +117,7 @@ export async function POST(req: NextRequest) {
 
   const { data: session, error: sErr } = await supabase
     .from('sessions')
-    .select('id, transcript, case_id, user_id')
+    .select('id, transcript, case_id, user_id, track')
     .eq('id', sessionId)
     .eq('user_id', authUser.id)
     .single();
@@ -121,7 +125,7 @@ export async function POST(req: NextRequest) {
 
   const { data: caseRow, error: cErr } = await supabase
     .from('cases')
-    .select('title, problem_statement, interviewer_notes')
+    .select('title, problem_statement, interviewer_notes, case_type')
     .eq('id', session.case_id)
     .single();
   if (cErr || !caseRow) return new Response('case not found', { status: 404 });
@@ -198,7 +202,31 @@ export async function POST(req: NextRequest) {
     disclosedBudget -= item.length;
   }
 
-  const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any);
+  // Interviewer stage machine + track persona. Deterministic, no LLM call, and
+  // wrapped fail-open: any error here leaves interviewerOpts empty, so
+  // buildInterviewerMessages falls back to its pre-stage-machine behavior
+  // (consulting persona, no stage directive). This wires INTO the never-fail
+  // NSM — it can only add signal, never block a turn. (FORTRESS.)
+  let interviewerOpts: BuildInterviewerOpts = {};
+  try {
+    const track = ((session as any).track as Track) || 'consulting';
+    const rawCaseType = (caseRow as any).case_type as CaseType | null | undefined;
+    const caseType: CaseType =
+      rawCaseType && rawCaseType !== 'unknown'
+        ? rawCaseType
+        : inferCaseType(caseRow.title, (caseRow as any).problem_statement || '');
+    const ctx = { track, caseType, isEstimation: caseType === 'estimation' };
+    const { stage } = inferStage(withUser as any, ctx);
+    interviewerOpts = {
+      persona: personaForTrack(track),
+      stageDirective: stageDirective(stage, ctx),
+    };
+  } catch (stageErr) {
+    console.warn(`[chat] stage/persona inference skipped: ${(stageErr as Error).message}`);
+    interviewerOpts = {};
+  }
+
+  const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any, interviewerOpts);
 
   // Detect verbatim coaching-template pastes. Append a one-turn directive to
   // the system prompt so Ash gently pushes for original thinking. We mutate

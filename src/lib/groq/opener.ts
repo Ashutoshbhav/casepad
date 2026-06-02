@@ -29,16 +29,18 @@
 
 import { groq, MODEL_SMALL } from './client';
 import { completeChat } from '@/lib/llm-router';
+import { personaForTrack, type PersonaTone } from '@/lib/interview/personas';
+import type { Track } from '@/lib/tracks';
 
 export interface InterviewerPersona {
   name: string;
   firm: string;
   role: string;
-  tone: 'warm-but-rigorous' | 'blunt-mbb' | 'friendly-startup';
+  tone: PersonaTone;
 }
 
-// v1 default persona. Hardcoded by design — keeps scope tight. The session
-// row doesn't yet store persona; if/when we want variety we'll add a column.
+// Default persona = consulting EM (kept for continuity with existing
+// transcripts). When a track is supplied, the opener uses that track's persona.
 export const DEFAULT_PERSONA: InterviewerPersona = {
   name: 'Ash',
   firm: 'Bain',
@@ -50,6 +52,12 @@ interface OpenerInput {
   caseTitle: string;
   problemStatement: string;
   persona?: InterviewerPersona;
+  /**
+   * The candidate's track. When provided (and no explicit persona is passed),
+   * the opener adopts that track's interviewer identity so the very first turn
+   * matches the rubric the session is graded against.
+   */
+  track?: Track;
   /**
    * Optional one-line continuity hint about the user's last completed session.
    * When present, the opener may briefly reference it (one short clause max)
@@ -66,7 +74,14 @@ interface OpenerInput {
   } | null;
 }
 
-const SYSTEM_PROMPT = (persona: InterviewerPersona) => `You are ${persona.name}, an ${persona.role} at ${persona.firm}, opening a live case interview with a candidate. Your tone is ${persona.tone === 'warm-but-rigorous' ? 'warm but rigorous — friendly greeting, then crisp business framing' : persona.tone === 'blunt-mbb' ? 'direct, no small talk, MBB-style' : 'friendly and conversational, startup-style'}.
+const TONE_DESC: Record<PersonaTone, string> = {
+  'warm-but-rigorous': 'warm but rigorous — friendly greeting, then crisp business framing',
+  'blunt-mbb': 'direct, no small talk, MBB-style',
+  'friendly-startup': 'friendly and conversational, startup-style',
+  'technical-direct': 'direct and technical — minimal small talk, straight into the problem, expects precision',
+};
+
+const SYSTEM_PROMPT = (persona: InterviewerPersona) => `You are ${persona.name}, ${persona.role} at ${persona.firm}, opening a live interview with a candidate. Your tone is ${TONE_DESC[persona.tone] ?? TONE_DESC['warm-but-rigorous']}.
 
 OUTPUT REQUIREMENTS:
 1. 2 to 3 sentences total. No more.
@@ -97,10 +112,21 @@ ${priorBlock}
 Now deliver your 2-3 sentence opening to the candidate.`;
 };
 
+/**
+ * Resolve the opener persona: explicit persona wins; else derive from the
+ * track; else the consulting default. personaForTrack returns a richer object,
+ * but it is structurally compatible (name/firm/role/tone) for the opener.
+ */
+function resolvePersona(input: OpenerInput): InterviewerPersona {
+  if (input.persona) return input.persona;
+  if (input.track) return personaForTrack(input.track);
+  return DEFAULT_PERSONA;
+}
+
 /** Static fallback used when every LLM provider fails. Never blocks session create. */
 function staticOpener(input: OpenerInput): string {
-  const persona = input.persona ?? DEFAULT_PERSONA;
-  return `Hi, I'm ${persona.name}, an ${persona.role} at ${persona.firm}. Here's the case: ${input.problemStatement} How would you like to approach this?`;
+  const persona = resolvePersona(input);
+  return `Hi, I'm ${persona.name}, ${persona.role} at ${persona.firm}. Here's the case: ${input.problemStatement} How would you like to approach this?`;
 }
 
 /**
@@ -110,7 +136,7 @@ function staticOpener(input: OpenerInput): string {
  * to a static fallback. Always returns a non-empty string.
  */
 export async function generateOpener(input: OpenerInput): Promise<string> {
-  const persona = input.persona ?? DEFAULT_PERSONA;
+  const persona = resolvePersona(input);
   const messages = [
     { role: 'system' as const, content: SYSTEM_PROMPT(persona) },
     {

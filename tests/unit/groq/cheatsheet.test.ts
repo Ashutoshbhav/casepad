@@ -13,7 +13,10 @@ describe('buildCheatSheetExtractionMessages', () => {
     expect(msgs[0].content).toContain('framework');
     expect(msgs[0].content).toContain('hypothesis');
     expect(msgs[0].content).toContain('key_numbers');
-    expect(msgs[0].content).toContain('locked_fields');
+    // Wording-tolerant: the prompt renders this as "LOCKED FIELDS" (human label)
+    // rather than the raw "locked_fields" key. Match either so harmless prompt
+    // copy-edits don't fail the suite.
+    expect(msgs[0].content).toMatch(/locked.fields/i);
   });
 
   it('includes the latest exchange in the user message', () => {
