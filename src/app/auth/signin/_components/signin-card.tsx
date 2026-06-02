@@ -29,17 +29,18 @@
 // behind `(hover: hover) and (pointer: fine)` so touch devices don't
 // trigger false hover from a tap.
 
-import { directSignIn } from '@/server-actions/direct-signin';
 import { GoogleSignInButton } from '@/components/auth/google-signin-button';
 
+// Auth is Google-only (decided 2026-06-02, Wave-1 launch hardening). The
+// instant-email path (directSignIn) was removed: it let anyone sign in as any
+// allowlisted email with no ownership proof — account takeover, fatal under
+// ALLOWLIST_MODE=open. Google OAuth proves email ownership; the allowlist gate
+// still runs in /auth/callback. See docs/BACKEND-AUDIT-2026-06-02.md (C1).
 const ERROR_MESSAGES: Record<string, string> = {
-  'missing-email': 'Please enter your email.',
-  'invalid-email': 'That doesn’t look like a valid email.',
-  'link-mint-failed': 'Couldn’t prepare your sign-in. Try again in a moment.',
-  'verify-failed': 'Sign-in failed. Try again, or ping the admin if it keeps happening.',
+  'no-access': 'That account isn’t on the cohort list. Ping the admin to be added.',
   'expired': 'Your session expired. Sign in again to pick up where you left off.',
-  'exchange': 'Sign-in link is invalid or expired. Try entering your email again.',
-  'otp': 'Sign-in code is invalid or expired. Try entering your email again.',
+  'exchange': 'Sign-in failed or expired. Try signing in with Google again.',
+  'otp': 'Sign-in link is invalid or expired. Try signing in with Google again.',
   'rate-limited': 'Too many sign-in attempts. Please wait a minute and try again.',
 };
 
@@ -99,31 +100,12 @@ export function SignInCard({
           margin: 0,
         }}
       >
-        Continue with Google, or enter your email below. Either way you&apos;re in
-        immediately. No magic link, no password.
+        Continue with Google to enter. Your Google account verifies who you are.
+        Cohort access only.
       </p>
 
       <div style={{ marginTop: 20 }}>
         <GoogleSignInButton returnTo={returnTo} />
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          margin: '20px 0 6px',
-          color: '#777169',
-          fontFamily: 'var(--font-body)',
-          fontSize: 10,
-          textTransform: 'uppercase',
-          letterSpacing: '0.18em',
-        }}
-        aria-hidden="true"
-      >
-        <span style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
-        <span>or email</span>
-        <span style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
       </div>
 
       {showSessionExpired && (
@@ -145,75 +127,25 @@ export function SignInCard({
         </div>
       )}
 
-      <form action={directSignIn} className="mt-4 space-y-3">
-        <input
-          name="email"
-          type="email"
-          inputMode="email"
-          autoComplete="email"
-          autoCapitalize="off"
-          spellCheck={false}
-          placeholder="you@school.edu"
-          required
-          autoFocus
-          className="casepad-signin-input w-full"
+      {errMsg && (
+        <div
+          role="alert"
           style={{
-            background: 'transparent',
-            border: 0,
-            borderBottom: '1px solid #e5e5e5',
-            padding: '10px 2px',
+            marginTop: 16,
+            padding: '8px 10px',
+            border: '1px solid #b33c3c',
+            color: '#b33c3c',
             fontFamily: 'var(--font-body)',
-            fontSize: 14,
-            color: '#323234',
-            borderRadius: 0,
-            outline: 'none',
-          }}
-        />
-        {returnTo && <input type="hidden" name="return_to" value={returnTo} />}
-        <button
-          type="submit"
-          className="casepad-signin-submit w-full"
-          style={{
-            background: '#323234',
-            color: '#FFFFFF',
-            padding: '11px 20px',
-            borderRadius: 9999,
-            border: 0,
-            cursor: 'pointer',
-            fontFamily: 'var(--font-body)',
-            fontSize: 12,
+            fontSize: 11,
             textTransform: 'uppercase',
-            letterSpacing: '0.14em',
-            fontWeight: 500,
-            // Specify exact properties per Emil's "never transition: all"
-            // rule. Background + transform only — both are GPU-cheap and
-            // both will be the only properties actually changing.
-            transition:
-              'background-color 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 120ms cubic-bezier(0.23, 1, 0.32, 1)',
-            willChange: 'transform',
+            letterSpacing: '0.06em',
+            borderRadius: 3,
+            background: 'rgba(179, 60, 60, 0.04)',
           }}
         >
-          Sign in
-        </button>
-        {errMsg && (
-          <div
-            role="alert"
-            style={{
-              padding: '8px 10px',
-              border: '1px solid #b33c3c',
-              color: '#b33c3c',
-              fontFamily: 'var(--font-body)',
-              fontSize: 11,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              borderRadius: 3,
-              background: 'rgba(179, 60, 60, 0.04)',
-            }}
-          >
-            {errMsg}
-          </div>
-        )}
-      </form>
+          {errMsg}
+        </div>
+      )}
 
       <div
         style={{

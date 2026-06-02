@@ -19,6 +19,7 @@ import { renderRecentTurnAwareness, findRepeatedPhrase, regenHintForPhraseRepeat
 import { renderDossierBlock, dossierIsUsable, loadDossier } from '@/lib/groq/dossier-context';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { embedWatermark } from '@/lib/security/watermark';
+import { logFailure } from '@/lib/observability/log-failure';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -172,9 +173,30 @@ export async function POST(req: NextRequest) {
     ...transcriptIn,
     { role: 'user', content: safeUserTurn, timestamp: new Date().toISOString() },
   ];
-  const disclosed = withUser
+  // C3 (2026-06-02 cost hardening): cap the "ALREADY DISCLOSED" context.
+  // It used to concatenate EVERY prior interviewer turn verbatim into the
+  // system prompt with no bound — input tokens grew linearly with case
+  // length and were re-sent on every regen, the primary driver of late-case
+  // Groq TPM blowups (one active user 429-ing the whole cohort). Keep only
+  // the most recent disclosures within a char budget; older ones matter
+  // least for "don't re-disclose." See docs/BACKEND-AUDIT-2026-06-02.md (C3).
+  const DISCLOSED_MAX_ITEMS = 8;
+  const DISCLOSED_CHAR_BUDGET = 2000;
+  const allDisclosed = withUser
     .filter((t) => t.role === 'interviewer')
     .map((t) => t.content);
+  const disclosed: string[] = [];
+  let disclosedBudget = DISCLOSED_CHAR_BUDGET;
+  for (
+    let i = allDisclosed.length - 1;
+    i >= 0 && disclosed.length < DISCLOSED_MAX_ITEMS;
+    i--
+  ) {
+    const item = allDisclosed[i];
+    if (disclosed.length > 0 && disclosedBudget - item.length < 0) break;
+    disclosed.unshift(item);
+    disclosedBudget -= item.length;
+  }
 
   const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any);
 
@@ -274,6 +296,14 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       let full = '';
       let errored = false;
+      // C3 (2026-06-02 cost hardening): cap total regeneration calls per turn.
+      // The gate stack (guardrail → registry/phrase → arithmetic → critic)
+      // could previously fire up to 4 sequential extra 70b generations on one
+      // turn, each re-sending the full system prompt — a free-tier TPM killer.
+      // Budget = 2 regens (worst case now 3 generations/turn, was 5). When the
+      // budget is spent, gates still RUN (and log) but ship the current draft
+      // instead of regenerating. See docs/BACKEND-AUDIT-2026-06-02.md (C3).
+      let regenBudget = 2;
 
       // GATE mode: buffer the full response, validate, regen once on fail,
       // then ship to client. Loses live token streaming for ~1-2s of latency
@@ -290,8 +320,9 @@ export async function POST(req: NextRequest) {
 
           // Gate 1: deterministic guardrail (banned phrases + length cap)
           const verdict = checkResponse(full);
-          if (!verdict.ok) {
+          if (!verdict.ok && regenBudget > 0) {
             console.warn(`[guardrail] turn failed: ${describeFailure(verdict.failure)}`);
+            regenBudget--;
             const hintedMessages = [
               ...messages,
               { role: 'system' as const, content: regenHintFor(verdict.failure) },
@@ -324,7 +355,8 @@ export async function POST(req: NextRequest) {
           if (registry) {
             const regViolations = checkDraftAgainstRegistry(full, registry, turnIdx);
             const repeatedPhrase = findRepeatedPhrase(full, withUser);
-            if (regViolations.length > 0 || repeatedPhrase) {
+            if ((regViolations.length > 0 || repeatedPhrase) && regenBudget > 0) {
+              regenBudget--;
               const hintParts: string[] = [];
               if (regViolations.length > 0) {
                 console.warn(`[registry] draft contradicts ${regViolations.length} committed metrics`);
@@ -372,8 +404,9 @@ export async function POST(req: NextRequest) {
           // server-side compute. Simpler than full Groq tool-use; catches ~80%
           // of arithmetic errors. One regen attempt with explicit correction.
           const arithErr = findArithmeticError(full);
-          if (arithErr) {
+          if (arithErr && regenBudget > 0) {
             console.warn(`[arithmetic] error in draft: ${arithErr.evidence}`);
+            regenBudget--;
             const hinted = [
               ...messages,
               { role: 'system' as const, content: regenHintForArithmeticError(arithErr) },
@@ -403,11 +436,15 @@ export async function POST(req: NextRequest) {
           // isn't gated; runs from turn 2 onward at CRITIC_TURN_INTERVAL cadence.
           // Fail-open on critic errors; never block the user on judge outage.
           const turnIndex = transcriptIn.length;
-          if (turnIndex >= 2 && shouldCritique(turnIndex)) {
+          // Gated on regenBudget too (C3): if we've already spent the turn's
+          // regen budget, skip the critic judge call entirely — no point
+          // spending an LLM judge call we can't act on.
+          if (turnIndex >= 2 && shouldCritique(turnIndex) && regenBudget > 0) {
             try {
               const cv = await critiqueResponse(full, safeUserTurn);
               if (!cv.ok && cv.failures.length > 0) {
                 console.warn(`[critic] turn ${turnIndex} failed: ${cv.failures.join(',')}`);
+                regenBudget--;
                 const hintedMessages = [
                   ...messages,
                   { role: 'system' as const, content: regenHintForCritic(cv) },
@@ -452,6 +489,7 @@ export async function POST(req: NextRequest) {
           // error string masquerading as the prior interviewer turn.
           errored = true;
           console.warn(`[chat] all providers failed: ${(err as Error).message.slice(0, 120)}; using static fallback`);
+          void logFailure('chat', err, { sessionId, userId: authUser.id, detail: 'all LLM providers failed (gate mode)' });
           full = embedWatermark(staticChatTurnFallback(transcriptIn.length), authUser.id);
           controller.enqueue(encoder.encode(full));
         }
@@ -481,6 +519,7 @@ export async function POST(req: NextRequest) {
           //       persisted turn.
           errored = true;
           console.warn(`[chat] all providers failed (monitor): ${(err as Error).message.slice(0, 120)}`);
+          void logFailure('chat', err, { sessionId, userId: authUser.id, detail: 'all LLM providers failed (monitor mode)' });
           if (!full || full.trim().length < 10) {
             const fallback = staticChatTurnFallback(transcriptIn.length);
             controller.enqueue(encoder.encode(fallback));
@@ -533,9 +572,11 @@ export async function POST(req: NextRequest) {
         );
         if (saveErr) {
           console.error(`[chat] transcript save FAILED after retries for session ${sessionId}: ${JSON.stringify(saveErr).slice(0, 200)}`);
+          void logFailure('chat', saveErr, { sessionId, userId: authUser.id, detail: 'transcript save failed after retries (turn lost)' });
         }
       } catch (saveThrow) {
         console.error(`[chat] transcript save THREW for session ${sessionId}: ${(saveThrow as Error).message.slice(0, 200)}`);
+        void logFailure('chat', saveThrow, { sessionId, userId: authUser.id, detail: 'transcript save threw (turn lost)' });
       }
       controller.close();
     },

@@ -1,0 +1,516 @@
+WEBVTT
+Kind: captions
+Language: en
+
+00:00:00.160 --> 00:00:03.840
+how many drivers does uber&nbsp;
+need to serve the bay area&nbsp;&nbsp;
+
+00:00:07.440 --> 00:00:13.120
+hey everyone welcome back to another exponent&nbsp;
+product management mock interview my name is kevin&nbsp;&nbsp;
+
+00:00:13.120 --> 00:00:18.720
+and on today's show we have selena we're going&nbsp;
+to be doing an estimation question but before we&nbsp;&nbsp;
+
+00:00:18.720 --> 00:00:22.480
+dive into that selena do you mind just telling&nbsp;
+the audience a little bit about who you are&nbsp;&nbsp;
+
+00:00:23.760 --> 00:00:28.080
+yeah for sure and thanks for having me um i'm&nbsp;
+selena i'm a product manager at google and i've&nbsp;&nbsp;
+
+00:00:28.080 --> 00:00:33.600
+been there about two years now and prior to&nbsp;
+that i was an apm at yahoo cool thanks for&nbsp;&nbsp;
+
+00:00:33.600 --> 00:00:38.800
+coming on today's show we're going to be doing an&nbsp;
+estimation question like i said and this is what&nbsp;&nbsp;
+
+00:00:38.800 --> 00:00:45.440
+i'd like to ask i'd like for you to tell me how&nbsp;
+many drivers does uber need to serve the bay area&nbsp;&nbsp;
+
+00:00:47.120 --> 00:00:54.240
+how many drivers does uber need to serve the&nbsp;
+bay area okay i'm typing but nothing is writing&nbsp;&nbsp;
+
+00:00:54.240 --> 00:01:00.640
+okay there we go there's a little bit of a lag&nbsp;
+awesome so i am gonna assume that when we say uh&nbsp;&nbsp;
+
+00:01:00.640 --> 00:01:06.320
+the amount of drivers that uber needs um they're&nbsp;
+talking about not necessarily how many people are&nbsp;&nbsp;
+
+00:01:06.320 --> 00:01:12.880
+like you know on staff in general just more like&nbsp;
+given some peak traffic time how many uh drivers&nbsp;&nbsp;
+
+00:01:12.880 --> 00:01:18.400
+are needed to cover that demand yeah we can do&nbsp;
+that that sounds good awesome cool so then um&nbsp;&nbsp;
+
+00:01:19.280 --> 00:01:24.400
+let's say uh let's say we're just gonna visualize&nbsp;
+like you know it's a friday afternoon at like 5&nbsp;&nbsp;
+
+00:01:24.400 --> 00:01:30.560
+30 pre-covered conditions like people are either&nbsp;
+coming back from work or going out to like dinner&nbsp;&nbsp;
+
+00:01:30.560 --> 00:01:35.760
+with their friends and so at a really high&nbsp;
+level the way i think we can approach this&nbsp;&nbsp;
+
+00:01:35.760 --> 00:01:41.920
+is um we want to know how many you know writers&nbsp;
+are being demanded per you know this peak traffic&nbsp;&nbsp;
+
+00:01:41.920 --> 00:01:47.680
+hour um sorry rides are being demanded uh per&nbsp;
+peak traffic hour and then we also are going to&nbsp;&nbsp;
+
+00:01:47.680 --> 00:01:53.840
+want to calculate how many of these rides per&nbsp;
+driver um can be done within an hour as well&nbsp;&nbsp;
+
+00:01:54.720 --> 00:01:59.440
+um and so if we take the demand and divide it&nbsp;
+by uh the supply we'll come out with the number&nbsp;&nbsp;
+
+00:01:59.440 --> 00:02:10.720
+of drivers in the end so basically rides per&nbsp;
+hour divided by um rides uh per driver per hour&nbsp;&nbsp;
+
+00:02:11.280 --> 00:02:19.040
+will get us the number of drivers awesome so if&nbsp;
+we tackle the left hand part of this first um&nbsp;&nbsp;
+
+00:02:19.040 --> 00:02:24.880
+in order to find how many rides are being demanded&nbsp;
+let's sort of take a sense of like how many people&nbsp;&nbsp;
+
+00:02:24.880 --> 00:02:32.320
+we're working with in general so i know that there&nbsp;
+are about seven million people in the bay area and&nbsp;&nbsp;
+
+00:02:32.320 --> 00:02:36.320
+you know if we sort of think about the&nbsp;
+types of people who would be picking uber&nbsp;&nbsp;
+
+00:02:36.320 --> 00:02:41.840
+um someone who's under 18 can't really take uber&nbsp;
+because it's part of just their policy and say if&nbsp;&nbsp;
+
+00:02:41.840 --> 00:02:47.040
+you're above you know 60 you might be too old&nbsp;
+to be familiar with the technology um and so&nbsp;&nbsp;
+
+00:02:48.080 --> 00:02:54.000
+let's say we have like a 80-year life&nbsp;
+expectancy for people um and if we assume&nbsp;&nbsp;
+
+00:02:54.000 --> 00:03:00.560
+a uniform distribution of ages uh cutting out&nbsp;
+under 18s and over 60s that's going to be about&nbsp;&nbsp;
+
+00:03:00.560 --> 00:03:13.200
+3.5 million people who could potentially use uber&nbsp;
+alrighty and so now that we have uh this number um&nbsp;&nbsp;
+
+00:03:13.840 --> 00:03:19.600
+i also want to call out that the amount of rides&nbsp;
+would differ depending on where you are in the&nbsp;&nbsp;
+
+00:03:19.600 --> 00:03:24.560
+bay area um so i don't know if you're familiar&nbsp;
+but you know an sf most people don't have cars&nbsp;&nbsp;
+
+00:03:24.560 --> 00:03:30.000
+they walk they depend on public transportation&nbsp;
+um and in the south bay things are much more&nbsp;&nbsp;
+
+00:03:30.000 --> 00:03:35.920
+spread apart so like most people actually do have&nbsp;
+a car um and so you know the demand would be less&nbsp;&nbsp;
+
+00:03:35.920 --> 00:03:46.160
+there so um i do want to break it out by like sf&nbsp;
+versus everywhere everywhere else um and so i know&nbsp;&nbsp;
+
+00:03:46.160 --> 00:03:53.600
+that sf has a population of uh one million and so&nbsp;
+if we just subtract out like for everywhere else&nbsp;&nbsp;
+
+00:03:53.600 --> 00:04:00.960
+that's gonna be like 2.5 million people um&nbsp;
+does this make sense so far yeah yeah this&nbsp;&nbsp;
+
+00:04:00.960 --> 00:04:05.920
+is a good segmentation on the geography and for&nbsp;
+for the people who who might not be familiar um&nbsp;&nbsp;
+
+00:04:05.920 --> 00:04:09.520
+sf is more city-like whereas everywhere&nbsp;
+else is a little bit more suburb-like&nbsp;&nbsp;
+
+00:04:10.560 --> 00:04:16.560
+yeah exactly um cool so now if we want to sort&nbsp;
+of take these two separate geographies um you&nbsp;&nbsp;
+
+00:04:16.560 --> 00:04:21.920
+know not everyone out of these 1 million and 2.5&nbsp;
+million cohorts are going to be ubering again like&nbsp;&nbsp;
+
+00:04:21.920 --> 00:04:27.600
+some people might walk drive you know shuttle&nbsp;
+if you're working in tech um and so i think&nbsp;&nbsp;
+
+00:04:27.600 --> 00:04:36.240
+one way to sort of approximate this is you know&nbsp;
+given uh most people in sf do not have a car um&nbsp;&nbsp;
+
+00:04:36.240 --> 00:04:42.800
+and you're thinking about the average friday night&nbsp;
+uh we know there's three people per household you&nbsp;&nbsp;
+
+00:04:42.800 --> 00:04:48.320
+know maybe you have roommates maybe you're a small&nbsp;
+family um and so if that's true that's going to be&nbsp;&nbsp;
+
+00:04:48.320 --> 00:04:53.920
+a and you say one person per household has plans&nbsp;
+that are not within walking distance or on like&nbsp;&nbsp;
+
+00:04:53.920 --> 00:05:02.640
+a bart line um so that would give us 33-ish&nbsp;
+percent of the 1 million um which is about
+
+00:05:02.640 --> 00:05:10.960
+333. let's just make it 350 to make it a&nbsp;
+little bit easier on us in the future um&nbsp;&nbsp;
+
+00:05:11.760 --> 00:05:18.560
+and so that would be how many rides per hour are&nbsp;
+coming from us and so given what i said earlier&nbsp;&nbsp;
+
+00:05:18.560 --> 00:05:25.280
+about the south bay just having like way more cars&nbsp;
+i would i would um guesstimate that the demand is&nbsp;&nbsp;
+
+00:05:25.280 --> 00:05:33.680
+probably 10x less um like literally everyone has&nbsp;
+a car here so if we just sort of um cut that down&nbsp;&nbsp;
+
+00:05:33.680 --> 00:05:42.240
+to 10 we would get point five k um or sorry yeah&nbsp;
+three uh we would get three point three percent&nbsp;&nbsp;
+
+00:05:43.760 --> 00:05:51.360
+um which let's make that five percent for&nbsp;
+math um and then five percent of 2.5 million&nbsp;&nbsp;
+
+00:05:51.360 --> 00:06:02.160
+is 125 k i believe and so if we total&nbsp;
+up 350 k plus 125k that will give us&nbsp;&nbsp;
+
+00:06:02.160 --> 00:06:07.680
+the total number of rides in the bay area&nbsp;
+in that given hour and that's about 475k&nbsp;&nbsp;
+
+00:06:09.600 --> 00:06:14.000
+alrighty okay so that's the first part of the&nbsp;
+equation now we kind of have to think about&nbsp;&nbsp;
+
+00:06:14.000 --> 00:06:19.840
+okay out of all these rides um how many&nbsp;
+rides can a single driver handle per hour&nbsp;&nbsp;
+
+00:06:20.720 --> 00:06:27.920
+and so um let's see i think you know when&nbsp;
+i think about the average trip in an hour&nbsp;&nbsp;
+
+00:06:27.920 --> 00:06:34.880
+um i'm thinking it might be you know 15 minutes if&nbsp;
+we if we decide to include uberpool because uber&nbsp;&nbsp;
+
+00:06:34.880 --> 00:06:38.960
+has a benefit of like you don't have to go back&nbsp;
+to the start you can just pick up where you left&nbsp;&nbsp;
+
+00:06:38.960 --> 00:06:44.080
+off and start taking the next person to wherever&nbsp;
+they're going um so keeping that in mind um i&nbsp;&nbsp;
+
+00:06:44.080 --> 00:06:50.640
+think a 15-minute trip is reasonable so it would&nbsp;
+be you know four trips per hour and you know given&nbsp;&nbsp;
+
+00:06:50.640 --> 00:06:56.640
+the popularity of pool let's say um on average&nbsp;
+like you know you have the single riders but you&nbsp;&nbsp;
+
+00:06:56.640 --> 00:07:01.840
+also have you know pools with like you know three&nbsp;
+to four people so maybe like two people per trip
+
+00:07:04.080 --> 00:07:08.240
+and of course we can revisit this based on&nbsp;
+like how many people we think are actually&nbsp;&nbsp;
+
+00:07:08.240 --> 00:07:13.440
+using pool versus other types of uber but for&nbsp;
+now like let's go here um so that's gonna be&nbsp;&nbsp;
+
+00:07:14.560 --> 00:07:25.680
+um eight rides per driver&nbsp;
+per hour okay so now if we go&nbsp;&nbsp;
+
+00:07:26.640 --> 00:07:36.720
+back to the original equation we wanna take&nbsp;
+these two numbers and divide and so we get 435k
+
+00:07:39.360 --> 00:07:49.840
+divided by eight and that is&nbsp;
+about 60 62 k let's just say 60k&nbsp;&nbsp;
+
+00:07:50.560 --> 00:07:57.760
+um okay so now i've gotten to some final answer i&nbsp;
+kind of want to check to see if this is close um&nbsp;&nbsp;
+
+00:07:57.760 --> 00:08:04.400
+one way i might think about is like out of a seven&nbsp;
+million person population like how many do i think&nbsp;&nbsp;
+
+00:08:04.400 --> 00:08:13.840
+are actually uber drivers and 60k is a little&nbsp;
+less than one percent of the total population of&nbsp;&nbsp;
+
+00:08:14.400 --> 00:08:19.680
+the area it actually makes a lot of sense um like&nbsp;
+you know given tech is a really big industry here&nbsp;&nbsp;
+
+00:08:19.680 --> 00:08:25.280
+i don't imagine um you know more than one percent&nbsp;
+of the would you know have the dispensable income&nbsp;&nbsp;
+
+00:08:25.280 --> 00:08:29.520
+to like spend on ooze and so it makes sense that&nbsp;
+you know less than one percent of the population&nbsp;&nbsp;
+
+00:08:29.520 --> 00:08:35.280
+uh would be you know drivers for people that can&nbsp;
+afford extra rides um so i'll pause there in case&nbsp;&nbsp;
+
+00:08:35.280 --> 00:08:39.760
+you have any questions on how we got here yeah&nbsp;
+this this totally makes sense one question that&nbsp;&nbsp;
+
+00:08:39.760 --> 00:08:44.720
+i have you don't have to go through the math for&nbsp;
+this but you made the assumption here that we're&nbsp;&nbsp;
+
+00:08:44.720 --> 00:08:51.120
+that customers are taking uberpool what if this&nbsp;
+is during covet times but with the same demand as&nbsp;&nbsp;
+
+00:08:51.120 --> 00:08:57.760
+non-cova times and everyone wants to&nbsp;
+take uberx so uh one customer per car&nbsp;&nbsp;
+
+00:08:57.760 --> 00:09:01.440
+where would you change some numbers if&nbsp;
+you had to go back and make those changes&nbsp;&nbsp;
+
+00:09:03.440 --> 00:09:09.440
+yeah good question so assuming you know we're in&nbsp;
+covit and they've not allowed pools um this part&nbsp;&nbsp;
+
+00:09:10.000 --> 00:09:14.960
+would go away it would basically just be like a&nbsp;
+very serial process you would have to pick up one&nbsp;&nbsp;
+
+00:09:14.960 --> 00:09:19.440
+person at a time but four would remain the same&nbsp;
+because i'm assuming the distance that someone&nbsp;&nbsp;
+
+00:09:19.440 --> 00:09:26.160
+is going is still about the same okay um and if&nbsp;
+you i think in here you you made some pretty good&nbsp;&nbsp;
+
+00:09:26.160 --> 00:09:31.920
+assumptions where most of these based around your&nbsp;
+intuition and if so what sort of additional data&nbsp;&nbsp;
+
+00:09:31.920 --> 00:09:36.480
+might you take if you had access to additional&nbsp;
+data to make your estimation more accurate&nbsp;&nbsp;
+
+00:09:38.160 --> 00:09:43.920
+yeah definitely i think um a lot of my more like&nbsp;
+intuitive guesses are around like how many trips&nbsp;&nbsp;
+
+00:09:43.920 --> 00:09:50.000
+per hour and how many people would be in said&nbsp;
+trip uh if i had data around like the split&nbsp;&nbsp;
+
+00:09:50.000 --> 00:09:56.240
+of usage between like uberx uber like is it called&nbsp;
+luxury uberpool um we would be able to have a more&nbsp;&nbsp;
+
+00:09:56.240 --> 00:10:03.840
+accurate estimate of how many people provide&nbsp;
+um and then if i had data around like how far&nbsp;&nbsp;
+
+00:10:04.400 --> 00:10:08.880
+you know different mooney and bart stops are&nbsp;
+and what the split of geography in terms of&nbsp;&nbsp;
+
+00:10:08.880 --> 00:10:13.760
+um public transportation coverage um i could&nbsp;
+potentially do a better job with the number&nbsp;&nbsp;
+
+00:10:13.760 --> 00:10:18.000
+of trips per hour like for example maybe it&nbsp;
+takes longer to get places in the south bay&nbsp;&nbsp;
+
+00:10:18.000 --> 00:10:21.760
+and so we would want to split like maybe&nbsp;
+it's like two rides per hour in the south bay&nbsp;&nbsp;
+
+00:10:21.760 --> 00:10:25.680
+but in sf maybe it's actually much shorter&nbsp;
+rides and maybe it's actually like five or six&nbsp;&nbsp;
+
+00:10:25.680 --> 00:10:31.600
+um so i would want to layer that in as well&nbsp;
+cool um yeah i i think that makes sense i&nbsp;&nbsp;
+
+00:10:31.600 --> 00:10:35.120
+think your gut check makes sense is there&nbsp;
+anything else that you might want to mention&nbsp;&nbsp;
+
+00:10:36.640 --> 00:10:43.920
+um no i think um overall uh yeah i think&nbsp;
+the gut check makes sense um i think&nbsp;&nbsp;
+
+00:10:44.720 --> 00:10:50.960
+uh given that given that we're thinking about like&nbsp;
+the total number of drivers it was important that&nbsp;&nbsp;
+
+00:10:50.960 --> 00:10:56.160
+we think about peak only because from like a user&nbsp;
+experience perspective like that's all that really&nbsp;&nbsp;
+
+00:10:56.160 --> 00:11:01.200
+matters like we don't care about the lazy you know&nbsp;
+sunday where no one is going anywhere um the peak&nbsp;&nbsp;
+
+00:11:01.200 --> 00:11:08.400
+is what really matters here totally great so i'll&nbsp;
+take off my interviewer hat i've written down some&nbsp;&nbsp;
+
+00:11:08.400 --> 00:11:12.400
+feedback here that i'd love to share with you and&nbsp;
+at the end i'd also love any tips that you might&nbsp;&nbsp;
+
+00:11:12.400 --> 00:11:18.160
+have for the audience who might be preparing&nbsp;
+for an estimation type interview so i think i&nbsp;&nbsp;
+
+00:11:18.160 --> 00:11:23.600
+think you did a really good job in the beginning&nbsp;
+clarifying what the question means i think with&nbsp;&nbsp;
+
+00:11:23.600 --> 00:11:28.880
+this question it could mean any number of things&nbsp;
+you wanted to focus on peak time which is fine um&nbsp;&nbsp;
+
+00:11:28.880 --> 00:11:33.920
+i think there are some other approaches you could&nbsp;
+have taken one was like what you mentioned take uh&nbsp;&nbsp;
+
+00:11:33.920 --> 00:11:38.400
+looking at the aggregate number of drivers&nbsp;
+needed that that would have been a whole another&nbsp;&nbsp;
+
+00:11:38.400 --> 00:11:44.720
+uh route um if you went that path you also had&nbsp;
+some pretty good assumptions that you say to them&nbsp;&nbsp;
+
+00:11:45.280 --> 00:11:52.080
+up front such as assuming that the people with 0&nbsp;
+to 80 life expectancy have uniform distribution&nbsp;&nbsp;
+
+00:11:53.360 --> 00:12:00.000
+i think you also did a good job breaking down&nbsp;
+the geography so uh taking the bay area and&nbsp;&nbsp;
+
+00:12:00.000 --> 00:12:07.040
+not treating it as some uniform land mass&nbsp;
+but really thinking about sf and non-sf and&nbsp;&nbsp;
+
+00:12:08.160 --> 00:12:14.000
+yeah you also did a great job of showing your&nbsp;
+soft skills in terms of not just answering the&nbsp;&nbsp;
+
+00:12:14.000 --> 00:12:19.920
+question but also taking the time to check in with&nbsp;
+me making sure we're on the same page and making&nbsp;&nbsp;
+
+00:12:19.920 --> 00:12:25.920
+sure that uh you you check to see if this was an&nbsp;
+overestimate or an underestimate at the very end&nbsp;&nbsp;
+
+00:12:25.920 --> 00:12:31.280
+so um all in all great answer and yeah i'd love&nbsp;
+to hear if you have any tips for the audience&nbsp;&nbsp;
+
+00:12:31.280 --> 00:12:36.400
+who might be preparing for their own estimation&nbsp;
+question interviews yeah awesome thank you for&nbsp;&nbsp;
+
+00:12:36.400 --> 00:12:41.920
+that feedback i think i agree with the general&nbsp;
+feedback you gave i think it's important um&nbsp;&nbsp;
+
+00:12:41.920 --> 00:12:45.360
+after like every big chunk of your answer to&nbsp;
+just pause and give your interviewer a chance&nbsp;&nbsp;
+
+00:12:45.360 --> 00:12:49.280
+to interject um because they probably do want to&nbsp;
+ask questions at some point they don't want to be&nbsp;&nbsp;
+
+00:12:49.280 --> 00:12:54.640
+silent the whole time and another one is yes just&nbsp;
+being really clear where you're making assumptions&nbsp;&nbsp;
+
+00:12:54.640 --> 00:12:59.040
+and where you don't have the data and just telling&nbsp;
+your interviewer like hey like if at the end we&nbsp;&nbsp;
+
+00:12:59.040 --> 00:13:02.960
+aren't really happy with the outcome like let's&nbsp;
+go back and visit like this particular estimation&nbsp;&nbsp;
+
+00:13:04.160 --> 00:13:09.760
+cool thanks selena and that's it for today's video&nbsp;
+for the audience good luck with your upcoming&nbsp;&nbsp;
+
+00:13:09.760 --> 00:13:15.840
+pm interview thanks so much for watching don't&nbsp;
+forget to hit the like and subscribe buttons below&nbsp;&nbsp;
+
+00:13:15.840 --> 00:13:21.200
+to let us know that this video is valuable for&nbsp;
+you and of course check out hundreds more videos&nbsp;&nbsp;
+
+00:13:21.200 --> 00:13:33.840
+just like this at try exponent dot com thanks for&nbsp;
+watching and good luck on your upcoming interview
+

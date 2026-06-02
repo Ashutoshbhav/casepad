@@ -5,6 +5,7 @@ import { buildEvaluatorMessages } from './evaluator';
 import { buildTrackEvaluatorMessages } from './track-evaluator';
 import { staticEvaluatorBreakdown } from './static-fallbacks';
 import type { Track } from '../tracks';
+import { logFailure } from '../observability/log-failure';
 
 export interface EvaluateResult {
   ok: boolean;
@@ -86,6 +87,7 @@ export async function evaluateSession(
   } catch (err) {
     // All providers failed — degrade gracefully so /debrief still renders.
     console.warn('[evaluate] all LLM providers failed, using static fallback:', (err as Error).message);
+    void logFailure('evaluate', err, { sessionId, detail: 'all LLM providers failed during scoring; used static fallback breakdown' });
     breakdown = staticEvaluatorBreakdown(track);
     usedFallback = true;
   }
@@ -107,6 +109,7 @@ export async function evaluateSession(
   );
   if (writeErr) {
     console.error(`[evaluate] write FAILED after retries for session ${sessionId}: ${JSON.stringify(writeErr).slice(0, 200)}`);
+    void logFailure('evaluate', writeErr, { sessionId, detail: 'score persistence failed after retries (score lost, retry-able)' });
     // Return the breakdown anyway so /debrief can render — but mark as not persisted
     // so the user can re-trigger evaluation. The 503 status signals "scoring done,
     // persistence failed — retry-able"; endSession will surface this to the user.

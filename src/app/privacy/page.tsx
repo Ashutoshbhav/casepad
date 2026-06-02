@@ -69,7 +69,9 @@ export default function PrivacyPage() {
           <h2 className="text-base font-semibold text-zinc-900 mb-1.5">3. Where it&apos;s stored</h2>
           <p>
             Your account data and practice transcripts are stored in Supabase Postgres,
-            US-East region. Authentication is handled by Supabase Auth. All connections use HTTPS;
+            hosted in the Mumbai, India region (ap-south-1), so your stored data resides in India.
+            (Interview text is additionally sent to the AI processors listed below to generate responses.)
+            Authentication is handled by Supabase Auth. All connections use HTTPS;
             data at rest is encrypted by Supabase.
           </p>
         </div>
