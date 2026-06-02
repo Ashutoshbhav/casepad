@@ -9,7 +9,7 @@
 // placard is never empty.
 
 import { CaseListLink } from '../case-list-link';
-import { CaseRowImage } from './case-row-image';
+import { CaseVisual } from './case-visual';
 
 // Case-type → HUPR earth-tone background mapping. Matches the /cases sticky
 // browse-by-type cards so the same case_type carries the same color across
@@ -112,12 +112,10 @@ export function HuprCaseRow({
               color: fg,
             }}
           >
-            {/* Per-case photo — Pollinations-generated to be relevant. The
-                <img> covers the placard. onError swaps to the deterministic
-                fallback from /public/case-photos/case-NNN.jpg when the
-                primary path 404s (generation not yet complete). loading
-                lazy because below-the-fold cards are common in long lists. */}
-            <CaseRowImage caseId={c.id} />
+            {/* Designed per-case-type visual (deep cinematic gradient + quiet
+                motif) — replaces stock photos, which returned irrelevant junk
+                for abstract case titles. Deterministic per caseId. */}
+            <CaseVisual caseType={c.case_type} caseId={c.id} />
             {/* Soft top→bottom gradient so the eyebrow + label have contrast
                 against any photo behind them. Same shape as the /cases hero
                 overlay for visual consistency. */}
