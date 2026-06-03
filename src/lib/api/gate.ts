@@ -23,7 +23,7 @@
 import { NextResponse } from 'next/server';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { checkRateLimit } from '@/lib/rate-limit';
+import { rateLimit } from '@/lib/rate-limit';
 
 export interface GateOptions {
   /** Stable namespace for rate-limit keys + log lines. e.g. 'crammer'. */
@@ -55,7 +55,7 @@ export async function gateRequest(opts: GateOptions): Promise<GateResult> {
 
   const windowMs = opts.windowMs ?? 60_000;
 
-  const rlUser = checkRateLimit(
+  const rlUser = await rateLimit(
     `${opts.routeName}:user:${user.id}`,
     opts.perUserPerMinute,
     windowMs
@@ -68,7 +68,7 @@ export async function gateRequest(opts: GateOptions): Promise<GateResult> {
   }
 
   if (opts.sessionId && typeof opts.perSessionPerMinute === 'number') {
-    const rlSession = checkRateLimit(
+    const rlSession = await rateLimit(
       `${opts.routeName}:session:${opts.sessionId}`,
       opts.perSessionPerMinute,
       windowMs
