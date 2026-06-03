@@ -25,6 +25,7 @@ import { renderDossierBlock, dossierIsUsable, loadDossier } from '@/lib/groq/dos
 import { checkRateLimit } from '@/lib/rate-limit';
 import { embedWatermark } from '@/lib/security/watermark';
 import { logFailure } from '@/lib/observability/log-failure';
+import { bumpAndCheckLlmBudget } from '@/lib/usage/llm-budget';
 
 // Single-turn directive prepended to the system prompt when we detect that
 // the candidate's message is a VERBATIM paste of one of the chat-panel
@@ -172,6 +173,30 @@ export async function POST(req: NextRequest) {
     return new Response(replayStream, {
       headers: { 'Content-Type': 'text/plain; charset=utf-8', 'X-CasePad-Replay': '1' },
     });
+  }
+
+  // Daily LLM budget (public-launch circuit breaker). Checked AFTER the
+  // idempotency replay (so retries don't burn budget) and BEFORE any LLM call.
+  // Global cap protects the whole app from a public flood; per-user cap stops a
+  // single abused account. Fail-open: a DB hiccup (or the migration not yet
+  // applied) returns `allowed`, so this can never block a legit turn on infra.
+  const budget = await bumpAndCheckLlmBudget(authUser.id);
+  if (!budget.allowed) {
+    console.warn(`[chat] daily LLM cap hit scope=${budget.scope} user=${authUser.id} global=${budget.globalCount} user=${budget.userCount}`);
+    return new Response(
+      JSON.stringify({
+        error: 'daily_limit',
+        scope: budget.scope,
+        message:
+          budget.scope === 'global'
+            ? 'CasePad is at capacity for today — please try again tomorrow.'
+            : "You've reached today's practice limit. Come back tomorrow for more reps.",
+      }),
+      {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', 'Retry-After': '3600' },
+      }
+    );
   }
 
   const withUser = [
