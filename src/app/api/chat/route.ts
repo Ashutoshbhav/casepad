@@ -63,6 +63,14 @@ export async function POST(req: NextRequest) {
   if (safeUserTurn.trim().length === 0) {
     return new Response(JSON.stringify({ error: 'userTurn (non-empty after sanitization) required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
+  // P0-4 (full): optional per-logical-turn id from the client. The retry button
+  // + browser network re-sends reuse the SAME id, so we can dedup by id even
+  // when the text is identical — independent of content matching. Additive +
+  // fail-open: legacy clients omit it and fall back to content-based dedup.
+  const clientTurnId =
+    typeof body?.clientTurnId === 'string' && body.clientTurnId.length <= 100
+      ? body.clientTurnId
+      : null;
   const supabase = await createSupabaseServerClient();
 
   // P1-13: verify the requester owns this session. RLS should already prevent
@@ -147,20 +155,27 @@ export async function POST(req: NextRequest) {
   // Window: only the most-recent user turn — if user genuinely repeats themselves
   // 5 turns later, that's a real turn.
   //
-  // KNOWN LIMITATION (DA-2): there's a race window of ~1.5s during the prior
-  // turn's withRetry transcript-save where this guard reads stale state — a
-  // duplicate arriving in that window would miss the dedup and hit the LLM
-  // again, producing a duplicate user+interviewer turn pair. Real-world risk
-  // is narrow (user must double-send within 1.5s of the LAST turn AND the dupe
-  // request must beat the save commit). Full fix requires either (a) writing
-  // the user turn before the LLM call, or (b) the deferred clientTurnId UUID
-  // scheme. Acceptable v1 trade-off; revisit if cohort signal shows duplicates.
+  // clientTurnId (2026-06-03): the client now sends a per-logical-turn id that
+  // the retry button + browser network re-sends REUSE, so an explicit retry or
+  // a transport-level resend is deduped by id regardless of content. Combined
+  // with the in-app "Send disabled while streaming" guard, the only residual
+  // window is a sub-~1.5s concurrent double-fire where NEITHER request has
+  // committed the prior save yet (so neither can see the other's id). Closing
+  // that last window requires a cross-instance lock — exactly what the
+  // pre-wired Upstash limiter provides once its env vars are set. Until then
+  // this is a vanishingly narrow, documented residual. (FORTRESS: fail-open.)
   const lastTwoTurns = transcriptIn.slice(-2);
+  const prevUser: any = lastTwoTurns.length === 2 ? lastTwoTurns[0] : null;
+  const prevInterviewer = lastTwoTurns.length === 2 ? lastTwoTurns[1] : null;
   const isDuplicateRetry =
-    lastTwoTurns.length === 2 &&
-    lastTwoTurns[0].role === 'user' &&
-    lastTwoTurns[0].content === safeUserTurn &&
-    lastTwoTurns[1].role === 'interviewer';
+    !!prevUser &&
+    !!prevInterviewer &&
+    prevUser.role === 'user' &&
+    prevInterviewer.role === 'interviewer' &&
+    // id-based match (retry button / network re-send of the SAME logical turn)
+    // OR legacy content-based match (clients that don't send an id).
+    ((!!clientTurnId && prevUser.clientTurnId === clientTurnId) ||
+      prevUser.content === safeUserTurn);
   if (isDuplicateRetry) {
     const replayContent = lastTwoTurns[1].content;
     const encoderReplay = new TextEncoder();
@@ -199,10 +214,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const withUser = [
-    ...transcriptIn,
-    { role: 'user', content: safeUserTurn, timestamp: new Date().toISOString() },
-  ];
+  const newUserTurn: { role: 'user'; content: string; timestamp: string; clientTurnId?: string } = {
+    role: 'user',
+    content: safeUserTurn,
+    timestamp: new Date().toISOString(),
+  };
+  if (clientTurnId) newUserTurn.clientTurnId = clientTurnId;
+  const withUser = [...transcriptIn, newUserTurn];
   // C3 (2026-06-02 cost hardening): cap the "ALREADY DISCLOSED" context.
   // It used to concatenate EVERY prior interviewer turn verbatim into the
   // system prompt with no bound — input tokens grew linearly with case

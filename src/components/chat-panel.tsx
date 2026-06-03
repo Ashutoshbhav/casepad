@@ -100,6 +100,26 @@ export function ChatPanel({
   const inputRef = useRef<HTMLInputElement>(null);
   const lastOrbRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+
+  // Bulletproofing (2026-06-03): abort + stall-timeout so a stalled stream can
+  // never hang the UI, plus a per-logical-turn id so an explicit retry / network
+  // re-send is deduped server-side. Both additive + fail-open.
+  const abortRef = useRef<AbortController | null>(null);
+  const currentTurnIdRef = useRef<string | null>(null);
+  // No progress (no token) for this long → treat the stream as stalled and
+  // abort so the user can recover. Server caps the function at 60s anyway.
+  const STALL_MS = 30_000;
+
+  const newTurnId = () => {
+    try {
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+    } catch { /* fall through to a best-effort id */ }
+    return `t-${Date.now()}-${Math.round(performance.now())}`;
+  };
+
+  const stopStreaming = () => {
+    try { abortRef.current?.abort(); } catch { /* noop */ }
+  };
   const [disperse, setDisperse] = useState<
     | { fromX: number; fromY: number; toX: number; toY: number; key: number }
     | null
@@ -237,11 +257,22 @@ export function ChatPanel({
 
   const retryLastUserTurn = () => {
     if (!lastMsg || lastMsg.role !== 'user' || streaming) return;
-    sendUserTurn(lastMsg.content, true);
+    // Reuse the same turn id so the server dedups this as the SAME logical
+    // turn instead of appending a duplicate.
+    sendUserTurn(lastMsg.content, true, currentTurnIdRef.current ?? undefined);
   };
 
-  const sendUserTurn = async (text: string, alreadyAppended = false) => {
+  const sendUserTurn = async (text: string, alreadyAppended = false, reuseTurnId?: string) => {
     if (!text.trim() || streaming) return;
+    const clientTurnId = reuseTurnId ?? newTurnId();
+    currentTurnIdRef.current = clientTurnId;
+    const controller = new AbortController();
+    abortRef.current = controller;
+    let stallTimer: ReturnType<typeof setTimeout> | undefined;
+    const armStall = () => {
+      if (stallTimer) clearTimeout(stallTimer);
+      stallTimer = setTimeout(() => { try { controller.abort(); } catch { /* noop */ } }, STALL_MS);
+    };
     // Fire-and-forget disperse animation IN PARALLEL with the actual send.
     // Skipped under reduced-motion. Doesn't block the network call.
     if (!reduced && !alreadyAppended && inputRef.current) {
@@ -260,11 +291,14 @@ export function ChatPanel({
     setStreaming(true);
 
     let streamOk = false;
+    let sawInterviewerPlaceholder = false;
     try {
+      armStall();
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, userTurn: text }),
+        body: JSON.stringify({ sessionId, userTurn: text, clientTurnId }),
+        signal: controller.signal,
       });
 
       // Defensive: if the API errored before sending a body, bail without
@@ -280,12 +314,14 @@ export function ChatPanel({
         return;
       }
       setMessages((m) => [...m, { role: 'interviewer', content: '' }]);
+      sawInterviewerPlaceholder = true;
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = '';
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
+        armStall(); // progress — reset the stall watchdog on every chunk
         acc += decoder.decode(value);
         setMessages((m) => {
           const copy = [...m];
@@ -304,7 +340,24 @@ export function ChatPanel({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId, userQuestion: text, interviewerAnswer: acc }),
       }).catch(() => {});
+    } catch (err) {
+      // Network drop, stall-abort, or the user pressed Stop. Never crash the
+      // page. Drop an EMPTY interviewer placeholder so the "Retry that turn"
+      // banner (driven by a hanging user turn) appears and the user can
+      // recover. If real text already streamed, keep it — they saw it.
+      setMessages((m) => {
+        if (!sawInterviewerPlaceholder) return m;
+        const last = m[m.length - 1];
+        if (last && last.role === 'interviewer' && (!last.content || last.content.trim().length === 0)) {
+          return m.slice(0, -1);
+        }
+        return m;
+      });
+      const aborted = (err as Error)?.name === 'AbortError';
+      console.warn(`[chat-panel] stream ${aborted ? 'aborted/stalled' : 'failed'}: ${(err as Error)?.message ?? String(err)}`);
     } finally {
+      if (stallTimer) clearTimeout(stallTimer);
+      abortRef.current = null;
       setStreaming(false);
       // Only fire the "good move" approving pulse when the stream landed
       // cleanly (not on error / abort). State auto-reverts at the
@@ -595,13 +648,22 @@ export function ChatPanel({
             inputRef.current?.focus();
           }}
         />
-        <button
-          onClick={send}
-          disabled={streaming}
-          className="ghost-btn ghost-btn--accent px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
-        >
-          Send
-        </button>
+        {streaming ? (
+          <button
+            onClick={stopStreaming}
+            aria-label="Stop the interviewer's reply"
+            className="ghost-btn px-4 py-2 rounded-md text-sm font-medium"
+          >
+            Stop
+          </button>
+        ) : (
+          <button
+            onClick={send}
+            className="ghost-btn ghost-btn--accent px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+          >
+            Send
+          </button>
+        )}
       </div>
     </div>
   );
