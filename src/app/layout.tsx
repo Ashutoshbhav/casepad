@@ -5,6 +5,7 @@ import { ConnectionBanner } from '@/components/connection-banner';
 import { AuthWatchdog } from '@/components/auth-watchdog';
 import { TopNavMount } from '@/components/top-nav-mount';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { Analytics } from '@vercel/analytics/next';
 
 // Pre-paint script — sets `data-theme` on <html> before React hydrates.
 // Defaults to LIGHT now (HUPR is light-canvas first). Reads localStorage
@@ -117,6 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TopNavMount />
         <ThemeToggle />
         {children}
+        <Analytics />
         {/* Watermark — present in DOM, not painted */}
         <div aria-hidden="true" style={{ display: 'none' }} data-watermark={WATERMARK} />
       </body>
