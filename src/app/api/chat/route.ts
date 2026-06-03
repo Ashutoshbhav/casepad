@@ -22,7 +22,7 @@ import { buildRegistry, toSystemPromptBlock as registryBlock, checkDraftAgainstR
 import { findArithmeticError, regenHintForArithmeticError } from '@/lib/case-state/arithmetic-verifier';
 import { renderRecentTurnAwareness, findRepeatedPhrase, regenHintForPhraseRepeat } from '@/lib/groq/recent-turn-context';
 import { renderDossierBlock, dossierIsUsable, loadDossier } from '@/lib/groq/dossier-context';
-import { checkRateLimit } from '@/lib/rate-limit';
+import { rateLimit } from '@/lib/rate-limit';
 import { embedWatermark } from '@/lib/security/watermark';
 import { logFailure } from '@/lib/observability/log-failure';
 import { bumpAndCheckLlmBudget } from '@/lib/usage/llm-budget';
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   // candidates type 1-3 messages/min. 30/min is well above natural use but
   // throttles authenticated scrapers iterating cases. Sliding 60s window.
   // Returns 429 with retry-after so legitimate retries still recover.
-  const rlByUser = checkRateLimit(`chat:user:${authUser.id}`, 30, 60_000);
+  const rlByUser = await rateLimit(`chat:user:${authUser.id}`, 30, 60_000);
   if (!rlByUser.ok) {
     console.warn(`[chat] rate-limit user=${authUser.id} retry=${rlByUser.retryAfterSec}s`);
     return new Response(
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
   // hammering a single session signals automated turn-by-turn scraping. 10
   // messages/min on a single session is the practical ceiling for a thinking
   // candidate; scrapers usually do 20+. Same sliding-window pattern.
-  const rlBySession = checkRateLimit(`chat:session:${sessionId}`, 10, 60_000);
+  const rlBySession = await rateLimit(`chat:session:${sessionId}`, 10, 60_000);
   if (!rlBySession.ok) {
     console.warn(`[chat] rate-limit session=${sessionId} retry=${rlBySession.retryAfterSec}s`);
     return new Response(
