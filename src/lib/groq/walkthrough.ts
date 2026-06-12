@@ -3,6 +3,8 @@ import { researchCase } from '../research/tavily';
 import { staticWalkthroughFallback } from './static-fallbacks';
 import { renderDossierBlock, dossierIsUsable } from './dossier-context';
 import { renderPlaybook } from './ideal-answer-playbooks';
+import { renderIndiaReferenceBlock } from '../india-reference';
+import { renderClarifiers } from '../case-clarifiers';
 
 // Bump when the generator's prompt/inputs change materially. The debrief
 // regenerates any cached walkthrough whose generator_version is below this,
@@ -11,7 +13,8 @@ import { renderPlaybook } from './ideal-answer-playbooks';
 // (anatomy + spike moves + anti-slop + L0-L4 depth) injected per case type.
 // v4: deep recursive issue tree (3-5 levels) instead of a flat 2-level skeleton.
 // v5: per-node "note" (the assumption/reasoning for exploring/prioritizing it).
-export const WALKTHROUGH_GENERATOR_VERSION = 5;
+// v6: verified India number-bank + per-case-type clarifier bank injected.
+export const WALKTHROUGH_GENERATOR_VERSION = 6;
 
 // Canonical case types (mirror cases.case_type) → the framework a top
 // candidate would actually use. Fixes the "Porter's 5 Forces on a
@@ -103,6 +106,17 @@ export async function generateIdealWalkthrough(
   // expert-answer principles (L0-L4 depth, anti-slop, India grounding).
   const playbookBlock = renderPlaybook(caseType);
 
+  // Verified India number-bank — gives the model real anchors to ground in
+  // instead of inventing figures (the India-grounding rule had no source of
+  // truth before this). Estimation cases get the full bank; other case types
+  // get macro + income + sector (the broadly useful anchors). Pure + total.
+  const indiaBlock = renderIndiaReferenceBlock(
+    caseType === 'estimation' ? undefined : ['macro', 'income', 'sector']
+  );
+  // The right clarifying questions for THIS case type, so step 1 of the
+  // walkthrough names real questions rather than a generic "clarify scope".
+  const clarifierBlock = renderClarifiers(caseType);
+
   // The per-case dossier is the deep, expert-level knowledge (real numbers,
   // common mistakes, anticipated Q&A). Feeding it in is the single biggest
   // quality lever — without it the walkthrough recites textbook skeletons.
@@ -179,6 +193,10 @@ CORRECT FRAMEWORK FOR THIS CASE TYPE (anchor the issue_tree on this):
 ${frameworkHint}
 
 ${playbookBlock}
+
+${clarifierBlock}
+
+${indiaBlock}
 
 IDEAL STRUCTURE (casebook hint — may be mislabeled; defer to the case-type anchor above):
 ${JSON.stringify(idealStructure, null, 2)}

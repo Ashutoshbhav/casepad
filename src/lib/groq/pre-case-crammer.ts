@@ -5,6 +5,7 @@
 import { completeChat } from '../llm-router';
 import { researchCase } from '../research/tavily';
 import { staticCrammerFallback } from './static-fallbacks';
+import { renderIndiaReferenceBlock } from '../india-reference';
 import type { Track } from '../tracks';
 import { TRACKS } from '../tracks';
 
@@ -65,7 +66,7 @@ Output JSON only:
 }
 
 Rules:
-- industry_primer: drawn from the WEB RESEARCH below. Specific numbers/companies, not generic. If web research is empty/missing, use sector-typical ranges and explicitly say "(typical range — verify in case)" for any number.
+- industry_primer: drawn from the WEB RESEARCH and the verified INDIA NUMBER BANK below. Specific numbers/companies, not generic. Prefer a bank anchor (tagged [V]/[E]) or a research figure over a guess; label [E]/estimate figures as estimates. If neither has it, use sector-typical ranges and explicitly say "(typical range — verify in case)" for any number.
 - likely_frameworks: 2-3 from the candidate's track frameworks (listed below). Pick based on the case's actual content. why_this_one must reference the case in 1 sentence — NOT a generic framework summary.
 - math_shortcuts: 3-5 from the track math list. Pick what THIS case will need; prioritize what the candidate's weak dimensions ${weakestDimensions.join(', ') || '(no history)'} suggests they'd struggle with.
 - watch_outs: 2-3 specific things to remember. INCLUDE one that maps to the user's weakest dimensions. Avoid generic "remember to be MECE" — these are useless.
@@ -95,6 +96,8 @@ CANDIDATE'S WEAKEST DIMENSIONS (last 10 cases): ${weakestDimensions.join(', ') |
 
 WEB RESEARCH (use for industry_primer):
 ${research || '(no research available)'}
+
+${renderIndiaReferenceBlock(['macro', 'sector'])}
 
 Generate the pre-case crammer JSON.`;
 
