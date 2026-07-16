@@ -1,5 +1,14 @@
 # CasePad — Session State Snapshot
 
+> ## 🔴 INCIDENT — PRODUCTION FULLY DEGRADED FOR ~34 DAYS, FIXED 2026-07-16
+> **Symptom (reported by Ash):** couldn't start a case; when one did start, dialogue never got past the first message.
+> **Root cause:** every app secret on Vercel Production (`GROQ_API_KEY`, `NVIDIA_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EMAIL`, `TAVILY_API_KEY`, `ALLOWLIST_MODE`) had been overwritten with **empty-string values** — confirmed via `vercel env pull --environment=production`, twice, ruling out a CLI artifact. No CI workflow and no shell history (bash/zsh/PowerShell) showed a `vercel env` command, so the likely mechanism is a manual dashboard/CLI edit where an empty paste was silently accepted (Vercel doesn't validate non-empty on save). App code was never at fault — local dev against the same production Supabase DB worked end-to-end throughout.
+> **Why this matches both symptoms:** blank Supabase creds → every DB call fails → the app's own defensive code (by design) redirects to `/cases` or `/auth/signin` instead of crashing, reading as "won't start." Blank Groq/NVIDIA keys → all 4 LLM-router layers fail on every turn → Fortress's fail-open logic (correctly) ships the static `staticChatTurnFallback()` probe instead of a real interviewer turn, reading as "dialogue frozen after 1 message."
+> **Why Fortress didn't catch it:** Fortress is designed to smooth over *transient* failures (a slow Groq call, a flaky Supabase 503), not to detect *sustained* config failure. It did exactly its job — degrade instead of crash — which is precisely why this went unnoticed for over a month: nothing was watching "is every single request hitting the fallback."
+> **Fix:** restored all 8 vars from the verified-working `.env.local` values, added as `--no-sensitive` (so they stay readable for future audits — they'd drifted to Vercel's write-only "Sensitive" type on the first restore attempt, which would have made this exact failure mode undetectable by `env pull` again), triggered a fresh production deploy (`dpl_3V5kofzPSqgkmV1R4yRgLLSSMqRs`, aliased to `casepad.vercel.app`), and verified live via a real signed-in browser session: case start, opener, a real turn-2 interviewer reply, and issue-tree update all confirmed working against production, not just local dev.
+> **New guardrail:** `scripts/smoke/production-check.ts` (`npm run smoke:prod`) — starts a real case and sends a real turn against a live deployment (default `https://casepad.vercel.app`, override with `PROD_URL`), and fails loudly if the response matches one of the known static-fallback probes instead of a real LLM reply. This is the check that should have been screaming for the last month; it is **not yet wired to a schedule** — do that next (see the `schedule` skill) so it's actually watched instead of being a one-off manual run.
+> **Resolves** the "Outstanding for Ash #1: Verify live deploy" item that had sat open since the 2026-05-29 snapshot below — that drift (nobody checking the live app after a code change) is exactly how this went unnoticed.
+
 > ## ✅ INDIA NUMBER-BANK + CLARIFIER BANK SHIPPED — 2026-06-12
 > Two new pure/static modules ground the engine in real India data + the right opening questions: **`src/lib/india-reference.ts`** = ~63 India macro/income/digital/sector anchors, EACH WebSearch-verified on 2026-06-12 with `sourceName`+`sourceUrl`+`asOf`+`confidence` ([V]erified primary vs [E]stimate). NCCS class shares + tier-spend splits deliberately OMITTED (no credible free source — no-assumptions). **`src/lib/case-clarifiers.ts`** = per-`CaseType` clarify-first question banks (from the faculty case method). Wired **fail-open** into `generateIdealWalkthrough` (walkthrough.ts, `WALKTHROUGH_GENERATOR_VERSION` 5→6 so cached walkthroughs regenerate) + `generatePreCaseCrammer` — generation paths only, **NOT the live chat loop** (protects Groq TPM + the Fortress NSM). Renderers are pure+total (never throw). Built from a 4-agent verification fan-out comparing two faculty cheat-sheets (India Guesstimate + Case Study Interview) against the codebase — only the verified India number-bank was a real gap; frameworks/dialogue/scoring were already deeper in CasePad. 251/251 tests (was 239), tsc clean, build green. Provenance of the comparison: the two `.xlsx` cheat-sheets in Downloads.
 
@@ -18,11 +27,11 @@
 > ## ✅ WAVE 1 SHIPPED — 2026-06-02 (commit `e9c0979`, deployed to prod)
 > Launch-blockers from `docs/BACKEND-AUDIT-2026-06-02.md` closed: **C1** Google-only auth (account-takeover hole removed; email signin gone, `directSignIn` stubbed) · **C3** chat cost caps (capped `alreadyDisclosed` + regen budget=2) · **C4** `nsm_failures` telemetry (migration 0016 applied) · **H4** privacy region → Mumbai · **C5** RLS verified already sound. **Next = Wave 2: solving-engine rebuild** (see `docs/superpowers/specs/2026-06-02-solving-engine-redesign.md` + `docs/research/case-sources/`). Reskin branch `feat/solve-dashboard-reskin` still parked.
 
-**Saved:** 2026-05-29 (post-crash recovery session)
+**Saved:** 2026-07-16 (production outage recovery — see incident note at top)
 **Trigger word:** `PAD` — say it in any new session to surface this state
 **Project root:** `C:\Users\Ashutosh Bhavale\Documents\casepad`
-**Production URL:** https://casepad.vercel.app
-**Branch:** `main` · **Latest commit:** `0bb1f21` (wip(guesstimate): builder script + source PDFs)
+**Production URL:** https://casepad.vercel.app — **verified live 2026-07-16** (case start + real turn-2 reply confirmed in-browser; do not trust this line uncritically after that date, re-verify with `npm run smoke:prod`)
+**Branch:** `main` · **Latest commit:** `b9251e3` (feat(engine): verified India number-bank + per-case-type clarifier banks)
 
 > ⚠️ Deploy state of the latest commits is **UNKNOWN from local** — verify what's actually live on Vercel when resuming.
 
@@ -57,7 +66,7 @@ Signin card reskinned to ElevenLabs ✅; HUPR landing **preserved** (the full-la
 ---
 
 ## ⚠️ Outstanding for Ash (action required)
-1. **Verify live deploy** — confirm `0bb1f21`/`e9f6082` are on `casepad.vercel.app`; redeploy if not.
+1. ~~Verify live deploy~~ — **done 2026-07-16**, and it was NOT fine (see incident note at top: all production secrets were blank). Fixed + verified live. New action: wire `npm run smoke:prod` to a schedule so this can't silently drift again — nothing currently re-checks production on a cadence.
 2. **Decide on exhibits thread** — `pm-gate` flagged `src/lib/exhibits` as **REVIEW** ("user_pull unknown"). It's a scaffold, **not wired into any surface yet** (0 imports). Confirm a user actually wants in-case exhibits before building further, or shelve it.
 3. **Pixabay/Supabase keys** — `generate-case-images-pixabay.ts` needs `PIXABAY_API_KEY` + `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` (keys read from env — no hardcoded secrets ✅).
 

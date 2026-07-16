@@ -24,6 +24,7 @@
     "ingest:ocr": "python scripts/ingest/ocr-scanned.py",
     "pm-gate": "node scripts/pm-gate.mjs",
     "lint:rls": "node scripts/lint-rls.mjs",
+    "smoke:prod": "tsx --env-file=.env.local scripts/smoke/production-check.ts",
     "verify:urls": "tsx scripts/ingest/verify-urls.ts",
     "audit:pdfs": "tsx scripts/ingest/audit-pdfs.ts"
   },
