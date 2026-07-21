@@ -7,6 +7,11 @@ import { NextRequest } from 'next/server';
 import { streamChat } from '@/lib/llm-router';
 import { buildInterviewerMessages, type BuildInterviewerOpts } from '@/lib/groq/interviewer';
 import { inferStage, stageDirective } from '@/lib/interview/stage-machine';
+import {
+  buildBehavioralInterviewerMessages,
+  type BuildBehavioralInterviewerOpts,
+} from '@/lib/groq/behavioral-interviewer';
+import { inferBehavioralStage, behavioralStageDirective } from '@/lib/interview/behavioral-stage-machine';
 import { personaForTrack } from '@/lib/interview/personas';
 import { inferCaseType, type CaseType } from '@/lib/groq/walkthrough';
 import { extractEstimationState, renderEstimationStateBlock } from '@/lib/case-state/estimation-state';
@@ -127,24 +132,37 @@ export async function POST(req: NextRequest) {
 
   const { data: session, error: sErr } = await supabase
     .from('sessions')
-    .select('id, transcript, case_id, user_id, track')
+    .select('id, transcript, case_id, user_id, track, target_firm')
     .eq('id', sessionId)
     .eq('user_id', authUser.id)
     .single();
   if (sErr || !session) return new Response('session not found', { status: 404 });
 
-  const { data: caseRow, error: cErr } = await supabase
-    .from('cases')
-    .select('title, problem_statement, interviewer_notes, case_type')
-    .eq('id', session.case_id)
-    .single();
-  if (cErr || !caseRow) return new Response('case not found', { status: 404 });
+  // Live-interview (0019_live_interview.sql): case_id is nullable — a
+  // caseless session (behavioral / culture-fit / résumé-grounded) has no
+  // case row at all. Branch here rather than forking the route: everything
+  // downstream (guardrails, retry, fallback, idempotency, persistence) stays
+  // identical for both — only message-building differs. (FORTRESS: wire into
+  // the fortress, never around it.)
+  const isCaseless = !session.case_id;
 
-  // Stream-4 (2026-05-08 v2): load per-case dossier from filesystem
-  // (data/dossiers/{case_id}.json). No DB migration needed. Defensive:
-  // null when not yet enriched — chat continues with problem_statement
-  // + interviewer_notes only.
-  const dossier = await loadDossier(session.case_id);
+  let caseRow: any = null;
+  let dossier: any = null;
+  if (!isCaseless) {
+    const { data: caseRowData, error: cErr } = await supabase
+      .from('cases')
+      .select('title, problem_statement, interviewer_notes, case_type')
+      .eq('id', session.case_id)
+      .single();
+    if (cErr || !caseRowData) return new Response('case not found', { status: 404 });
+    caseRow = caseRowData;
+
+    // Stream-4 (2026-05-08 v2): load per-case dossier from filesystem
+    // (data/dossiers/{case_id}.json). No DB migration needed. Defensive:
+    // null when not yet enriched — chat continues with problem_statement
+    // + interviewer_notes only.
+    dossier = await loadDossier(session.case_id);
+  }
 
   const transcriptIn = (session.transcript as { role: string; content: string; timestamp: string }[]) ?? [];
 
@@ -251,37 +269,82 @@ export async function POST(req: NextRequest) {
   // buildInterviewerMessages falls back to its pre-stage-machine behavior
   // (consulting persona, no stage directive). This wires INTO the never-fail
   // NSM — it can only add signal, never block a turn. (FORTRESS.)
-  let interviewerOpts: BuildInterviewerOpts = {};
   // Guesstimate engine (Wave 2 lever B): when a sizing thread is active, this
   // block tells the interviewer the candidate's estimation behavior so it
   // applies the guesstimate playbook (demand the logic, force a sanity-check,
-  // catch a blurted number). Computed fail-open; '' when no thread.
+  // catch a blurted number). Computed fail-open; '' when no thread. Caseless
+  // sessions have no math thread, so this stays '' for them (the injection
+  // below is a no-op on falsy estimationBlock — no separate guard needed).
   let estimationBlock = '';
-  try {
-    const track = ((session as any).track as Track) || 'consulting';
-    const rawCaseType = (caseRow as any).case_type as CaseType | null | undefined;
-    const caseType: CaseType =
-      rawCaseType && rawCaseType !== 'unknown'
-        ? rawCaseType
-        : inferCaseType(caseRow.title, (caseRow as any).problem_statement || '');
-    const ctx = { track, caseType, isEstimation: caseType === 'estimation' };
-    const { stage } = inferStage(withUser as any, ctx);
-    interviewerOpts = {
-      persona: personaForTrack(track),
-      stageDirective: stageDirective(stage, ctx),
-    };
-    const estState = extractEstimationState(withUser as any, {
-      caseType,
-      isEstimation: ctx.isEstimation,
-    });
-    estimationBlock = renderEstimationStateBlock(estState);
-  } catch (stageErr) {
-    console.warn(`[chat] stage/persona/estimation inference skipped: ${(stageErr as Error).message}`);
-    interviewerOpts = {};
-    estimationBlock = '';
-  }
+  let messages: { role: 'system' | 'user' | 'assistant'; content: string }[];
 
-  const messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any, interviewerOpts);
+  if (isCaseless) {
+    // Best-effort résumé lookup — a fetch failure just means the interviewer
+    // asks generic questions instead of résumé-grounded ones, never blocks
+    // the turn. (FORTRESS: résumé grounding is an enhancement, not a
+    // requirement — see P1-14-style "degrades, doesn't fail" precedent.)
+    let resumeText: string | null = null;
+    try {
+      const { data: resumeRow } = await supabase
+        .from('user_resumes')
+        .select('resume_text')
+        .eq('user_id', authUser.id)
+        .maybeSingle();
+      resumeText = resumeRow?.resume_text ?? null;
+    } catch (resumeErr) {
+      console.warn(`[chat] resume lookup skipped: ${(resumeErr as Error).message}`);
+      resumeText = null;
+    }
+
+    const behavioralCtx = {
+      hasResume: !!resumeText,
+      targetFirm: (session as any).target_firm ?? null,
+    };
+    let behavioralOpts: BuildBehavioralInterviewerOpts = {};
+    try {
+      const { stage } = inferBehavioralStage(withUser as any, behavioralCtx);
+      behavioralOpts = {
+        persona: personaForTrack('behavioral'),
+        stageDirective: behavioralStageDirective(stage, behavioralCtx),
+      };
+    } catch (stageErr) {
+      console.warn(`[chat] behavioral stage inference skipped: ${(stageErr as Error).message}`);
+      behavioralOpts = {};
+    }
+
+    messages = buildBehavioralInterviewerMessages(
+      { resumeText, targetFirm: behavioralCtx.targetFirm },
+      withUser as any,
+      behavioralOpts
+    );
+  } else {
+    let interviewerOpts: BuildInterviewerOpts = {};
+    try {
+      const track = ((session as any).track as Track) || 'consulting';
+      const rawCaseType = (caseRow as any).case_type as CaseType | null | undefined;
+      const caseType: CaseType =
+        rawCaseType && rawCaseType !== 'unknown'
+          ? rawCaseType
+          : inferCaseType(caseRow.title, (caseRow as any).problem_statement || '');
+      const ctx = { track, caseType, isEstimation: caseType === 'estimation' };
+      const { stage } = inferStage(withUser as any, ctx);
+      interviewerOpts = {
+        persona: personaForTrack(track),
+        stageDirective: stageDirective(stage, ctx),
+      };
+      const estState = extractEstimationState(withUser as any, {
+        caseType,
+        isEstimation: ctx.isEstimation,
+      });
+      estimationBlock = renderEstimationStateBlock(estState);
+    } catch (stageErr) {
+      console.warn(`[chat] stage/persona/estimation inference skipped: ${(stageErr as Error).message}`);
+      interviewerOpts = {};
+      estimationBlock = '';
+    }
+
+    messages = buildInterviewerMessages(caseRow as any, disclosed, withUser as any, interviewerOpts);
+  }
 
   // Inject the estimation-state block (fail-open) at the high-attention end of
   // the system prompt when a sizing thread is active.
@@ -319,27 +382,32 @@ export async function POST(req: NextRequest) {
   // `citations` on the interviewer turn. The wire stream stays plain text
   // (no breaking change to the streaming contract) — citations live in
   // Postgres only and are read on the next /solve render.
+  // Playbook findings are grounded in real MBB CASE-interviewer practice —
+  // irrelevant (and potentially confusing) for a caseless behavioral session,
+  // so skip retrieval entirely rather than inject off-topic case content.
   let turnFindings: RetrievedFinding[] = [];
-  try {
-    const recentText = withUser
-      .slice(-4)
-      .map((t) => t.content)
-      .join(' ');
-    const queryText = `${safeUserTurn} ${recentText}`.slice(-1200);
-    const findings = retrievePlaybookFindings(queryText, 3);
-    turnFindings = findings;
-    if (findings.length > 0 && messages.length > 0 && messages[0].role === 'system') {
-      const block = formatFindingsForPrompt(findings);
-      if (block) {
-        messages[0] = {
-          ...messages[0],
-          content: messages[0].content + block,
-        };
+  if (!isCaseless) {
+    try {
+      const recentText = withUser
+        .slice(-4)
+        .map((t) => t.content)
+        .join(' ');
+      const queryText = `${safeUserTurn} ${recentText}`.slice(-1200);
+      const findings = retrievePlaybookFindings(queryText, 3);
+      turnFindings = findings;
+      if (findings.length > 0 && messages.length > 0 && messages[0].role === 'system') {
+        const block = formatFindingsForPrompt(findings);
+        if (block) {
+          messages[0] = {
+            ...messages[0],
+            content: messages[0].content + block,
+          };
+        }
       }
+    } catch {
+      // fall through — playbook retrieval is an enhancement, not a requirement
+      turnFindings = [];
     }
-  } catch {
-    // fall through — playbook retrieval is an enhancement, not a requirement
-    turnFindings = [];
   }
 
   // STREAM-4 (2026-05-08): Inject the per-case dossier (deep knowledge for

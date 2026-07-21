@@ -177,6 +177,36 @@ export const TRACK_PLAYBOOKS: Partial<Record<Track, TrackPlaybook>> = {
         'Demand an operationalizable rec a team can execute day-1; high-level strategy with no execution path = instant downgrade. 30-60s, answer-first.',
     },
   },
+
+  // Behavioral / fit round. Grounded in docs/playbook/03-synthesis-behavioral-
+  // firm-specific.md §8 (grilling tactics: silence, play-dumb, devil's-advocate)
+  // and §9 (McKinsey PEI single-story deep-dives; Bain warmth + the "Bainie
+  // test" + "being right but abrasive is a fast path to rejection"), plus the
+  // vetted BEHAVIORAL_30 spike_move / common_mistake corpus. Consumed via the
+  // persona (personaForTrack('behavioral') → tells/spikeMoves/redFlags).
+  // stageNotes is intentionally empty: the caseless flow uses its OWN stage
+  // machine (behavioral-stage-machine.ts), not the case stageDirective path.
+  behavioral: {
+    tells: [
+      'Stay on that one story — walk me through exactly what YOU did next, step by step.',
+      'That’s what the team did. What was YOUR specific move?',
+      'I’m not sure I follow — say that part again.',
+      'What would you do differently if you ran it back?',
+      'Someone on your team argued the opposite — how did you actually handle that?',
+      '(lets a silence sit after your answer to see if you fill it and undercut yourself)',
+    ],
+    spikeMoves: [
+      'Owns the “I” — names the exact moment they doubted themselves or it got hard, and what they did anyway, instead of a sanitized arc.',
+      'Gives a concrete, quantified outcome AND a specific lesson they later applied — offers the second story where they used it.',
+      'Holds the answer calmly under silence or pushback: clarifies with one piece of evidence rather than over-explaining or changing it.',
+    ],
+    redFlags: [
+      '“We” soup — credits the team throughout, never states their own specific action.',
+      'Pseudo-failures and humblebrags (“I’m too much of a perfectionist”) instead of a real one; makes the other person the villain in a conflict story.',
+      'Being right but abrasive — patronizes under pushback; or a rehearsed, over-polished delivery with no messy specifics.',
+    ],
+    stageNotes: {},
+  },
 };
 
 // Guesstimate / market-sizing discipline. Cross-track: applied at the `quant`
