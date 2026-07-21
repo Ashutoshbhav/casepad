@@ -2,6 +2,8 @@
 
 import { useRef, useState, useTransition } from 'react';
 import { startLiveCaseInterview, startCaselessLiveInterview } from '@/server-actions/start-live-interview';
+import { CaseFilters } from './case-filters';
+import { CaseSearch } from './case-search';
 
 interface CaseListRow {
   id: string;
@@ -15,9 +17,11 @@ type Mode = 'case' | 'behavioral';
 export function LiveInterviewStartClient({
   cases,
   resumeUpdatedAt,
+  hasFilters,
 }: {
   cases: CaseListRow[];
   resumeUpdatedAt: string | null;
+  hasFilters: boolean;
 }) {
   const [mode, setMode] = useState<Mode>('behavioral');
   const [targetFirm, setTargetFirm] = useState('');
@@ -147,7 +151,7 @@ export function LiveInterviewStartClient({
               <label className="hupr-mono-eyebrow block mb-2">Résumé</label>
               {resumeStatus ? (
                 <p style={{ fontFamily: 'var(--font-accent)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
-                  On file, uploaded {new Date(resumeStatus).toLocaleDateString()}.{' '}
+                  On file, uploaded {new Date(resumeStatus).toLocaleDateString('en-US')}.{' '}
                   <button
                     type="button"
                     className="underline"
@@ -204,12 +208,15 @@ export function LiveInterviewStartClient({
         )}
 
         {mode === 'case' && (
-          <div style={cardStyle} className="space-y-3">
-            {cases.length === 0 && (
-              <p style={{ fontFamily: 'var(--font-accent)', fontSize: 14, color: 'var(--color-text-secondary)' }}>
-                No cases available to load right now.
-              </p>
-            )}
+          <div className="space-y-4">
+            <CaseSearch basePath="/live-interview" hash="" />
+            <CaseFilters basePath="/live-interview" />
+            <div style={cardStyle} className="space-y-3">
+              {cases.length === 0 && (
+                <p style={{ fontFamily: 'var(--font-accent)', fontSize: 14, color: 'var(--color-text-secondary)' }}>
+                  {hasFilters ? 'No cases match those filters — try widening the search.' : 'No cases available to load right now.'}
+                </p>
+              )}
             {cases.map((c) => (
               <button
                 key={c.id}
@@ -231,6 +238,7 @@ export function LiveInterviewStartClient({
                 </div>
               </button>
             ))}
+            </div>
           </div>
         )}
       </div>

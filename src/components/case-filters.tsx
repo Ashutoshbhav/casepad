@@ -16,7 +16,7 @@ const QUICK_TYPES: { key: string; label: string; color: string }[] = [
   { key: 'gtm', label: 'GTM', color: 'fuchsia' },
 ];
 
-export function CaseFilters() {
+export function CaseFilters({ basePath = '/cases' }: { basePath?: string }) {
   const router = useRouter();
   const params = useSearchParams();
   const activeType = params.get('type') ?? '';
@@ -24,7 +24,7 @@ export function CaseFilters() {
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString());
     if (value) next.set(key, value); else next.delete(key);
-    router.push(`/cases?${next.toString()}`);
+    router.push(`${basePath}?${next.toString()}`);
   };
 
   return (
