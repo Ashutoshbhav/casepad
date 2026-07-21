@@ -64,16 +64,23 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
     console.error('[debrief] sessions fetch failed:', e);
   }
   if (!session) redirect('/cases');
+  // Live-interview (0019_live_interview.sql): case_id is nullable — a
+  // caseless (behavioral/culture-fit) session has no case row at all. Skip
+  // the query entirely rather than let it 0-row-error; caseRow stays null,
+  // which every render path below already treats as "no case" gracefully
+  // (title falls back to em-dash, walkthrough section is hidden further down).
   let caseRow: any = null;
-  try {
-    const r = await supabase
-      .from('cases')
-      .select('id, title, case_type, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
-      .eq('id', session.case_id)
-      .single();
-    caseRow = r.data;
-  } catch (e) {
-    console.error('[debrief] cases fetch failed:', e);
+  if (session.case_id) {
+    try {
+      const r = await supabase
+        .from('cases')
+        .select('id, title, case_type, ideal_structure, problem_statement, interviewer_notes, ideal_walkthrough')
+        .eq('id', session.case_id)
+        .single();
+      caseRow = r.data;
+    } catch (e) {
+      console.error('[debrief] cases fetch failed:', e);
+    }
   }
 
   // TOMORROW'S CASE — graceful degrade if migration 0011 missing or no user.
@@ -322,26 +329,31 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       {/* The stale casebook ideal_structure box (often mislabeled, e.g. "Porter's
           5 Forces" on a profit case) is gone — the walkthrough's correct,
           case-type-anchored issue tree below replaces it. The walkthrough is
-          loaded/regenerated client-side so this page never blocks on the LLM. */}
-      <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
-        <span className="hupr-mono-eyebrow">How a top candidate would solve this</span>
-        <hr className="hupr-hairline" />
-        <p
-          className="mt-3 mb-5"
-          style={{
-            fontFamily: 'var(--font-accent)',
-            fontSize: 14,
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.
-        </p>
-        <IdealWalkthroughLoader
-          sessionId={sessionId}
-          initial={cachedWalkthrough}
-          initialFresh={walkthroughFresh}
-        />
-      </section>
+          loaded/regenerated client-side so this page never blocks on the LLM.
+          Case-structural by definition (issue tree / hypothesis tree) — no
+          meaning for a caseless (behavioral/culture-fit) session, so hidden
+          when there's no case row rather than shown empty/broken. */}
+      {caseRow && (
+        <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
+          <span className="hupr-mono-eyebrow">How a top candidate would solve this</span>
+          <hr className="hupr-hairline" />
+          <p
+            className="mt-3 mb-5"
+            style={{
+              fontFamily: 'var(--font-accent)',
+              fontSize: 14,
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.
+          </p>
+          <IdealWalkthroughLoader
+            sessionId={sessionId}
+            initial={cachedWalkthrough}
+            initialFresh={walkthroughFresh}
+          />
+        </section>
+      )}
 
       {/* TOMORROW — anticipation outro. Routes to /dashboard (set anticipation),
           not /cases. The library is still reachable via the secondary link below. */}
