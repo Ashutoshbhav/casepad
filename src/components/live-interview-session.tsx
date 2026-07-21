@@ -6,21 +6,33 @@
 // scrolling bubble list, because a voice interface needs "whose turn is it"
 // to be the primary thing on screen, not a chat transcript.
 //
-// Turn-taking (see the live-interviewer plan): the interviewer's turn and
-// the candidate's turn are structurally mutually exclusive — <LiveMicInput>
-// is disabled for the entire duration of 'interviewer_speaking' /
-// 'processing', so it is impossible (not just unlikely) for the mic to be
-// live while the interviewer is talking.
+// Turn-taking (hands-free, bidirectional barge-in): <LiveMicInput> is now
+// mounted continuously for the whole session, including while the
+// interviewer is "speaking" — that's what makes barge-in possible. It calls
+// `interrupt()` itself (via onBargeIn) the moment it detects the candidate
+// talking over the AI; sending a turn while the AI is still "processing" the
+// previous one is guarded inside LiveMicInput itself (phase-gated), not here.
+// This replaced the original push-to-talk/hard-mutual-exclusion design — see
+// git history on this file for that version if you need to compare.
 //
 // Never-fail: STT failure shows a plain text input for that turn instead of
 // blocking (never_fail_stt); TTS failure just renders text with no audio,
 // silently, since nothing the user depends on actually failed
 // (never_fail_tts). A network stall on the chat call itself aborts and lets
 // the candidate try again rather than hanging forever.
+//
+// Visual: cyberpunk-HUD treatment, scoped to this component only (forced
+// dark canvas regardless of the app's light/dark toggle — the rest of the
+// app stays on HUPR's monochrome system per globals.css; this is a
+// deliberate, bounded exception for one full-screen "different mode"
+// surface, not a brand change).
 
 import { useEffect, useRef, useState } from 'react';
-import { LiveMicInput } from './live-mic-input';
+import { LiveMicInput, type ListenerStatus } from './live-mic-input';
+import { LiveInterviewScene } from './live-interview-scene';
 import { InlineSubmitCTA } from './inline-submit-cta';
+
+export type GlowState = 'idle' | 'ai' | 'candidate' | 'processing';
 
 type Msg = { role: 'user' | 'interviewer'; content: string };
 type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
@@ -50,6 +62,19 @@ export function LiveInterviewSession({
   const [sttFallbackActive, setSttFallbackActive] = useState(false);
   const [fallbackText, setFallbackText] = useState('');
   const [transcriptOpen, setTranscriptOpen] = useState(false);
+  const [listenerStatus, setListenerStatus] = useState<ListenerStatus>('loading');
+  // Written at ~30Hz by LiveMicInput's onAmplitude — read directly inside
+  // the 3D scene's useFrame loop, never through React state (see
+  // live-interview-scene.tsx's header comment for why).
+  const ampRef = useRef(0);
+  // Real elapsed session time (not a fabricated stat) for the dial's
+  // chronometer readout — ticks once/sec from actual mount time.
+  const [elapsedSec, setElapsedSec] = useState(0);
+  useEffect(() => {
+    const startedAt = Date.now();
+    const id = setInterval(() => setElapsedSec(Math.floor((Date.now() - startedAt) / 1000)), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const startedOpenerRef = useRef(false);
@@ -250,77 +275,102 @@ export function LiveInterviewSession({
 
   const showSubmitCta = phase === 'candidate_turn' && messages.length >= 6;
 
+  // listenerStatus === 'transcribing' MUST be checked before `phase`
+  // fallback — the gap between "candidate stopped talking" and "phase
+  // actually flips to processing" (which only happens once the Whisper call
+  // resolves and sendTurn() runs) was previously falling through to
+  // 'LISTENING', i.e. the UI looked frozen for the whole STT round-trip
+  // right when it matters most for perceived responsiveness.
   const stateLabel =
     phase === 'interviewer_speaking'
-      ? 'Interviewer is speaking'
+      ? 'INTERVIEWER — SPEAKING'
       : phase === 'processing'
-        ? 'Processing…'
-        : sttFallbackActive
-          ? 'Type your answer'
-          : 'Your turn';
+        ? 'PROCESSING'
+        : listenerStatus === 'transcribing'
+          ? 'PROCESSING'
+          : listenerStatus === 'speaking'
+            ? 'HEARING YOU'
+            : sttFallbackActive
+              ? 'TYPE YOUR ANSWER'
+              : 'LISTENING';
+
+  // Drives the 3D scene + HUD glow color — see live-interview-scene.tsx and
+  // the .hud-glow-* rules in the trailing <style jsx> block. Distinct from
+  // `phase` alone because "candidate is actively speaking"
+  // (listenerStatus === 'speaking') should read differently from
+  // "candidate_turn but silent, waiting," and transcribing should read as
+  // "processing" for the same reason as stateLabel above.
+  const glowState: GlowState =
+    phase === 'interviewer_speaking'
+      ? 'ai'
+      : phase === 'processing' || listenerStatus === 'transcribing'
+        ? 'processing'
+        : listenerStatus === 'speaking'
+          ? 'candidate'
+          : 'idle';
+
+  const elapsedLabel = `${String(Math.floor(elapsedSec / 60)).padStart(2, '0')}:${String(elapsedSec % 60).padStart(2, '0')}`;
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: 'var(--color-bg-canvas)' }}>
-      <section className="px-6 sm:px-12 py-6 flex items-center justify-between" style={{ borderBottom: '1px solid var(--color-border)' }}>
-        <span className="hupr-mono-eyebrow">Live Interview</span>
-        <button
-          type="button"
-          onClick={() => setTranscriptOpen((v) => !v)}
-          className="hupr-mono-eyebrow underline"
-          style={{ background: 'none', border: 0, cursor: 'pointer' }}
-        >
-          {transcriptOpen ? 'Hide transcript' : 'Show transcript'}
+    <main className={`hud-shell hud-glow-${glowState} min-h-screen flex flex-col`}>
+      <div className="hud-scene" aria-hidden="true">
+        <LiveInterviewScene glowState={glowState} ampRef={ampRef} />
+      </div>
+      <div className="hud-scanlines" aria-hidden="true" />
+      <div className="hud-vignette" aria-hidden="true" />
+
+      <section className="hud-header px-6 sm:px-12 py-6 flex items-center justify-between">
+        <span className="hud-eyebrow">{'// LIVE_INTERVIEW'}</span>
+        <button type="button" onClick={() => setTranscriptOpen((v) => !v)} className="hud-eyebrow hud-link">
+          {transcriptOpen ? '[ HIDE TRANSCRIPT ]' : '[ SHOW TRANSCRIPT ]'}
         </button>
       </section>
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 py-12">
-        <span
-          className="font-mono text-[12px] uppercase tracking-widest"
-          style={{ color: 'var(--color-text-secondary)' }}
-          aria-live="polite"
-        >
-          {stateLabel}
-        </span>
-
-        {phase === 'interviewer_speaking' && (
-          <button
-            type="button"
-            onClick={interrupt}
-            className="px-4 py-2 rounded-md"
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-secondary)',
-              background: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Stop — I want to jump in
-          </button>
-        )}
-
-        {phase === 'candidate_turn' && !sttFallbackActive && (
-          <LiveMicInput
-            sessionId={sessionId}
-            disabled={false}
-            onAutoSend={(text) => void sendTurn(text)}
-            onSttFailed={() => setSttFallbackActive(true)}
-          />
-        )}
-
-        {phase !== 'candidate_turn' && (
-          <div style={{ opacity: 0.35 }}>
-            <LiveMicInput
-              sessionId={sessionId}
-              disabled={true}
-              onAutoSend={() => {}}
-              onSttFailed={() => {}}
-            />
+      <div className="flex-1 flex flex-col items-center justify-center gap-8 px-6 py-12">
+        <div className="jarvis-dial">
+          <div className="jarvis-ring jarvis-ring-tickset" aria-hidden="true">
+            {Array.from({ length: 36 }).map((_, i) => (
+              <div key={i} className="jarvis-tick-wrap" style={{ transform: `rotate(${(360 / 36) * i}deg)` }}>
+                <span className="jarvis-tick" />
+              </div>
+            ))}
           </div>
-        )}
+          <div className="jarvis-ring jarvis-ring-dash" aria-hidden="true" />
+          <div className="jarvis-ring jarvis-arc jarvis-arc-a" aria-hidden="true" />
+          <div className="jarvis-ring jarvis-arc jarvis-arc-b" aria-hidden="true" />
+
+          <span className="jarvis-radial-label jarvis-radial-tl">SESSION {elapsedLabel}</span>
+          <span className="jarvis-radial-label jarvis-radial-tr">ASH · LIVE</span>
+          <span className="jarvis-radial-label jarvis-radial-bl">TURN {Math.ceil(messages.length / 2)}</span>
+          <span className="jarvis-radial-label jarvis-radial-br">{listenerStatus.toUpperCase()}</span>
+
+          <div className="jarvis-core">
+            <span className="hud-readout" aria-live="polite">
+              [ {stateLabel} ]
+            </span>
+
+            {phase === 'interviewer_speaking' && listenerStatus !== 'needs_permission' && listenerStatus !== 'loading' && (
+              <button type="button" onClick={interrupt} className="hud-link-button">
+                ⏻ JUMP IN
+              </button>
+            )}
+
+            {!sttFallbackActive && (
+              <LiveMicInput
+                sessionId={sessionId}
+                phase={phase}
+                onAutoSend={(text) => void sendTurn(text)}
+                onBargeIn={interrupt}
+                onSttFailed={() => setSttFallbackActive(true)}
+                onStatusChange={setListenerStatus}
+                onAmplitude={(level) => {
+                  ampRef.current = level;
+                }}
+              />
+            )}
+          </div>
+        </div>
+        <span className="hud-mic-note">Mic input degrades gracefully — never blocks a turn.</span>
 
         {sttFallbackActive && phase === 'candidate_turn' && (
           <form
@@ -339,48 +389,27 @@ export function LiveInterviewSession({
               value={fallbackText}
               onChange={(e) => setFallbackText(e.target.value)}
               placeholder="Type your answer for this turn…"
-              className="flex-1 px-3 py-2 rounded-md"
-              style={{
-                background: 'var(--color-bg-sunken)',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-text-primary)',
-                fontSize: 14,
-                outline: 'none',
-              }}
+              className="hud-input flex-1 px-3 py-2"
             />
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-md"
-              style={{
-                background: 'var(--color-text-primary)',
-                color: 'var(--color-bg-canvas)',
-                border: 0,
-                fontFamily: 'var(--font-mono)',
-                fontSize: 12,
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-              }}
-            >
-              Send
+            <button type="submit" className="hud-link-button">
+              SEND
             </button>
           </form>
         )}
 
         {notice && (
-          <p role="alert" className="text-sm text-center max-w-md" style={{ color: 'var(--color-signal-danger, #D94B4B)' }}>
+          <p role="alert" className="hud-notice text-sm text-center max-w-md">
             {notice}
           </p>
         )}
       </div>
 
       {transcriptOpen && (
-        <section className="px-6 sm:px-12 py-6 max-h-[40vh] overflow-y-auto" style={{ borderTop: '1px solid var(--color-border)' }}>
+        <section className="hud-transcript px-6 sm:px-12 py-6 max-h-[40vh] overflow-y-auto">
           <div className="max-w-2xl mx-auto space-y-3">
             {messages.map((m, i) => (
-              <div key={i} style={{ fontFamily: 'var(--font-accent)', fontSize: 14, color: 'var(--color-text-primary)' }}>
-                <span className="font-mono text-[10px] uppercase tracking-wide mr-2" style={{ color: 'var(--color-text-secondary)' }}>
-                  {m.role === 'interviewer' ? 'Interviewer' : 'You'}
-                </span>
+              <div key={i} className="hud-transcript-line">
+                <span className="hud-eyebrow mr-2">{m.role === 'interviewer' ? 'ASH' : 'YOU'}</span>
                 {m.content}
               </div>
             ))}
@@ -391,6 +420,282 @@ export function LiveInterviewSession({
       {showSubmitCta && (
         <InlineSubmitCTA sessionId={sessionId} endSessionAction={endSessionAction} messageCount={messages.length} />
       )}
+
+      <style jsx>{`
+        .hud-shell {
+          position: relative;
+          background: #05070a;
+          color: #d7ecff;
+          overflow: hidden;
+          isolation: isolate;
+        }
+        .hud-scene {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+        }
+        .hud-scanlines {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
+          background-image: repeating-linear-gradient(
+            0deg,
+            rgba(120, 220, 255, 0.035) 0px,
+            rgba(120, 220, 255, 0.035) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+        }
+        .hud-vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
+          background: radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(5, 7, 10, 0.55) 78%, #05070a 100%);
+        }
+        .hud-header,
+        .hud-shell > .flex-1 {
+          position: relative;
+          z-index: 2;
+        }
+        .hud-header {
+          border-bottom: 1px solid rgba(120, 220, 255, 0.18);
+        }
+        .hud-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(215, 236, 255, 0.55);
+        }
+        .hud-link {
+          background: none;
+          border: 0;
+          cursor: pointer;
+        }
+        .hud-link:hover {
+          color: #7dd8ff;
+        }
+        /* ---- JARVIS dial ---------------------------------------------- */
+        .jarvis-dial {
+          position: relative;
+          width: clamp(300px, 42vw, 420px);
+          height: clamp(300px, 42vw, 420px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .jarvis-ring {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          border-radius: 50%;
+          pointer-events: none;
+        }
+        .jarvis-ring-tickset {
+          width: 100%;
+          height: 100%;
+          transform: translate(-50%, -50%);
+          animation: jarvis-spin 42s linear infinite;
+        }
+        /* Full-size wrapper rotated per-tick — default transform-origin
+           (50% 50%, i.e. the wrapper's own center) lands exactly on the
+           dial's center since the wrapper fills it via inset:0, so each
+           tick swings to its angle with no manual radius/offset math. */
+        .jarvis-tick-wrap {
+          position: absolute;
+          inset: 0;
+        }
+        .jarvis-tick {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 2px;
+          height: 9px;
+          margin-left: -1px;
+          background: var(--jarvis-glow, #22d3ee);
+          opacity: 0.55;
+          display: block;
+        }
+        .jarvis-ring-dash {
+          width: 86%;
+          height: 86%;
+          transform: translate(-50%, -50%);
+          border: 1px dashed rgba(120, 220, 255, 0.35);
+          animation: jarvis-spin-reverse 26s linear infinite;
+        }
+        .jarvis-arc {
+          border: 2px solid transparent;
+        }
+        .jarvis-arc-a {
+          width: 96%;
+          height: 96%;
+          transform: translate(-50%, -50%);
+          border-top-color: var(--jarvis-glow, #22d3ee);
+          border-right-color: var(--jarvis-glow, #22d3ee);
+          opacity: 0.8;
+          animation: jarvis-spin 6s linear infinite;
+          filter: drop-shadow(0 0 6px var(--jarvis-glow, #22d3ee));
+        }
+        .jarvis-arc-b {
+          width: 70%;
+          height: 70%;
+          transform: translate(-50%, -50%);
+          border-bottom-color: rgba(120, 220, 255, 0.5);
+          border-left-color: rgba(120, 220, 255, 0.5);
+          animation: jarvis-spin-reverse 9s linear infinite;
+        }
+        .jarvis-core {
+          position: relative;
+          z-index: 1;
+          width: 62%;
+          height: 62%;
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+          text-align: center;
+          padding: 20px;
+          background: radial-gradient(circle at 50% 40%, rgba(120, 220, 255, 0.1), rgba(5, 10, 16, 0.72) 72%);
+          border: 1px solid rgba(120, 220, 255, 0.3);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          box-shadow: 0 0 40px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.18)) inset, 0 0 60px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.12));
+          transition: box-shadow 300ms ease, border-color 300ms ease;
+        }
+        .jarvis-radial-label {
+          position: absolute;
+          font-family: var(--font-mono);
+          font-size: 9px;
+          letter-spacing: 0.12em;
+          color: rgba(215, 236, 255, 0.45);
+          white-space: nowrap;
+        }
+        .jarvis-radial-tl { top: 2%; left: 2%; }
+        .jarvis-radial-tr { top: 2%; right: 2%; text-align: right; }
+        .jarvis-radial-bl { bottom: 2%; left: 2%; }
+        .jarvis-radial-br { bottom: 2%; right: 2%; text-align: right; }
+
+        @keyframes jarvis-spin {
+          from { transform: translate(-50%, -50%) rotate(0deg); }
+          to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes jarvis-spin-reverse {
+          from { transform: translate(-50%, -50%) rotate(0deg); }
+          to { transform: translate(-50%, -50%) rotate(-360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .jarvis-ring-tickset, .jarvis-ring-dash, .jarvis-arc-a, .jarvis-arc-b {
+            animation: none;
+          }
+        }
+
+        .hud-glow-ai .jarvis-dial { --jarvis-glow: #22d3ee; --jarvis-glow-dim: rgba(34, 211, 238, 0.28); }
+        .hud-glow-candidate .jarvis-dial { --jarvis-glow: #f2b84b; --jarvis-glow-dim: rgba(242, 184, 75, 0.28); }
+        .hud-glow-processing .jarvis-dial { --jarvis-glow: #8b7bf0; --jarvis-glow-dim: rgba(139, 123, 240, 0.28); }
+        .hud-glow-idle .jarvis-dial { --jarvis-glow: #3fa9c9; --jarvis-glow-dim: rgba(63, 169, 201, 0.16); }
+        .hud-glow-candidate .jarvis-core { border-color: rgba(242, 184, 75, 0.45); }
+        .hud-glow-candidate .hud-readout { color: #ffd682; }
+        .hud-glow-processing .jarvis-core { animation: jarvis-pulse 1.3s ease-in-out infinite; }
+
+        @keyframes jarvis-pulse {
+          0%, 100% { box-shadow: 0 0 30px var(--jarvis-glow-dim) inset, 0 0 40px var(--jarvis-glow-dim); }
+          50% { box-shadow: 0 0 50px var(--jarvis-glow-dim) inset, 0 0 80px var(--jarvis-glow-dim); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hud-glow-processing .jarvis-core { animation: none; }
+        }
+
+        .hud-readout {
+          font-family: var(--font-mono);
+          font-size: 13px;
+          letter-spacing: 0.12em;
+          color: #9be7ff;
+        }
+        .hud-mic-note {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 0.04em;
+          color: rgba(215, 236, 255, 0.35);
+          text-align: center;
+        }
+        .hud-link-button {
+          font-family: var(--font-mono);
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 10px 18px;
+          background: transparent;
+          border: 1px solid rgba(120, 220, 255, 0.4);
+          color: #9be7ff;
+          cursor: pointer;
+        }
+        .hud-link-button:hover {
+          border-color: #9be7ff;
+          background: rgba(120, 220, 255, 0.08);
+        }
+        .hud-input {
+          font-family: var(--font-mono);
+          font-size: 14px;
+          background: rgba(120, 220, 255, 0.04);
+          border: 1px solid rgba(120, 220, 255, 0.25);
+          color: #d7ecff;
+          outline: none;
+        }
+        .hud-input::placeholder {
+          color: rgba(215, 236, 255, 0.35);
+        }
+        .hud-notice {
+          color: #ff8a8a;
+          font-family: var(--font-mono);
+          font-size: 12px;
+        }
+        .hud-transcript {
+          border-top: 1px solid rgba(120, 220, 255, 0.18);
+        }
+        .hud-transcript-line {
+          font-family: var(--font-accent);
+          font-size: 14px;
+          color: rgba(215, 236, 255, 0.85);
+        }
+
+        /* Glow state — tied to whichever side currently "has the mic." */
+        .hud-glow-ai .hud-frame {
+          box-shadow: 0 0 28px rgba(120, 220, 255, 0.22);
+          border-color: rgba(120, 220, 255, 0.5);
+        }
+        .hud-glow-ai .hud-corner {
+          border-color: #9be7ff;
+        }
+        .hud-glow-candidate .hud-frame {
+          box-shadow: 0 0 28px rgba(255, 214, 130, 0.2);
+          border-color: rgba(255, 214, 130, 0.5);
+        }
+        .hud-glow-candidate .hud-corner {
+          border-color: #ffd682;
+        }
+        .hud-glow-candidate .hud-readout {
+          color: #ffd682;
+        }
+        .hud-glow-processing .hud-frame {
+          animation: hud-pulse 1.4s ease-in-out infinite;
+        }
+
+        @keyframes hud-pulse {
+          0%, 100% { box-shadow: 0 0 12px rgba(120, 220, 255, 0.12); }
+          50% { box-shadow: 0 0 24px rgba(120, 220, 255, 0.28); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hud-glow-processing .hud-frame {
+            animation: none;
+          }
+        }
+      `}</style>
     </main>
   );
 }
