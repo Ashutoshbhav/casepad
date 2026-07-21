@@ -8,6 +8,7 @@ import type { Track } from '@/lib/tracks';
 import { startSession } from '@/server-actions/start-session';
 import { endSession } from '@/server-actions/end-session';
 import { resetSession } from '@/server-actions/reset-session';
+import { PracticeLiveLink } from '@/components/practice-live-link';
 
 export default async function SolvePage({
   params, searchParams,
@@ -92,6 +93,9 @@ export default async function SolvePage({
         initialCs={initialCs as any}
         ended={ended}
       />
+      <div className="px-5 py-1" style={{ borderTop: '1px solid var(--color-border)' }}>
+        <PracticeLiveLink caseId={caseId} />
+      </div>
       <details
         className="px-5 py-1"
         style={{ borderTop: '1px solid var(--color-border)' }}

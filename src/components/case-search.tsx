@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export function CaseSearch() {
+export function CaseSearch({ basePath = '/cases', hash = '#library' }: { basePath?: string; hash?: string }) {
   const router = useRouter();
   const params = useSearchParams();
   const urlQ = params.get('q') ?? '';
@@ -29,7 +29,7 @@ export function CaseSearch() {
     lastPushedRef.current = trimmed;
     const qs = sp.toString();
     startTransition(() => {
-      router.push(qs ? `/cases?${qs}#library` : '/cases#library', { scroll: false });
+      router.push(qs ? `${basePath}?${qs}${hash}` : `${basePath}${hash}`, { scroll: false });
     });
   };
 

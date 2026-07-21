@@ -75,6 +75,16 @@ const nextConfig: NextConfig = {
   // SWC pipeline like first-party code. Only used by the dynamically-
   // imported Signin3DHero — never reaches mobile bundles.
   transpilePackages: ['three'],
+
+  // pdf-parse (src/app/api/resume/upload) wraps pdf.js, which sets up a
+  // Node "fake worker" via a dynamic import of its own compiled
+  // pdf.worker.mjs. Turbopack's route bundling doesn't resolve that dynamic
+  // import correctly (404s on a chunk path that doesn't exist in the
+  // bundle output — confirmed the library itself works fine under plain
+  // `node`, unbundled). Excluding it from Server Components bundling makes
+  // Next use native `require` instead, which resolves the worker file
+  // through normal node_modules resolution like any other Node script.
+  serverExternalPackages: ['pdf-parse'],
 };
 
 export default nextConfig;

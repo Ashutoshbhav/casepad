@@ -10,6 +10,7 @@ import { TRACKS, type Track } from '@/lib/tracks';
 import { STARTER_CASE_IDS } from '@/lib/starter-cases';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 import { HuprCaseRow, type HuprCaseRowData } from '@/components/hupr/hupr-case-row';
+import { PracticeLiveLink } from '@/components/practice-live-link';
 import { HuprStickyCard, HuprStickyCardStack } from '@/components/hupr/hupr-sticky-card';
 import { caseImageFor } from '@/lib/case-images/picker';
 
@@ -592,6 +593,7 @@ export default async function CasesPage({
                   <div className="case-section-rest" aria-hidden="true" />
                 )}
                 <HuprCaseRow c={c} completed={completedCaseIds.has(c.id)} />
+                <PracticeLiveLink caseId={c.id} className="-mt-3 pb-4 text-right" />
               </div>
             ))}
           </CasesLoadMore>
@@ -672,6 +674,7 @@ export default async function CasesPage({
                 {fallbackFiltered.map((c) => (
                   <div key={c.id}>
                     <HuprCaseRow c={c} completed={completedCaseIds.has(c.id)} />
+                    <PracticeLiveLink caseId={c.id} className="-mt-3 pb-4 text-right" />
                   </div>
                 ))}
               </div>

@@ -85,25 +85,43 @@ function renderQuestionBank(): string {
   return blocks.join('\n\n');
 }
 
+// Résumé-anchored question construction — the bank alone was producing
+// generic, template-y questions even when a résumé was on file (résumé was
+// only used passively for follow-up flavor, not to drive which question got
+// asked). When a résumé exists, the bank should read as evaluation criteria
+// per dimension, not a script to recite; when there's no résumé, fall back
+// to the bank verbatim since there's nothing to anchor to instead.
+function renderQuestionBankInstructions(hasResume: boolean): string {
+  if (!hasResume) {
+    return 'These are the real, vetted behavioral questions for this interview, grouped by the dimension they test. During the deep-dive, ask questions FROM this bank (you may adapt the wording slightly to fit the conversation), one at a time, moving across dimensions rather than repeating one. For each: "spike" is what a top answer does — probe with follow-ups until you can tell whether they hit it; "watch" is the common failure — check whether they fall into it and push if they do. Prefer a vetted question over inventing a new one.';
+  }
+  return `The candidate has a résumé on file (above) — use it. For each dimension you probe, DO NOT recite the question below verbatim; build a question anchored in a specific, real detail from their résumé instead — a project name, a number, a role transition, a team they led, a stated outcome. The bank entry for that dimension is your evaluation criteria, not your script: "spike" is what a top answer does (probe with follow-ups until you can tell whether they hit it), "watch" is the common failure (check whether they fall into it and push if they do). A generic, un-anchored question when a résumé is sitting right there reads as lazy — treat that as a failure mode to avoid, same as a chatbot tell.
+
+Example — same dimension (leadership), same spike/watch criteria, anchored instead of canned:
+  ❌ Bank question, recited as-is: "Tell me about a time you led a team through ambiguity."
+  ✅ Anchored to their résumé: "You mention rebuilding the procurement-to-delivery pipeline at Omkar Motors — where in that rebuild did the plan you started with stop working, and what did you do?"`;
+}
+
 export function buildBehavioralInterviewerMessages(
   context: BehavioralInterviewContext,
   transcript: ChatMessage[],
   opts: BuildBehavioralInterviewerOpts = {}
 ): Msg[] {
   const persona = opts.persona ?? personaForTrack('behavioral');
+  const hasResume = !!(context.resumeText && context.resumeText.trim());
 
   const system = `${personaPromptBlock(persona)}
 
 You are NOT a tutor, NOT a coach, NOT a chatbot. You are an interviewer doing a live BEHAVIORAL / CULTURE-FIT interview — there is no case, no framework, no math. This is a real fit round: STAR-format questions, follow-ups, and honest reflection.
 
-== CANDIDATE RÉSUMÉ CONTEXT (private — reference specific details naturally when relevant; do not recite it back verbatim) ==
+== CANDIDATE RÉSUMÉ CONTEXT (private — this is your primary source for building deep-dive questions when present, per the VETTED QUESTION BANK section below; weave details in naturally, do not recite the résumé back verbatim) ==
 ${renderResumeBlock(context.resumeText)}
 
 == CULTURE-FIT CONTEXT ==
 ${renderCultureFitBlock(context.targetFirm)}
 
-== VETTED QUESTION BANK (this is your question repertoire — draw from it, don't invent) ==
-These are the real, vetted behavioral questions for this interview, grouped by the dimension they test. During the deep-dive, ask questions FROM this bank (you may adapt the wording slightly to fit the conversation), one at a time, moving across dimensions rather than repeating one. For each: "spike" is what a top answer does — probe with follow-ups until you can tell whether they hit it; "watch" is the common failure — check whether they fall into it and push if they do. Prefer a vetted question over inventing a new one.
+== VETTED QUESTION BANK ==
+${renderQuestionBankInstructions(hasResume)}
 
 ${renderQuestionBank()}
 
