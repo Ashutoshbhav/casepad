@@ -32,7 +32,7 @@ import { LiveMicInput, type ListenerStatus } from './live-mic-input';
 import { LiveInterviewScene } from './live-interview-scene';
 import { InlineSubmitCTA } from './inline-submit-cta';
 
-export type GlowState = 'idle' | 'ai' | 'candidate' | 'processing';
+export type GlowState = 'idle' | 'ai' | 'candidate' | 'processing' | 'error';
 
 type Msg = { role: 'user' | 'interviewer'; content: string };
 type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
@@ -300,8 +300,9 @@ export function LiveInterviewSession({
   // (listenerStatus === 'speaking') should read differently from
   // "candidate_turn but silent, waiting," and transcribing should read as
   // "processing" for the same reason as stateLabel above.
-  const glowState: GlowState =
-    phase === 'interviewer_speaking'
+  const glowState: GlowState = notice
+    ? 'error'
+    : phase === 'interviewer_speaking'
       ? 'ai'
       : phase === 'processing' || listenerStatus === 'transcribing'
         ? 'processing'
@@ -316,8 +317,14 @@ export function LiveInterviewSession({
       <div className="hud-scene" aria-hidden="true">
         <LiveInterviewScene glowState={glowState} ampRef={ampRef} />
       </div>
+      <div className="hud-hexgrid" aria-hidden="true" />
       <div className="hud-scanlines" aria-hidden="true" />
+      <div className="hud-sweep" aria-hidden="true" />
       <div className="hud-vignette" aria-hidden="true" />
+      <span className="hud-reticle hud-reticle-tl" aria-hidden="true" />
+      <span className="hud-reticle hud-reticle-tr" aria-hidden="true" />
+      <span className="hud-reticle hud-reticle-bl" aria-hidden="true" />
+      <span className="hud-reticle hud-reticle-br" aria-hidden="true" />
 
       <section className="hud-header px-6 sm:px-12 py-6 flex items-center justify-between">
         <span className="hud-eyebrow">{'// LIVE_INTERVIEW'}</span>
@@ -331,18 +338,44 @@ export function LiveInterviewSession({
           <div className="jarvis-ring jarvis-ring-tickset" aria-hidden="true">
             {Array.from({ length: 36 }).map((_, i) => (
               <div key={i} className="jarvis-tick-wrap" style={{ transform: `rotate(${(360 / 36) * i}deg)` }}>
-                <span className="jarvis-tick" />
+                <span className={i % 3 === 0 ? 'jarvis-tick jarvis-tick-major' : 'jarvis-tick'} />
               </div>
             ))}
           </div>
-          <div className="jarvis-ring jarvis-ring-dash" aria-hidden="true" />
+          <div className="jarvis-ring jarvis-ring-segmented" aria-hidden="true" />
+          <div className="jarvis-ring jarvis-ring-pulsepath" aria-hidden="true">
+            <span className="jarvis-pulse-dot" />
+          </div>
           <div className="jarvis-ring jarvis-arc jarvis-arc-a" aria-hidden="true" />
           <div className="jarvis-ring jarvis-arc jarvis-arc-b" aria-hidden="true" />
 
-          <span className="jarvis-radial-label jarvis-radial-tl">SESSION {elapsedLabel}</span>
-          <span className="jarvis-radial-label jarvis-radial-tr">ASH · LIVE</span>
-          <span className="jarvis-radial-label jarvis-radial-bl">TURN {Math.ceil(messages.length / 2)}</span>
-          <span className="jarvis-radial-label jarvis-radial-br">{listenerStatus.toUpperCase()}</span>
+          {/* Satellite gauge cluster — small off-axis rings, independent of the
+              main dial's rotation, per the "persistent repositioning gauges"
+              motif real JARVIS-genre HUDs use. Decorative telemetry, not real
+              data — see hud-mic-note below for the one thing that IS real. */}
+          <div className="jarvis-satellite jarvis-satellite-a" aria-hidden="true">
+            <div className="jarvis-satellite-ring" />
+          </div>
+          <div className="jarvis-satellite jarvis-satellite-b" aria-hidden="true">
+            <div className="jarvis-satellite-ring" />
+          </div>
+
+          <div className="jarvis-panel jarvis-panel-tl">
+            <span className="jarvis-panel-corner" aria-hidden="true" />
+            SESSION {elapsedLabel}
+          </div>
+          <div className="jarvis-panel jarvis-panel-tr">
+            ASH · LIVE
+            <span className="jarvis-panel-corner jarvis-panel-corner-r" aria-hidden="true" />
+          </div>
+          <div className="jarvis-panel jarvis-panel-bl">
+            <span className="jarvis-panel-corner jarvis-panel-corner-b" aria-hidden="true" />
+            TURN {Math.ceil(messages.length / 2)}
+          </div>
+          <div className="jarvis-panel jarvis-panel-br">
+            {listenerStatus.toUpperCase()}
+            <span className="jarvis-panel-corner jarvis-panel-corner-br" aria-hidden="true" />
+          </div>
 
           <div className="jarvis-core">
             <span className="hud-readout" aria-live="polite">
@@ -422,6 +455,11 @@ export function LiveInterviewSession({
       )}
 
       <style jsx>{`
+        /* ---- Color hierarchy (per real JARVIS-genre HUD research) -----
+           cyan = live info/active glow, white = structural/chrome (grid,
+           reticles, ring frames, ticks), red = warning/critical only. Not
+           monochrome cyan throughout — that read as generic sci-fi, not
+           JARVIS specifically. */
         .hud-shell {
           position: relative;
           background: #05070a;
@@ -434,6 +472,15 @@ export function LiveInterviewSession({
           inset: 0;
           z-index: 0;
           pointer-events: none;
+        }
+        .hud-hexgrid {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          opacity: 0.16;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0 L56 16.2 L56 48.5 L28 64.7 L0 48.5 L0 16.2 Z' fill='none' stroke='%23dceeff' stroke-width='0.6'/%3E%3Cpath d='M28 32.3 L56 48.5 L56 80.8 L28 97 L0 80.8 L0 48.5 Z' fill='none' stroke='%23dceeff' stroke-width='0.6'/%3E%3C/svg%3E");
+          background-size: 84px 145px;
         }
         .hud-scanlines {
           position: absolute;
@@ -448,6 +495,24 @@ export function LiveInterviewSession({
             transparent 3px
           );
         }
+        /* Radar-style sweep — a slowly rotating wedge of light, one of the
+           recurring "instrument is alive" motifs in this genre. */
+        .hud-sweep {
+          position: absolute;
+          inset: -20%;
+          z-index: 1;
+          pointer-events: none;
+          background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            var(--jarvis-glow, #22d3ee) 2deg,
+            transparent 40deg,
+            transparent 360deg
+          );
+          opacity: 0.08;
+          animation: jarvis-spin 14s linear infinite;
+          transition: opacity 300ms ease;
+        }
         .hud-vignette {
           position: absolute;
           inset: 0;
@@ -455,13 +520,33 @@ export function LiveInterviewSession({
           z-index: 1;
           background: radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(5, 7, 10, 0.55) 78%, #05070a 100%);
         }
+        /* Corner reticle brackets — viewfinder/targeting-HUD framing for the
+           whole screen, not just the dial. Structural chrome -> white. */
+        /* Anchored to .hud-shell's own bounds (position: absolute, not
+           fixed) — fixed positioning ignores DOM/stacking order entirely and
+           put these behind the app's global nav header at the top of the
+           viewport, rendering them invisible. .hud-shell already establishes
+           a positioning context (position: relative, set above). */
+        .hud-reticle {
+          position: absolute;
+          z-index: 3;
+          width: 28px;
+          height: 28px;
+          pointer-events: none;
+          opacity: 0.4;
+          border-color: rgba(230, 245, 255, 0.55);
+        }
+        .hud-reticle-tl { top: 18px; left: 18px; border-top: 1px solid; border-left: 1px solid; }
+        .hud-reticle-tr { top: 18px; right: 18px; border-top: 1px solid; border-right: 1px solid; }
+        .hud-reticle-bl { bottom: 18px; left: 18px; border-bottom: 1px solid; border-left: 1px solid; }
+        .hud-reticle-br { bottom: 18px; right: 18px; border-bottom: 1px solid; border-right: 1px solid; }
         .hud-header,
         .hud-shell > .flex-1 {
           position: relative;
           z-index: 2;
         }
         .hud-header {
-          border-bottom: 1px solid rgba(120, 220, 255, 0.18);
+          border-bottom: 1px solid rgba(230, 245, 255, 0.14);
         }
         .hud-eyebrow {
           font-family: var(--font-mono);
@@ -476,13 +561,13 @@ export function LiveInterviewSession({
           cursor: pointer;
         }
         .hud-link:hover {
-          color: #7dd8ff;
+          color: var(--jarvis-glow, #7dd8ff);
         }
         /* ---- JARVIS dial ---------------------------------------------- */
         .jarvis-dial {
           position: relative;
-          width: clamp(300px, 42vw, 420px);
-          height: clamp(300px, 42vw, 420px);
+          width: clamp(320px, 46vw, 460px);
+          height: clamp(320px, 46vw, 460px);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -512,19 +597,53 @@ export function LiveInterviewSession({
           position: absolute;
           top: 0;
           left: 50%;
-          width: 2px;
-          height: 9px;
-          margin-left: -1px;
-          background: var(--jarvis-glow, #22d3ee);
-          opacity: 0.55;
+          width: 1.5px;
+          height: 7px;
+          margin-left: -0.75px;
+          background: rgba(230, 245, 255, 0.4);
           display: block;
         }
-        .jarvis-ring-dash {
+        .jarvis-tick-major {
+          width: 2px;
+          height: 12px;
+          margin-left: -1px;
+          background: var(--jarvis-glow, #22d3ee);
+          box-shadow: 0 0 4px var(--jarvis-glow, #22d3ee);
+        }
+        /* Notched/segmented ring (conic-gradient dashes masked to a thin
+           band) instead of a smooth continuous circle — real HUD rings read
+           as instrumented dial segments, not plain geometry. */
+        .jarvis-ring-segmented {
           width: 86%;
           height: 86%;
           transform: translate(-50%, -50%);
-          border: 1px dashed rgba(120, 220, 255, 0.35);
-          animation: jarvis-spin-reverse 26s linear infinite;
+          background: repeating-conic-gradient(
+            rgba(230, 245, 255, 0.5) 0deg 6deg,
+            transparent 6deg 14deg
+          );
+          -webkit-mask: radial-gradient(circle, transparent calc(50% - 3px), #000 calc(50% - 2px), #000 50%, transparent calc(50% + 1px));
+          mask: radial-gradient(circle, transparent calc(50% - 3px), #000 calc(50% - 2px), #000 50%, transparent calc(50% + 1px));
+          animation: jarvis-spin-reverse 34s linear infinite;
+        }
+        /* Data pulse traveling around a ring — a bright dot on its own
+           rotating wrapper, same "rotate the full-size wrapper" trick as
+           the ticks, just a single element instead of thirty-six. */
+        .jarvis-ring-pulsepath {
+          width: 78%;
+          height: 78%;
+          transform: translate(-50%, -50%);
+          animation: jarvis-spin 4s linear infinite;
+        }
+        .jarvis-pulse-dot {
+          position: absolute;
+          top: -2px;
+          left: 50%;
+          width: 5px;
+          height: 5px;
+          margin-left: -2.5px;
+          border-radius: 50%;
+          background: var(--jarvis-glow, #22d3ee);
+          box-shadow: 0 0 8px 2px var(--jarvis-glow, #22d3ee);
         }
         .jarvis-arc {
           border: 2px solid transparent;
@@ -543,15 +662,70 @@ export function LiveInterviewSession({
           width: 70%;
           height: 70%;
           transform: translate(-50%, -50%);
-          border-bottom-color: rgba(120, 220, 255, 0.5);
-          border-left-color: rgba(120, 220, 255, 0.5);
+          border-bottom-color: rgba(230, 245, 255, 0.4);
+          border-left-color: rgba(230, 245, 255, 0.4);
           animation: jarvis-spin-reverse 9s linear infinite;
         }
+        /* Satellite gauge cluster — small off-axis rings that don't share
+           the main dial's rotation center, per the "persistent repositioning
+           gauges" motif. Purely decorative telemetry. */
+        .jarvis-satellite {
+          position: absolute;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+        }
+        .jarvis-satellite-a { top: 6%; right: 8%; }
+        .jarvis-satellite-b { bottom: 10%; left: 4%; }
+        .jarvis-satellite-ring {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          border: 1px solid transparent;
+          border-top-color: rgba(230, 245, 255, 0.5);
+          border-right-color: var(--jarvis-glow, #22d3ee);
+          animation: jarvis-spin 3.2s linear infinite;
+        }
+        .jarvis-satellite-b .jarvis-satellite-ring {
+          animation: jarvis-spin-reverse 5s linear infinite;
+        }
+        /* Floating glass readout panels — small bordered/blurred rectangles
+           with a corner-bracket accent, not plain text sitting on nothing. */
+        .jarvis-panel {
+          position: absolute;
+          font-family: var(--font-mono);
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          color: rgba(230, 245, 255, 0.75);
+          white-space: nowrap;
+          padding: 5px 8px;
+          background: rgba(8, 14, 20, 0.5);
+          border: 1px solid rgba(230, 245, 255, 0.18);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+        }
+        .jarvis-panel-tl { top: -2%; left: -4%; }
+        .jarvis-panel-tr { top: -2%; right: -4%; text-align: right; }
+        .jarvis-panel-bl { bottom: -2%; left: -4%; }
+        .jarvis-panel-br { bottom: -2%; right: -4%; text-align: right; }
+        .jarvis-panel-corner {
+          position: absolute;
+          top: -1px;
+          left: -1px;
+          width: 6px;
+          height: 6px;
+          border-top: 1px solid var(--jarvis-glow, #22d3ee);
+          border-left: 1px solid var(--jarvis-glow, #22d3ee);
+        }
+        .jarvis-panel-corner-r { left: auto; right: -1px; border-left: 0; border-right: 1px solid var(--jarvis-glow, #22d3ee); }
+        .jarvis-panel-corner-b { top: auto; bottom: -1px; border-top: 0; border-bottom: 1px solid var(--jarvis-glow, #22d3ee); }
+        .jarvis-panel-corner-br { top: auto; left: auto; bottom: -1px; right: -1px; border-top: 0; border-left: 0; border-bottom: 1px solid var(--jarvis-glow, #22d3ee); border-right: 1px solid var(--jarvis-glow, #22d3ee); }
+
         .jarvis-core {
           position: relative;
           z-index: 1;
-          width: 62%;
-          height: 62%;
+          width: 58%;
+          height: 58%;
           border-radius: 50%;
           display: flex;
           flex-direction: column;
@@ -560,25 +734,13 @@ export function LiveInterviewSession({
           gap: 14px;
           text-align: center;
           padding: 20px;
-          background: radial-gradient(circle at 50% 40%, rgba(120, 220, 255, 0.1), rgba(5, 10, 16, 0.72) 72%);
-          border: 1px solid rgba(120, 220, 255, 0.3);
+          background: radial-gradient(circle at 50% 40%, rgba(230, 245, 255, 0.08), rgba(5, 10, 16, 0.75) 72%);
+          border: 1px solid rgba(230, 245, 255, 0.22);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
           box-shadow: 0 0 40px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.18)) inset, 0 0 60px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.12));
           transition: box-shadow 300ms ease, border-color 300ms ease;
         }
-        .jarvis-radial-label {
-          position: absolute;
-          font-family: var(--font-mono);
-          font-size: 9px;
-          letter-spacing: 0.12em;
-          color: rgba(215, 236, 255, 0.45);
-          white-space: nowrap;
-        }
-        .jarvis-radial-tl { top: 2%; left: 2%; }
-        .jarvis-radial-tr { top: 2%; right: 2%; text-align: right; }
-        .jarvis-radial-bl { bottom: 2%; left: 2%; }
-        .jarvis-radial-br { bottom: 2%; right: 2%; text-align: right; }
 
         @keyframes jarvis-spin {
           from { transform: translate(-50%, -50%) rotate(0deg); }
@@ -589,25 +751,35 @@ export function LiveInterviewSession({
           to { transform: translate(-50%, -50%) rotate(-360deg); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .jarvis-ring-tickset, .jarvis-ring-dash, .jarvis-arc-a, .jarvis-arc-b {
+          .jarvis-ring-tickset, .jarvis-ring-segmented, .jarvis-ring-pulsepath,
+          .jarvis-arc-a, .jarvis-arc-b, .jarvis-satellite-ring, .hud-sweep {
             animation: none;
           }
         }
 
-        .hud-glow-ai .jarvis-dial { --jarvis-glow: #22d3ee; --jarvis-glow-dim: rgba(34, 211, 238, 0.28); }
-        .hud-glow-candidate .jarvis-dial { --jarvis-glow: #f2b84b; --jarvis-glow-dim: rgba(242, 184, 75, 0.28); }
-        .hud-glow-processing .jarvis-dial { --jarvis-glow: #8b7bf0; --jarvis-glow-dim: rgba(139, 123, 240, 0.28); }
-        .hud-glow-idle .jarvis-dial { --jarvis-glow: #3fa9c9; --jarvis-glow-dim: rgba(63, 169, 201, 0.16); }
+        /* Defined on .hud-shell itself (not scoped to .jarvis-dial) so every
+           descendant that reads var(--jarvis-glow) — the dial, .hud-sweep,
+           reticles, etc — inherits the same state color, not just the dial. */
+        .hud-glow-ai { --jarvis-glow: #22d3ee; --jarvis-glow-dim: rgba(34, 211, 238, 0.28); }
+        .hud-glow-candidate { --jarvis-glow: #f2b84b; --jarvis-glow-dim: rgba(242, 184, 75, 0.28); }
+        .hud-glow-processing { --jarvis-glow: #8b7bf0; --jarvis-glow-dim: rgba(139, 123, 240, 0.28); }
+        .hud-glow-idle { --jarvis-glow: #3fa9c9; --jarvis-glow-dim: rgba(63, 169, 201, 0.16); }
+        .hud-glow-error { --jarvis-glow: #ff4d4d; --jarvis-glow-dim: rgba(255, 77, 77, 0.32); }
         .hud-glow-candidate .jarvis-core { border-color: rgba(242, 184, 75, 0.45); }
         .hud-glow-candidate .hud-readout { color: #ffd682; }
-        .hud-glow-processing .jarvis-core { animation: jarvis-pulse 1.3s ease-in-out infinite; }
+        .hud-glow-error .jarvis-core { border-color: rgba(255, 77, 77, 0.5); }
+        .hud-glow-error .hud-readout { color: #ff8a8a; }
+        .hud-glow-processing .jarvis-core,
+        .hud-glow-error .jarvis-core {
+          animation: jarvis-pulse 1.3s ease-in-out infinite;
+        }
 
         @keyframes jarvis-pulse {
           0%, 100% { box-shadow: 0 0 30px var(--jarvis-glow-dim) inset, 0 0 40px var(--jarvis-glow-dim); }
           50% { box-shadow: 0 0 50px var(--jarvis-glow-dim) inset, 0 0 80px var(--jarvis-glow-dim); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .hud-glow-processing .jarvis-core { animation: none; }
+          .hud-glow-processing .jarvis-core, .hud-glow-error .jarvis-core { animation: none; }
         }
 
         .hud-readout {
@@ -661,39 +833,6 @@ export function LiveInterviewSession({
           font-family: var(--font-accent);
           font-size: 14px;
           color: rgba(215, 236, 255, 0.85);
-        }
-
-        /* Glow state — tied to whichever side currently "has the mic." */
-        .hud-glow-ai .hud-frame {
-          box-shadow: 0 0 28px rgba(120, 220, 255, 0.22);
-          border-color: rgba(120, 220, 255, 0.5);
-        }
-        .hud-glow-ai .hud-corner {
-          border-color: #9be7ff;
-        }
-        .hud-glow-candidate .hud-frame {
-          box-shadow: 0 0 28px rgba(255, 214, 130, 0.2);
-          border-color: rgba(255, 214, 130, 0.5);
-        }
-        .hud-glow-candidate .hud-corner {
-          border-color: #ffd682;
-        }
-        .hud-glow-candidate .hud-readout {
-          color: #ffd682;
-        }
-        .hud-glow-processing .hud-frame {
-          animation: hud-pulse 1.4s ease-in-out infinite;
-        }
-
-        @keyframes hud-pulse {
-          0%, 100% { box-shadow: 0 0 12px rgba(120, 220, 255, 0.12); }
-          50% { box-shadow: 0 0 24px rgba(120, 220, 255, 0.28); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .hud-glow-processing .hud-frame {
-            animation: none;
-          }
         }
       `}</style>
     </main>

@@ -1,14 +1,18 @@
 'use client';
 
 // LiveInterviewScene — reactive 3D HUD centerpiece for the live-interview
-// screen, replacing a flat CSS panel per Ash's call ("the design is basic as
-// fuck"). Reuses the visual language already established and vetted in
-// src/app/design-lab/cinematic-shell/_components/stage.tsx (same cyan
-// emissive-material glow, additive-blended particle field, camera
-// parallax) rather than inventing a new one — that file's header notes
-// @react-three/postprocessing crashes under React 19's ref-as-prop, so glow
-// here comes from material settings + additive blending only, same as there,
-// never from a postprocessing bloom pass.
+// screen. Reuses the visual language established in
+// src/app/design-lab/cinematic-shell/_components/stage.tsx (cyan emissive
+// glow, additive-blended particle field, camera parallax) as a base.
+//
+// Real bloom postprocessing (EffectComposer + Bloom below): stage.tsx's
+// header notes @react-three/postprocessing crashes under React 19's
+// ref-as-prop. Re-tested here directly against the versions actually
+// installed (@react-three/postprocessing 3.0.4, @react-three/fiber 9.6.1,
+// React 19.2.4) and it does NOT reproduce — renders cleanly, no console
+// errors. That note was likely accurate for an older combination of
+// versions and is now stale; hasn't been re-verified against stage.tsx
+// itself, just confirmed fixed here.
 //
 // Reacts to two live inputs from <LiveInterviewSession>:
 //   - `glowState`: which side "has the mic" (idle / ai / candidate /
@@ -19,6 +23,7 @@
 
 import { useMemo, useRef, useEffect, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import type { GlowState } from './live-interview-session';
 
@@ -27,6 +32,7 @@ const STATE_COLOR: Record<GlowState, THREE.Color> = {
   ai: new THREE.Color('#22d3ee'),
   candidate: new THREE.Color('#f2b84b'),
   processing: new THREE.Color('#8b7bf0'),
+  error: new THREE.Color('#ff4d4d'),
 };
 
 const STATE_INTENSITY: Record<GlowState, number> = {
@@ -34,12 +40,23 @@ const STATE_INTENSITY: Record<GlowState, number> = {
   ai: 1.1,
   candidate: 1.0,
   processing: 0.75,
+  error: 1.2,
 };
 
+// Core orb — glass/crystal material (MeshPhysicalMaterial + transmission),
+// not a flat-shaded standard material — reads as an instrument core rather
+// than a generic low-poly sci-fi shape. A soft additive rim-glow shell and a
+// few thin "energy filament" rings (great-circle flat rings intersecting the
+// core, independently rotating) sit around it — the "crystal ball with
+// lightning inside" look the JARVIS-genre research called for, as opposed to
+// a single plain wireframe overlay.
 function CoreOrb({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObject<number> }) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const wireRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<THREE.MeshStandardMaterial>(null);
+  const materialRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  const rimRef = useRef<THREE.Mesh>(null);
+  const rimMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const filamentRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const filamentMaterialRefs = useRef<(THREE.MeshBasicMaterial | null)[]>([]);
   const currentColor = useRef(new THREE.Color('#3fa9c9'));
 
   useFrame((state) => {
@@ -49,11 +66,11 @@ function CoreOrb({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObjec
     const targetIntensity = STATE_INTENSITY[glowState];
 
     currentColor.current.lerp(targetColor, 0.06);
+
     if (materialRef.current) {
-      materialRef.current.color.copy(currentColor.current);
       materialRef.current.emissive.copy(currentColor.current);
       const breath = 1 + Math.sin(t * (glowState === 'processing' ? 3.2 : 0.8)) * 0.06;
-      materialRef.current.emissiveIntensity = targetIntensity * breath + amp * 1.4;
+      materialRef.current.emissiveIntensity = targetIntensity * breath * 0.6 + amp * 1.1;
     }
     if (meshRef.current) {
       const scale = 1 + amp * 0.22 + Math.sin(t * 0.7) * 0.02;
@@ -61,30 +78,81 @@ function CoreOrb({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObjec
       meshRef.current.rotation.y = t * 0.12;
       meshRef.current.rotation.x = Math.sin(t * 0.2) * 0.1;
     }
-    if (wireRef.current) {
-      wireRef.current.rotation.y = -t * 0.05;
-      wireRef.current.rotation.z = t * 0.03;
-      wireRef.current.scale.setScalar(1.55 + amp * 0.1);
+    if (rimRef.current && rimMaterialRef.current) {
+      rimMaterialRef.current.color.copy(currentColor.current);
+      rimMaterialRef.current.opacity = 0.22 + amp * 0.35 + Math.sin(t * 1.1) * 0.04;
+      rimRef.current.scale.setScalar(1.18 + amp * 0.08);
     }
+    filamentRefs.current.forEach((f, i) => {
+      if (!f) return;
+      const speed = 0.18 + i * 0.07;
+      f.rotation.y = t * speed + i;
+      f.rotation.x = t * speed * 0.6 + i * 2;
+      const mat = filamentMaterialRefs.current[i];
+      if (mat) {
+        mat.color.copy(currentColor.current);
+        mat.opacity = 0.35 + amp * 0.4 + Math.sin(t * 2 + i) * 0.1;
+      }
+    });
   });
 
   return (
     <group>
       <mesh ref={meshRef}>
-        <icosahedronGeometry args={[1, 3]} />
-        <meshStandardMaterial
+        <icosahedronGeometry args={[1, 4]} />
+        <meshPhysicalMaterial
           ref={materialRef}
-          color="#3fa9c9"
+          color="#0a1620"
           emissive="#3fa9c9"
           emissiveIntensity={0.5}
-          roughness={0.25}
-          metalness={0.55}
+          roughness={0.12}
+          metalness={0.1}
+          transmission={0.75}
+          thickness={1.2}
+          ior={1.4}
+          clearcoat={1}
+          clearcoatRoughness={0.08}
         />
       </mesh>
-      <mesh ref={wireRef}>
-        <icosahedronGeometry args={[1, 1]} />
-        <meshBasicMaterial color="#8fe3ff" wireframe transparent opacity={0.16} />
+      {/* Additive rim-glow shell — cheap fresnel stand-in (backside-rendered,
+          larger, transparent) rather than a full fresnel shader. */}
+      <mesh ref={rimRef}>
+        <icosahedronGeometry args={[1, 3]} />
+        <meshBasicMaterial
+          ref={rimMaterialRef}
+          color="#8fe3ff"
+          transparent
+          opacity={0.22}
+          side={THREE.BackSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
       </mesh>
+      {/* Energy filament rings — thin flat rings through the core at
+          different axes/speeds, additive-blended so they read as glowing
+          lines rather than solid geometry. */}
+      {[0, 1, 2].map((i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            filamentRefs.current[i] = el;
+          }}
+          rotation={[i * 1.1, i * 0.7, 0]}
+        >
+          <ringGeometry args={[1.02, 1.035, 64]} />
+          <meshBasicMaterial
+            ref={(el) => {
+              filamentMaterialRefs.current[i] = el;
+            }}
+            color="#8fe3ff"
+            transparent
+            opacity={0.4}
+            side={THREE.DoubleSide}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
     </group>
   );
 }
@@ -210,6 +278,9 @@ export function LiveInterviewScene({ glowState, ampRef }: { glowState: GlowState
       <HudRings glowState={glowState} />
       <CoreOrb glowState={glowState} ampRef={ampRef} />
       <CameraRig />
+      <EffectComposer>
+        <Bloom intensity={1.4} luminanceThreshold={0.15} luminanceSmoothing={0.4} mipmapBlur radius={0.6} />
+      </EffectComposer>
     </Canvas>
   );
 }
