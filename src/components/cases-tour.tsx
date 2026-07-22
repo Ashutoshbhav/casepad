@@ -16,7 +16,7 @@ const STEPS: TourStep[] = [
   {
     target: 'cases-card',
     title: 'Click a card to start',
-    body: 'A case opens the solve arena: AI interviewer on the left, live cheat sheet on the right. You talk through the case in turns — same format as a real interview.',
+    body: 'A case drops you straight into a live voice interview with Ash — talk through it hands-free, same as the real thing. Prefer to type it out instead? Every card has a small "read + type it out" link too.',
   },
   {
     target: 'cases-tutorial-btn',
