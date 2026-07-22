@@ -36,9 +36,14 @@ import {
   shouldNudge,
   type RamblingTrackerState,
 } from '@/lib/voice/rambling-tracker';
+import { isThinkingTimeRequest } from '@/lib/interview/thinking-time';
 
 const MAX_RECORD_MS = 120_000; // Same hard cap as MicButton — Groq STT budget.
 const NUDGE_CHECK_INTERVAL_MS = 2000;
+// How long widened pause-tolerance ("thinking" patience) stays on before
+// auto-reverting even if the candidate never sends another turn — a safety
+// net so a missed revert can't permanently slow down turn-taking.
+const THINKING_PATIENCE_MS = 90_000;
 
 export type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
 export type ListenerStatus =
@@ -50,14 +55,17 @@ export type ListenerStatus =
   | 'ptt_fallback'
   | 'unsupported';
 
-async function transcribe(sessionId: string, blob: Blob, filename: string): Promise<string | null> {
+type TranscribeResult = { text: string; lowConfidence: boolean };
+
+async function transcribe(sessionId: string, blob: Blob, filename: string): Promise<TranscribeResult | null> {
   const fd = new FormData();
   fd.append('audio', blob, filename);
   fd.append('sessionId', sessionId);
   const res = await fetch('/api/voice/transcribe', { method: 'POST', body: fd });
   if (!res.ok) return null;
-  const { text } = (await res.json()) as { text: string };
-  return text?.trim() || null;
+  const { text, lowConfidence } = (await res.json()) as { text: string; lowConfidence?: boolean };
+  const trimmed = text?.trim();
+  return trimmed ? { text: trimmed, lowConfidence: Boolean(lowConfidence) } : null;
 }
 
 export function LiveMicInput({
@@ -71,7 +79,7 @@ export function LiveMicInput({
 }: {
   sessionId: string;
   phase: Phase;
-  onAutoSend: (text: string) => void;
+  onAutoSend: (text: string, lowConfidence?: boolean) => void;
   onBargeIn: () => void;
   onSttFailed: (reason: string) => void;
   onStatusChange?: (status: ListenerStatus) => void;
@@ -93,10 +101,27 @@ export function LiveMicInput({
   // that through setState would mean a re-render per frame for a purely
   // visual effect. See onAmplitude in createTurnDetector() below.
   const barsRef = useRef<HTMLDivElement>(null);
+  // 'normal' | 'thinking' — mirrors what was last told to turn-detector's
+  // setPatience so handleUtterance can decide whether a substantive (non
+  // thinking-time) turn should revert it, without re-deriving state from
+  // the detector itself.
+  const patienceModeRef = useRef<'normal' | 'thinking'>('normal');
+  const patienceRevertTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setStatusReported = (s: ListenerStatus) => {
     setStatus(s);
     onStatusChange?.(s);
+  };
+
+  const revertPatience = () => {
+    if (patienceRevertTimerRef.current) {
+      clearTimeout(patienceRevertTimerRef.current);
+      patienceRevertTimerRef.current = null;
+    }
+    if (patienceModeRef.current === 'thinking') {
+      patienceModeRef.current = 'normal';
+      handleRef.current?.setPatience('normal');
+    }
   };
 
   const handleUtterance = async (audio: Blob) => {
@@ -109,13 +134,26 @@ export function LiveMicInput({
     }
     setStatusReported('transcribing');
     try {
-      const text = await transcribe(sessionId, audio, 'utterance.wav');
+      const result = await transcribe(sessionId, audio, 'utterance.wav');
       if (!aliveRef.current) return;
-      if (!text) {
+      if (!result) {
         setStatusReported('listening');
         return;
       }
-      onAutoSend(text);
+      const { text, lowConfidence } = result;
+      // Widen pause tolerance so halting/muttering "thinking out loud"
+      // doesn't fragment into several auto-sent turns; a substantive turn
+      // after that reverts back to normal conversational pacing. See
+      // src/lib/voice/turn-detector.ts's setPatience + REDEMPTION_MS_THINKING.
+      if (isThinkingTimeRequest(text)) {
+        if (patienceRevertTimerRef.current) clearTimeout(patienceRevertTimerRef.current);
+        patienceModeRef.current = 'thinking';
+        handleRef.current?.setPatience('thinking');
+        patienceRevertTimerRef.current = setTimeout(revertPatience, THINKING_PATIENCE_MS);
+      } else {
+        revertPatience();
+      }
+      onAutoSend(text, lowConfidence);
       setStatusReported('listening');
     } catch (err) {
       console.error('[LiveMicInput] transcribe failed', err);
@@ -178,6 +216,7 @@ export function LiveMicInput({
     return () => {
       aliveRef.current = false;
       cancelled = true;
+      if (patienceRevertTimerRef.current) clearTimeout(patienceRevertTimerRef.current);
       handleRef.current?.destroy().catch(() => {});
       handleRef.current = null;
     };
@@ -392,7 +431,7 @@ function PushToTalkFallback({
 }: {
   sessionId: string;
   disabled?: boolean;
-  onAutoSend: (text: string) => void;
+  onAutoSend: (text: string, lowConfidence?: boolean) => void;
   onSttFailed: (reason: string) => void;
 }) {
   const [state, setState] = useState<PttState>('idle');
@@ -453,13 +492,13 @@ function PushToTalkFallback({
   const transcribeAndSend = async (blob: Blob) => {
     setState('transcribing');
     try {
-      const text = await transcribe(sessionId, blob, 'recording');
-      if (!text) {
+      const result = await transcribe(sessionId, blob, 'recording');
+      if (!result) {
         showError('No speech detected — try again, or type this turn');
         return;
       }
       setState('idle');
-      onAutoSend(text);
+      onAutoSend(result.text, result.lowConfidence);
     } catch (err) {
       console.error('[PushToTalkFallback] transcribe failed', err);
       showError('Transcription failed — type this turn instead');
