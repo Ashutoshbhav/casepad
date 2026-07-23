@@ -31,7 +31,10 @@ import { useEffect, useRef, useState } from 'react';
 import { LiveMicInput, type ListenerStatus } from './live-mic-input';
 import { LiveInterviewScene } from './live-interview-scene';
 import { IssueTreePanel } from './issue-tree-panel';
+import { LiveInterviewAvatar, type LiveInterviewAvatarHandle, type AvatarStatus } from './live-interview-avatar';
 import { InlineSubmitCTA } from './inline-submit-cta';
+
+type VisualMode = 'jarvis' | 'avatar';
 
 export type GlowState = 'idle' | 'ai' | 'candidate' | 'processing' | 'error';
 
@@ -84,6 +87,13 @@ export function LiveInterviewSession({
   // caption itself, distinct from the AI's own conversational judgment of
   // whether an answer made sense (that's a separate, LLM-side check).
   const [lastTranscriptLowConfidence, setLastTranscriptLowConfidence] = useState(false);
+  // Visual mode — JARVIS is the default/priority (matches the whole rest of
+  // this file); 'avatar' is an explicit, cost-gated opt-in (see
+  // live-interview-avatar.tsx's header comment — Simli bills per minute
+  // connected). Never defaults to 'avatar' even if configured server-side.
+  const [mode, setMode] = useState<VisualMode>('jarvis');
+  const [avatarStatus, setAvatarStatus] = useState<AvatarStatus>('idle');
+  const avatarRef = useRef<LiveInterviewAvatarHandle>(null);
   // Written at ~30Hz by LiveMicInput's onAmplitude — read directly inside
   // the 3D scene's useFrame loop, never through React state (see
   // live-interview-scene.tsx's header comment for why).
@@ -159,6 +169,17 @@ export function LiveInterviewSession({
   // or synchronously in sendTurn's own non-effect code path) — this function
   // only sets phase again once the async work resolves.
   const playInterviewerTurn = async (text: string) => {
+    // Avatar mode (opt-in, see live-interview-avatar.tsx): try it first, but
+    // ONLY skip the normal ladder below if it actually took the turn —
+    // speak() returns false on any failure (not connected, request failed),
+    // in which case falling through to the exact same ladder every JARVIS
+    // session already uses is the correct, silent degrade. phase transitions
+    // back to candidate_turn via the avatar's onSpeakEnd (its 'silent'
+    // event), not here — mirrors audio.onended below.
+    if (mode === 'avatar') {
+      const handled = await avatarRef.current?.speak(text).catch(() => false);
+      if (handled) return;
+    }
     try {
       const res = await fetch('/api/voice/speak', {
         method: 'POST',
@@ -353,11 +374,43 @@ export function LiveInterviewSession({
       <span className="hud-reticle hud-reticle-bl" aria-hidden="true" />
       <span className="hud-reticle hud-reticle-br" aria-hidden="true" />
 
-      <section className="hud-header px-6 sm:px-12 py-6 flex items-center justify-between">
+      <section className="hud-header px-6 sm:px-12 py-6 flex items-center justify-between flex-wrap gap-3">
         <span className="hud-eyebrow">{'// LIVE_INTERVIEW'}</span>
-        <button type="button" onClick={() => setTranscriptOpen((v) => !v)} className="hud-eyebrow hud-link">
-          {transcriptOpen ? '[ HIDE TRANSCRIPT ]' : '[ SHOW TRANSCRIPT ]'}
-        </button>
+        <div className="flex items-center gap-4 flex-wrap">
+          {/* JARVIS is the priority/default — always pre-selected, never
+              auto-switches to avatar even if Simli happens to be configured.
+              Avatar is a real per-minute cost once connected (see
+              live-interview-avatar.tsx), so this is the one place that
+              spends money, and only when explicitly chosen. */}
+          <div className="hud-mode-select" role="radiogroup" aria-label="Interviewer visual">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={mode === 'jarvis'}
+              onClick={() => setMode('jarvis')}
+              className={mode === 'jarvis' ? 'hud-mode-btn hud-mode-btn-active' : 'hud-mode-btn'}
+            >
+              JARVIS
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={mode === 'avatar'}
+              onClick={() => setMode('avatar')}
+              className={mode === 'avatar' ? 'hud-mode-btn hud-mode-btn-active' : 'hud-mode-btn'}
+              title="Beta — real-time avatar, uses metered credits"
+            >
+              {mode === 'avatar' && avatarStatus === 'connecting'
+                ? 'AVATAR — CONNECTING…'
+                : mode === 'avatar' && (avatarStatus === 'unavailable' || avatarStatus === 'error')
+                  ? 'AVATAR — UNAVAILABLE'
+                  : 'AVATAR (BETA)'}
+            </button>
+          </div>
+          <button type="button" onClick={() => setTranscriptOpen((v) => !v)} className="hud-eyebrow hud-link">
+            {transcriptOpen ? '[ HIDE TRANSCRIPT ]' : '[ SHOW TRANSCRIPT ]'}
+          </button>
+        </div>
       </section>
 
       <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-6 px-4 sm:px-8 py-8 lg:py-12">
@@ -415,6 +468,18 @@ export function LiveInterviewSession({
           </div>
 
           <div className="jarvis-core">
+            {/* Always mounted (not conditionally rendered) so its ref and
+                connection state survive JARVIS<->avatar toggling without a
+                remount — the component itself only actually connects to
+                Simli (and starts costing anything) when active={true}. */}
+            <div className="jarvis-avatar-slot" aria-hidden={mode !== 'avatar'}>
+              <LiveInterviewAvatar
+                ref={avatarRef}
+                active={mode === 'avatar'}
+                onStatusChange={setAvatarStatus}
+                onSpeakEnd={() => setPhase('candidate_turn')}
+              />
+            </div>
             <span className="hud-readout" aria-live="polite">
               [ {stateLabel} ]
             </span>
@@ -804,6 +869,35 @@ export function LiveInterviewSession({
           -webkit-backdrop-filter: blur(6px);
           box-shadow: 0 0 40px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.18)) inset, 0 0 60px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.12));
           transition: box-shadow 300ms ease, border-color 300ms ease;
+        }
+        .jarvis-avatar-slot {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        /* ---- Mode selector (JARVIS default/priority vs opt-in avatar) --- */
+        .hud-mode-select {
+          display: flex;
+          gap: 2px;
+          border: 1px solid rgba(230, 245, 255, 0.18);
+          padding: 2px;
+        }
+        .hud-mode-btn {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          padding: 5px 10px;
+          background: transparent;
+          border: 0;
+          color: rgba(215, 236, 255, 0.5);
+          cursor: pointer;
+        }
+        .hud-mode-btn-active {
+          background: rgba(230, 245, 255, 0.12);
+          color: var(--jarvis-glow, #9be7ff);
         }
 
         @keyframes jarvis-spin {
