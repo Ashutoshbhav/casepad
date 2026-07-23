@@ -27,6 +27,11 @@ interface Props {
 
 const PRIMARY = [
   { href: '/cases', label: 'Cases' },
+  // Short label on purpose — the drawer renders these at up to 56px
+  // Montserrat 700 uppercase in a ≤440px drawer; "LIVE INTERVIEW" wraps.
+  // isActive() uses startsWith, so this also stays highlighted inside a
+  // running /live-interview/[sessionId] session.
+  { href: '/live-interview', label: 'Live' },
   { href: '/drills', label: 'Drills' },
   { href: '/cheatsheet', label: 'Cheats' },
   { href: '/dashboard', label: 'Dashboard' },

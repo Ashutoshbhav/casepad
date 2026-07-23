@@ -12,6 +12,7 @@ export default function HomePage() {
       eyebrow="Cohort case prep · 2026"
       menuLinks={[
         { label: 'Cases', href: '/cases' },
+        { label: 'Live interview', href: '/live-interview' },
         { label: 'Drills', href: '/drills' },
         { label: 'Cheats', href: '/cheatsheet' },
         { label: 'Dashboard', href: '/dashboard' },
