@@ -28,7 +28,11 @@
 
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { useReducedMotion } from 'motion/react';
-import { createTurnDetector, type TurnDetectorHandle } from '@/lib/voice/turn-detector';
+import {
+  createTurnDetector,
+  CONFIDENT_SPEECH_PROBABILITY,
+  type TurnDetectorHandle,
+} from '@/lib/voice/turn-detector';
 import {
   initialRamblingState,
   onSpeechStart as ramblingOnSpeechStart,
@@ -44,6 +48,19 @@ const NUDGE_CHECK_INTERVAL_MS = 2000;
 // auto-reverting even if the candidate never sends another turn — a safety
 // net so a missed revert can't permanently slow down turn-taking.
 const THINKING_PATIENCE_MS = 90_000;
+// Stuck-segment watchdog: MicVAD only ends a segment once speech
+// probability sits below its negative threshold for redemptionMs straight.
+// Ambient noise can hold the probability in the gray zone between the two
+// thresholds indefinitely — the segment never closes and the UI reads
+// "hearing you" long after the candidate stopped (reported live by Ash).
+// If no CONFIDENT speech frame has arrived for this long while a segment
+// is open, force-flush it (pause→resume, submitUserSpeechOnPause sends
+// whatever was captured). Must comfortably exceed REDEMPTION_MS (650ms) so
+// the VAD's own end-of-turn always wins when it's working; the thinking
+// variant must exceed REDEMPTION_MS_THINKING (2500ms) for the same reason.
+const STUCK_SILENCE_MS = 3000;
+const STUCK_SILENCE_THINKING_MS = 6500;
+const STUCK_CHECK_INTERVAL_MS = 500;
 
 export type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
 export type ListenerStatus =
@@ -107,10 +124,40 @@ export function LiveMicInput({
   // the detector itself.
   const patienceModeRef = useRef<'normal' | 'thinking'>('normal');
   const patienceRevertTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Stuck-segment watchdog state: when the last CONFIDENT speech frame
+  // arrived, and whether a force-flush is already in flight (pause→resume
+  // is async; firing it twice concurrently would double-flush).
+  const lastConfidentSpeechTsRef = useRef(0);
+  const flushInFlightRef = useRef(false);
+  const errorClearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setStatusReported = (s: ListenerStatus) => {
     setStatus(s);
     onStatusChange?.(s);
+  };
+
+  const showTransientError = (msg: string) => {
+    setErrorMsg(msg);
+    if (errorClearTimerRef.current) clearTimeout(errorClearTimerRef.current);
+    errorClearTimerRef.current = setTimeout(() => setErrorMsg(null), 3500);
+  };
+
+  // Force the current segment to end NOW — pause() flushes captured audio
+  // as a completed utterance (submitUserSpeechOnPause), resume() re-arms.
+  // Used by both the automatic stuck-segment watchdog and the manual
+  // "Done — send" escape hatch; sub-MIN_SPEECH_MS captures surface as a
+  // misfire, which correctly drops back to listening with nothing sent.
+  const forceFlush = () => {
+    const handle = handleRef.current;
+    if (!handle || flushInFlightRef.current) return;
+    flushInFlightRef.current = true;
+    void handle
+      .pause()
+      .then(() => handle.resume())
+      .catch((err) => console.warn('[LiveMicInput] force-flush failed (non-fatal)', err))
+      .finally(() => {
+        flushInFlightRef.current = false;
+      });
   };
 
   const revertPatience = () => {
@@ -137,6 +184,10 @@ export function LiveMicInput({
       const result = await transcribe(sessionId, audio, 'utterance.wav');
       if (!aliveRef.current) return;
       if (!result) {
+        // Whisper heard nothing usable. Say so — silently dropping back to
+        // "listening" here reads, from the candidate's seat, as the app
+        // ignoring an answer they just gave.
+        showTransientError('Didn’t catch that — try again, or type this turn');
         setStatusReported('listening');
         return;
       }
@@ -174,6 +225,10 @@ export function LiveMicInput({
       // confident enough yet to act on. Deliberately does NOT trigger
       // barge-in or the rambling clock; see onSpeechRealStart below for why.
       onSpeechStart: () => {
+        // Fresh segment — start the stuck-watchdog clock from now so a
+        // stale timestamp from a previous turn can't trigger an instant
+        // flush the moment this one opens.
+        lastConfidentSpeechTsRef.current = Date.now();
         setStatusReported('speaking');
       },
       // Confirmed past MIN_SPEECH_MS — i.e. the model is done disambiguating
@@ -196,6 +251,9 @@ export function LiveMicInput({
         setStatusReported('listening');
       },
       onAmplitude: (level) => {
+        if (level >= CONFIDENT_SPEECH_PROBABILITY) {
+          lastConfidentSpeechTsRef.current = Date.now();
+        }
         onAmplitude?.(level);
         paintBars(barsRef.current, level);
       },
@@ -217,11 +275,32 @@ export function LiveMicInput({
       aliveRef.current = false;
       cancelled = true;
       if (patienceRevertTimerRef.current) clearTimeout(patienceRevertTimerRef.current);
+      if (errorClearTimerRef.current) clearTimeout(errorClearTimerRef.current);
       handleRef.current?.destroy().catch(() => {});
       handleRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Stuck-segment watchdog (guardrail for "it keeps listening after I'm
+  // done"): while a segment is open ('speaking'), if no confident speech
+  // frame has arrived for STUCK_SILENCE_MS, the segment is being held open
+  // by gray-zone ambient noise — force-flush it so the turn actually sends.
+  // Wider tolerance in 'thinking' patience mode, where halting muttering
+  // legitimately sits near the threshold for long stretches.
+  useEffect(() => {
+    if (status !== 'speaking') return;
+    const id = setInterval(() => {
+      const limit =
+        patienceModeRef.current === 'thinking' ? STUCK_SILENCE_THINKING_MS : STUCK_SILENCE_MS;
+      if (Date.now() - lastConfidentSpeechTsRef.current >= limit) {
+        console.warn('[LiveMicInput] stuck segment (no confident speech for', limit, 'ms) — force-flushing');
+        forceFlush();
+      }
+    }, STUCK_CHECK_INTERVAL_MS);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   // Rambling nudge: force-flush a segment that's run long without a natural
   // pause, so it doesn't sit silent for a minute-plus with no interviewer
@@ -276,6 +355,7 @@ export function LiveMicInput({
         setErrorMsg(null);
         void enable();
       }}
+      onDone={forceFlush}
     />
   );
 }
@@ -309,11 +389,13 @@ function HandsFreeIndicator({
   errorMsg,
   barsRef,
   onEnable,
+  onDone,
 }: {
   status: ListenerStatus;
   errorMsg: string | null;
   barsRef: RefObject<HTMLDivElement | null>;
   onEnable: () => void;
+  onDone: () => void;
 }) {
   const reduced = useReducedMotion();
 
@@ -390,6 +472,29 @@ function HandsFreeIndicator({
       >
         {label}
       </span>
+      {/* Manual end-of-turn escape hatch — whatever the VAD believes, the
+          candidate can always force their answer to send. Only meaningful
+          while a segment is actually open ('speaking'); when merely
+          listening there is no captured audio to flush. */}
+      {status === 'speaking' && (
+        <button
+          type="button"
+          onClick={onDone}
+          style={{
+            fontFamily: 'var(--font-headline)',
+            fontWeight: 600,
+            fontSize: 12,
+            padding: '7px 16px',
+            background: 'transparent',
+            border: '1px solid rgba(238, 240, 244, 0.35)',
+            borderRadius: 999,
+            color: 'rgba(238, 240, 244, 0.85)',
+            cursor: 'pointer',
+          }}
+        >
+          ✓ Done — send it
+        </button>
+      )}
       {errorMsg && (
         <span role="alert" className="text-[11px]" style={{ color: '#ff8a8a' }}>
           {errorMsg}

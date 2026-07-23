@@ -54,6 +54,14 @@ const POSITIVE_SPEECH_THRESHOLD = 0.55;
 const NEGATIVE_SPEECH_THRESHOLD = 0.4;
 const MIN_SPEECH_MS = 600;
 
+// Exported for LiveMicInput's stuck-segment watchdog: a per-frame
+// probability at or above this counts as "the candidate is confidently
+// speaking right now." The gap between NEGATIVE_SPEECH_THRESHOLD and this
+// is the gray zone where ambient noise can hold a segment open forever —
+// probability too high for the redemption countdown to run, too low to be
+// actual speech — which is exactly the hang the watchdog exists to break.
+export const CONFIDENT_SPEECH_PROBABILITY = POSITIVE_SPEECH_THRESHOLD;
+
 export type TurnDetectorEvents = {
   /** Speech onset detected — may still turn out to be a misfire (see onMisfire).
    *  Fine for snappy UI feedback (waveform, status label) but NOT confident
