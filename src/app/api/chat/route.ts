@@ -18,6 +18,7 @@ import { extractEstimationState, renderEstimationStateBlock } from '@/lib/case-s
 import type { Track } from '@/lib/tracks';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isCannedTemplate } from '@/lib/canned-templates';
+import { isThinkingTimeRequest } from '@/lib/interview/thinking-time';
 import { checkResponse, describeFailure, getGuardrailMode, regenHintFor } from '@/lib/groq/guardrails';
 import { critiqueResponse, regenHintForCritic, shouldCritique } from '@/lib/groq/critic';
 import { staticChatTurnFallback } from '@/lib/groq/static-fallbacks';
@@ -45,6 +46,31 @@ The candidate just used a textbook coaching opener verbatim — they didn't auth
 2. Push for THEIR original thinking — invite them to express it in their own words. Examples: "now in your own words, what's the first hypothesis you'd test?" / "good — but tell me what YOU actually think the answer is going to be."
 3. Stay 2–3 sentences total. Don't lecture. Don't penalize them. Don't break character.
 4. After this single nudge, return to normal interviewer behavior on subsequent turns.`;
+
+// Single-turn directive for when the candidate explicitly asked for a
+// moment to think (see src/lib/interview/thinking-time.ts) — voice-first
+// specific in practice (a text candidate can just... not send a message),
+// but detection runs on any transcript so it degrades correctly either way.
+const THINKING_TIME_DIRECTIVE = `
+
+== CANDIDATE ASKED FOR A MOMENT (this turn only) ==
+The candidate just explicitly asked for a moment/second to think, structure their approach, or gather their thoughts. Your response for THIS TURN ONLY must:
+1. A brief, real acknowledgment only — "Take your time." / "Sure, go ahead." / "No rush." One short clause, nothing more.
+2. Do NOT ask a new question. Do NOT push, probe, or redirect. Do NOT recap the case or the question you just asked.
+3. Do NOT lecture about how to structure a case even if that's exactly what they're doing — that's on them right now, not you.
+After this single acknowledgment, return to normal interviewer behavior once they lead with their next substantive turn.`;
+
+// Single-turn directive when Whisper's own confidence data (avg_logprob /
+// no_speech_prob — see /api/voice/transcribe) flagged this transcription as
+// unreliable. This catches AUDIO-quality garbling specifically — a
+// different, complementary check to the general "does this answer make
+// sense in context" instruction already in interviewer.ts and
+// behavioral-interviewer.ts's system prompts, which catches a correctly-
+// transcribed but incoherent/off-topic answer instead.
+const LOW_CONFIDENCE_DIRECTIVE = `
+
+== TRANSCRIPTION CONFIDENCE WAS LOW (this turn only) ==
+The speech-to-text system flagged this transcript as unreliable — audio may have been unclear, cut off, or misheard. If what follows reads as garbled, incomplete, or doesn't parse as a real sentence, say so plainly and ask the candidate to repeat themselves — do NOT try to answer or build on a transcript you can't actually make sense of. If it reads coherently despite the flag, proceed normally; this is a hint, not a certainty.`;
 
 export const runtime = 'nodejs';
 
@@ -76,6 +102,10 @@ export async function POST(req: NextRequest) {
     typeof body?.clientTurnId === 'string' && body.clientTurnId.length <= 100
       ? body.clientTurnId
       : null;
+  // Set by live-interview-session.tsx from /api/voice/transcribe's Whisper
+  // confidence data (see that route). Optional/legacy-safe: absent for text
+  // turns and older clients, defaults to "confident" (no false alarms).
+  const lowConfidence = body?.lowConfidence === true;
   const supabase = await createSupabaseServerClient();
 
   // P1-13: verify the requester owns this session. RLS should already prevent
@@ -366,6 +396,35 @@ export async function POST(req: NextRequest) {
       messages[0] = {
         ...messages[0],
         content: messages[0].content + CANNED_TEMPLATE_DIRECTIVE,
+      };
+    }
+  } catch {
+    // fall through — never block the chat call on detection
+  }
+
+  // Detect an explicit "give me a moment to think" request (voice-first
+  // motivated — see src/lib/interview/thinking-time.ts) and tell the
+  // interviewer to back off for this turn instead of pushing forward. Same
+  // fail-open mutation pattern as the coaching-template block above.
+  try {
+    if (isThinkingTimeRequest(safeUserTurn) && messages.length > 0 && messages[0].role === 'system') {
+      messages[0] = {
+        ...messages[0],
+        content: messages[0].content + THINKING_TIME_DIRECTIVE,
+      };
+    }
+  } catch {
+    // fall through — never block the chat call on detection
+  }
+
+  // Whisper flagged this transcription as low-confidence (client-supplied,
+  // sourced from real avg_logprob/no_speech_prob — see /api/voice/transcribe).
+  // Same fail-open mutation pattern as the two blocks above.
+  try {
+    if (lowConfidence && messages.length > 0 && messages[0].role === 'system') {
+      messages[0] = {
+        ...messages[0],
+        content: messages[0].content + LOW_CONFIDENCE_DIRECTIVE,
       };
     }
   } catch {

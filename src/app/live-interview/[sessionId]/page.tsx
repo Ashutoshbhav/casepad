@@ -27,6 +27,22 @@ export default async function LiveInterviewSessionPage({
     (session.transcript as { role: 'user' | 'interviewer'; content: string; timestamp: string }[]) ?? []
   ).map((t) => ({ role: t.role, content: t.content }));
 
+  // Case-based sessions get the problem statement (persistent display) and
+  // the issue tree (builds live as the candidate speaks) — neither applies
+  // to caseless/behavioral sessions, so both are gated on case_id being set.
+  // Not persisted on `sessions` itself (only baked into the opener text at
+  // session-start) so it's re-fetched here on every load, same as /solve
+  // does from `cases` directly.
+  let caseTitle: string | null = null;
+  let problemStatement: string | null = null;
+  if (session.case_id) {
+    const { data: caseRow } = await withRetry(() =>
+      supabase.from('cases').select('title, problem_statement').eq('id', session.case_id).maybeSingle()
+    );
+    caseTitle = caseRow?.title ?? null;
+    problemStatement = caseRow?.problem_statement ?? null;
+  }
+
   const endSessionAction = endSession.bind(null, sessionId);
 
   return (
@@ -34,6 +50,8 @@ export default async function LiveInterviewSessionPage({
       sessionId={sessionId}
       initialMessages={initialMessages}
       endSessionAction={endSessionAction}
+      caseTitle={caseTitle}
+      problemStatement={problemStatement}
     />
   );
 }

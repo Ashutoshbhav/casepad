@@ -1,18 +1,37 @@
 // src/app/api/voice/transcribe/route.ts
 //
-// Voice → text endpoint for the /solve chat panel. Accepts a multipart upload
-// from <MicButton />, forwards the audio Blob to Groq's whisper-large-v3-turbo
-// (free tier, 25 MB max, ~216x real-time), and returns { text, durationMs }.
-//
-// We do NOT auto-send the transcript — the client puts it in the input box
-// for the user to edit (Indian-English WER ~15-20% means "DCF" can come back
-// as "decaf" and the user must be allowed to fix it).
+// Voice → text endpoint, shared by <MicButton /> (/solve — text stays
+// editable before send) and <LiveMicInput /> (/live-interview — auto-sent,
+// so this is the ONLY chance to catch a bad transcription before it reaches
+// the interviewer). Forwards the audio Blob to Groq's whisper-large-v3-turbo
+// (free tier, 25 MB max, ~216x real-time).
 //
 // Auth-gated via the existing Supabase server client. No new infra; reuses
 // GROQ_API_KEY already set in .env.local for the chat path.
 
 import { NextRequest } from 'next/server';
 import { gateRequest } from '@/lib/api/gate';
+
+// verbose_json (vs. plain json) costs nothing extra — same endpoint, same
+// latency — but returns per-segment avg_logprob/no_speech_prob, which is
+// real confidence data straight from the model, not a heuristic bolted on
+// after the fact. Used to flag "that came through unclear" to the live
+// caption UI and to the interviewer itself (see /api/chat's lowConfidence
+// handling) — genuinely correctly-transcribed-but-garbled speech isn't
+// caught by this (that's a content/coherence problem, not an audio one; see
+// the interviewer-prompt-level instruction in interviewer.ts/
+// behavioral-interviewer.ts for that half).
+//
+// Thresholds are first-pass estimates from general Whisper confidence
+// heuristics (avg_logprob closer to 0 = better; below roughly -0.5 usually
+// reads as a garbled/uncertain segment; no_speech_prob above ~0.6 means the
+// model itself doubts there was speech in that segment at all) — flagged as
+// the first thing to retune once there's real usage data, same treatment as
+// the VAD thresholds in turn-detector.ts.
+const LOW_CONFIDENCE_AVG_LOGPROB = -0.5;
+const LOW_CONFIDENCE_NO_SPEECH_PROB = 0.6;
+
+type WhisperSegment = { avg_logprob?: number; no_speech_prob?: number };
 
 export const runtime = 'nodejs'; // Edge has flakier multipart-streaming on large blobs.
 
@@ -101,7 +120,7 @@ export async function POST(req: NextRequest) {
   groqForm.append('file', audio, `recording.${ext}`);
   groqForm.append('model', 'whisper-large-v3-turbo');
   groqForm.append('language', 'en');
-  groqForm.append('response_format', 'json');
+  groqForm.append('response_format', 'verbose_json');
   groqForm.append('temperature', '0');
   groqForm.append('prompt', DOMAIN_PROMPT);
 
@@ -135,7 +154,7 @@ export async function POST(req: NextRequest) {
     return jsonError(502, 'transcription failed');
   }
 
-  let payload: { text?: string };
+  let payload: { text?: string; segments?: WhisperSegment[] };
   try {
     payload = await groqRes.json();
   } catch (err) {
@@ -146,7 +165,22 @@ export async function POST(req: NextRequest) {
   const text = (payload.text ?? '').trim();
   const durationMs = Date.now() - startedAt;
 
-  return new Response(JSON.stringify({ text, durationMs }), {
+  // Defensive: confidence is an enhancement, not a requirement — missing or
+  // malformed segments must never break transcription itself, so this is
+  // fully optional and defaults to "confident" (no false alarms) if absent.
+  let lowConfidence = false;
+  try {
+    const segments = payload.segments ?? [];
+    if (segments.length > 0) {
+      const avgLogprob = segments.reduce((sum, s) => sum + (s.avg_logprob ?? 0), 0) / segments.length;
+      const avgNoSpeechProb = segments.reduce((sum, s) => sum + (s.no_speech_prob ?? 0), 0) / segments.length;
+      lowConfidence = avgLogprob < LOW_CONFIDENCE_AVG_LOGPROB || avgNoSpeechProb > LOW_CONFIDENCE_NO_SPEECH_PROB;
+    }
+  } catch (err) {
+    console.warn('[voice/transcribe] confidence computation skipped (non-blocking):', err);
+  }
+
+  return new Response(JSON.stringify({ text, durationMs, lowConfidence }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });

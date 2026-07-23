@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>CasePad — LinkedIn carousel</title>
+<style>
+  @page { size: 1080px 1080px; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  :root{
+    --ink:#323234; --paper:#fdfcfa; --rule:#e2dccb; --margin:#c75c5c;
+    --red:#b33c3c; --muted:rgba(50,50,52,.55); --border:#e8e8e8;
+    --sans:"Helvetica Neue",Arial,system-ui,sans-serif;
+    --mono:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+  }
+  html,body{ background:#8f8f8f; }
+  .slide{ position:relative; width:1080px; height:1080px; overflow:hidden;
+    color:var(--ink); padding:66px 80px 90px 80px; display:flex; flex-direction:column;
+    page-break-after:always; font-family:var(--mono); }
+  .paper{ background-color:var(--paper); }
+  .ink{ background:var(--ink); color:#fff; padding-left:80px; }
+  .ink .kicker,.ink .foot{ color:rgba(255,255,255,.55); } .ink .num{ color:rgba(255,255,255,.45); }
+  .kicker{ font-family:var(--mono); font-size:23px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  .rule-sm{ width:60px; height:3px; background:var(--ink); margin:24px 0; }
+  h1{ font-family:var(--sans); font-weight:800; letter-spacing:-.022em; line-height:1.0; font-size:84px; }
+  h2{ font-family:var(--sans); font-weight:800; letter-spacing:-.015em; line-height:1.04; font-size:64px; }
+  .lead{ font-family:var(--mono); font-size:33px; line-height:1.4; }
+  .lead.sm{ font-size:29px; }
+  .red{ color:var(--red); }
+  .spacer{ flex:1; }
+  .center{ justify-content:center; }
+  .arrow{ position:absolute; right:68px; bottom:74px; font-size:50px; font-family:var(--sans); color:var(--ink); }
+  .ink .arrow{ color:#fff; }
+  .foot{ position:absolute; left:80px; bottom:46px; font-family:var(--mono); font-size:19px; letter-spacing:.04em; color:var(--muted); display:flex; gap:14px; align-items:center; }
+  .ink .foot{ left:80px; }
+  /* hand-drawn track doodles (rough.js) */
+  .doodle{ position:absolute; top:72px; right:84px; width:96px; height:96px; opacity:.22; pointer-events:none; }
+  .ink .doodle{ opacity:.3; }
+  .tracks{ display:flex; gap:30px; justify-content:center; align-items:flex-end; margin-top:14px; }
+  .tracks .d{ width:96px; opacity:.85; display:flex; flex-direction:column; align-items:center; }
+  .tracks .d figcaption{ font-family:var(--mono); font-size:16px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-align:center; margin-top:8px; }
+  .star{ color:var(--margin); font-size:23px; }
+  .num{ position:absolute; right:76px; bottom:46px; font-family:var(--mono); font-size:19px; color:var(--muted); }
+  .cta-url{ font-family:var(--sans); font-weight:800; font-size:60px; letter-spacing:-.01em; }
+  .big{ font-family:var(--sans); font-weight:800; font-size:150px; line-height:.9; letter-spacing:-.03em; }
+  /* chat cover */
+  .chat{ margin-top:10px; display:flex; flex-direction:column; gap:20px; }
+  .cand{ align-self:flex-end; max-width:82%; background:#fff; border:2px solid var(--border);
+    border-radius:18px 18px 4px 18px; padding:20px 24px; font-family:var(--mono); font-size:26px; line-height:1.38; box-shadow:0 6px 22px rgba(50,50,52,.07); }
+  .int{ display:flex; gap:16px; align-items:flex-start; max-width:94%; }
+  .orb{ flex:none; width:54px; height:54px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-size:27px; }
+  .who{ font-family:var(--mono); font-size:19px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .said{ font-family:var(--sans); font-weight:700; font-size:33px; line-height:1.18; }
+  /* product shots — taller crop fills the portrait */
+  .frame{ border:2px solid var(--ink); border-radius:16px; overflow:hidden; box-shadow:0 26px 64px rgba(50,50,52,.22); background:#fff; }
+  .frame .bar{ height:38px; background:var(--paper); border-bottom:2px solid var(--border); display:flex; align-items:center; gap:9px; padding:0 18px; }
+  .frame .bar i{ width:12px; height:12px; border-radius:50%; background:#cfcfcf; display:inline-block; } .frame .bar i.r{ background:var(--margin); }
+  .frame img{ width:100%; height:auto; display:block; }
+  .cap{ font-family:var(--mono); font-size:28px; line-height:1.4; margin-top:24px; }
+  .cap b{ font-weight:700; color:var(--ink); }
+  .compare .row{ padding:38px 0; border-top:2px solid var(--rule); }
+  .compare .row:last-child{ border-bottom:2px solid var(--rule); }
+  .compare .who2{ font-family:var(--mono); font-size:23px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  .compare .said2{ font-family:var(--sans); font-weight:800; font-size:50px; line-height:1.05; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+</head>
+<body>
+
+<!-- 1 — COVER hook + roast -->
+<section class="slide paper">
+  <span class="kicker">✳ CasePad · live case interview</span>
+  <div style="height:22px"></div>
+  <h1>I reverse-engineered<br/>the <span class="red">case interview.</span></h1>
+  <div style="height:16px"></div>
+  <p class="lead sm" style="color:var(--muted)">Into an AI that grills you exactly like the real thing.</p>
+  <div class="chat">
+    <div class="cand">I’d use a profitability framework — revenue and costs. Where should I start?</div>
+    <div class="int"><div class="orb">✳</div><div>
+      <div class="who">Ash · EM at Bain</div>
+      <div class="said">“That’s the textbook. What’s your hypothesis on what’s actually <span class="red">broken</span> — revenue or cost, and why?”</div>
+    </div></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">01 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 2 — WHAT IT IS (plain) -->
+<section class="slide paper center">
+  <span class="kicker">What it actually is</span>
+  <div class="rule-sm"></div>
+  <h2>A full mock case interview — with an AI that acts like a <span class="red">real interviewer</span>, not a chatbot.</h2>
+  <div style="height:30px"></div>
+  <p class="lead sm">You talk, it grills you, it scores you, and it shows you how a top candidate would’ve done it. Free.</p>
+  <div style="height:40px"></div>
+  <div class="tracks">
+    <figure class="d" data-icon="bars"><figcaption>Consulting</figcaption></figure>
+    <figure class="d" data-icon="phone"><figcaption>Product</figcaption></figure>
+    <figure class="d" data-icon="coin"><figcaption>Finance</figcaption></figure>
+    <figure class="d" data-icon="mega"><figcaption>Marketing</figcaption></figure>
+    <figure class="d" data-icon="target"><figcaption>Strategy</figcaption></figure>
+  </div>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">02 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 3 — SHOT solve -->
+<section class="slide paper center">
+  <span class="kicker">It interviews you — for real</span>
+  <div style="height:22px"></div>
+  <div class="frame"><div class="bar"><i class="r"></i><i></i><i></i></div><img src="shots/shot-solve.jpeg" alt=""/></div>
+  <p class="cap">It asks the case, <b>pushes back on weak answers</b>, makes you defend every number, and won’t hand you data until you ask the right question — drawing your <b>issue tree</b> as you think.</p>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">03 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 4 — SHOT debrief score -->
+<section class="slide paper center">
+  <span class="kicker">Then it grades you — honestly</span>
+  <div style="height:22px"></div>
+  <div class="frame"><div class="bar"><i class="r"></i><i></i><i></i></div><img src="shots/shot-debrief-score.jpeg" alt=""/></div>
+  <p class="cap">A real score the second you finish — on <b>structure, math, and judgment</b> — with the exact gaps that would’ve cost you the offer. The truth you usually only get <i>after</i> the rejection email.</p>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">04 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 5 — SHOT tree -->
+<section class="slide paper center">
+  <span class="kicker">And shows you the perfect answer</span>
+  <div style="height:22px"></div>
+  <div class="frame"><div class="bar"><i class="r"></i><i></i><i></i></div><img class="topleft" src="shots/shot-tree.jpeg" alt=""/></div>
+  <p class="cap">Exactly how a <b>top candidate</b> would’ve cracked it — the full issue tree, the hypotheses, and the step-by-step — so you learn what “brilliant” looks like.</p>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">05 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 6 — SHOT cases / breadth -->
+<section class="slide paper center">
+  <span class="kicker">And there are thousands</span>
+  <div style="height:22px"></div>
+  <div class="frame"><div class="bar"><i class="r"></i><i></i><i></i></div><img src="shots/shot-cases.jpeg" alt=""/></div>
+  <p class="cap"><b>2,600+ real cases</b> across 5 tracks — consulting, product, finance, marketing, strategy. Real cases from the real world — not AI-invented ones.</p>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">06 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 7 — OBJECTION KILLER (also carries credibility) -->
+<section class="slide paper center">
+  <span class="kicker">“But can’t I just use ChatGPT?”</span>
+  <div class="rule-sm"></div>
+  <h2>ChatGPT has already <span class="red">read the answer.</span></h2>
+  <div style="height:26px"></div>
+  <p class="lead sm">Paste a case into ChatGPT and it’s seen the solution — so it can’t make you earn the data, it won’t push back, and it’ll tell you you’re brilliant.</p>
+  <div style="height:18px"></div>
+  <p class="lead sm">CasePad hides the answer, makes you earn every fact, and is built from how real interviews actually run. It behaves like the <span class="red">room</span> — not the cheat sheet.</p>
+  <div class="foot"><span class="star">✳</span> casepad.vercel.app</div>
+  <div class="num">07 / 08</div>
+  <div class="arrow">→</div>
+</section>
+
+<!-- 8 — CTA -->
+<section class="slide ink center">
+  <span class="kicker">It’s live. It’s free.</span>
+  <div class="spacer" style="flex:.5"></div>
+  <h2 style="font-size:80px">A coach gives you one hour.<br/>This gives you <span style="color:#ff9a9a">a thousand.</span></h2>
+  <div style="height:38px"></div>
+  <div class="cta-url">casepad.vercel.app</div>
+  <div style="height:16px"></div>
+  <p class="lead sm" style="color:rgba(255,255,255,.7)">Unlimited mock interviews. Zero cost.</p>
+  <div class="spacer"></div>
+  <p class="lead sm" style="color:rgba(255,255,255,.55)">↩︎ Repost if someone you know is prepping.</p>
+  <div class="num">08 / 08</div>
+</section>
+
+<script>
+(function(){
+  if(!window.rough) return;
+  var NS='http://www.w3.org/2000/svg', INK='#323234', RED='#b33c3c';
+  function mk(w,h){ var s=document.createElementNS(NS,'svg'); s.setAttribute('width',w); s.setAttribute('height',h); s.style.display='block'; s.style.overflow='visible'; return s; }
+  function draw(el){
+    var name=el.getAttribute('data-icon'); if(!name) return;
+    var hasCap=!!el.querySelector('figcaption');
+    var sw = el.clientWidth||96, sh = hasCap?72:(el.clientHeight||96);
+    var svg=mk(sw,sh), rc=rough.svg(svg);
+    var o={stroke:INK,strokeWidth:2.2,roughness:1.35,bowing:1.3};
+    var cx=sw/2, cy=sh/2, m=Math.min(sw,sh);
+    if(name==='bars'){ var base=sh-6, bw=m*0.2; [[0.16,0.45],[0.41,0.8],[0.66,0.6]].forEach(function(b){ svg.appendChild(rc.rectangle(sw*b[0], base-sh*b[1], bw, sh*b[1], o)); }); }
+    else if(name==='phone'){ var pw=m*0.5, ph=m*0.84, x=cx-pw/2, y=cy-ph/2; svg.appendChild(rc.rectangle(x,y,pw,ph,o)); svg.appendChild(rc.line(x+pw*0.32,y+7,x+pw*0.68,y+7,o)); svg.appendChild(rc.line(x+pw*0.36,y+ph-9,x+pw*0.64,y+ph-9,o)); }
+    else if(name==='coin'){ svg.appendChild(rc.circle(cx,cy,m*0.8,o)); var t=document.createElementNS(NS,'text'); t.setAttribute('x',cx); t.setAttribute('y',cy+m*0.17); t.setAttribute('text-anchor','middle'); t.setAttribute('font-family','Helvetica,Arial,sans-serif'); t.setAttribute('font-weight','800'); t.setAttribute('font-size',m*0.5); t.setAttribute('fill',INK); t.textContent='$'; svg.appendChild(t); }
+    else if(name==='mega'){ svg.appendChild(rc.polygon([[sw*0.18,cy-m*0.16],[sw*0.54,cy-m*0.3],[sw*0.54,cy+m*0.3],[sw*0.18,cy+m*0.16]],o)); svg.appendChild(rc.line(sw*0.6,cy-m*0.22,sw*0.8,cy-m*0.32,o)); svg.appendChild(rc.line(sw*0.62,cy,sw*0.84,cy,o)); svg.appendChild(rc.line(sw*0.6,cy+m*0.22,sw*0.8,cy+m*0.32,o)); }
+    else if(name==='target'){ svg.appendChild(rc.circle(cx,cy,m*0.82,o)); svg.appendChild(rc.circle(cx,cy,m*0.46,o)); svg.appendChild(rc.circle(cx,cy,m*0.12,{stroke:RED,fill:RED,fillStyle:'solid',strokeWidth:1})); }
+    el.insertBefore(svg, el.firstChild);
+  }
+  var ICONS=['bars','phone','coin','mega','target'];
+  // faint corner doodle only on text slides (no screenshot frame, no track row)
+  document.querySelectorAll('.slide').forEach(function(s,i){
+    if(s.querySelector('.frame')||s.querySelector('.tracks')||s.querySelector('.chat')) return;
+    var d=document.createElement('div'); d.className='doodle'; d.setAttribute('data-icon', ICONS[i%5]); s.appendChild(d);
+  });
+  document.querySelectorAll('[data-icon]').forEach(draw);
+})();
+</script>
+</body>
+</html>

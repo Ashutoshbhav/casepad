@@ -59,6 +59,11 @@ export async function POST(req: NextRequest) {
   const text = typeof body?.text === 'string' ? body.text.trim() : '';
   if (!text) return jsonError(400, 'text (non-empty string) required');
   if (text.length > MAX_CHARS) return jsonError(413, 'text too large');
+  // 'pcm16' is for the optional Simli avatar (src/components/
+  // live-interview-avatar.tsx), which needs raw PCM16 @ 16kHz to feed
+  // sendAudioData() — everything else (existing browser playback) keeps
+  // using the default 'mp3' path unchanged.
+  const format: 'mp3' | 'pcm16' = body?.format === 'pcm16' ? 'pcm16' : 'mp3';
 
   const apiKey = process.env.GOOGLE_TTS_API_KEY;
   if (!apiKey) {
@@ -79,7 +84,10 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           input: { text },
           voice: { languageCode: DEFAULT_VOICE.slice(0, 5), name: DEFAULT_VOICE },
-          audioConfig: { audioEncoding: 'MP3' },
+          audioConfig:
+            format === 'pcm16'
+              ? { audioEncoding: 'LINEAR16', sampleRateHertz: 16000 }
+              : { audioEncoding: 'MP3' },
         }),
       }
     );
@@ -106,10 +114,19 @@ export async function POST(req: NextRequest) {
     return jsonError(502, 'speech synthesis returned no audio');
   }
 
-  // Base64 MP3 passthrough — client builds a data URI / Blob and plays it.
-  // Simpler and more robust across the Next.js runtime than streaming binary.
-  return new Response(JSON.stringify({ audioBase64: payload.audioContent, mimeType: 'audio/mpeg' }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  // Base64 passthrough — client decodes and either builds a playable data
+  // URI/Blob (mp3) or feeds the raw bytes straight to Simli's
+  // sendAudioData() (pcm16 — Google's LINEAR16 output is headerless raw
+  // PCM, not a playable file by itself, hence the distinct mimeType so the
+  // client never tries to play it directly).
+  return new Response(
+    JSON.stringify({
+      audioBase64: payload.audioContent,
+      mimeType: format === 'pcm16' ? 'audio/l16;rate=16000' : 'audio/mpeg',
+    }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 }

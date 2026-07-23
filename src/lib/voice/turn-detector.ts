@@ -34,6 +34,13 @@ const ASSET_BASE = '/vad/';
 // off — go materially lower than this and thinking-pauses start getting
 // mistaken for the end of a turn.
 const REDEMPTION_MS = 650;
+// Widened pause tolerance for "the candidate explicitly asked for a moment
+// to think" (see src/lib/interview/thinking-time.ts + live-mic-input.tsx's
+// setPatience wiring) — halting/muttering thinking-out-loud speech has
+// natural pauses well past the normal 650ms conversational threshold; at
+// the normal setting each pause would auto-send a fragment as a separate
+// turn, interrupting exactly the thinking space the candidate asked for.
+const REDEMPTION_MS_THINKING = 2500;
 const PRE_SPEECH_PAD_MS = 800;
 // Raised above the library defaults (0.3 / 0.25 / 400ms) — the defaults are
 // tuned for general-purpose use and fire on ambient room noise (fan hum,
@@ -74,6 +81,11 @@ export type TurnDetectorHandle = {
   resume: () => Promise<void>;
   /** Fully releases the mic stream, audio context, and model. Call on session end/unmount. */
   destroy: () => Promise<void>;
+  /** Widens/restores the pause tolerance — 'thinking' after an explicit
+   *  "give me a moment" request, 'normal' otherwise. Thin wrapper over
+   *  MicVAD's own setOptions; never prompts for permission or touches the
+   *  mic stream, just the redemption timing. */
+  setPatience: (mode: 'normal' | 'thinking') => void;
 };
 
 /**
@@ -119,6 +131,13 @@ export async function createTurnDetector(events: TurnDetectorEvents): Promise<Tu
         await vad.destroy();
       } catch (err) {
         console.warn('[turn-detector] destroy on a never-started VAD instance (safe to ignore)', err);
+      }
+    },
+    setPatience: (mode) => {
+      try {
+        vad.setOptions({ redemptionMs: mode === 'thinking' ? REDEMPTION_MS_THINKING : REDEMPTION_MS });
+      } catch (err) {
+        console.warn('[turn-detector] setPatience failed (non-fatal, keeps prior timing)', err);
       }
     },
   };

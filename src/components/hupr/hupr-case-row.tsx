@@ -8,8 +8,9 @@
 // the deterministic fallback from the bundled 147 photos. Either way the
 // placard is never empty.
 
-import { CaseListLink } from '../case-list-link';
+import Link from 'next/link';
 import { CaseRowImage } from './case-row-image';
+import { startLiveCaseInterview } from '@/server-actions/start-live-interview';
 
 // Case-type → HUPR earth-tone background mapping. Matches the /cases sticky
 // browse-by-type cards so the same case_type carries the same color across
@@ -91,15 +92,26 @@ export function HuprCaseRow({
     : '';
 
   return (
-    <CaseListLink
-      href={`/solve/${c.id}`}
-      className="block py-6 group"
+    <div
+      className="group"
       style={{
         borderBottom: '1px solid var(--color-border)',
         opacity: completed ? 0.7 : 1,
       }}
     >
-      <div className="flex flex-col sm:flex-row gap-5">
+      {/* Voice is the primary action — the whole row submits straight into a
+          live case interview (see startLiveCaseInterview, already accepts
+          any case id, no backend change needed here). A <button> can't nest
+          inside the <a> this used to be, and vice versa, so the "read it as
+          text instead" doorway below is a separate, un-nested sibling link,
+          not a link inside the button. */}
+      <form action={startLiveCaseInterview.bind(null, c.id)}>
+        <button
+          type="submit"
+          className="block w-full text-left py-6"
+          style={{ background: 'none', border: 0, cursor: 'pointer' }}
+        >
+          <div className="flex flex-col sm:flex-row gap-5">
         {/* Left placard — case photo with case-type-themed gradient overlay.
             The image fills the placard; the gradient + eyebrow + case-type
             label sit on top. Matches the hero treatment used on /cases. */}
@@ -222,8 +234,17 @@ export function HuprCaseRow({
               {excerpt}
             </p>
           )}
-        </div>
-      </div>
-    </CaseListLink>
+          </div>
+          </div>
+        </button>
+      </form>
+      <Link
+        href={`/solve/${c.id}`}
+        className="hupr-mono-eyebrow underline block text-right"
+        style={{ color: 'var(--color-text-muted)', paddingBottom: 14, marginTop: -8 }}
+      >
+        or read + type it out →
+      </Link>
+    </div>
   );
 }

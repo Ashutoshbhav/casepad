@@ -1,0 +1,490 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e10]:
+    - generic [ref=e15]:
+      - heading "Text-to-Speech pricing" [level=1] [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e21] [cursor=pointer]:
+          - generic [ref=e22]: Contact sales
+          - link "Contact sales" [ref=e23]:
+            - /url: https://cloud.google.com/contact?direct=true
+        - generic [ref=e26] [cursor=pointer]:
+          - generic [ref=e27]: Go to console
+          - link "Go to console" [ref=e28]:
+            - /url: https://console.cloud.google.com/speech/text-to-speech
+    - generic [ref=e32]:
+      - heading [level=2]
+      - generic [ref=e34]:
+        - paragraph [ref=e35]:
+          - text: Text-to-Speech is priced based on the number of characters sent to the service to be synthesized into audio each month. You must enable billing to use Text-to-Speech, and will be automatically charged if your usage exceeds the number of free characters allowed per month. For information about how to keep track of your character totals, see
+          - link "Monitoring API usage" [ref=e36] [cursor=pointer]:
+            - /url: https://cloud.google.com/apis/docs/monitoring
+          - text: . Price is calculated per character.
+        - paragraph [ref=e37]:
+          - text: The total number of characters in the input string are counted for billing purposes, including spaces and newline characters. All
+          - link "Speech Synthesis Markup Language (SSML)" [ref=e38] [cursor=pointer]:
+            - /url: https://cloud.google.com/text-to-speech/docs/ssml
+          - text: tags (except the
+          - link "<mark>" [ref=e39] [cursor=pointer]:
+            - /url: https://cloud.google.com/text-to-speech/docs/ssml#mark
+          - text: tag) are also included in the character count.
+    - generic [ref=e43]:
+      - heading "Pricing table" [level=2] [ref=e47]
+      - generic [ref=e51]:
+        - heading "Gemini-TTS" [level=3] [ref=e52]
+        - paragraph [ref=e56]: The latest evolution of our Text-to-Speech technology giving granular control over generated audio using text-based prompts.
+      - region "Gemini-TTS" [ref=e58]:
+        - table [ref=e59]:
+          - row [ref=e60]:
+            - columnheader [ref=e61]:
+              - paragraph [ref=e63]: Model
+            - columnheader [ref=e64]:
+              - paragraph [ref=e66]: Free usage limit
+            - columnheader [ref=e67]:
+              - paragraph [ref=e69]: Price after free usage limit is reached
+          - rowgroup [ref=e70]:
+            - row [ref=e71]:
+              - cell [ref=e72]:
+                - paragraph [ref=e73]: Gemini 2.5 Flash TTS
+                - paragraph [ref=e74]: Gemini 2.5 Flash-Lite Preview TTS
+              - cell [ref=e75]:
+                - paragraph [ref=e76]: Not available
+              - cell [ref=e77]:
+                - paragraph [ref=e78]: "Input tokens: $0.50 per 1 million text tokens*"
+                - paragraph [ref=e79]: "(sku: 242A-EA16-C1EC)"
+                - paragraph [ref=e80]: "Output tokens: $10.00 per 1 million audio tokens*"
+                - paragraph [ref=e81]: "(sku: 9228-79EF-B162)"
+            - row [ref=e82]:
+              - cell [ref=e83]:
+                - paragraph [ref=e84]: Gemini 3.1 Flash TTS (Preview)
+                - paragraph [ref=e85]
+              - cell [ref=e86]:
+                - paragraph [ref=e87]: Not available
+              - cell [ref=e88]:
+                - paragraph [ref=e89]: "Input tokens: $1.00 per 1 million text tokens*"
+                - paragraph [ref=e90]: "(sku: EB3F-1051-05D7)"
+                - paragraph [ref=e91]: "Output tokens: $20.00 per 1 million audio tokens*"
+                - paragraph [ref=e92]: "(sku: 7976-330B-8F17)"
+                - paragraph [ref=e93]
+                - paragraph [ref=e94]
+                - paragraph [ref=e95]
+            - row [ref=e96]:
+              - cell [ref=e97]:
+                - paragraph [ref=e98]: Gemini 2.5 Pro TTS
+              - cell [ref=e99]:
+                - paragraph [ref=e100]: Not available
+                - paragraph [ref=e101]
+              - cell [ref=e102]:
+                - paragraph [ref=e103]: "Input tokens: $1.00 per 1 million text tokens*"
+                - paragraph [ref=e104]: "(sku: 8FF1-7E5B-5BB7)"
+                - paragraph [ref=e105]: "Output tokens: $20.00 per 1 million audio tokens*"
+                - paragraph [ref=e106]: "(sku: DCF3-CB17-8262)"
+      - paragraph [ref=e108]: "* Audio tokens correspond to 25 tokens per second of audio"
+      - generic [ref=e111]:
+        - heading "Latest TTS models" [level=3] [ref=e112]
+        - paragraph [ref=e116]: Powered by our cutting-edge LLMs, our latest TTS models deliver an unparalleled level of realism and emotional resonance right out-of-the-box for every use-case.
+      - region "Latest TTS models" [ref=e118]:
+        - table [ref=e119]:
+          - row [ref=e120]:
+            - columnheader [ref=e121]:
+              - generic [ref=e122]:
+                - paragraph [ref=e123]: Model
+                - paragraph [ref=e124]
+            - columnheader [ref=e125]:
+              - paragraph [ref=e127]: Free usage limit
+            - columnheader [ref=e128]:
+              - paragraph [ref=e130]: Price after free usage limit is reached
+          - rowgroup [ref=e131]:
+            - row [ref=e132]:
+              - cell [ref=e133]:
+                - paragraph [ref=e134]:
+                  - 'link "Chirp 3: HD" [ref=e135] [cursor=pointer]':
+                    - /url: https://cloud.google.com/text-to-speech/docs/list-voices-and-types#chirp3_hd_voices
+                  - text: voices
+                - paragraph [ref=e136]: (sku:F977-2280-6F1B)
+              - cell [ref=e137]:
+                - paragraph [ref=e138]: 0 to 1 million characters
+              - cell [ref=e139]:
+                - paragraph [ref=e140]: US$0.00003 per character (US$30 per 1 million characters)
+            - row [ref=e141]:
+              - cell [ref=e142]:
+                - paragraph [ref=e143]:
+                  - link "Instant custom voice" [ref=e144] [cursor=pointer]:
+                    - /url: https://cloud.google.com/text-to-speech/docs/chirp3-instant-custom-voice
+                - paragraph [ref=e145]: (sku:A247-37D7-C094)
+              - cell [ref=e146]:
+                - paragraph [ref=e147]: Not available
+              - cell [ref=e148]:
+                - paragraph [ref=e149]: US$0.00006 per character (US$60 per 1 million characters)
+                - paragraph [ref=e150]
+      - heading "Legacy TTS models" [level=3] [ref=e154]
+      - region "Legacy TTS models" [ref=e157]:
+        - table [ref=e158]:
+          - row [ref=e159]:
+            - columnheader [ref=e160]:
+              - paragraph [ref=e162]: Model
+            - columnheader [ref=e163]:
+              - paragraph [ref=e165]: Free usage limit
+            - columnheader [ref=e166]:
+              - paragraph [ref=e168]: Price after free usage limit is reached
+          - rowgroup [ref=e169]:
+            - row [ref=e170]:
+              - cell [ref=e171]:
+                - paragraph [ref=e172]:
+                  - link "WaveNet" [ref=e173] [cursor=pointer]:
+                    - /url: https://cloud.google.com/text-to-speech/docs/list-voices-and-types#wavenet_voices
+                  - text: voices
+                - paragraph [ref=e174]: (sku:9D01-5995-B545)
+              - cell [ref=e175]:
+                - paragraph [ref=e176]: 0 to 4 million characters
+              - cell [ref=e177]:
+                - paragraph [ref=e178]: US$0.000004 per character (US$4per 1 million characters)
+            - row [ref=e179]:
+              - cell [ref=e180]:
+                - paragraph [ref=e181]:
+                  - link "Studio" [ref=e182] [cursor=pointer]:
+                    - /url: https://cloud.google.com/text-to-speech/docs/voice-types#studio_voices
+                  - text: voices
+                - paragraph [ref=e183]: (sku:84AB-48C0-F9C3)
+              - cell [ref=e184]:
+                - paragraph [ref=e185]: 0 to 1 million characters
+              - cell [ref=e186]:
+                - paragraph [ref=e187]: US$0.00016 per character (US$160 per 1 million characters)
+            - row [ref=e188]:
+              - cell [ref=e189]:
+                - paragraph [ref=e190]:
+                  - link "Standard" [ref=e191] [cursor=pointer]:
+                    - /url: https://cloud.google.com/text-to-speech/docs/list-voices-and-types#standard_voices
+                  - text: voices
+                - paragraph [ref=e192]: (sku:9D01-5995-B545)
+              - cell [ref=e193]:
+                - paragraph [ref=e194]: 0 to 4 million characters
+              - cell [ref=e195]:
+                - paragraph [ref=e196]: US$0.000004 per character (US$4 per 1 million characters)
+            - row [ref=e197]:
+              - cell [ref=e198]:
+                - paragraph [ref=e199]:
+                  - link "Neural2" [ref=e200] [cursor=pointer]:
+                    - /url: https://cloud.google.com/text-to-speech/docs/voice-types#neural2_voices
+                  - text: voices
+                - paragraph [ref=e201]: (sku:FEBD-04B6-769B)
+              - cell [ref=e202]:
+                - paragraph [ref=e203]: 0 to 1 million characters
+              - cell [ref=e204]:
+                - paragraph [ref=e205]: US$0.000016 per character (US$16 per 1 million characters)
+            - row [ref=e206]:
+              - cell [ref=e207]:
+                - paragraph [ref=e208]:
+                  - link "Polyglot (Preview)" [ref=e209] [cursor=pointer]:
+                    - /url: https://cloud.google.com/text-to-speech/docs/polyglot
+                  - text: voices
+                - paragraph [ref=e210]: (sku:FEBD-04B6-769B)
+              - cell [ref=e211]:
+                - paragraph [ref=e212]: 0 to 1 million characters
+              - cell [ref=e213]:
+                - paragraph [ref=e214]: US$0.000016 per character (US$16 per 1 million characters)
+      - paragraph [ref=e216]: "Note: For WaveNet and Standard voices, the number of characters will be equal to or less than the number of bytes represented by the text. This includes alphanumeric characters, punctuation, and white spaces. Some character sets use more than one byte for a character. For example, Japanese (ja-JP) characters in UTF-8 typically require more than one byte each. In this case, you are only charged for one character, not multiple bytes."
+    - generic [ref=e220]:
+      - heading "Google Cloud pricing" [level=2] [ref=e221]
+      - paragraph [ref=e224]:
+        - text: If you use other Google Cloud resources in tandem with the Text-to-Speech, such as Google App Engine instances, then you will also be billed for the use of those services. See
+        - link "Google Cloud's pricing calculator" [ref=e225] [cursor=pointer]:
+          - /url: https://cloud.google.com/products/calculator?
+        - text: to determine other costs based on current rates.
+      - heading "What's next" [level=3] [ref=e226]
+      - list [ref=e229]:
+        - listitem [ref=e230]:
+          - text: Read the
+          - link "Text-to-Speech documentation" [ref=e231] [cursor=pointer]:
+            - /url: https://cloud.google.com/text-to-speech/docs
+        - listitem [ref=e232]:
+          - text: Get started with
+          - link "Text-to-Speech" [ref=e233] [cursor=pointer]:
+            - /url: https://cloud.google.com/text-to-speech/docs/quickstarts
+        - listitem [ref=e234]:
+          - text: Try the
+          - link "pricing calculator" [ref=e235] [cursor=pointer]:
+            - /url: https://cloud.google.com/products/calculator
+        - listitem [ref=e236]:
+          - text: Learn about
+          - link "Text-to-Speech solutions and use cases" [ref=e237] [cursor=pointer]:
+            - /url: https://cloud.google.com/architecture?text=Text-to-Speech
+    - generic [ref=e243]:
+      - generic [ref=e245]:
+        - heading [level=2] [ref=e246]:
+          - heading "Request a custom quote" [level=4] [ref=e248]
+        - generic [ref=e250]:
+          - paragraph [ref=e251]: With Google Cloud's pay-as-you-go pricing, you only pay for the services you use. Connect with our sales team to get a custom quote for your organization.
+          - paragraph [ref=e252]
+          - paragraph [ref=e253]
+        - generic [ref=e255]:
+          - generic [ref=e258] [cursor=pointer]:
+            - generic [ref=e259]: Contact sales
+            - link "Contact sales" [ref=e260]:
+              - /url: https://cloud.google.com/contact?direct=true
+          - generic [ref=e263] [cursor=pointer]:
+            - generic [ref=e264]: Go to console
+            - link "Go to console" [ref=e265]:
+              - /url: https://console.cloud.google.com/speech
+      - img "Cloud logo" [ref=e269]
+  - banner [ref=e270]:
+    - generic [ref=e273]:
+      - link [ref=e275] [cursor=pointer]:
+        - /url: https://cloud.google.com/
+        - img "Google Cloud" [ref=e276]
+      - generic [ref=e277]:
+        - navigation [ref=e280]:
+          - text: chevron_left
+          - link "Overview" [ref=e282] [cursor=pointer]:
+            - /url: https://cloud.google.com/why-google-cloud
+          - link "Solutions" [ref=e284] [cursor=pointer]:
+            - /url: https://cloud.google.com/solutions
+          - link "Products" [ref=e286] [cursor=pointer]:
+            - /url: https://cloud.google.com/products
+          - link "Pricing" [ref=e288] [cursor=pointer]:
+            - /url: https://cloud.google.com/pricing
+          - link "Resources" [ref=e290] [cursor=pointer]:
+            - /url: https://cloud.google.com/docs/get-started
+          - text: chevron_right
+        - generic [ref=e294]:
+          - generic: 
+          - generic [ref=e295]:
+            - generic: search
+            - generic:
+              - combobox "Search"
+            - button "Search" [ref=e297] [cursor=pointer]: send
+      - generic [ref=e298]:
+        - link "Docs" [ref=e300] [cursor=pointer]:
+          - /url: https://cloud.google.com/docs
+        - link "Support" [ref=e302] [cursor=pointer]:
+          - /url: https://cloud.google.com/support-hub
+      - link "Console" [ref=e303] [cursor=pointer]:
+        - /url: https://console.cloud.google.com/
+      - generic [ref=e304]:
+        - generic [ref=e305]:
+          - button "Developer Profile Dropdown" [ref=e306] [cursor=pointer]
+          - generic: Google Developer Program
+          - menu:
+            - generic: Google Developer Program
+            - menuitem "Dashboard"
+            - menuitem "Saved pages"
+            - menuitem "Communities and Programs"
+            - menuitem "Profile"
+          - menu "Create Google Developer Profile":
+            - generic:
+              - menuitem
+              - generic: Join the Google Developer Program
+              - generic: Unlock AI tools, exclusive training, and insider access. Join today and accelerate your developer journey.
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - menuitem "Dismiss"
+                - generic:
+                  - generic:
+                    - generic:
+                      - menuitem "Start":
+                        - link "Start":
+                          - /url: https://developers.google.com/profile/u/new
+        - 'button "Google Account: Ashutosh Bhavale (ash18bhav@gmail.com)" [ref=e315] [cursor=pointer]'
+  - contentinfo [ref=e324]:
+    - generic [ref=e325]:
+      - navigation "Footer Links" [ref=e327]:
+        - list [ref=e328]:
+          - listitem [ref=e329]:
+            - heading "Why Google" [level=3] [ref=e330]
+            - list [ref=e331]:
+              - listitem [ref=e332]:
+                - link "Choosing Google Cloud" [ref=e333] [cursor=pointer]:
+                  - /url: https://cloud.google.com/why-google-cloud
+              - listitem [ref=e334]:
+                - link "Trust and security" [ref=e335] [cursor=pointer]:
+                  - /url: https://cloud.google.com/trust-center
+              - listitem [ref=e336]:
+                - link "Modern Infrastructure Cloud" [ref=e337] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/modern-infrastructure
+              - listitem [ref=e338]:
+                - link "Multicloud" [ref=e339] [cursor=pointer]:
+                  - /url: https://cloud.google.com/multicloud
+              - listitem [ref=e340]:
+                - link "Global infrastructure" [ref=e341] [cursor=pointer]:
+                  - /url: https://cloud.google.com/infrastructure
+              - listitem [ref=e342]:
+                - link "Locations" [ref=e343] [cursor=pointer]:
+                  - /url: https://cloud.google.com/about/locations
+              - listitem [ref=e344]:
+                - link "Customers and case studies" [ref=e345] [cursor=pointer]:
+                  - /url: https://cloud.google.com/customers
+              - listitem [ref=e346]:
+                - link "Analyst reports" [ref=e347] [cursor=pointer]:
+                  - /url: https://cloud.google.com/analyst-reports
+              - listitem [ref=e348]:
+                - link "Whitepapers" [ref=e349] [cursor=pointer]:
+                  - /url: https://cloud.google.com/whitepapers
+              - listitem [ref=e350]:
+                - link "Blog" [ref=e351] [cursor=pointer]:
+                  - /url: https://cloud.google.com/blog
+          - listitem [ref=e352]:
+            - heading "Products and pricing" [level=3] [ref=e353]
+            - list [ref=e354]:
+              - listitem [ref=e355]:
+                - link "Google Cloud pricing" [ref=e356] [cursor=pointer]:
+                  - /url: https://cloud.google.com/pricing
+              - listitem [ref=e357]:
+                - link "Google Workspace pricing" [ref=e358] [cursor=pointer]:
+                  - /url: https://workspace.google.com/pricing.html
+              - listitem [ref=e359]:
+                - link "See all products" [ref=e360] [cursor=pointer]:
+                  - /url: https://cloud.google.com/products
+          - listitem [ref=e361]:
+            - heading "Solutions" [level=3] [ref=e362]
+            - list [ref=e363]:
+              - listitem [ref=e364]:
+                - link "Infrastructure modernization" [ref=e365] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/infrastructure-modernization/
+              - listitem [ref=e366]:
+                - link "Databases" [ref=e367] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/databases
+              - listitem [ref=e368]:
+                - link "Application modernization" [ref=e369] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/application-modernization
+              - listitem [ref=e370]:
+                - link "Smart analytics" [ref=e371] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/data-analytics-and-ai
+              - listitem [ref=e372]:
+                - link "Artificial Intelligence" [ref=e373] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/ai
+              - listitem [ref=e374]:
+                - link "Security" [ref=e375] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/security
+              - listitem [ref=e376]:
+                - link "Productivity & work transformation" [ref=e377] [cursor=pointer]:
+                  - /url: https://workspace.google.com/enterprise
+              - listitem [ref=e378]:
+                - link "Industry solutions" [ref=e379] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions/#industry-solutions
+              - listitem [ref=e380]:
+                - link "DevOps solutions" [ref=e381] [cursor=pointer]:
+                  - /url: https://cloud.google.com/devops
+              - listitem [ref=e382]:
+                - link "Small business solutions" [ref=e383] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions#section-14
+              - listitem [ref=e384]:
+                - link "See all solutions" [ref=e385] [cursor=pointer]:
+                  - /url: https://cloud.google.com/solutions
+          - listitem [ref=e386]:
+            - heading "Resources" [level=3] [ref=e387]
+            - list [ref=e388]:
+              - listitem [ref=e389]:
+                - link "Google Cloud Affiliate Program" [ref=e390] [cursor=pointer]:
+                  - /url: https://cloud.google.com/affiliate-program
+              - listitem [ref=e391]:
+                - link "Google Cloud documentation" [ref=e392] [cursor=pointer]:
+                  - /url: https://docs.cloud.google.com/
+              - listitem [ref=e393]:
+                - link "Google Cloud quickstarts" [ref=e394] [cursor=pointer]:
+                  - /url: https://docs.cloud.google.com/docs/get-started/
+              - listitem [ref=e395]:
+                - link "Google Cloud Marketplace" [ref=e396] [cursor=pointer]:
+                  - /url: https://cloud.google.com/marketplace
+              - listitem [ref=e397]:
+                - link "Learn about cloud computing" [ref=e398] [cursor=pointer]:
+                  - /url: https://cloud.google.com/discover
+              - listitem [ref=e399]:
+                - link "Support" [ref=e400] [cursor=pointer]:
+                  - /url: https://cloud.google.com/support-hub
+              - listitem [ref=e401]:
+                - link "Code samples" [ref=e402] [cursor=pointer]:
+                  - /url: https://docs.cloud.google.com/docs/samples
+              - listitem [ref=e403]:
+                - link "Cloud Architecture Center" [ref=e404] [cursor=pointer]:
+                  - /url: https://docs.cloud.google.com/architecture
+              - listitem [ref=e405]:
+                - link "Training" [ref=e406] [cursor=pointer]:
+                  - /url: https://cloud.google.com/learn/training
+              - listitem [ref=e407]:
+                - link "Certifications" [ref=e408] [cursor=pointer]:
+                  - /url: https://cloud.google.com/learn/certification
+              - listitem [ref=e409]:
+                - link "Google for Developers" [ref=e410] [cursor=pointer]:
+                  - /url: https://developers.google.com
+              - listitem [ref=e411]:
+                - link "Google Cloud for Startups" [ref=e412] [cursor=pointer]:
+                  - /url: https://cloud.google.com/startup
+              - listitem [ref=e413]:
+                - link "System status" [ref=e414] [cursor=pointer]:
+                  - /url: https://status.cloud.google.com
+              - listitem [ref=e415]:
+                - link "Release Notes" [ref=e416] [cursor=pointer]:
+                  - /url: https://docs.cloud.google.com/release-notes
+          - listitem [ref=e417]:
+            - heading "Engage" [level=3] [ref=e418]
+            - list [ref=e419]:
+              - listitem [ref=e420]:
+                - link "Contact sales" [ref=e421] [cursor=pointer]:
+                  - /url: https://cloud.google.com/contact
+              - listitem [ref=e422]:
+                - link "Find a Partner" [ref=e423] [cursor=pointer]:
+                  - /url: https://cloud.google.com/partners
+              - listitem [ref=e424]:
+                - link "Become a Partner" [ref=e425] [cursor=pointer]:
+                  - /url: https://cloud.google.com/partners/become-a-partner
+              - listitem [ref=e426]:
+                - link "Events" [ref=e427] [cursor=pointer]:
+                  - /url: https://cloud.google.com/events
+              - listitem [ref=e428]:
+                - link "Podcasts" [ref=e429] [cursor=pointer]:
+                  - /url: https://cloud.google.com/podcasts
+              - listitem [ref=e430]:
+                - link "Developer Center" [ref=e431] [cursor=pointer]:
+                  - /url: https://cloud.google.com/developers
+              - listitem [ref=e432]:
+                - link "Press Corner" [ref=e433] [cursor=pointer]:
+                  - /url: https://www.googlecloudpresscorner.com
+              - listitem [ref=e434]:
+                - link "Google Cloud on YouTube" [ref=e435] [cursor=pointer]:
+                  - /url: https://www.youtube.com/googlecloud
+              - listitem [ref=e436]:
+                - link "Google Cloud Tech on YouTube" [ref=e437] [cursor=pointer]:
+                  - /url: https://www.youtube.com/googlecloudplatform
+              - listitem [ref=e438]:
+                - link "Follow on X" [ref=e439] [cursor=pointer]:
+                  - /url: https://x.com/googlecloud
+              - listitem [ref=e440]:
+                - link "Join User Research" [ref=e441] [cursor=pointer]:
+                  - /url: https://userresearch.google.com/?reserved=1&utm_source=website&Q_Language=en&utm_medium=own_srch&utm_campaign=CloudWebFooter&utm_term=0&utm_content=0&productTag=clou&campaignDate=jul19&pType=devel&referral_code=jk212693
+              - listitem [ref=e442]:
+                - link "We're hiring. Join Google Cloud!" [ref=e443] [cursor=pointer]:
+                  - /url: https://careers.google.com/cloud
+              - listitem [ref=e444]:
+                - link "Community forums" [ref=e445] [cursor=pointer]:
+                  - /url: https://discuss.google.dev/c/google-cloud/14
+      - navigation "Utility links" [ref=e447]:
+        - list [ref=e448]:
+          - listitem [ref=e449]:
+            - link "About Google" [ref=e450] [cursor=pointer]:
+              - /url: https://about.google
+          - listitem [ref=e451]:
+            - text: "|"
+            - link "Privacy" [ref=e452] [cursor=pointer]:
+              - /url: https://policies.google.com/privacy
+          - listitem [ref=e453]:
+            - text: "|"
+            - link "Site terms" [ref=e454] [cursor=pointer]:
+              - /url: https://policies.google.com/terms
+          - listitem [ref=e455]:
+            - text: "|"
+            - link "Google Cloud terms" [ref=e456] [cursor=pointer]:
+              - /url: https://cloud.google.com/product-terms
+          - text: "|"
+          - listitem [ref=e457]:
+            - text: "|"
+            - 'link "Our third decade of climate action: join us" [ref=e458] [cursor=pointer]':
+              - /url: https://cloud.google.com/sustainability
+          - listitem [ref=e459]:
+            - generic [ref=e460]: Sign up for the Google Cloud newsletter
+            - generic [ref=e464] [cursor=pointer]:
+              - text: Subscribe
+              - link "Subscribe" [ref=e465]:
+                - /url: https://cloud.google.com/newsletter
+        - combobox "‪English‬" [ref=e469] [cursor=pointer]:
+          - generic: language

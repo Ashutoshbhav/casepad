@@ -30,7 +30,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { LiveMicInput, type ListenerStatus } from './live-mic-input';
 import { LiveInterviewScene } from './live-interview-scene';
+import { IssueTreePanel } from './issue-tree-panel';
+import { LiveInterviewAvatar, type LiveInterviewAvatarHandle, type AvatarStatus } from './live-interview-avatar';
 import { InlineSubmitCTA } from './inline-submit-cta';
+
+type VisualMode = 'jarvis' | 'avatar';
 
 export type GlowState = 'idle' | 'ai' | 'candidate' | 'processing' | 'error';
 
@@ -43,11 +47,18 @@ export function LiveInterviewSession({
   sessionId,
   initialMessages,
   endSessionAction,
+  caseTitle,
+  problemStatement,
 }: {
   sessionId: string;
   initialMessages: Msg[];
   endSessionAction: () => Promise<void> | void;
+  /** Non-null only for case-based sessions — gates both the problem-statement
+   *  panel and the issue tree. Behavioral/caseless sessions get neither. */
+  caseTitle?: string | null;
+  problemStatement?: string | null;
 }) {
+  const hasCase = Boolean(problemStatement);
   const [messages, setMessages] = useState<Msg[]>(initialMessages);
   // Lazy initializer computes the correct starting phase synchronously at
   // mount — the effect below only needs to KICK OFF the async TTS fetch for
@@ -63,6 +74,26 @@ export function LiveInterviewSession({
   const [fallbackText, setFallbackText] = useState('');
   const [transcriptOpen, setTranscriptOpen] = useState(false);
   const [listenerStatus, setListenerStatus] = useState<ListenerStatus>('loading');
+  // Bumped once per completed turn — same trigger contract IssueTreePanel
+  // already expects from solve-layout.tsx (refreshTrigger===0 means "just
+  // fetch the existing tree," any increment means "re-extract").
+  const [treeRefresh, setTreeRefresh] = useState(0);
+  // Live caption — "what did it just hear me say," distinct from the full
+  // toggle-able transcript below. Sourced directly from LiveMicInput's
+  // onAutoSend callback (which already has the text), no new fetch.
+  const [lastTranscript, setLastTranscript] = useState<string | null>(null);
+  // Real signal from /api/voice/transcribe's Whisper confidence data (see
+  // that route + turn-detector.ts's onAutoSend threading) — surfaced on the
+  // caption itself, distinct from the AI's own conversational judgment of
+  // whether an answer made sense (that's a separate, LLM-side check).
+  const [lastTranscriptLowConfidence, setLastTranscriptLowConfidence] = useState(false);
+  // Visual mode — JARVIS is the default/priority (matches the whole rest of
+  // this file); 'avatar' is an explicit, cost-gated opt-in (see
+  // live-interview-avatar.tsx's header comment — Simli bills per minute
+  // connected). Never defaults to 'avatar' even if configured server-side.
+  const [mode, setMode] = useState<VisualMode>('jarvis');
+  const [avatarStatus, setAvatarStatus] = useState<AvatarStatus>('idle');
+  const avatarRef = useRef<LiveInterviewAvatarHandle>(null);
   // Written at ~30Hz by LiveMicInput's onAmplitude — read directly inside
   // the 3D scene's useFrame loop, never through React state (see
   // live-interview-scene.tsx's header comment for why).
@@ -138,6 +169,17 @@ export function LiveInterviewSession({
   // or synchronously in sendTurn's own non-effect code path) — this function
   // only sets phase again once the async work resolves.
   const playInterviewerTurn = async (text: string) => {
+    // Avatar mode (opt-in, see live-interview-avatar.tsx): try it first, but
+    // ONLY skip the normal ladder below if it actually took the turn —
+    // speak() returns false on any failure (not connected, request failed),
+    // in which case falling through to the exact same ladder every JARVIS
+    // session already uses is the correct, silent degrade. phase transitions
+    // back to candidate_turn via the avatar's onSpeakEnd (its 'silent'
+    // event), not here — mirrors audio.onended below.
+    if (mode === 'avatar') {
+      const handled = await avatarRef.current?.speak(text).catch(() => false);
+      if (handled) return;
+    }
     try {
       const res = await fetch('/api/voice/speak', {
         method: 'POST',
@@ -222,10 +264,12 @@ export function LiveInterviewSession({
     setPhase('candidate_turn');
   };
 
-  const sendTurn = async (text: string) => {
+  const sendTurn = async (text: string, lowConfidence?: boolean) => {
     setNotice(null);
     setSttFallbackActive(false);
     setPhase('processing');
+    setLastTranscript(text);
+    setLastTranscriptLowConfidence(Boolean(lowConfidence));
     setMessages((m) => [...m, { role: 'user', content: text }]);
 
     const clientTurnId =
@@ -240,7 +284,7 @@ export function LiveInterviewSession({
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, userTurn: text, clientTurnId }),
+        body: JSON.stringify({ sessionId, userTurn: text, clientTurnId, lowConfidence: Boolean(lowConfidence) }),
         signal: controller.signal,
       });
       clearTimeout(stallTimer);
@@ -261,6 +305,10 @@ export function LiveInterviewSession({
       setMessages((m) => [...m, { role: 'interviewer', content: interviewerText }]);
       setPhase('interviewer_speaking');
       void playInterviewerTurn(interviewerText);
+      // Same trigger point chat-panel.tsx uses (onTurnComplete, right after
+      // the interviewer's reply lands) — mirrors solve-layout.tsx's pattern
+      // exactly. Case-only: a tree makes no sense for a behavioral session.
+      if (hasCase) setTreeRefresh((n) => n + 1);
     } catch (err) {
       clearTimeout(stallTimer);
       console.error('[live-interview] chat call failed', err);
@@ -326,14 +374,56 @@ export function LiveInterviewSession({
       <span className="hud-reticle hud-reticle-bl" aria-hidden="true" />
       <span className="hud-reticle hud-reticle-br" aria-hidden="true" />
 
-      <section className="hud-header px-6 sm:px-12 py-6 flex items-center justify-between">
+      <section className="hud-header px-6 sm:px-12 py-6 flex items-center justify-between flex-wrap gap-3">
         <span className="hud-eyebrow">{'// LIVE_INTERVIEW'}</span>
-        <button type="button" onClick={() => setTranscriptOpen((v) => !v)} className="hud-eyebrow hud-link">
-          {transcriptOpen ? '[ HIDE TRANSCRIPT ]' : '[ SHOW TRANSCRIPT ]'}
-        </button>
+        <div className="flex items-center gap-4 flex-wrap">
+          {/* JARVIS is the priority/default — always pre-selected, never
+              auto-switches to avatar even if Simli happens to be configured.
+              Avatar is a real per-minute cost once connected (see
+              live-interview-avatar.tsx), so this is the one place that
+              spends money, and only when explicitly chosen. */}
+          <div className="hud-mode-select" role="radiogroup" aria-label="Interviewer visual">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={mode === 'jarvis'}
+              onClick={() => setMode('jarvis')}
+              className={mode === 'jarvis' ? 'hud-mode-btn hud-mode-btn-active' : 'hud-mode-btn'}
+            >
+              JARVIS
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={mode === 'avatar'}
+              onClick={() => setMode('avatar')}
+              className={mode === 'avatar' ? 'hud-mode-btn hud-mode-btn-active' : 'hud-mode-btn'}
+              title="Beta — real-time avatar, uses metered credits"
+            >
+              {mode === 'avatar' && avatarStatus === 'connecting'
+                ? 'AVATAR — CONNECTING…'
+                : mode === 'avatar' && (avatarStatus === 'unavailable' || avatarStatus === 'error')
+                  ? 'AVATAR — UNAVAILABLE'
+                  : 'AVATAR (BETA)'}
+            </button>
+          </div>
+          <button type="button" onClick={() => setTranscriptOpen((v) => !v)} className="hud-eyebrow hud-link">
+            {transcriptOpen ? '[ HIDE TRANSCRIPT ]' : '[ SHOW TRANSCRIPT ]'}
+          </button>
+        </div>
       </section>
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-8 px-6 py-12">
+      <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-6 px-4 sm:px-8 py-8 lg:py-12">
+        {hasCase && (
+          <aside className="hud-side-panel">
+            <div className="hud-panel-label">
+              PROBLEM STATEMENT{caseTitle ? ` — ${caseTitle.toUpperCase()}` : ''}
+            </div>
+            <div className="hud-panel-body">{problemStatement}</div>
+          </aside>
+        )}
+
+        <div className="flex flex-col items-center justify-center gap-8 flex-1 min-w-0">
         <div className="jarvis-dial">
           <div className="jarvis-ring jarvis-ring-tickset" aria-hidden="true">
             {Array.from({ length: 36 }).map((_, i) => (
@@ -378,6 +468,18 @@ export function LiveInterviewSession({
           </div>
 
           <div className="jarvis-core">
+            {/* Always mounted (not conditionally rendered) so its ref and
+                connection state survive JARVIS<->avatar toggling without a
+                remount — the component itself only actually connects to
+                Simli (and starts costing anything) when active={true}. */}
+            <div className="jarvis-avatar-slot" aria-hidden={mode !== 'avatar'}>
+              <LiveInterviewAvatar
+                ref={avatarRef}
+                active={mode === 'avatar'}
+                onStatusChange={setAvatarStatus}
+                onSpeakEnd={() => setPhase('candidate_turn')}
+              />
+            </div>
             <span className="hud-readout" aria-live="polite">
               [ {stateLabel} ]
             </span>
@@ -392,7 +494,7 @@ export function LiveInterviewSession({
               <LiveMicInput
                 sessionId={sessionId}
                 phase={phase}
-                onAutoSend={(text) => void sendTurn(text)}
+                onAutoSend={(text, lowConfidence) => void sendTurn(text, lowConfidence)}
                 onBargeIn={interrupt}
                 onSttFailed={() => setSttFallbackActive(true)}
                 onStatusChange={setListenerStatus}
@@ -404,6 +506,18 @@ export function LiveInterviewSession({
           </div>
         </div>
         <span className="hud-mic-note">Mic input degrades gracefully — never blocks a turn.</span>
+
+        {/* Live caption — confirms what was just heard, separate from the
+            [SHOW TRANSCRIPT] full-history toggle above. Sourced directly
+            from the text sendTurn() already receives, no new fetch. */}
+        {lastTranscript && (
+          <div className={lastTranscriptLowConfidence ? 'hud-caption hud-caption-unclear' : 'hud-caption'} aria-live="polite">
+            <span className="hud-caption-label">YOU SAID</span> {lastTranscript}
+            {lastTranscriptLowConfidence && (
+              <span className="hud-caption-flag"> — that came through unclear, worth confirming</span>
+            )}
+          </div>
+        )}
 
         {sttFallbackActive && phase === 'candidate_turn' && (
           <form
@@ -434,6 +548,21 @@ export function LiveInterviewSession({
           <p role="alert" className="hud-notice text-sm text-center max-w-md">
             {notice}
           </p>
+        )}
+        </div>
+
+        {hasCase && (
+          <aside className="hud-side-panel hud-tree-side-panel">
+            <div className="hud-panel-label">ISSUE TREE</div>
+            {/* IssueTreePanel is styled for the light HUPR theme (built for
+                /solve) — wrapped in this dark glass panel rather than
+                reskinning its internals (drag-reparent UI, node cards,
+                etc.), a bigger job scoped out unless it reads as actually
+                broken rather than just stylistically inconsistent. */}
+            <div className="hud-tree-embed">
+              <IssueTreePanel sessionId={sessionId} refreshTrigger={treeRefresh} />
+            </div>
+          </aside>
         )}
       </div>
 
@@ -697,9 +826,10 @@ export function LiveInterviewSession({
           font-size: 9px;
           letter-spacing: 0.1em;
           color: rgba(230, 245, 255, 0.75);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
-          padding: 5px 8px;
-          background: rgba(8, 14, 20, 0.5);
+          padding: 6px 10px;
+          background: rgba(8, 14, 20, 0.2);
           border: 1px solid rgba(230, 245, 255, 0.18);
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
@@ -722,6 +852,12 @@ export function LiveInterviewSession({
         .jarvis-panel-corner-br { top: auto; left: auto; bottom: -1px; right: -1px; border-top: 0; border-left: 0; border-bottom: 1px solid var(--jarvis-glow, #22d3ee); border-right: 1px solid var(--jarvis-glow, #22d3ee); }
 
         .jarvis-core {
+          /* Genuine glass, not a smudgy solid disc: real glassmorphism reads
+             premium at low panel opacity (~0.2) with a scrim/text-shadow for
+             legibility, not by cranking the panel opacity up — the latter is
+             the single most-cited "amateur glassmorphism" tell. Readability
+             now comes from hud-readout's own text-shadow below, not from
+             this background going dark/opaque. */
           position: relative;
           z-index: 1;
           width: 58%;
@@ -731,15 +867,53 @@ export function LiveInterviewSession({
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 14px;
+          gap: 20px;
           text-align: center;
-          padding: 20px;
-          background: radial-gradient(circle at 50% 40%, rgba(230, 245, 255, 0.08), rgba(5, 10, 16, 0.75) 72%);
+          padding: 28px;
+          /* 0.2 (the general glassmorphism guidance) washed out into a solid
+             cyan blob here — this panel sits directly over a bright glowing
+             3D scene, not a calm backdrop, so it needs to stay dark enough
+             to ground/contrast the text against that brightness. 0.42 is
+             the real middle ground found by testing against the actual
+             scene, not the general-purpose number. */
+          background: radial-gradient(circle at 50% 40%, rgba(230, 245, 255, 0.06), rgba(5, 10, 16, 0.42) 72%);
           border: 1px solid rgba(230, 245, 255, 0.22);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          box-shadow: 0 0 40px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.18)) inset, 0 0 60px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.12));
+          /* Inset glow spread also reduced — at the old 40px/60px spread on
+             a ~250px circle it filled most of the interior, reading as "the
+             whole disc glows" rather than a restrained rim-light accent. */
+          box-shadow: 0 0 22px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.14)) inset, 0 0 36px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.08));
           transition: box-shadow 300ms ease, border-color 300ms ease;
+        }
+        .jarvis-avatar-slot {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        /* ---- Mode selector (JARVIS default/priority vs opt-in avatar) --- */
+        .hud-mode-select {
+          display: flex;
+          gap: 2px;
+          border: 1px solid rgba(230, 245, 255, 0.18);
+          padding: 2px;
+        }
+        .hud-mode-btn {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          padding: 5px 10px;
+          background: transparent;
+          border: 0;
+          color: rgba(215, 236, 255, 0.5);
+          cursor: pointer;
+        }
+        .hud-mode-btn-active {
+          background: rgba(230, 245, 255, 0.12);
+          color: var(--jarvis-glow, #9be7ff);
         }
 
         @keyframes jarvis-spin {
@@ -787,6 +961,9 @@ export function LiveInterviewSession({
           font-size: 13px;
           letter-spacing: 0.12em;
           color: #9be7ff;
+          /* Carries legibility now that jarvis-core's backing is genuinely
+             translucent (0.2, not 0.75) rather than a dark solid disc. */
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 12px rgba(5, 10, 16, 0.7);
         }
         .hud-mic-note {
           font-family: var(--font-mono);
@@ -833,6 +1010,83 @@ export function LiveInterviewSession({
           font-family: var(--font-accent);
           font-size: 14px;
           color: rgba(215, 236, 255, 0.85);
+        }
+
+        /* ---- Side panels (problem statement + issue tree) -------------- */
+        .hud-side-panel {
+          width: 100%;
+          max-width: 420px;
+          flex-shrink: 0;
+          background: rgba(8, 14, 20, 0.18);
+          border: 1px solid rgba(230, 245, 255, 0.16);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          max-height: 70vh;
+          overflow-y: auto;
+        }
+        @media (min-width: 1024px) {
+          .hud-side-panel {
+            max-width: 300px;
+          }
+        }
+        .hud-panel-label {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          color: var(--jarvis-glow, #9be7ff);
+          text-transform: uppercase;
+          border-bottom: 1px solid rgba(230, 245, 255, 0.14);
+          padding-bottom: 8px;
+        }
+        .hud-panel-body {
+          font-family: var(--font-accent);
+          font-size: 14px;
+          line-height: 1.6;
+          color: rgba(215, 236, 255, 0.9);
+          white-space: pre-wrap;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+        }
+        /* IssueTreePanel is built for the light HUPR theme — this wrapper
+           gives it a legible light surface to sit on rather than fighting
+           the dark HUD background, without touching its internals. */
+        .hud-tree-embed {
+          background: rgba(244, 244, 244, 0.94);
+          border-radius: 4px;
+          padding: 8px;
+          color: #323234;
+        }
+
+        /* ---- Live caption strip ----------------------------------------- */
+        .hud-caption {
+          font-family: var(--font-accent);
+          font-size: 13px;
+          line-height: 1.5;
+          color: rgba(215, 236, 255, 0.75);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+          text-align: center;
+          max-width: 480px;
+          padding: 10px 18px;
+          background: rgba(8, 14, 20, 0.18);
+          border: 1px solid rgba(230, 245, 255, 0.12);
+        }
+        .hud-caption-label {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          color: var(--jarvis-glow, #9be7ff);
+        }
+        /* Real signal (Whisper confidence), not decorative — reuses the same
+           red used for the 'error' glow state elsewhere in this file. */
+        .hud-caption-unclear {
+          border-color: rgba(255, 77, 77, 0.4);
+        }
+        .hud-caption-flag {
+          color: #ff8a8a;
+          font-style: italic;
         }
       `}</style>
     </main>

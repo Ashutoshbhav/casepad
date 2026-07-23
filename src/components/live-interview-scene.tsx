@@ -279,7 +279,13 @@ export function LiveInterviewScene({ glowState, ampRef }: { glowState: GlowState
       <CoreOrb glowState={glowState} ampRef={ampRef} />
       <CameraRig />
       <EffectComposer>
-        <Bloom intensity={1.4} luminanceThreshold={0.15} luminanceSmoothing={0.4} mipmapBlur radius={0.6} />
+        {/* luminanceThreshold raised from an earlier 0.15 — that let nearly
+            everything in the scene bloom uniformly, which reads as amateur
+            ("everything glows the same" is a cited cheap-tell); real
+            bloom/film grading only blooms genuinely bright highlights
+            (the orb's emissive peak, the pulse dot) while dimmer chrome
+            (ticks, particles, faint rings) stays crisp by comparison. */}
+        <Bloom intensity={1.1} luminanceThreshold={0.75} luminanceSmoothing={0.25} mipmapBlur radius={0.5} />
       </EffectComposer>
     </Canvas>
   );
