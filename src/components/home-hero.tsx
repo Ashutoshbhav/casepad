@@ -118,9 +118,10 @@ export function HomeHero() {
             margin: '32px auto 0',
           }}
         >
-          1,165 real cases. An AI engagement manager who stays on script. A
-          cohort of 12 schools rehearsing together. Six weeks of reps before
-          your first real interview.
+          1,165 real cases. A voice-first AI interviewer who talks back,
+          pushes back, and scores every rep. A cohort of 12 schools
+          rehearsing together. Speak — no safety net, no editing, the same
+          pressure as the real room.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link

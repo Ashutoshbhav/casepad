@@ -20,7 +20,7 @@
 // Adapted to CasePad context:
 //   tagline  → "When Cases Become Conviction"
 //   stats    → 1,165 cases / 12 schools / 5 tracks / 240+ cohort hours
-//   tracks   → Solve / Drill / Debrief
+//   tracks   → Speak / Drill / Debrief
 //   spheres  → Structure / Insight / Speed / Voice
 //   news     → Featured cases
 //
@@ -63,7 +63,7 @@ const STATS = [
   {
     headline: '2026',
     body:
-      'Built this year for case-prep cohorts who needed actual reps, not casebooks. CasePad ships real interviews with Ash — your AI engagement manager — across consulting, IB, PM, marketing, and strategy tracks.',
+      'Built this year for case-prep cohorts who needed actual reps, not casebooks. CasePad ships live spoken interviews with Ash — your AI engagement manager — across consulting, IB, PM, marketing, and strategy tracks. You talk, Ash talks back.',
   },
   {
     headline: '+ Than 1,165',
@@ -87,12 +87,20 @@ const STATS = [
 // a paragraph.
 const TRACKS = [
   {
-    title: 'Solve',
+    title: 'Speak',
     photo:
       'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1200&q=80',
     body:
-      'Live case interviews with Ash, your AI engagement manager. Pick a track, get a real prompt from a real school, and start the timer. Ash holds the room — pushes when you stall, calls when the math drifts, and asks the follow-ups that come up in the actual interview.',
+      'Voice-first live interviews with Ash, your AI engagement manager. Hands-free — you talk, Ash answers, and you can jump in mid-sentence the way you would across a real table. What you say is what gets sent: no editing, the same pressure as the real room. Prefer typing? The written arena is still there.',
     bg: '#a69385', // warm sand
+  },
+  {
+    title: 'Behavioral',
+    photo:
+      'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80',
+    body:
+      'Culture-fit rounds built from your actual résumé. Upload it once and Ash stops asking generic questions — it digs into your specific projects, your numbers, your role changes, the way a real EM who read your file would. Spoken out loud, STAR-scored, written take after every rep.',
+    bg: '#c2876d', // cognac — CTA-emphasis tone from the HUPR palette
   },
   {
     title: 'Drill',
@@ -140,7 +148,7 @@ const SPHERES = [
     image:
       'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1600&q=80',
     body:
-      "Calm under pressure. Cohort-tested. Behavioral interview pool curated from real consulting, IB, and PM stories — STAR scoring, behavioral signal map, and a peer cohort that hears the same prompt the same week so the deltas show up sharp.",
+      "Calm under pressure, out loud. Live spoken interviews — what you say is what gets sent, no editing before it goes. The behavioral round reads your actual résumé and digs into your specific projects, numbers, and role changes; STAR scoring on the way out. Speaking it is a different muscle than typing it.",
   },
 ];
 
@@ -148,18 +156,18 @@ const NEWS = [
   {
     image:
       'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1200&q=80',
-    title: 'Cohort drop — June 2026 enrollment open',
-    date: 'May 2026',
+    title: 'Live voice interviews are here — speak, no safety net',
+    date: 'July 2026',
     body:
-      'Twelve B-schools, fifty seats, eight weeks. Daily live case with Ash, weekly cohort debrief in the open, written take after every rep. Applications close end of May.',
+      'The live interview room is open: hands-free spoken interviews with Ash, barge-in like a real table, and an interviewer that visibly listens, thinks, and reacts while you talk. Any case in the library, or a behavioral round grounded in your own résumé.',
   },
   {
     image:
       'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
-    title: 'New ingest — IIM Bangalore strategy casebook',
-    date: 'April 2026',
+    title: 'Behavioral track — culture-fit rounds built from your résumé',
+    date: 'July 2026',
     body:
-      "Eighty cases across strategy, ops, and growth. All source-attributed, all cleaned, all on the live track. The case you sat in your interview prep last year is probably already on the platform.",
+      "Upload a résumé and the behavioral interview stops being generic: Ash asks about your specific projects, your numbers, your role changes — the way a real EM who actually read it would. STAR scoring and a written take after every rep.",
   },
 ];
 
@@ -410,10 +418,12 @@ function HuprStyles() {
       }
       .hupr-btn-square:hover .arrow { top: 0.5rem; right: 0.5rem; }
 
-      /* HUPR uses scrollbar-gutter: stable for sticky cards on desktop */
+      /* HUPR uses scrollbar-gutter: stable for sticky cards on desktop.
+         Height must track TRACKS.length (85vh per card + slack for the
+         70px-per-card sticky offsets) — now 4 cards with Behavioral. */
       @media (min-width: 1280px) {
         .hupr-services-container {
-          height: calc(85vh * 3 + 160px);
+          height: calc(85vh * 4 + 230px);
         }
       }
     `}</style>
@@ -760,9 +770,10 @@ function Hero({ rightCard }: { rightCard?: ReactNode }) {
                 margin: 0,
               }}
             >
-              CasePad runs cohort case-prep for B-school candidates — daily live
-              cases with Ash, your AI engagement manager, plus drill loops and
-              written debriefs.
+              CasePad runs cohort case-prep for B-school candidates — live
+              spoken interviews with Ash, your AI engagement manager, plus
+              drill loops, résumé-grounded behavioral rounds, and written
+              debriefs.
             </p>
             <div className="pt-8">
               <a
