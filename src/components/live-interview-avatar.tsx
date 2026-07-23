@@ -76,11 +76,17 @@ export const LiveInterviewAvatar = forwardRef<
       try {
         const sessionRes = await fetch('/api/voice/avatar-session', { method: 'POST' });
         if (!sessionRes.ok) throw new Error(`avatar session unavailable (${sessionRes.status})`);
-        const { sessionToken } = (await sessionRes.json()) as { sessionToken: string };
+        const { sessionToken, iceServers } = (await sessionRes.json()) as {
+          sessionToken: string;
+          iceServers: RTCIceServer[];
+        };
         if (cancelled || !videoRef.current || !audioRef.current) return;
 
         const { SimliClient } = await import('simli-client');
-        const client = new SimliClient(sessionToken, videoRef.current, audioRef.current, null);
+        // p2p transport (the default) hard-fails without real ICE servers
+        // ("Ice Servers Required for P2P Mode") — confirmed live, null
+        // doesn't degrade gracefully here the way it might elsewhere.
+        const client = new SimliClient(sessionToken, videoRef.current, audioRef.current, iceServers);
         client.on('error', (message) => {
           console.warn('[LiveInterviewAvatar] Simli error, falling back to JARVIS', message);
           if (!cancelled) setStatusReported('error');

@@ -18,7 +18,7 @@
 // backstop against an abandoned/idle tab racking up billed minutes.
 
 import { NextRequest } from 'next/server';
-import { generateSimliSessionToken } from 'simli-client';
+import { generateSimliSessionToken, generateIceServers } from 'simli-client';
 import { gateRequest } from '@/lib/api/gate';
 
 export const runtime = 'nodejs';
@@ -34,7 +34,7 @@ function jsonError(status: number, error: string) {
   });
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   const gate = await gateRequest({ routeName: 'voice-avatar-session', perUserPerMinute: 10 });
   if (!gate.ok) return gate.response;
 
@@ -48,21 +48,30 @@ export async function POST(req: NextRequest) {
   const faceId = process.env.SIMLI_FACE_ID || DEFAULT_FACE_ID;
 
   try {
-    const { session_token } = await generateSimliSessionToken({
-      apiKey,
-      config: {
-        faceId,
-        handleSilence: true,
-        maxSessionLength: MAX_SESSION_LENGTH_SEC,
-        maxIdleTime: MAX_IDLE_TIME_SEC,
-      },
-    });
-    return new Response(JSON.stringify({ sessionToken: session_token }), {
+    // P2P transport requires real ICE servers — passing null here produces
+    // a hard "Ice Servers Required for P2P Mode" client-side failure
+    // (confirmed live). ICE server configs (STUN/TURN URLs + short-lived
+    // TURN credentials) aren't sensitive the way the API key is — sending
+    // them to the browser is normal WebRTC practice, the browser needs
+    // them to negotiate the connection itself.
+    const [{ session_token }, iceServers] = await Promise.all([
+      generateSimliSessionToken({
+        apiKey,
+        config: {
+          faceId,
+          handleSilence: true,
+          maxSessionLength: MAX_SESSION_LENGTH_SEC,
+          maxIdleTime: MAX_IDLE_TIME_SEC,
+        },
+      }),
+      generateIceServers(apiKey),
+    ]);
+    return new Response(JSON.stringify({ sessionToken: session_token, iceServers }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    console.error('[voice/avatar-session] Simli token generation failed:', err);
+    console.error('[voice/avatar-session] Simli token/ICE generation failed:', err);
     return jsonError(502, 'avatar session unavailable');
   }
 }

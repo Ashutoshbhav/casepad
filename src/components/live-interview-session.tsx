@@ -826,9 +826,10 @@ export function LiveInterviewSession({
           font-size: 9px;
           letter-spacing: 0.1em;
           color: rgba(230, 245, 255, 0.75);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
-          padding: 5px 8px;
-          background: rgba(8, 14, 20, 0.5);
+          padding: 6px 10px;
+          background: rgba(8, 14, 20, 0.2);
           border: 1px solid rgba(230, 245, 255, 0.18);
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
@@ -851,6 +852,12 @@ export function LiveInterviewSession({
         .jarvis-panel-corner-br { top: auto; left: auto; bottom: -1px; right: -1px; border-top: 0; border-left: 0; border-bottom: 1px solid var(--jarvis-glow, #22d3ee); border-right: 1px solid var(--jarvis-glow, #22d3ee); }
 
         .jarvis-core {
+          /* Genuine glass, not a smudgy solid disc: real glassmorphism reads
+             premium at low panel opacity (~0.2) with a scrim/text-shadow for
+             legibility, not by cranking the panel opacity up — the latter is
+             the single most-cited "amateur glassmorphism" tell. Readability
+             now comes from hud-readout's own text-shadow below, not from
+             this background going dark/opaque. */
           position: relative;
           z-index: 1;
           width: 58%;
@@ -860,14 +867,23 @@ export function LiveInterviewSession({
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 14px;
+          gap: 20px;
           text-align: center;
-          padding: 20px;
-          background: radial-gradient(circle at 50% 40%, rgba(230, 245, 255, 0.08), rgba(5, 10, 16, 0.75) 72%);
+          padding: 28px;
+          /* 0.2 (the general glassmorphism guidance) washed out into a solid
+             cyan blob here — this panel sits directly over a bright glowing
+             3D scene, not a calm backdrop, so it needs to stay dark enough
+             to ground/contrast the text against that brightness. 0.42 is
+             the real middle ground found by testing against the actual
+             scene, not the general-purpose number. */
+          background: radial-gradient(circle at 50% 40%, rgba(230, 245, 255, 0.06), rgba(5, 10, 16, 0.42) 72%);
           border: 1px solid rgba(230, 245, 255, 0.22);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          box-shadow: 0 0 40px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.18)) inset, 0 0 60px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.12));
+          /* Inset glow spread also reduced — at the old 40px/60px spread on
+             a ~250px circle it filled most of the interior, reading as "the
+             whole disc glows" rather than a restrained rim-light accent. */
+          box-shadow: 0 0 22px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.14)) inset, 0 0 36px var(--jarvis-glow-dim, rgba(34, 211, 238, 0.08));
           transition: box-shadow 300ms ease, border-color 300ms ease;
         }
         .jarvis-avatar-slot {
@@ -945,6 +961,9 @@ export function LiveInterviewSession({
           font-size: 13px;
           letter-spacing: 0.12em;
           color: #9be7ff;
+          /* Carries legibility now that jarvis-core's backing is genuinely
+             translucent (0.2, not 0.75) rather than a dark solid disc. */
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 12px rgba(5, 10, 16, 0.7);
         }
         .hud-mic-note {
           font-family: var(--font-mono);
@@ -998,14 +1017,14 @@ export function LiveInterviewSession({
           width: 100%;
           max-width: 420px;
           flex-shrink: 0;
-          background: rgba(8, 14, 20, 0.55);
+          background: rgba(8, 14, 20, 0.18);
           border: 1px solid rgba(230, 245, 255, 0.16);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          padding: 16px;
+          padding: 24px;
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 14px;
           max-height: 70vh;
           overflow-y: auto;
         }
@@ -1027,8 +1046,9 @@ export function LiveInterviewSession({
           font-family: var(--font-accent);
           font-size: 14px;
           line-height: 1.6;
-          color: rgba(215, 236, 255, 0.85);
+          color: rgba(215, 236, 255, 0.9);
           white-space: pre-wrap;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
         }
         /* IssueTreePanel is built for the light HUPR theme — this wrapper
            gives it a legible light surface to sit on rather than fighting
@@ -1045,11 +1065,12 @@ export function LiveInterviewSession({
           font-family: var(--font-accent);
           font-size: 13px;
           line-height: 1.5;
-          color: rgba(215, 236, 255, 0.7);
+          color: rgba(215, 236, 255, 0.75);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
           text-align: center;
           max-width: 480px;
-          padding: 8px 14px;
-          background: rgba(8, 14, 20, 0.4);
+          padding: 10px 18px;
+          background: rgba(8, 14, 20, 0.18);
           border: 1px solid rgba(230, 245, 255, 0.12);
         }
         .hud-caption-label {
