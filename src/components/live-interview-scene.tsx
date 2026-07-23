@@ -191,7 +191,13 @@ const DUST_POSITIONS = (() => {
   return positions;
 })();
 
-function DustField({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObject<number> }) {
+// The background interacts through MOTION, not color — two earlier passes
+// (a mood-colored halo + additive ripple rings) both read as a loud color
+// wash even after dimming (flagged twice by Ash). Now the dust physically
+// stirs (faster drift) and puffs outward (field scale) with live voice
+// amplitude, staying a fixed near-neutral tone; the DOM-side contour waves
+// and glow swell via --hud-amp (see live-interview-session.tsx).
+function DustField({ ampRef }: { ampRef: RefObject<number> }) {
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(DUST_POSITIONS, 3));
@@ -200,7 +206,7 @@ function DustField({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObj
   const material = useMemo(
     () =>
       new THREE.PointsMaterial({
-        color: '#aab4c4',
+        color: '#9aa3b2',
         size: 0.018,
         transparent: true,
         opacity: 0.4,
@@ -210,119 +216,18 @@ function DustField({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObj
     []
   );
   const ref = useRef<THREE.Points>(null);
-  const colorRef = useRef(new THREE.Color('#aab4c4'));
-  const tint = useRef(new THREE.Color());
-  useFrame((s, delta) => {
+  const smoothedAmp = useRef(0);
+  useFrame((_, delta) => {
     if (!ref.current) return;
     const amp = Math.max(0, Math.min(1, ampRef.current ?? 0));
-    // Dust stirs faster and brightens while anyone is speaking, and drifts
-    // toward the active mood color — the background listening along.
-    ref.current.rotation.y += delta * (0.012 + amp * 0.12);
-    tint.current.copy(STATE_LIGHTS[glowState][0]).lerp(new THREE.Color('#aab4c4'), 0.55);
-    colorRef.current.lerp(tint.current, 0.03);
-    material.color.copy(colorRef.current);
-    material.opacity = 0.35 + amp * 0.15;
+    // Smoothed so the field breathes with speech instead of twitching on
+    // every syllable.
+    smoothedAmp.current += (amp - smoothedAmp.current) * 0.06;
+    ref.current.rotation.y += delta * (0.012 + smoothedAmp.current * 0.14);
+    ref.current.scale.setScalar(1 + smoothedAmp.current * 0.07);
+    material.opacity = 0.35 + smoothedAmp.current * 0.12;
   });
   return <points ref={ref} geometry={geometry} material={material} />;
-}
-
-// Radial-gradient sprite texture, generated once — no external asset.
-function makeHaloTexture(): THREE.CanvasTexture | null {
-  if (typeof document === 'undefined') return null;
-  const canvas = document.createElement('canvas');
-  canvas.width = 256;
-  canvas.height = 256;
-  const g = canvas.getContext('2d');
-  if (!g) return null;
-  const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grad.addColorStop(0, 'rgba(255,255,255,0.9)');
-  grad.addColorStop(0.4, 'rgba(255,255,255,0.25)');
-  grad.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 256, 256);
-  return new THREE.CanvasTexture(canvas);
-}
-
-// Soft halo behind the blob — follows the mood color and SWELLS with live
-// voice amplitude, so the space around the blob visibly reacts to whoever
-// is speaking rather than sitting inert.
-function BackgroundHalo({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObject<number> }) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<THREE.MeshBasicMaterial>(null);
-  const colorRef = useRef(STATE_LIGHTS.idle[0].clone());
-  const texture = useMemo(() => makeHaloTexture(), []);
-  useFrame((s) => {
-    const t = s.clock.elapsedTime;
-    const amp = Math.max(0, Math.min(1, ampRef.current ?? 0));
-    colorRef.current.lerp(STATE_LIGHTS[glowState][0], 0.035);
-    if (materialRef.current) {
-      materialRef.current.color.copy(colorRef.current);
-      materialRef.current.opacity = 0.055 + amp * 0.09 + Math.sin(t * 0.6) * 0.01;
-    }
-    if (meshRef.current) {
-      meshRef.current.scale.setScalar(1 + amp * 0.28 + Math.sin(t * 0.6) * 0.015);
-    }
-  });
-  if (!texture) return null;
-  return (
-    <mesh ref={meshRef} position={[0, 0, -1.7]}>
-      <planeGeometry args={[5, 5]} />
-      <meshBasicMaterial
-        ref={materialRef}
-        map={texture}
-        transparent
-        opacity={0.14}
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-      />
-    </mesh>
-  );
-}
-
-// Expanding ripple rings radiating from behind the blob — barely-there
-// pulses at rest, surging outward with speech. Three recycled meshes, no
-// allocation per ripple.
-function RippleRings({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObject<number> }) {
-  const refs = useRef<(THREE.Mesh | null)[]>([]);
-  const phases = useRef([0, 0.34, 0.67]);
-  const colorRef = useRef(STATE_LIGHTS.idle[0].clone());
-  useFrame((_, delta) => {
-    const amp = Math.max(0, Math.min(1, ampRef.current ?? 0));
-    colorRef.current.lerp(STATE_LIGHTS[glowState][0], 0.035);
-    for (let i = 0; i < 3; i++) {
-      const mesh = refs.current[i];
-      if (!mesh) continue;
-      phases.current[i] += delta * (0.16 + amp * 0.75);
-      if (phases.current[i] > 1) phases.current[i] -= 1;
-      const p = phases.current[i];
-      mesh.scale.setScalar(1.5 + p * 2.6);
-      const mat = mesh.material as THREE.MeshBasicMaterial;
-      mat.color.copy(colorRef.current);
-      mat.opacity = (1 - p) * (0.025 + amp * 0.09);
-    }
-  });
-  return (
-    <>
-      {[0, 1, 2].map((i) => (
-        <mesh
-          key={i}
-          ref={(el) => {
-            refs.current[i] = el;
-          }}
-          position={[0, 0, -1.5]}
-        >
-          <ringGeometry args={[0.985, 1, 64]} />
-          <meshBasicMaterial
-            transparent
-            opacity={0}
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      ))}
-    </>
-  );
 }
 
 // Real (procedurally generated, no external asset) environment reflections
@@ -387,9 +292,7 @@ export function LiveInterviewScene({ glowState, ampRef }: { glowState: GlowState
     >
       <ambientLight intensity={0.35} color="#ffffff" />
       <SceneEnvironment />
-      <BackgroundHalo glowState={glowState} ampRef={ampRef} />
-      <RippleRings glowState={glowState} ampRef={ampRef} />
-      <DustField glowState={glowState} ampRef={ampRef} />
+      <DustField ampRef={ampRef} />
       <MoodLights glowState={glowState} />
       <LiquidBlob glowState={glowState} ampRef={ampRef} />
       <CameraRig />

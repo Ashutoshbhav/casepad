@@ -134,6 +134,25 @@ export function LiveInterviewSession({
     phaseRef.current = phase;
   }, [phase]);
 
+  // Background reacts to voice through MOTION, not color: a smoothed
+  // 0..1 amplitude is written to the shell as --hud-amp each frame, and
+  // the corner contour waves + ambient glow scale with it in pure CSS
+  // transforms (GPU-composited; the only main-thread cost is one style
+  // write per frame on one element).
+  const shellRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    let raf: number;
+    let smoothed = 0;
+    const tick = () => {
+      const amp = Math.max(0, Math.min(1, ampRef.current ?? 0));
+      smoothed += (amp - smoothed) * 0.07;
+      shellRef.current?.style.setProperty('--hud-amp', smoothed.toFixed(3));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   const getAudioCtx = (): AudioContext | null => {
     if (typeof window === 'undefined') return null;
     if (audioCtxRef.current) return audioCtxRef.current;
@@ -477,7 +496,7 @@ export function LiveInterviewSession({
   const elapsedLabel = `${String(Math.floor(elapsedSec / 60)).padStart(2, '0')}:${String(elapsedSec % 60).padStart(2, '0')}`;
 
   return (
-    <main className={`hud-shell hud-glow-${glowState} min-h-screen flex flex-col`}>
+    <main ref={shellRef} className={`hud-shell hud-glow-${glowState} min-h-screen flex flex-col`}>
       <div className="hud-mood-glow" aria-hidden="true" />
       <div className="hud-scene" aria-hidden="true">
         <LiveInterviewScene glowState={glowState} ampRef={ampRef} />
@@ -659,11 +678,14 @@ export function LiveInterviewSession({
           pointer-events: none;
           background: radial-gradient(
             circle at 50% 42%,
-            color-mix(in srgb, var(--jarvis-glow, #38bdf8) 13%, transparent),
-            transparent 55%
+            color-mix(in srgb, var(--jarvis-glow, #38bdf8) 7%, transparent),
+            transparent 52%
           );
           animation: hud-glow-breathe 5s ease-in-out infinite;
           transition: background 600ms ease;
+          /* Swells gently with live voice amplitude — motion, not color. */
+          transform: scale(calc(1 + var(--hud-amp, 0) * 0.06));
+          transform-origin: 50% 42%;
         }
         @keyframes hud-glow-breathe {
           0%, 100% { opacity: 0.65; }
@@ -683,8 +705,20 @@ export function LiveInterviewSession({
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23eef0f4' stroke-width='1'%3E%3Ccircle cx='420' cy='0' r='70'/%3E%3Ccircle cx='420' cy='0' r='115'/%3E%3Ccircle cx='420' cy='0' r='165'/%3E%3Ccircle cx='420' cy='0' r='220'/%3E%3Ccircle cx='420' cy='0' r='280'/%3E%3Ccircle cx='420' cy='0' r='345'/%3E%3Ccircle cx='420' cy='0' r='415'/%3E%3C/g%3E%3C/svg%3E");
           background-repeat: no-repeat;
         }
-        .hud-contour-tr { top: 0; right: 0; }
-        .hud-contour-bl { bottom: 0; left: 0; transform: rotate(180deg); }
+        /* The waves expand outward from their corner with voice amplitude —
+           sound pressure reaching the walls of the room. */
+        .hud-contour-tr {
+          top: 0;
+          right: 0;
+          transform-origin: top right;
+          transform: scale(calc(1 + var(--hud-amp, 0) * 0.1));
+        }
+        .hud-contour-bl {
+          bottom: 0;
+          left: 0;
+          transform-origin: bottom left;
+          transform: rotate(180deg) scale(calc(1 + var(--hud-amp, 0) * 0.1));
+        }
         @media (prefers-reduced-motion: reduce) {
           .hud-mood-glow { animation: none; }
         }
