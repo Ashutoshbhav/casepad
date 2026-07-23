@@ -149,6 +149,83 @@ const EXPRESSIONS: Record<GlowState, Expression> = {
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+// ---------------------------------------------------------------------------
+// Limbs — short anime stick arms/legs with mitten hands and little feet,
+// drawn in the same rough.js ink as the face. Each pose is 3 control
+// points per limb (shoulder/hip → elbow/knee → hand/foot), lerped between
+// states exactly like the face; per-frame gesture offsets (talk bounce,
+// idle sway, foot tap, alarm wave) are added at draw time in the loop.
+// Coordinates deliberately extend OUTSIDE the 0–200 viewBox — the svg
+// renders with overflow visible, so limbs reach past the blob's silhouette.
+// ---------------------------------------------------------------------------
+
+type LimbPts = [[number, number], [number, number], [number, number]];
+type LimbPose = { armL: LimbPts; armR: LimbPts };
+
+// Anchor geometry: the rendered 3D blob is LARGER than the face frame the
+// svg maps onto (~116 viewBox units of radius from center (100,100) at
+// desktop sizes vs the 100-unit viewBox half-width), so arms must anchor
+// OUTSIDE the 0–200 box to sprout from the blob's visible silhouette
+// instead of floating on top of it. Shoulders sit at ~±114 x / 120 y.
+// Measured on the rendered page (desktop 1280×800): the blob's silhouette
+// sits ~±132 viewBox units from center (100,100) — the earlier ±114
+// estimate left shoulders visibly inside the sphere with elbows bending
+// back onto it. Shoulders now tuck just inside the edge (~±124, reads as
+// "attached behind the ball") with elbows/hands swinging clearly outside.
+const LIMBS: Record<GlowState, LimbPose> = {
+  idle: {
+    // Arms relaxed at the sides.
+    armL: [[-24, 122], [-46, 146], [-36, 172]],
+    armR: [[224, 122], [246, 146], [236, 172]],
+  },
+  ai: {
+    // Grilling pose — right arm raised and gesticulating (continuous
+    // motion + speech-amplitude surge in the loop), left arm akimbo.
+    armL: [[-24, 122], [-48, 144], [-32, 162]],
+    armR: [[224, 114], [256, 88], [246, 52]],
+  },
+  candidate: {
+    // Attentive listener — arms curve around the body, hands clasped
+    // together low in front, under the blob (bobbing with the nod).
+    armL: [[-24, 124], [-16, 210], [80, 254]],
+    armR: [[224, 124], [216, 210], [120, 254]],
+  },
+  processing: {
+    // Classic thinking pose — right hand comes up in front of the body to
+    // the chin (deliberate overlap with the blob: hand in front of face,
+    // tapping it in the loop), left arm folded low across the front.
+    armL: [[-24, 122], [-12, 188], [64, 182]],
+    armR: [[224, 120], [214, 174], [130, 140]],
+  },
+  error: {
+    // Alarm — both arms thrown up, waving franticly in opposite phase.
+    armL: [[-24, 118], [-50, 84], [-38, 48]],
+    armR: [[224, 118], [250, 84], [238, 48]],
+  },
+};
+
+function lerpLimbPts(a: LimbPts, b: LimbPts, t: number): LimbPts {
+  return a.map(([x, y], i) => [lerp(x, b[i][0], t), lerp(y, b[i][1], t)]) as LimbPts;
+}
+
+function lerpLimbs(a: LimbPose, b: LimbPose, t: number): LimbPose {
+  return {
+    armL: lerpLimbPts(a.armL, b.armL, t),
+    armR: lerpLimbPts(a.armR, b.armR, t),
+  };
+}
+
+// Apply a gesture offset to an arm: full strength at the hand, half at the
+// elbow, shoulder pinned — reads as the arm swinging from the shoulder
+// rather than the whole limb translating rigidly.
+function offsetArm(arm: LimbPts, dx: number, dy: number): LimbPts {
+  return [
+    arm[0],
+    [arm[1][0] + dx * 0.5, arm[1][1] + dy * 0.5],
+    [arm[2][0] + dx, arm[2][1] + dy],
+  ];
+}
+
 // Discrete fields (eye/mouth shape, marks) switch at the transition
 // midpoint — they're drawn with entirely different primitives and can't
 // tween; continuous fields lerp so expressions shift rather than cut.
@@ -173,6 +250,7 @@ function lerpExpression(a: Expression, b: Expression, t: number): Expression {
 export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: RefObject<number> }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const currentRef = useRef<Expression>(EXPRESSIONS.idle);
+  const currentLimbsRef = useRef<LimbPose>(LIMBS.idle);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -182,6 +260,7 @@ export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: 
 
     const draw = (
       e: Expression,
+      limbs: LimbPose,
       blinkAmount: number,
       talkOpen: number,
       sweatT: number,
@@ -196,6 +275,20 @@ export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: 
       const sweat = { stroke: 'rgba(147, 197, 253, 0.8)', strokeWidth: 1.8, roughness: 1.8, bowing: 1.4, seed };
 
       svg.innerHTML = '';
+
+      // Arms first (visually "behind" the face features) — stick arms with
+      // mitten hands; the raised gesturing hand in the ai pose gets a
+      // pointing finger stroke.
+      for (const pts of [limbs.armL, limbs.armR]) {
+        svg.appendChild(rc.curve(pts as unknown as [number, number][], ink));
+        const [ex, ey] = pts[2];
+        svg.appendChild(rc.circle(ex, ey, 11, ink));
+      }
+      // Pointing finger on the raised right hand while gesturing.
+      if (limbs.armR[2][1] < 100) {
+        const [hx, hy] = limbs.armR[2];
+        svg.appendChild(rc.line(hx + 2, hy - 5, hx + 6, hy - 14, ink));
+      }
 
       // Brows — browPop lifts both on loud speech emphasis.
       svg.appendChild(rc.line(e.browL[0], e.browL[1] - browPop, e.browL[2], e.browL[3] - browPop, ink));
@@ -301,6 +394,7 @@ export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: 
 
       const target = EXPRESSIONS[glowState];
       currentRef.current = lerpExpression(currentRef.current, target, 0.08);
+      currentLimbsRef.current = lerpLimbs(currentLimbsRef.current, LIMBS[glowState], 0.08);
       sweatT = lerp(sweatT, target.sweatDrop ? 1 : 0, 0.08);
       const e = currentRef.current;
 
@@ -328,6 +422,44 @@ export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: 
       // "…" cycles 0→3 dots.
       const dotCount = Math.floor((t * 2.2) % 4);
 
+      // Arm gestures — additive per-frame offsets on top of the lerped
+      // pose, swinging from the shoulder (full offset at the hand, half at
+      // the elbow). Every state keeps its arms in continuous motion:
+      let armLDx = 0, armLDy = 0, armRDx = 0, armRDy = 0;
+      if (glowState === 'idle') {
+        // Lazy sway in time with the breathing.
+        armLDx = Math.sin(t * 0.9) * 3;
+        armLDy = Math.sin(t * 1.3) * 2;
+        armRDx = -Math.sin(t * 0.9 + 0.6) * 3;
+        armRDy = Math.sin(t * 1.3 + 0.8) * 2;
+      } else if (glowState === 'ai') {
+        // The raised hand gesticulates the whole time it holds the floor,
+        // and surges harder with actual speech amplitude; the akimbo arm
+        // pumps gently.
+        armRDx = Math.sin(t * 4.2) * 4;
+        armRDy = Math.sin(t * 7) * (3 + amp * 9);
+        armLDy = Math.sin(t * 3.5) * 2;
+      } else if (glowState === 'candidate') {
+        // Clasped hands bob in sync with the listening nod (same 1.9Hz).
+        armLDy = Math.sin(t * 1.9) * 3.5;
+        armRDy = Math.sin(t * 1.9) * 3.5;
+      } else if (glowState === 'processing') {
+        // Chin hand taps thoughtfully; folded arm drums.
+        armRDy = -Math.abs(Math.sin(t * 4)) * 4.5;
+        armLDy = Math.sin(t * 6) * 1.5;
+      } else if (glowState === 'error') {
+        // Frantic opposite-phase waving.
+        armLDx = Math.sin(t * 11) * 8;
+        armLDy = Math.cos(t * 11) * 4;
+        armRDx = -Math.sin(t * 11) * 8;
+        armRDy = Math.cos(t * 11 + Math.PI) * 4;
+      }
+      const base = currentLimbsRef.current;
+      const limbs: LimbPose = {
+        armL: offsetArm(base.armL, armLDx, armLDy),
+        armR: offsetArm(base.armR, armRDx, armRDy),
+      };
+
       // Whole-face motion — breathe matches the 3D blob's formula exactly;
       // nod (listening lean-in), tremble (error), tilt (per expression).
       const breathe = 1 + Math.sin(t * 0.6) * 0.015 + amp * 0.1;
@@ -350,13 +482,14 @@ export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: 
         e.eyeShape === target.eyeShape &&
         Math.abs(e.browL[1] - target.browL[1]) < 0.4 &&
         Math.abs(e.mouth[1][1] - target.mouth[1][1]) < 0.4 &&
+        Math.abs(base.armR[2][1] - LIMBS[glowState].armR[2][1]) < 0.5 &&
         Math.abs(e.tiltDeg - target.tiltDeg) < 0.3;
       const drawKey = settled
-        ? `${seed}|${effectiveShape}|${blinkAmount}|${Math.round(talkOpen)}|${Math.round(browPop)}|${Math.round(wanderDx)}|${dotCount}|${sweatT > 0.15 ? 1 : 0}`
+        ? `${seed}|${effectiveShape}|${blinkAmount}|${Math.round(talkOpen)}|${Math.round(browPop)}|${Math.round(wanderDx)}|${dotCount}|${sweatT > 0.15 ? 1 : 0}|${Math.round(armLDx)},${Math.round(armLDy)},${Math.round(armRDx)},${Math.round(armRDy)}`
         : `transitioning-${now}`;
       if (drawKey !== lastDrawKey) {
         lastDrawKey = drawKey;
-        draw({ ...e, eyeShape: effectiveShape }, blinkAmount, talkOpen, sweatT, dotCount, browPop, wanderDx, seed);
+        draw({ ...e, eyeShape: effectiveShape }, limbs, blinkAmount, talkOpen, sweatT, dotCount, browPop, wanderDx, seed);
       }
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -380,6 +513,10 @@ export function BlobFace({ glowState, ampRef }: { glowState: GlowState; ampRef: 
         height: '100%',
         pointerEvents: 'none',
         transformOrigin: 'center',
+        // Limbs are drawn outside the 0–200 viewBox on purpose — they
+        // reach past the blob's silhouette (arms out to the sides, legs
+        // below). Without this they'd clip at the frame edge.
+        overflow: 'visible',
       }}
     />
   );
