@@ -518,11 +518,25 @@ export function ChatPanel({
                 >
                   <AshMark size={48} state={orbState} />
                 </div>
-                <div
-                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                  style={{ color: 'var(--color-text-muted)' }}
-                >
-                  Ash · EM at Bain
+                <div className="flex flex-col gap-1">
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-headline)',
+                      fontWeight: 700,
+                      fontSize: 19,
+                      letterSpacing: '-0.01em',
+                      color: 'var(--color-text-primary)',
+                      lineHeight: 1,
+                    }}
+                  >
+                    Ash
+                  </div>
+                  <div
+                    className="font-mono text-[11px] uppercase tracking-[0.14em]"
+                    style={{ color: 'var(--color-text-muted)' }}
+                  >
+                    Engagement Manager · Bain &amp; Company
+                  </div>
                 </div>
                 <div
                   className="leading-[1.5] max-w-[60ch]"
@@ -560,8 +574,8 @@ export function ChatPanel({
                 <AshMark size={18} state={orbState} />
               </div>
               <div
-                className="flex-1 min-w-0 py-1 font-body text-[15px] leading-[1.6]"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="flex-1 min-w-0 py-1 leading-[1.62]"
+                style={{ color: 'var(--color-text-primary)', fontFamily: 'var(--font-accent)', fontSize: 16 }}
               >
                 {m.content ? (
                   shouldTypewriter(i, m.role) ? (

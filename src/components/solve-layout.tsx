@@ -9,8 +9,6 @@ import { useAsteriskScene, useAsteriskPaused } from '@/hooks/use-asterisk-scene'
 import { EASE, DURATION, INSTANT } from '@/lib/motion-tokens';
 import { SubmitForScoringButton } from './submit-for-scoring-button';
 import { XpTicker } from './xp-ticker';
-import { NotebookPaper } from './solve/notebook-paper';
-import { RoughUnderline } from './solve/rough-underline';
 
 // Solve-page main layout — header + body.
 //
@@ -216,16 +214,32 @@ export function SolveLayout({
 
   return (
     <>
-      {/* Notebook paper — fixed full-bleed background SVG with hand-drawn
-          horizontal rule lines + red margin rule. Lives behind everything.
-          Only mounted in /solve — the notebook aesthetic is exclusive to
-          the solving experience. */}
-      <NotebookPaper />
+      {/* Interview-room backdrop — a calm warm wash behind everything: soft
+          light at the top (the "table" in focus) settling into the canvas
+          below (the "room"). Replaces the old sketchy notebook-paper SVG.
+          Fixed, behind all content, no interaction. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1, // BEHIND all content. An opaque z-index:0 fixed layer was
+                      // painting OVER the chat / prompt / tree (those are static,
+                      // so a positioned z-0 sibling stacks above them) — that's
+                      // why the page looked blank. -1 puts it behind everything.
+          pointerEvents: 'none',
+          // Warm interview-room wash you can actually feel: a soft pool of warm
+          // light up top (the table) over a calm cream room, deepening slightly
+          // at the edges. Dark text keeps full contrast on cream.
+          background:
+            'radial-gradient(120% 80% at 50% -6%, var(--hupr-cream) 0%, var(--hupr-cream) 34%, var(--hupr-sand) 140%)',
+        }}
+      />
       {/* HEADER — minimal chrome, glyph + title + tools. */}
       <header
         data-tour="solve-header"
         className="px-6 sm:px-8 py-4 flex items-center justify-between gap-3"
-        style={{ position: 'relative', zIndex: 2, background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(2px)' }}
+        style={{ position: 'relative', zIndex: 2, background: 'color-mix(in srgb, var(--color-bg-canvas) 82%, transparent)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--color-border)' }}
       >
         <div className="min-w-0 flex items-center gap-3">
           <div className="hidden sm:block flex-shrink-0">
@@ -256,10 +270,12 @@ export function SolveLayout({
             >
               {caseTitle}
             </h1>
-            {/* Hand-drawn underline — sets the notebook tone right at the top */}
-            <div className="mt-0.5" style={{ maxWidth: 280 }}>
-              <RoughUnderline strokeWidth={1.4} roughness={1.6} bowing={1.8} />
-            </div>
+            {/* Calm accent rule under the case title — replaces the sketchy
+                hand-drawn underline. */}
+            <div
+              className="mt-1.5"
+              style={{ width: 56, height: 2, background: 'var(--color-accent)', borderRadius: 1 }}
+            />
           </div>
         </div>
         <div className="flex items-center gap-2">

@@ -11,7 +11,7 @@ import { STARTER_CASE_IDS } from '@/lib/starter-cases';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
 import { HuprCaseRow, type HuprCaseRowData } from '@/components/hupr/hupr-case-row';
 import { HuprStickyCard, HuprStickyCardStack } from '@/components/hupr/hupr-sticky-card';
-import { caseImageFor } from '@/lib/case-images/picker';
+import { CaseVisual } from '@/components/hupr/case-visual';
 
 export const dynamic = 'force-dynamic';
 
@@ -201,22 +201,9 @@ export default async function CasesPage({
             background: 'var(--hupr-cognac)',
           }}
         >
-          <div
-            className="absolute inset-0"
-            style={{
-              // Hero photo for the featured case — uses the per-case picker.
-              // If the generated webp doesn't exist yet, the underlying
-              // cognac band (parent section background) shows through. CSS
-              // background-image comma-syntax LAYERS, not falls back, so we
-              // only specify one URL.
-              backgroundImage: `url(${caseImageFor(heroCase.id)})`,
-              backgroundSize: 'cover',
-              backgroundPosition: '50% 50%',
-              filter: 'brightness(0.72) saturate(0.88)',
-              opacity: 0.85,
-              mixBlendMode: 'multiply',
-            }}
-          />
+          {/* Designed per-case-type hero visual (deep cinematic gradient +
+              motif) — replaces the stock photo. Fills the hero band. */}
+          <CaseVisual caseType={heroCase.case_type} caseId={heroCase.id} />
           <div
             className="absolute inset-0"
             style={{

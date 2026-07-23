@@ -136,7 +136,7 @@ export function IssueTreePanel({
       >
         {loading
           ? <span>Inferring tree from your latest turn…</span>
-          : 'Empty. The tree fills as you state your structure in chat.'}
+          : 'Your issue tree builds here as you talk Ash through how you’d structure the problem.'}
       </div>
     );
   }
@@ -356,7 +356,7 @@ export function IssueTreePanel({
           className="text-xs mt-4"
           style={{ color: 'var(--color-text-muted)' }}
         >
-          Empty. The tree fills as you state your structure in chat.
+          Your issue tree builds here as you talk Ash through how you&rsquo;d structure the problem.
         </div>
       ) : (
         <div className="org-tree">
