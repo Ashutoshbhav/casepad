@@ -9,6 +9,13 @@
 > **New guardrail:** `scripts/smoke/production-check.ts` (`npm run smoke:prod`) — starts a real case and sends a real turn against a live deployment (default `https://casepad.vercel.app`, override with `PROD_URL`), and fails loudly if the response matches one of the known static-fallback probes instead of a real LLM reply. This is the check that should have been screaming for the last month; it is **not yet wired to a schedule** — do that next (see the `schedule` skill) so it's actually watched instead of being a one-off manual run.
 > **Resolves** the "Outstanding for Ash #1: Verify live deploy" item that had sat open since the 2026-05-29 snapshot below — that drift (nobody checking the live app after a code change) is exactly how this went unnoticed.
 
+> ## 🔧 SIMLI AVATAR ICE-SERVERS FIX + HUD POLISH — 2026-07-23 (commit `28c6465`, branch `feat/voice-first-case-solving`, NOT merged to main)
+> The optional Simli talking-head avatar (shipped `28e7875`) hard-failed live with `"Ice Servers Required for P2P Mode"` — the session route passed `null` instead of real ICE servers to `SimliClient`'s P2P transport. Fix: `avatar-session/route.ts` now calls `generateIceServers(apiKey)` alongside `generateSimliSessionToken` (`Promise.all`, still fails open to 502 → client falls back to the JARVIS HUD) and `live-interview-avatar.tsx` threads `iceServers` through to the client constructor. Bundled in the same commit (unrelated concern, Ash's call): a JARVIS HUD glassmorphism/bloom retune in `live-interview-scene.tsx` (bloom threshold 0.15→0.75 — was blooming everything uniformly) and `live-interview-session.tsx` (panel opacity dropped ~0.5→0.2 with added text-shadows for legibility, inset glow spread reduced).
+> **Verified:** `tsc --noEmit` clean, `vitest` 268/268 pass, and `generateIceServers()` called live against the real Simli key — confirmed it returns 4 real STUN/TURN entries with `urls`/`username`/`credential`, so the fix isn't just type-correct.
+> **NOT verified:** the actual browser WebRTC handshake, and the HUD polish hasn't been looked at visually — `/api/voice/avatar-session` requires a signed-in Supabase session (`gateRequest`), so neither a bare curl nor a headless Playwright run (blocked on Google OAuth) could confirm it live. Do this from a real signed-in browser session next.
+> **Also untracked, undecided, not part of this commit:** `docs/launch/` (carousel HTML/PDF + screenshots — launch-marketing prep) and `gcp_tts_pricing.md` (GCP TTS pricing scrape — cost research, purpose unclear, likely for the voice feature). Neither triaged this session.
+> **Still open from the 2026-07-16 snapshot below, untouched this session:** `npm run smoke:prod` is still not wired to a schedule.
+
 > ## ✅ INDIA NUMBER-BANK + CLARIFIER BANK SHIPPED — 2026-06-12
 > Two new pure/static modules ground the engine in real India data + the right opening questions: **`src/lib/india-reference.ts`** = ~63 India macro/income/digital/sector anchors, EACH WebSearch-verified on 2026-06-12 with `sourceName`+`sourceUrl`+`asOf`+`confidence` ([V]erified primary vs [E]stimate). NCCS class shares + tier-spend splits deliberately OMITTED (no credible free source — no-assumptions). **`src/lib/case-clarifiers.ts`** = per-`CaseType` clarify-first question banks (from the faculty case method). Wired **fail-open** into `generateIdealWalkthrough` (walkthrough.ts, `WALKTHROUGH_GENERATOR_VERSION` 5→6 so cached walkthroughs regenerate) + `generatePreCaseCrammer` — generation paths only, **NOT the live chat loop** (protects Groq TPM + the Fortress NSM). Renderers are pure+total (never throw). Built from a 4-agent verification fan-out comparing two faculty cheat-sheets (India Guesstimate + Case Study Interview) against the codebase — only the verified India number-bank was a real gap; frameworks/dialogue/scoring were already deeper in CasePad. 251/251 tests (was 239), tsc clean, build green. Provenance of the comparison: the two `.xlsx` cheat-sheets in Downloads.
 
@@ -27,13 +34,13 @@
 > ## ✅ WAVE 1 SHIPPED — 2026-06-02 (commit `e9c0979`, deployed to prod)
 > Launch-blockers from `docs/BACKEND-AUDIT-2026-06-02.md` closed: **C1** Google-only auth (account-takeover hole removed; email signin gone, `directSignIn` stubbed) · **C3** chat cost caps (capped `alreadyDisclosed` + regen budget=2) · **C4** `nsm_failures` telemetry (migration 0016 applied) · **H4** privacy region → Mumbai · **C5** RLS verified already sound. **Next = Wave 2: solving-engine rebuild** (see `docs/superpowers/specs/2026-06-02-solving-engine-redesign.md` + `docs/research/case-sources/`). Reskin branch `feat/solve-dashboard-reskin` still parked.
 
-**Saved:** 2026-07-16 (production outage recovery — see incident note at top)
+**Saved:** 2026-07-23 (Simli ICE-servers fix + HUD polish — see entry above; production-outage incident note above is still the last verified prod state)
 **Trigger word:** `PAD` — say it in any new session to surface this state
 **Project root:** `C:\Users\Ashutosh Bhavale\Documents\casepad`
-**Production URL:** https://casepad.vercel.app — **verified live 2026-07-16** (case start + real turn-2 reply confirmed in-browser; do not trust this line uncritically after that date, re-verify with `npm run smoke:prod`)
-**Branch:** `main` · **Latest commit:** `b9251e3` (feat(engine): verified India number-bank + per-case-type clarifier banks)
+**Production URL:** https://casepad.vercel.app — **last verified live 2026-07-16**, NOT re-verified since (this session's commit was never deployed); re-verify with `npm run smoke:prod` before trusting this line
+**Branch:** `feat/voice-first-case-solving` (5 commits ahead of `main`@`bb465f8`, not merged) · **Latest commit:** `28c6465` (fix(live-interview): wire real ICE servers into Simli avatar + retune JARVIS HUD glass/bloom)
 
-> ⚠️ Deploy state of the latest commits is **UNKNOWN from local** — verify what's actually live on Vercel when resuming.
+> ⚠️ Deploy state of the latest commits is **UNKNOWN from local** — verify what's actually live on Vercel when resuming. This branch in particular has not been deployed or merged.
 
 ---
 
@@ -69,6 +76,9 @@ Signin card reskinned to ElevenLabs ✅; HUPR landing **preserved** (the full-la
 1. ~~Verify live deploy~~ — **done 2026-07-16**, and it was NOT fine (see incident note at top: all production secrets were blank). Fixed + verified live. New action: wire `npm run smoke:prod` to a schedule so this can't silently drift again — nothing currently re-checks production on a cadence.
 2. **Decide on exhibits thread** — `pm-gate` flagged `src/lib/exhibits` as **REVIEW** ("user_pull unknown"). It's a scaffold, **not wired into any surface yet** (0 imports). Confirm a user actually wants in-case exhibits before building further, or shelve it.
 3. **Pixabay/Supabase keys** — `generate-case-images-pixabay.ts` needs `PIXABAY_API_KEY` + `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` (keys read from env — no hardcoded secrets ✅).
+4. **Triage `docs/launch/` + `gcp_tts_pricing.md`** (untracked, 2026-07-23) — carousel/launch-marketing files and a GCP TTS pricing scrape sitting uncommitted. Decide if/where these belong (commit, `.gitignore`, or delete) before they go stale.
+5. **Live-verify the Simli avatar fix** (commit `28c6465`) from a real signed-in browser session — the ICE-servers fix is verified at the API/type level but the actual WebRTC P2P handshake has never been watched connect. Also eyeball the JARVIS HUD glassmorphism/bloom retune in the same commit — visual-only change, never rendered.
+6. **Merge or keep parking `feat/voice-first-case-solving`** — 6 commits ahead of `main`, undeployed. Five other feature branches are also parked unmerged (`feat/launch-landing`, `feat/llm-budget-caps`, `feat/solve-dashboard-reskin`, `feat/upstash-ratelimit`) — worth a pass to merge, rebase, or prune.
 
 ## 🟡 Outstanding for me (deferred)
 | # | Task | Est. |
@@ -80,6 +90,7 @@ Signin card reskinned to ElevenLabs ✅; HUPR landing **preserved** (the full-la
 | 5 | Stream 5: math drill MVP (RocketBlocks pattern) | 1-2 h |
 | 6 | Improve no-probe rate on regen path | 30 m |
 | 7 | Calculator tool-use via Groq native tool API (math reliability) | 1-2 h |
+| 8 | Wire `npm run smoke:prod` to a schedule (see `schedule` skill) | 30 m |
 
 ## ✅ Resolved since old snapshot (do NOT re-do)
 - ~~Apply migration `0012_dossier.sql`~~ — **dropped** (`0717048`); dossiers moved to filesystem.
