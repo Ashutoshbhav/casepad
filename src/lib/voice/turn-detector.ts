@@ -28,12 +28,15 @@ import { encodeWavBlob } from './pcm-wav';
 
 const ASSET_BASE = '/vad/';
 
-// Tuned for interview pacing: default redemptionMs (1400ms) reads as
-// laggy for back-and-forth conversation. 650ms is the floor that still
-// reliably clears a normal breath/"um" pause without cutting the candidate
-// off — go materially lower than this and thinking-pauses start getting
-// mistaken for the end of a turn.
-const REDEMPTION_MS = 650;
+// Tuned for interview pacing — and retuned from live usage. The first
+// shipped value (650ms) was chosen for snappy back-and-forth but Ash's real
+// sessions showed it AMPUTATING sentences constantly ("it never listens to
+// my whole sentences"): a natural mid-sentence breath or word-search pause
+// routinely exceeds 650ms, especially when answering under pressure.
+// 1250ms clears normal mid-sentence pauses while still ending a genuinely
+// finished turn in about a second — the cost (slightly slower hand-off) is
+// far cheaper than the cost of cutting the candidate off mid-thought.
+const REDEMPTION_MS = 1250;
 // Widened pause tolerance for "the candidate explicitly asked for a moment
 // to think" (see src/lib/interview/thinking-time.ts + live-mic-input.tsx's
 // setPatience wiring) — halting/muttering thinking-out-loud speech has

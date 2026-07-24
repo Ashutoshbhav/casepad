@@ -45,7 +45,12 @@ export type GlowState = 'idle' | 'ai' | 'candidate' | 'processing' | 'error';
 type Msg = { role: 'user' | 'interviewer'; content: string };
 type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
 
-const STALL_MS = 30_000; // Same stall budget as chat-panel.tsx.
+// Raised from 30s (chat-panel's budget) after live turns hit the abort while
+// the server was still legitimately working — /api/chat's maxDuration is 60s
+// and the guardrail/critic regen chain can push a slow turn past 30. A lost
+// turn costs the candidate their whole answer; 45s leaves the server 15s of
+// real headroom while still failing before Vercel's own timeout.
+const STALL_MS = 45_000;
 
 export function LiveInterviewSession({
   sessionId,
@@ -549,6 +554,10 @@ export function LiveInterviewSession({
           <LiveMicInput
             sessionId={sessionId}
             phase={phase}
+            // Behavioral/story sessions get the wide pause tolerance from
+            // turn one — telling a story has natural 1-2s pauses that the
+            // normal conversational tolerance was amputating mid-sentence.
+            patienceDefault={hasCase ? 'normal' : 'thinking'}
             onAutoSend={(text, lowConfidence) => void sendTurn(text, lowConfidence)}
             onBargeIn={interrupt}
             onSttFailed={() => setSttFallbackActive(true)}

@@ -58,8 +58,14 @@ const THINKING_PATIENCE_MS = 90_000;
 // whatever was captured). Must comfortably exceed REDEMPTION_MS (650ms) so
 // the VAD's own end-of-turn always wins when it's working; the thinking
 // variant must exceed REDEMPTION_MS_THINKING (2500ms) for the same reason.
-const STUCK_SILENCE_MS = 3000;
-const STUCK_SILENCE_THINKING_MS = 6500;
+// Windows widened from the first-shipped 3000/6500 after a live session
+// showed the 3s version AMPUTATING soft continuous speech mid-sentence: on
+// a quiet laptop mic, genuine speech can sit in the same 0.4–0.55 gray
+// zone as noise, and probability-alone can't tell them apart — so the
+// watchdog must be slow enough that a real speaker would have to go a full
+// conversational beat without one confident frame before it fires.
+const STUCK_SILENCE_MS = 5000;
+const STUCK_SILENCE_THINKING_MS = 9000;
 const STUCK_CHECK_INTERVAL_MS = 500;
 
 export type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
@@ -93,6 +99,7 @@ export function LiveMicInput({
   onSttFailed,
   onStatusChange,
   onAmplitude,
+  patienceDefault = 'normal',
 }: {
   sessionId: string;
   phase: Phase;
@@ -101,6 +108,12 @@ export function LiveMicInput({
   onSttFailed: (reason: string) => void;
   onStatusChange?: (status: ListenerStatus) => void;
   onAmplitude?: (level: number) => void;
+  /**
+   * Baseline pause tolerance. Behavioral/story sessions should pass
+   * 'thinking' — telling a story has natural 1-2s pauses that the normal
+   * conversational tolerance amputates mid-sentence (reported live).
+   */
+  patienceDefault?: 'normal' | 'thinking';
 }) {
   const [status, setStatus] = useState<ListenerStatus>('loading');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -121,9 +134,22 @@ export function LiveMicInput({
   // 'normal' | 'thinking' — mirrors what was last told to turn-detector's
   // setPatience so handleUtterance can decide whether a substantive (non
   // thinking-time) turn should revert it, without re-deriving state from
-  // the detector itself.
-  const patienceModeRef = useRef<'normal' | 'thinking'>('normal');
+  // the detector itself. Reverts go back to patienceDefault, not a
+  // hardcoded 'normal' — behavioral sessions live in 'thinking' baseline.
+  const patienceDefaultRef = useRef<'normal' | 'thinking'>(patienceDefault);
+  useEffect(() => {
+    patienceDefaultRef.current = patienceDefault;
+  }, [patienceDefault]);
+  const patienceModeRef = useRef<'normal' | 'thinking'>(patienceDefault);
   const patienceRevertTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Utterances that complete while a turn is already in flight
+  // (phase === 'processing') are transcribed and BUFFERED here, then
+  // auto-sent when the phase returns to candidate_turn. The first version
+  // of this file silently DISCARDED them — so when the VAD chopped a
+  // sentence early and the candidate kept talking over the processing
+  // window, the continuation of their answer simply vanished, which read
+  // as "it never listens to my whole sentences" (reported live).
+  const pendingTextsRef = useRef<string[]>([]);
   // Stuck-segment watchdog state: when the last CONFIDENT speech frame
   // arrived, and whether a force-flush is already in flight (pause→resume
   // is async; firing it twice concurrently would double-flush).
@@ -144,18 +170,26 @@ export function LiveMicInput({
 
   // Force the current segment to end NOW — pause() flushes captured audio
   // as a completed utterance (submitUserSpeechOnPause), resume() re-arms.
-  // Used by both the automatic stuck-segment watchdog and the manual
-  // "Done — send" escape hatch; sub-MIN_SPEECH_MS captures surface as a
-  // misfire, which correctly drops back to listening with nothing sent.
+  // Used by the automatic stuck-segment watchdog, the rambling nudge, and
+  // the manual "Done — send" escape hatch; sub-MIN_SPEECH_MS captures
+  // surface as a misfire, which correctly drops back to listening.
+  // CRITICAL: resume() must be attempted even when pause() rejects — the
+  // first version chained .then(resume) so a pause() failure left the mic
+  // permanently paused while the UI still said LISTENING (the "stuck
+  // listening, mic dead" report). Each step now fails independently.
   const forceFlush = () => {
     const handle = handleRef.current;
     if (!handle || flushInFlightRef.current) return;
     flushInFlightRef.current = true;
     void handle
       .pause()
+      .catch((err) => console.warn('[LiveMicInput] flush pause failed (still resuming)', err))
       .then(() => handle.resume())
-      .catch((err) => console.warn('[LiveMicInput] force-flush failed (non-fatal)', err))
+      .catch((err) => console.warn('[LiveMicInput] flush resume failed', err))
       .finally(() => {
+        // Fresh watchdog clock — without this, a stale timestamp could
+        // refire the watchdog the instant a new segment opens.
+        lastConfidentSpeechTsRef.current = Date.now();
         flushInFlightRef.current = false;
       });
   };
@@ -165,18 +199,26 @@ export function LiveMicInput({
       clearTimeout(patienceRevertTimerRef.current);
       patienceRevertTimerRef.current = null;
     }
-    if (patienceModeRef.current === 'thinking') {
-      patienceModeRef.current = 'normal';
-      handleRef.current?.setPatience('normal');
+    if (patienceModeRef.current !== patienceDefaultRef.current) {
+      patienceModeRef.current = patienceDefaultRef.current;
+      handleRef.current?.setPatience(patienceDefaultRef.current);
     }
   };
 
   const handleUtterance = async (audio: Blob) => {
-    // A previous turn is still in flight — ignore rather than double-submit.
-    // Rare: the candidate started talking again immediately after their own
-    // turn sent, before the interviewer's reply landed.
+    // A previous turn is still in flight. Do NOT discard — when the VAD
+    // ends a segment early and the candidate keeps talking through the
+    // processing window, this utterance IS the rest of their answer.
+    // Transcribe it and buffer; the phase-watcher effect below auto-sends
+    // it the moment the turn slot frees up.
     if (phaseRef.current === 'processing') {
-      setStatusReported('listening');
+      try {
+        const result = await transcribe(sessionId, audio, 'utterance.wav');
+        if (result?.text) pendingTextsRef.current.push(result.text);
+      } catch (err) {
+        console.warn('[LiveMicInput] buffering mid-processing utterance failed', err);
+      }
+      if (aliveRef.current) setStatusReported('listening');
       return;
     }
     setStatusReported('transcribing');
@@ -264,6 +306,13 @@ export function LiveMicInput({
           return;
         }
         handleRef.current = handle;
+        // Apply the session's baseline pause tolerance (behavioral/story
+        // sessions run on 'thinking' from the first turn — see
+        // patienceDefault prop).
+        if (patienceDefaultRef.current !== 'normal') {
+          handle.setPatience(patienceDefaultRef.current);
+          patienceModeRef.current = patienceDefaultRef.current;
+        }
         setStatusReported('needs_permission');
       })
       .catch((err) => {
@@ -281,6 +330,17 @@ export function LiveMicInput({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Flush buffered continuation text the moment the turn slot frees up —
+  // the second half of the "never discard the candidate's words" fix.
+  useEffect(() => {
+    if (phase !== 'candidate_turn') return;
+    if (pendingTextsRef.current.length === 0) return;
+    const text = pendingTextsRef.current.join(' ').trim();
+    pendingTextsRef.current = [];
+    if (text) onAutoSend(text);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
 
   // Stuck-segment watchdog (guardrail for "it keeps listening after I'm
   // done"): while a segment is open ('speaking'), if no confident speech
@@ -311,10 +371,13 @@ export function LiveMicInput({
       if (!handleRef.current) return;
       if (status !== 'speaking') return;
       if (!shouldNudge(ramblingRef.current, Date.now())) return;
-      const handle = handleRef.current;
-      void handle.pause().then(() => handle.resume());
+      // Same safe flush as the watchdog/Done button — the old inline
+      // pause().then(resume) here had the identical dead-mic-on-pause-
+      // failure gap forceFlush() now guards against.
+      forceFlush();
     }, NUDGE_CHECK_INTERVAL_MS);
     return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const enable = async () => {
