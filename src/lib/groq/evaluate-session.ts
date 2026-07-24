@@ -73,6 +73,7 @@ export async function evaluateSession(
       json: true,
       temperature: 0.2,
       max_tokens: 800,
+      tier: 'aux', // once at session end — see llm-router.ts
     });
     try {
       breakdown = JSON.parse(raw || '{}');

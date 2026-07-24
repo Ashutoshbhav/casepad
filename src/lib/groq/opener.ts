@@ -165,6 +165,7 @@ export async function generateOpener(input: OpenerInput): Promise<string> {
       messages,
       max_tokens: 220,
       temperature: 0.5,
+      tier: 'aux', // once per session start — see llm-router.ts
     })).trim();
     if (content) return content;
   } catch {

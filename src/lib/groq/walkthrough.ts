@@ -218,6 +218,7 @@ Generate the ideal walkthrough JSON. Remember: anchor on the CASE-TYPE framework
       json: true,
       temperature: 0.2,
       max_tokens: 2500,
+      tier: 'aux', // async, deferred generation — see llm-router.ts
     });
     const parsed = JSON.parse(raw || '{}') as IdealWalkthrough & { generator_version?: number };
     // Attach the web sources we used so the UI can cite them.

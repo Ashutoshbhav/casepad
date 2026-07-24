@@ -17,6 +17,17 @@
 // actual failure mode on 2026-07-24 — Groq's daily quota ran out, NVIDIA
 // hung on every request, and /api/chat 504'd instead of falling through.
 //
+// TIER (added same incident): a single candidate turn in a case session
+// fans out to 3-4 LLM calls total — the primary interviewer reply PLUS
+// issue-tree extraction, cheatsheet update, and (every other turn) the
+// self-critique judge, each hitting this SAME router. Left unmarked, all
+// of them competed for Groq's one shared 100K/day budget, so the aux calls
+// were silently eating the primary chat's headroom. `tier: 'aux'` (default
+// 'primary') puts Cerebras FIRST instead of Groq for exactly the calls
+// that don't need Groq's edge in quality/latency — issue-tree, cheatsheet,
+// critic, opener, walkthrough, evaluate-session — leaving Groq's budget to
+// last longer for the live turn the candidate is actually waiting on.
+//
 // Configure via env: GROQ_API_KEY, CEREBRAS_API_KEY, NVIDIA_API_KEY,
 // OPENROUTER_API_KEY. Any subset works; route picks whatever's present.
 // Each provider speaks OpenAI-compatible /v1/chat/completions.
@@ -46,52 +57,59 @@ const CONNECT_TIMEOUT_MS = 12_000;
 const CHUNK_TIMEOUT_MS = 15_000;
 const COMPLETE_TIMEOUT_MS = 30_000;
 
-function providers(): Provider[] {
-  const list: Provider[] = [];
-  if (process.env.GROQ_API_KEY) {
-    list.push({
-      name: 'groq',
-      url: 'https://api.groq.com/openai/v1/chat/completions',
-      key: process.env.GROQ_API_KEY,
-      model: 'llama-3.3-70b-versatile',
-      supports_json_streaming: true,
-    });
-  }
-  if (process.env.CEREBRAS_API_KEY) {
-    list.push({
-      name: 'cerebras',
-      url: 'https://api.cerebras.ai/v1/chat/completions',
-      key: process.env.CEREBRAS_API_KEY,
-      // 2026-07-24: Cerebras removed every Llama model (llama3.1-70b now
-      // 404s — verified against their /v1/models). gpt-oss-120b is their
-      // strongest live model; reasoning_effort low + a max_tokens floor
-      // keep it behaving like a plain chat model (verified: clean content,
-      // ~700ms). Promoted ABOVE nvidia, which was observed hanging.
-      model: 'gpt-oss-120b',
-      supports_json_streaming: true,
-      extraBody: { reasoning_effort: 'low' },
-      minMaxTokens: 300,
-    });
-  }
-  if (process.env.NVIDIA_API_KEY) {
-    list.push({
-      name: 'nvidia',
-      url: 'https://integrate.api.nvidia.com/v1/chat/completions',
-      key: process.env.NVIDIA_API_KEY,
-      model: 'meta/llama-3.3-70b-instruct',
-      supports_json_streaming: true,
-    });
-  }
-  if (process.env.OPENROUTER_API_KEY) {
-    list.push({
-      name: 'openrouter',
-      url: 'https://openrouter.ai/api/v1/chat/completions',
-      key: process.env.OPENROUTER_API_KEY,
-      model: 'meta-llama/llama-3.3-70b-instruct:free',
-      supports_json_streaming: true,
-    });
-  }
-  return list;
+function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
+  const groq: Provider | null = process.env.GROQ_API_KEY
+    ? {
+        name: 'groq',
+        url: 'https://api.groq.com/openai/v1/chat/completions',
+        key: process.env.GROQ_API_KEY,
+        model: 'llama-3.3-70b-versatile',
+        supports_json_streaming: true,
+      }
+    : null;
+  const cerebras: Provider | null = process.env.CEREBRAS_API_KEY
+    ? {
+        name: 'cerebras',
+        url: 'https://api.cerebras.ai/v1/chat/completions',
+        key: process.env.CEREBRAS_API_KEY,
+        // 2026-07-24: Cerebras removed every Llama model (llama3.1-70b now
+        // 404s — verified against their /v1/models). gpt-oss-120b is their
+        // strongest live model; reasoning_effort low + a max_tokens floor
+        // keep it behaving like a plain chat model (verified: clean content,
+        // ~700ms).
+        model: 'gpt-oss-120b',
+        supports_json_streaming: true,
+        extraBody: { reasoning_effort: 'low' },
+        minMaxTokens: 300,
+      }
+    : null;
+  const nvidia: Provider | null = process.env.NVIDIA_API_KEY
+    ? {
+        name: 'nvidia',
+        url: 'https://integrate.api.nvidia.com/v1/chat/completions',
+        key: process.env.NVIDIA_API_KEY,
+        model: 'meta/llama-3.3-70b-instruct',
+        supports_json_streaming: true,
+      }
+    : null;
+  const openrouter: Provider | null = process.env.OPENROUTER_API_KEY
+    ? {
+        name: 'openrouter',
+        url: 'https://openrouter.ai/api/v1/chat/completions',
+        key: process.env.OPENROUTER_API_KEY,
+        model: 'meta-llama/llama-3.3-70b-instruct:free',
+        supports_json_streaming: true,
+      }
+    : null;
+
+  // 'aux' leads with Cerebras — a separate free-tier quota from Groq's
+  // shared 100K/day budget, and fast enough (~700ms) that aux callers lose
+  // nothing by not touching Groq at all in the common case. Groq still sits
+  // right behind it as a real fallback, not removed — just no longer first
+  // in line for calls that don't need to be.
+  const ordered =
+    tier === 'aux' ? [cerebras, groq, nvidia, openrouter] : [groq, cerebras, nvidia, openrouter];
+  return ordered.filter((p): p is Provider => p !== null);
 }
 
 // reader.read() with a deadline — a stream that opens and then stalls is as
@@ -117,12 +135,20 @@ interface ChatOpts {
   max_tokens?: number;
   temperature?: number;
   json?: boolean;
+  /**
+   * 'primary' (default) = Groq first — the live interviewer turn the
+   * candidate is waiting on. 'aux' = Cerebras first — issue-tree,
+   * cheatsheet, critic, opener, walkthrough, evaluate-session: real work,
+   * but not worth spending shared Groq daily-quota headroom on when a
+   * separately-quota'd, comparably-fast provider is sitting right there.
+   */
+  tier?: 'primary' | 'aux';
 }
 
 // Streaming chat — returns an async iterator of content deltas.
 // Tries providers in order; on 429/5xx falls through.
 export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, void> {
-  const list = providers();
+  const list = providers(opts.tier);
   if (list.length === 0) throw new Error('no LLM providers configured');
 
   let lastErr: any = null;
@@ -215,7 +241,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
 // Non-streaming completion — same provider rotation logic, whole-call
 // time-boxed per provider.
 export async function completeChat(opts: ChatOpts): Promise<string> {
-  const list = providers();
+  const list = providers(opts.tier);
   let lastErr: any = null;
   for (const p of list) {
     try {

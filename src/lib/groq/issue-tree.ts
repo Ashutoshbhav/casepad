@@ -123,6 +123,9 @@ Return the updated issue_tree JSON. Remember: if the candidate hasn't mentioned 
       json: true,
       temperature: 0.2,
       max_tokens: 1400,
+      // Fires after every turn alongside the primary chat call — shouldn't
+      // compete with it for Groq's shared daily budget (see llm-router.ts).
+      tier: 'aux',
     });
   } catch (err) {
     console.warn('[issue-tree] all providers failed:', (err as Error).message);

@@ -83,6 +83,9 @@ export async function POST(req: NextRequest) {
       json: true,
       temperature: 0.1,
       max_tokens: 600,
+      // Fires after every turn alongside the primary chat call — shouldn't
+      // compete with it for Groq's shared daily budget (see llm-router.ts).
+      tier: 'aux',
     });
   } catch {
     return NextResponse.json({ error: 'all providers failed' }, { status: 502 });

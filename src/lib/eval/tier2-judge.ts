@@ -48,6 +48,7 @@ async function judgeCall(systemPrompt: string, userPrompt: string): Promise<stri
     json: true,
     temperature: 0.1,
     max_tokens: 200,
+    tier: 'aux', // offline eval tooling, not live traffic — see llm-router.ts
   });
 }
 

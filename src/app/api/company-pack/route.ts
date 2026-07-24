@@ -89,6 +89,7 @@ Generate the pack JSON.`;
       json: true,
       temperature: 0.2,
       max_tokens: 1500,
+      tier: 'aux', // one-off content generation — see llm-router.ts
     });
   } catch {
     return NextResponse.json({ error: 'all providers failed' }, { status: 502 });

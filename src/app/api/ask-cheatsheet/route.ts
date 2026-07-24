@@ -72,6 +72,7 @@ ${research ? `\nWEB RESEARCH SNIPPET:\n${research}` : ''}\n\nAnswer.`;
       ],
       temperature: 0.3,
       max_tokens: 600,
+      tier: 'aux', // side panel, not the primary turn — see llm-router.ts
     });
   } catch {
     return NextResponse.json({ error: 'all providers failed' }, { status: 502 });

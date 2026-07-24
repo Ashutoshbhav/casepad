@@ -114,6 +114,7 @@ Generate the pre-case crammer JSON.`;
         json: true,
         temperature: 0.2,
         max_tokens: 1800,
+        tier: 'aux', // pre-case content generation — see llm-router.ts
       });
       const parsed = JSON.parse(raw || '{}') as PreCaseCrammer;
       parsed.sources = sources;

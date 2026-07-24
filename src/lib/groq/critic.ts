@@ -65,10 +65,13 @@ export async function critiqueResponse(
       ],
       max_tokens: 120,
       temperature: 0.1,
-      // NOTE: llm-router currently uses 70b across all providers. Critic
-      // would ideally run on 8b-instant for ~3x speed, but adding model
-      // routing is a separate change. ~2s critic call is acceptable for
-      // every-other-turn cadence. TODO: extend llm-router with modelSize.
+      // 2026-07-24: this ran on Groq by default, meaning EVERY other turn
+      // doubled the primary chat call's draw on Groq's shared 100K/day
+      // budget for a side judgment, not the reply the candidate is
+      // waiting on. tier:'aux' puts Cerebras first instead (separate
+      // quota, ~700ms) — resolves the modelSize TODO in spirit without
+      // needing a full model-routing feature.
+      tier: 'aux',
     });
   } catch (err) {
     // Fail-open: never block the user on a critic outage.
