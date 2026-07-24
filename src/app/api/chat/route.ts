@@ -11,7 +11,12 @@ import {
   buildBehavioralInterviewerMessages,
   type BuildBehavioralInterviewerOpts,
 } from '@/lib/groq/behavioral-interviewer';
-import { inferBehavioralStage, behavioralStageDirective } from '@/lib/interview/behavioral-stage-machine';
+import {
+  inferBehavioralStage,
+  behavioralStageDirective,
+  assessAnswerDepth,
+  followUpDirective,
+} from '@/lib/interview/behavioral-stage-machine';
 import { personaForTrack } from '@/lib/interview/personas';
 import { inferCaseType, type CaseType } from '@/lib/groq/walkthrough';
 import { extractEstimationState, renderEstimationStateBlock } from '@/lib/case-state/estimation-state';
@@ -333,9 +338,19 @@ export async function POST(req: NextRequest) {
     let behavioralOpts: BuildBehavioralInterviewerOpts = {};
     try {
       const { stage } = inferBehavioralStage(withUser as any, behavioralCtx);
+      let directive = behavioralStageDirective(stage, behavioralCtx);
+      // Answer-depth gate (reported by Ash: a vague answer got a brand-new
+      // question instead of a follow-up). Only in the story-telling stages —
+      // a three-word "no, thank you" at wrap, or a short warmup intro,
+      // must not force a story follow-up. Appended AFTER the stage
+      // directive so it outranks "move across dimensions" for this turn.
+      if (stage === 'resume_probe' || stage === 'behavioral_deep_dive' || stage === 'culture_fit') {
+        const depthIssue = assessAnswerDepth(safeUserTurn);
+        if (depthIssue) directive += `\n\n${followUpDirective(depthIssue)}`;
+      }
       behavioralOpts = {
         persona: personaForTrack('behavioral'),
-        stageDirective: behavioralStageDirective(stage, behavioralCtx),
+        stageDirective: directive,
       };
     } catch (stageErr) {
       console.warn(`[chat] behavioral stage inference skipped: ${(stageErr as Error).message}`);
