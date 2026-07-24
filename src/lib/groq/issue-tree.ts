@@ -36,12 +36,20 @@ const EMPTY_TREE: IssueTree = {
 
 const SYSTEM = `You watch a case-interview transcript and infer the candidate's issue/hypothesis tree as they think aloud.
 
-A real case-interview tree looks like this (example: profitability case):
+Levels are a ZOOM LENS, each with distinct semantics — not just depth counting:
+- L0: ROOT — the case question itself ("Why is profit declining?")
+- L1: BIG BUCKETS — the first MECE cut, pure framework ("Revenue" / "Cost")
+- L2: GENERIC DRIVERS — the bucket's template anatomy, still no case facts ("Volume" / "Price"; "Fixed" / "Variable")
+- L3: CASE-SPECIFIC DRIVERS — the tree bent to THIS client's actual facts and disclosed data ("Same-store footfall" after the interviewer disclosed transactions are down with outlets flat; "Chicken input costs" after COGS inflation came up)
+- L4: QUANTIFIABLE / TESTABLE SUB-DRIVERS — specific enough to attach a number or design a test ("Footfall drop vs competitor proximity")
+
+Example (profitability case, one branch taken deep):
 - L0: ROOT ("Why is profit declining?")
   - L1: Revenue
     - L2: Volume
-      - L3: New customers
-      - L3: Existing customers
+      - L3: Same-store footfall
+        - L4: Drop vs competitor proximity
+      - L3: Conversion rate
     - L2: Price
   - L1: Cost
     - L2: Fixed
@@ -49,6 +57,7 @@ A real case-interview tree looks like this (example: profitability case):
 - Each node has a "label" (short noun phrase, max 5 words).
 - Hypotheses are attached to LEAF nodes (e.g., "Existing customers churning to a cheaper competitor").
 - Levels are measured from L0 (the root question itself).
+- IMPORTANT: assign L3+ only to nodes genuinely grounded in case facts from the transcript — a candidate reciting generic anatomy three layers deep is producing deep L2s, not real L3s; keep such nodes at the generic level their content deserves. The tree's depth should reflect how case-specific the thinking got, not how many words were said.
 - A non-MECE branch is one with overlapping siblings, missing siblings, or a single child where the parent should split.
 
 Your job: extract or update the tree from the TRANSCRIPT ONLY. **Strict rule: the tree must reflect ONLY what the candidate has explicitly said in chat or what the interviewer has explicitly disclosed in their replies.** You are NOT given the case prompt's data — you only see the title (for orientation) and the conversation. If the candidate hasn't yet mentioned a branch / hypothesis / number, it MUST NOT appear in the tree. Do not pre-populate nodes from any external knowledge of the case.
@@ -62,9 +71,9 @@ Output JSON only:
   ],
   "rubric": {
     "mece": 0-100,                   // Are siblings non-overlapping & exhaustive?
-    "depth_balance": 0-100,           // Is depth roughly even across L1 branches, or one branch is L4 and another L1?
+    "depth_balance": 0-100,           // Is depth roughly even across L1 branches, or one branch is L4 and another L1? Penalize diving deep on a branch before the L1 split established it matters.
     "hypothesis_attached": 0-100,    // % of leaf nodes that have a hypothesis
-    "driven_from_issue": 0-100       // Did candidate start from a clear root question and drill down, vs jumping to detail?
+    "driven_from_issue": 0-100       // Did candidate descend the ladder in order (L0 question → L1 buckets → L2 drivers → L3 case-specific → L4 testable), or jump altitude — L3/L4 detail before L0/L1 existed?
   }
 }
 

@@ -21,7 +21,7 @@ export interface Playbook {
 
 // Always injected, regardless of case type. The expert-vs-textbook backbone.
 export const CROSS_CUTTING = `EXPERT-ANSWER PRINCIPLES (apply to every case):
-- Depth model L0→L4: L0 one-line recommendation (state it FIRST) → L1 the 2-4 tailored drivers (a custom tree, NOT a named off-the-shelf framework) → L2 each driver pinned to a number/named company/mechanism → L3 risks & the case-changing "so what" → L4 concrete sequenced next steps + what to measure. A textbook answer dies at L1; an expert answer reaches L3-L4.
+- Answer-depth model (coarse→fine; distinct from the L0→L4 structural zoom ladder used in live solving): one-line recommendation stated FIRST → the 2-4 tailored drivers (a custom tree, NOT a named off-the-shelf framework) → each driver pinned to a number/named company/mechanism → risks & the case-changing "so what" → concrete sequenced next steps + what to measure. A textbook answer dies at the drivers; an expert answer reaches grounded evidence and next steps.
 - Answer-first / top-down always: recommendation, THEN support. Never make the reader wait for the conclusion.
 - Hypothesis-driven: commit to an early directional hypothesis, state the test that would KILL it, and update out loud when data contradicts.
 - Quant: state the equation before computing; round cleanly; sanity-check the result a second way; then translate the number into its business meaning.

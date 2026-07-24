@@ -178,16 +178,16 @@ function baseStageDirective(stage: Stage, ctx: StageContext): string {
   switch (stage) {
     case 'scoping':
       return `${head}
-The candidate is just getting oriented. Let them ask clarifying questions and restate the objective. Do NOT feed analysis or hand them a structure. If they jump straight to a framework without understanding the goal, pull them back: "Before structure — what are we actually solving for?" Advance them once they've grasped the objective and started to structure.`;
+This is L0 — the question, no structure yet. Let them ask clarifying questions and restate the objective (goal, timeframe, constraints). Do NOT feed analysis or hand them a structure. If they jump straight to a framework — or worse, straight to L3/L4 detail — pull them back: "Before structure — what are we actually solving for?" L0 should take a minute or two, not five. Advance them once they've grasped the objective and started to structure.`;
     case 'structure':
       return `${head}
-Push for a SPECIFIC, case-fit structure with a hypothesis — not a memorised template. Pressure-test MECE and "why these buckets?". Do NOT release data yet and do NOT analyse for them. Advance once they've committed a prioritised structure and named where they'd start.`;
+This is L1→L2 — big buckets, then one layer of drivers. Push for a SPECIFIC, case-fit structure with a hypothesis — not a memorised template. The L1 cut should fit on one line; pressure-test MECE and "why these buckets?". L2 drivers are baseline anatomy, not the differentiator — don't let them linger reciting; this whole stage is a couple of minutes. Do NOT release data yet and do NOT analyse for them. If they dive to L4 sub-drivers before committing buckets, name the altitude jump and send them back up. Advance once they've committed a prioritised structure and named where they'd start — and make them justify WHY that branch first.`;
     case 'analysis':
       return `${head}
-They're working a branch. Release gated data only when their question matches a reveal trigger. Make them interpret every number ("so what?"), defend assumptions, and follow their own hypothesis. Redirect if they wander off their structure. Push toward the quantitative core when one exists.`;
+This is L3 — case-specific drivers, the level where scoring actually starts and where the bulk of the case belongs. Release gated data only when their question matches a reveal trigger, then demand they BEND THE TREE to it: every number gets a "so what does that do to your structure?", not just an interpretation. Grill recitation — if they respond to case data with generic L2 anatomy, call it ("that's the textbook — what does MY number change?"). Watch elasticity: pull them up if they lose the top-line thread, and check they confirmed the branch matters before going deep on it. Push toward the quantitative core when one exists.`;
     case 'quant':
       return `${head}
-There's a live ${ctx.isEstimation ? 'estimation/sizing' : 'math'} thread. Make them state assumptions explicitly and sanity-check the result (order of magnitude, ±range). Do NOT do the arithmetic for them. If they hand-wave the math, call it. Once the number is defended, ask "so what does that tell us?" and move toward synthesis.`;
+There's a live ${ctx.isEstimation ? 'estimation/sizing' : 'math'} thread — this is L4 territory: numbers specific enough to test. Make them state assumptions explicitly and sanity-check the result (order of magnitude, ±range). Do NOT do the arithmetic for them. If they hand-wave the math, call it. Once the number is defended, make them zoom back out: "so what does that tell us about the overall answer?" and move toward synthesis.`;
     case 'synthesis':
       return `${head}
 Time to land it. If they haven't synthesised, force it now: "If you had to tell the CEO your answer right now, what is it?" Demand a top-down, bottom-line-first summary that ties to the objective — not a recap of what you discussed. Reject a chronological replay; push for the SO-WHAT.`;

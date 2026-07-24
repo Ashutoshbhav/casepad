@@ -18,7 +18,7 @@ export default function DebriefLoading() {
         <ul className="text-xs text-zinc-400 space-y-1.5">
           <li>· Scoring your transcript across 7 dimensions</li>
           <li>· Pulling industry context from the web</li>
-          <li>· Building the L0–L4 expert walkthrough</li>
+          <li>· Building the expert answer-depth walkthrough</li>
           <li>· Drafting your strengths + gap list</li>
         </ul>
       </div>

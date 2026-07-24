@@ -106,7 +106,7 @@ export function staticWalkthroughFallback(): any {
       'Most likely driver is X based on (general business pattern). Verify with quantitative data.',
     ],
     levels: [
-      { level: 'L0', topic: 'Recommendation', reasoning: 'Pending detailed analysis once service returns.' },
+      { level: '1', topic: 'Recommendation', reasoning: 'Pending detailed analysis once service returns.' },
     ],
     steps: [
       { title: 'Clarify the prompt', prompt: 'Restate objective + constraints + time horizon.' },

@@ -24,13 +24,19 @@ export function IdealWalkthroughView({ w }: { w: IdealWalkthrough }) {
       </section>
 
       <section>
-        <h3 className="text-sm font-semibold text-zinc-300 mb-2">Thinking levels (L0 → L4)</h3>
+        {/* Deliberately NOT labeled L0–L4: those codes mean the structural
+            zoom ladder (root question → buckets → generic drivers →
+            case-specific → testable) everywhere else in the app — the live
+            issue tree, the interviewer's altitude discipline. This section
+            is a different axis (answer-presentation depth, recommendation
+            first), and reusing the L-codes here taught the wrong meaning. */}
+        <h3 className="text-sm font-semibold text-zinc-300 mb-2">Answer depth (top line → next steps)</h3>
         <div className="space-y-2 text-sm">
-          <Level label="L0" name="Recommendation" content={[w.thinking_levels.L0_recommendation]} colour="emerald" />
-          <Level label="L1" name="Drivers" content={w.thinking_levels.L1_drivers} colour="sky" />
-          <Level label="L2" name="Evidence" content={w.thinking_levels.L2_evidence} colour="violet" />
-          <Level label="L3" name="Risks" content={w.thinking_levels.L3_risks} colour="rose" />
-          <Level label="L4" name="Implementation" content={w.thinking_levels.L4_implementation} colour="amber" />
+          <Level label="1" name="Recommendation" content={[w.thinking_levels.L0_recommendation]} colour="emerald" />
+          <Level label="2" name="Drivers" content={w.thinking_levels.L1_drivers} colour="sky" />
+          <Level label="3" name="Evidence" content={w.thinking_levels.L2_evidence} colour="violet" />
+          <Level label="4" name="Risks" content={w.thinking_levels.L3_risks} colour="rose" />
+          <Level label="5" name="Next steps" content={w.thinking_levels.L4_implementation} colour="amber" />
         </div>
       </section>
 

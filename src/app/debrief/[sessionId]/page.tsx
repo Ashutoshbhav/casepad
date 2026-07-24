@@ -345,7 +345,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               color: 'var(--color-text-muted)',
             }}
           >
-            Issue tree, hypothesis tree, and L0–L4 thinking depth — the ideal walkthrough.
+            Issue tree, hypothesis tree, and answer depth — the ideal walkthrough.
           </p>
           <IdealWalkthroughLoader
             sessionId={sessionId}
