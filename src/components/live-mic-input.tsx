@@ -25,6 +25,21 @@
 // fails for a turn). The push-to-talk tier is the same MediaRecorder logic
 // this file used before hands-free existed — kept as the safety net rather
 // than deleted, since it's already written and tested.
+//
+// Semantic endpointing (continuation-buffer.ts + endpoint-check-client.ts):
+// turn-detector.ts's VAD only ever measures SILENCE duration, so REDEMPTION_MS
+// is one fixed number standing in for "is this pause the end of the answer."
+// That can't distinguish "I think we should..." from "...the profitability
+// lever." after the same length pause — production voice-agent stacks solve
+// this with a second signal on top of VAD, a check on the TRANSCRIBED TEXT.
+// Since Groq Whisper is batch-only (no partial transcript while the
+// candidate is still talking), this runs AFTER each VAD segment closes: a
+// fast classifier judges whether the transcript sounds finished; if not, it's
+// held (continuationRef) and stitched onto the next utterance instead of
+// being sent as a prematurely cut answer. A grace timer (CONTINUATION_GRACE_MS)
+// and a hard cap on consecutive defers (continuation-buffer.ts's
+// MAX_CONTINUATIONS) both fail open to sending — this can slow a turn down
+// by at most one classifier round-trip, never withhold an answer.
 
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { useReducedMotion } from 'motion/react';
@@ -41,6 +56,14 @@ import {
   type RamblingTrackerState,
 } from '@/lib/voice/rambling-tracker';
 import { isThinkingTimeRequest } from '@/lib/interview/thinking-time';
+import {
+  initialContinuationState,
+  combine as combineContinuation,
+  defer as deferContinuation,
+  atCap as continuationAtCap,
+  type ContinuationState,
+} from '@/lib/voice/continuation-buffer';
+import { checkEndpointComplete } from '@/lib/voice/endpoint-check-client';
 
 const MAX_RECORD_MS = 120_000; // Same hard cap as MicButton — Groq STT budget.
 const NUDGE_CHECK_INTERVAL_MS = 2000;
@@ -67,6 +90,13 @@ const THINKING_PATIENCE_MS = 90_000;
 const STUCK_SILENCE_MS = 5000;
 const STUCK_SILENCE_THINKING_MS = 9000;
 const STUCK_CHECK_INTERVAL_MS = 500;
+// Semantic-endpointing safety net: if a fragment is buffered awaiting a
+// continuation (see continuation-buffer.ts) and nothing more arrives within
+// this long, send it anyway. Must fail open — a classifier that's unsure
+// can never permanently swallow an answer. Comfortably longer than the
+// normal STUCK_SILENCE_MS window since this is holding a fragment the
+// candidate already finished saying, not an open mic segment.
+const CONTINUATION_GRACE_MS = 6000;
 
 export type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
 export type ListenerStatus =
@@ -156,6 +186,19 @@ export function LiveMicInput({
   const lastConfidentSpeechTsRef = useRef(0);
   const flushInFlightRef = useRef(false);
   const errorClearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Semantic-endpointing state: a fragment the classifier judged unfinished,
+  // held here awaiting the next utterance to stitch onto it. See
+  // continuation-buffer.ts's header for why this is whole-segment
+  // granularity, not true streaming endpointing.
+  const continuationRef = useRef<ContinuationState>(initialContinuationState);
+  const continuationGraceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Set true just before forceFlush() triggers a pause()-driven onSpeechEnd
+  // (watchdog / rambling nudge / manual "Done" button) — consumed by the
+  // onUtterance wiring below to skip the semantic check entirely for those.
+  // A forced flush is already an explicit "this segment is over now"
+  // decision (system or candidate override); running the classifier on top
+  // would fight that decision rather than respect it.
+  const forcedFlushPendingRef = useRef(false);
 
   const setStatusReported = (s: ListenerStatus) => {
     setStatus(s);
@@ -177,10 +220,24 @@ export function LiveMicInput({
   // first version chained .then(resume) so a pause() failure left the mic
   // permanently paused while the UI still said LISTENING (the "stuck
   // listening, mic dead" report). Each step now fails independently.
+  const clearContinuationGrace = () => {
+    if (continuationGraceTimerRef.current) {
+      clearTimeout(continuationGraceTimerRef.current);
+      continuationGraceTimerRef.current = null;
+    }
+  };
+
   const forceFlush = () => {
     const handle = handleRef.current;
     if (!handle || flushInFlightRef.current) return;
     flushInFlightRef.current = true;
+    // MicVAD's submitUserSpeechOnPause fires onSpeechEnd (→ onUtterance)
+    // synchronously as part of pause()'s own work, before its promise
+    // resolves — so by the time the .finally() below runs, the onUtterance
+    // wiring has already read and reset this flag. The .finally() reset here
+    // is a defensive fallback only, for the case pause() rejects without
+    // ever emitting onSpeechEnd (e.g. no segment was actually open).
+    forcedFlushPendingRef.current = true;
     void handle
       .pause()
       .catch((err) => console.warn('[LiveMicInput] flush pause failed (still resuming)', err))
@@ -191,6 +248,7 @@ export function LiveMicInput({
         // refire the watchdog the instant a new segment opens.
         lastConfidentSpeechTsRef.current = Date.now();
         flushInFlightRef.current = false;
+        forcedFlushPendingRef.current = false;
       });
   };
 
@@ -205,7 +263,27 @@ export function LiveMicInput({
     }
   };
 
-  const handleUtterance = async (audio: Blob) => {
+  // Sends whatever's buffered in continuationRef right now, bypassing the
+  // semantic check (used by the grace-timeout fail-open and by forced
+  // flushes that already carry buffered continuation text).
+  const flushContinuation = (extraLowConfidence = false) => {
+    clearContinuationGrace();
+    const state = continuationRef.current;
+    if (!state.text) return;
+    continuationRef.current = initialContinuationState;
+    onAutoSend(state.text, state.lowConfidence || extraLowConfidence);
+  };
+
+  const armContinuationGrace = () => {
+    clearContinuationGrace();
+    continuationGraceTimerRef.current = setTimeout(() => {
+      continuationGraceTimerRef.current = null;
+      flushContinuation();
+      if (aliveRef.current) setStatusReported('listening');
+    }, CONTINUATION_GRACE_MS);
+  };
+
+  const handleUtterance = async (audio: Blob, opts: { skipEndpointCheck?: boolean } = {}) => {
     // A previous turn is still in flight. Do NOT discard — when the VAD
     // ends a segment early and the candidate keeps talking through the
     // processing window, this utterance IS the rest of their answer.
@@ -226,10 +304,14 @@ export function LiveMicInput({
       const result = await transcribe(sessionId, audio, 'utterance.wav');
       if (!aliveRef.current) return;
       if (!result) {
-        // Whisper heard nothing usable. Say so — silently dropping back to
-        // "listening" here reads, from the candidate's seat, as the app
-        // ignoring an answer they just gave.
-        showTransientError('Didn’t catch that — try again, or type this turn');
+        // Whisper heard nothing usable this segment. If there's already a
+        // buffered continuation waiting, don't clobber it with an error —
+        // the grace timer will still flush it if nothing more comes.
+        // Otherwise say so — silently dropping back to "listening" here
+        // reads, from the candidate's seat, as the app ignoring their answer.
+        if (!continuationRef.current.text) {
+          showTransientError('Didn’t catch that — try again, or type this turn');
+        }
         setStatusReported('listening');
         return;
       }
@@ -246,8 +328,26 @@ export function LiveMicInput({
       } else {
         revertPatience();
       }
-      onAutoSend(text, lowConfidence);
-      setStatusReported('listening');
+
+      const combinedText = combineContinuation(continuationRef.current, text);
+      const skipCheck = opts.skipEndpointCheck || continuationAtCap(continuationRef.current);
+      const isComplete = skipCheck ? true : await checkEndpointComplete(combinedText);
+      if (!aliveRef.current) return;
+
+      if (isComplete) {
+        clearContinuationGrace();
+        const combinedLowConfidence = continuationRef.current.lowConfidence || lowConfidence;
+        continuationRef.current = initialContinuationState;
+        onAutoSend(combinedText, combinedLowConfidence);
+        setStatusReported('listening');
+      } else {
+        // Sounds unfinished — hold it and keep listening (VAD is still
+        // running; the next utterance's onUtterance will combine onto this).
+        // Grace timer guarantees this can never withhold an answer forever.
+        continuationRef.current = deferContinuation(continuationRef.current, combinedText, lowConfidence);
+        armContinuationGrace();
+        setStatusReported('listening');
+      }
     } catch (err) {
       console.error('[LiveMicInput] transcribe failed', err);
       if (aliveRef.current) setStatusReported('listening');
@@ -271,6 +371,12 @@ export function LiveMicInput({
         // stale timestamp from a previous turn can't trigger an instant
         // flush the moment this one opens.
         lastConfidentSpeechTsRef.current = Date.now();
+        // The candidate is actively continuing — stop the continuation
+        // grace timer so it can't fire mid-sentence and send a stale
+        // buffered fragment out from under the speech happening right now.
+        // The buffered text itself is untouched; onUtterance will combine
+        // onto it once this new segment ends.
+        clearContinuationGrace();
         setStatusReported('speaking');
       },
       // Confirmed past MIN_SPEECH_MS — i.e. the model is done disambiguating
@@ -285,7 +391,9 @@ export function LiveMicInput({
       },
       onUtterance: (audio) => {
         ramblingRef.current = ramblingOnTurnSent();
-        void handleUtterance(audio);
+        const skipEndpointCheck = forcedFlushPendingRef.current;
+        forcedFlushPendingRef.current = false;
+        void handleUtterance(audio, { skipEndpointCheck });
       },
       onMisfire: () => {
         // The raw onset above already flipped status to 'speaking' — this
@@ -325,6 +433,7 @@ export function LiveMicInput({
       cancelled = true;
       if (patienceRevertTimerRef.current) clearTimeout(patienceRevertTimerRef.current);
       if (errorClearTimerRef.current) clearTimeout(errorClearTimerRef.current);
+      if (continuationGraceTimerRef.current) clearTimeout(continuationGraceTimerRef.current);
       handleRef.current?.destroy().catch(() => {});
       handleRef.current = null;
     };
