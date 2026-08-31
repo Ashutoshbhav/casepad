@@ -39,12 +39,20 @@ function jsonError(status: number, message: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const expected = process.env.SMOKE_CHECK_TOKEN;
-  if (!expected) return jsonError(501, 'SMOKE_CHECK_TOKEN not configured on this deployment');
+  // Accept either SMOKE_CHECK_TOKEN (external routine) or CRON_SECRET
+  // (auto-injected by Vercel Cron as `Authorization: Bearer $CRON_SECRET`).
+  // Checked independently — they need not share a value, so the
+  // Vercel-native cron authenticates this route on its own.
+  const accepted = [process.env.SMOKE_CHECK_TOKEN, process.env.CRON_SECRET].filter(
+    (v): v is string => !!v,
+  );
+  if (accepted.length === 0) {
+    return jsonError(501, 'neither SMOKE_CHECK_TOKEN nor CRON_SECRET configured on this deployment');
+  }
 
   const auth = req.headers.get('authorization') || '';
   const provided = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (!provided || !safeEqual(provided, expected)) {
+  if (!provided || !accepted.some((tok) => safeEqual(provided, tok))) {
     return jsonError(401, 'unauthorized');
   }
 
