@@ -52,7 +52,21 @@ export async function GET(req: NextRequest) {
 
   const auth = req.headers.get('authorization') || '';
   const provided = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (!provided || !accepted.some((tok) => safeEqual(provided, tok))) {
+  const bearerOk = !!provided && accepted.some((tok) => safeEqual(provided, tok));
+
+  // Fallback: Vercel Cron only attaches `Authorization: Bearer $CRON_SECRET`
+  // when a CRON_SECRET env var exists on the project. Setting that env var has
+  // been the manual step that repeatedly did not happen, and each time it was
+  // missed this free-tier Supabase project drifted into an inactivity pause
+  // (3 incidents). This route is a harmless, read-only, rate-limited liveness
+  // ping — no app tables, no writes, nothing returned but {ok} — so it is
+  // acceptable to also honour an otherwise-unauthenticated request that
+  // carries Vercel's cron user-agent. The bearer path above stays the strong
+  // check for every external caller; this only rescues the platform cron.
+  const ua = req.headers.get('user-agent') || '';
+  const isVercelCron = /^vercel-cron\//i.test(ua);
+
+  if (!bearerOk && !isVercelCron) {
     return jsonError(401, 'unauthorized');
   }
 
