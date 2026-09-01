@@ -34,6 +34,17 @@ import { createClient } from '@supabase/supabase-js';
 import { timingSafeEqual } from 'crypto';
 import { checkRateLimit, rateLimit } from '@/lib/rate-limit';
 
+// Supabase-js rejects with a plain PostgrestError object, not an Error, so
+// `String(err)` yields "[object Object]". Pull a real message out of anything.
+function errMsg(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (err && typeof err === 'object') {
+    const e = err as Record<string, unknown>;
+    return [e.message, e.details, e.hint, e.code].filter(Boolean).join(' | ') || JSON.stringify(err);
+  }
+  return String(err);
+}
+
 export const runtime = 'nodejs';
 export const maxDuration = 15;
 
@@ -105,7 +116,7 @@ export async function GET(req: NextRequest) {
     results.supabase = 'ok';
   } catch (err) {
     failed = true;
-    results.supabase = `FAILED: ${err instanceof Error ? err.message : String(err)}`;
+    results.supabase = `FAILED: ${errMsg(err)}`;
   }
 
   // Deliberate write — see header comment. Best-effort: a missing table
@@ -129,7 +140,7 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
     results.keepalive = `ok (source=${source}, count=${(cur?.ping_count ?? 0) + 1})`;
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
+    const msg = errMsg(err);
     results.keepalive = /does not exist|Could not find the table/i.test(msg)
       ? 'table missing — apply migration 0020_keepalive.sql'
       : `write failed: ${msg}`;
