@@ -1,0 +1,51 @@
+name: keepalive
+
+# Redundant free-tier inactivity keep-alive for the Supabase project.
+#
+# Vercel Cron already hits /api/admin/heartbeat once a day, but every prior
+# pause (4 of them) was that ONE scheduler silently failing with nothing
+# watching. This is the independent second path: different infra, visible run
+# history, and — crucially — it FAILS LOUDLY. A non-200 response fails the job,
+# and GitHub emails the repo owner on a failed scheduled run, so a broken
+# keep-alive surfaces in hours instead of after a 7-day pause.
+#
+# The heartbeat endpoint allows a `casepad-keepalive/*` user-agent without a
+# secret (its blast radius is a size-1 listUsers + one ops-row upsert, rate
+# limited), so this needs no repo secrets to set up.
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours
+  workflow_dispatch: {}      # manual "Run workflow" button
+
+permissions:
+  contents: read
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping heartbeat
+        run: |
+          set -euo pipefail
+          url="https://casepad.vercel.app/api/admin/heartbeat?source=github-actions"
+          echo "GET $url"
+          body="$(mktemp)"
+          code="$(curl -sS -m 30 --retry 3 --retry-delay 20 --retry-all-errors \
+                   -A 'casepad-keepalive/1.0 (github-actions)' \
+                   -o "$body" -w '%{http_code}' "$url")"
+          echo "HTTP $code"
+          cat "$body"; echo
+          if [ "$code" != "200" ]; then
+            echo "::error::heartbeat returned $code (expected 200) — Supabase keep-alive may be broken"
+            exit 1
+          fi
+          grep -q '"supabase":"ok"' "$body" || {
+            echo "::error::heartbeat 200 but supabase not ok — check the project"
+            exit 1
+          }
