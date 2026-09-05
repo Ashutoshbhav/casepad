@@ -15,8 +15,10 @@
 //
 // Barge-in: this component stays mounted and listening even while the
 // interviewer is "speaking" (the parent no longer disables it during that
-// phase) — `onBargeIn` fires the moment speech is detected during that phase
-// so the parent can stop the AI's audio immediately. See
+// phase) — `onBargeIn` fires once confident speech during that phase has
+// held unbroken for a short confirmation window (see barge-in-confirm.ts),
+// not on the raw onset, so the parent can stop the AI's audio on a real
+// interruption without an "mm-hmm"/noise/echo blip false-triggering it. See
 // <LiveInterviewSession> for how phase drives this.
 //
 // Never-fail 3-tier ladder: hands-free VAD -> push-to-talk (if the VAD
@@ -64,6 +66,12 @@ import {
   type ContinuationState,
 } from '@/lib/voice/continuation-buffer';
 import { checkEndpointComplete } from '@/lib/voice/endpoint-check-client';
+import {
+  initialBargeInConfirmState,
+  onAmplitudeFrame as bargeInOnAmplitudeFrame,
+  isConfirmed as bargeInIsConfirmed,
+  type BargeInConfirmState,
+} from '@/lib/voice/barge-in-confirm';
 
 const MAX_RECORD_MS = 120_000; // Same hard cap as MicButton — Groq STT budget.
 const NUDGE_CHECK_INTERVAL_MS = 2000;
@@ -199,6 +207,14 @@ export function LiveMicInput({
   // decision (system or candidate override); running the classifier on top
   // would fight that decision rather than respect it.
   const forcedFlushPendingRef = useRef(false);
+  // Barge-in confirmation state (see barge-in-confirm.ts): while a barge-in is
+  // pending confirmation, tracks the current unbroken confident-speech streak.
+  // `bargeInPendingRef` gates whether onAmplitude should even be feeding this
+  // state machine right now — only true between onSpeechRealStart firing
+  // during interviewer_speaking and the barge-in confirming or the segment
+  // ending, so normal listening never pays this extra bookkeeping.
+  const bargeInConfirmRef = useRef<BargeInConfirmState>(initialBargeInConfirmState);
+  const bargeInPendingRef = useRef(false);
 
   const setStatusReported = (s: ListenerStatus) => {
     setStatus(s);
@@ -377,19 +393,33 @@ export function LiveMicInput({
         // The buffered text itself is untouched; onUtterance will combine
         // onto it once this new segment ends.
         clearContinuationGrace();
+        // Defensive reset — a fresh segment should never inherit a pending
+        // barge-in confirmation from whatever the mic was doing before.
+        bargeInPendingRef.current = false;
+        bargeInConfirmRef.current = initialBargeInConfirmState;
         setStatusReported('speaking');
       },
       // Confirmed past MIN_SPEECH_MS — i.e. the model is done disambiguating
-      // this from background noise (a fan, typing, a chair creak). Barge-in
-      // and the rambling clock both wait for this rather than the raw
-      // onset, specifically because a false-positive barge-in interrupts the
-      // AI's actual audio — a much costlier mistake than a half-second of UI
-      // lag on a real interruption.
+      // this from background noise (a fan, typing, a chair creak). The
+      // rambling clock starts here, same as before. Barge-in does NOT fire
+      // here directly anymore — see barge-in-confirm.ts's header for why a
+      // single confidence gate isn't a strict enough bar for interrupting
+      // real AI audio specifically. This only ARMS the confirmation window;
+      // onAmplitude below does the actual firing once it holds.
       onSpeechRealStart: () => {
-        if (phaseRef.current === 'interviewer_speaking') onBargeIn();
+        if (phaseRef.current === 'interviewer_speaking') {
+          bargeInPendingRef.current = true;
+          bargeInConfirmRef.current = initialBargeInConfirmState;
+        }
         ramblingRef.current = ramblingOnSpeechStart(ramblingRef.current, Date.now());
       },
       onUtterance: (audio) => {
+        // Segment closed (naturally or force-flushed) before barge-in ever
+        // confirmed — correct outcome for a backchannel/noise blip that
+        // cleared MIN_SPEECH_MS but never sustained. Nothing to undo; the AI
+        // was simply never interrupted.
+        bargeInPendingRef.current = false;
+        bargeInConfirmRef.current = initialBargeInConfirmState;
         ramblingRef.current = ramblingOnTurnSent();
         const skipEndpointCheck = forcedFlushPendingRef.current;
         forcedFlushPendingRef.current = false;
@@ -398,11 +428,30 @@ export function LiveMicInput({
       onMisfire: () => {
         // The raw onset above already flipped status to 'speaking' — this
         // was noise, not a real utterance, so revert.
+        bargeInPendingRef.current = false;
+        bargeInConfirmRef.current = initialBargeInConfirmState;
         setStatusReported('listening');
       },
       onAmplitude: (level) => {
         if (level >= CONFIDENT_SPEECH_PROBABILITY) {
           lastConfidentSpeechTsRef.current = Date.now();
+        }
+        // Barge-in confirmation: only tracked while a barge-in is actually
+        // pending (armed by onSpeechRealStart above), so normal listening
+        // never pays this extra bookkeeping. Fires onBargeIn() exactly once
+        // per segment, the moment confident speech has held unbroken for
+        // BARGE_IN_CONFIRM_MS — see barge-in-confirm.ts.
+        if (bargeInPendingRef.current) {
+          const now = Date.now();
+          bargeInConfirmRef.current = bargeInOnAmplitudeFrame(
+            bargeInConfirmRef.current,
+            level >= CONFIDENT_SPEECH_PROBABILITY,
+            now
+          );
+          if (bargeInIsConfirmed(bargeInConfirmRef.current, now)) {
+            bargeInPendingRef.current = false;
+            onBargeIn();
+          }
         }
         onAmplitude?.(level);
         paintBars(barsRef.current, level);
