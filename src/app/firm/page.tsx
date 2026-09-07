@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import type { Track } from '@/lib/tracks';
 import { requireUser } from '@/lib/supabase/require-user';
 import { getFirmView } from '@/lib/firm/apply';
+import { assignEngagement } from '@/server-actions/assign-engagement';
 import { LEVELS } from '@/lib/firm/levels';
 import { roomFontVars } from '@/components/room/fonts';
 import { SketchyUnderline, SketchyProgressBar } from '@/components/room/sketchy';
@@ -18,6 +20,8 @@ const ACCENT_TEXT = '#c23f00';
 export default async function FirmPage() {
   const { supabase, user } = await requireUser();
   const firm = await getFirmView(supabase, user.id).catch(() => null);
+  const track = (user.user_metadata?.preferred_track as Track | undefined) ?? null;
+  const engagement = await assignEngagement(user.id, track).catch(() => null);
 
   const eyebrow: React.CSSProperties = {
     fontFamily: 'var(--font-room-mono)',
@@ -210,26 +214,97 @@ export default async function FirmPage() {
               </ol>
             </section>
 
-            <div style={{ marginTop: 56 }}>
-              <Link
-                href="/dashboard"
-                style={{
-                  background: ACCENT_TEXT,
-                  color: '#FFFFFF',
-                  borderRadius: 999,
-                  padding: '12px 22px',
-                  fontFamily: 'var(--font-room-mono)',
-                  fontSize: 11,
-                  fontWeight: 500,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  textDecoration: 'none',
-                  boxShadow: 'rgba(50,50,52,0.4) 4px 4px 0 0',
-                }}
-              >
-                Take the next engagement →
-              </Link>
-            </div>
+            {/* NEXT ENGAGEMENT — firm-aware: rank sets the difficulty, the Twin
+                sets the focus. */}
+            <section style={{ marginTop: 64 }}>
+              <p style={eyebrow}>Your next engagement</p>
+              {engagement ? (
+                <div
+                  style={{
+                    marginTop: 16,
+                    background: '#FFFFFF',
+                    boxShadow: `inset 0 0 0 1px ${engagement.brief.twinDriven ? ACCENT_TEXT : '#e8e4dd'}`,
+                    padding: 'clamp(20px, 3.5vw, 32px)',
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-room-serif)',
+                      fontWeight: 400,
+                      fontStyle: 'italic',
+                      fontSize: 'clamp(24px, 3.4vw, 32px)',
+                      lineHeight: 1.05,
+                      letterSpacing: '-0.02em',
+                      margin: 0,
+                    }}
+                  >
+                    {engagement.caseTitle}
+                  </h3>
+                  <p style={{ ...eyebrow, marginTop: 12, letterSpacing: '0.14em' }}>
+                    {engagement.caseType.replace(/_/g, ' ')} · {engagement.caseDifficulty}
+                    {engagement.generated ? ' · generated' : ''}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-room-mono)',
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      color: 'rgba(50,50,52,0.82)',
+                      margin: '16px 0 0',
+                      maxWidth: '56ch',
+                    }}
+                  >
+                    {engagement.brief.rationale}
+                  </p>
+                  {engagement.brief.focusSkillNames.length > 0 && (
+                    <p style={{ ...eyebrow, marginTop: 12, letterSpacing: '0.12em', color: ACCENT_TEXT }}>
+                      Focus: {engagement.brief.focusSkillNames.join(' · ')}
+                    </p>
+                  )}
+                  <div style={{ marginTop: 24 }}>
+                    <Link
+                      href={`/solve/${engagement.caseId}`}
+                      style={{
+                        background: ACCENT_TEXT,
+                        color: '#FFFFFF',
+                        borderRadius: 999,
+                        padding: '12px 22px',
+                        fontFamily: 'var(--font-room-mono)',
+                        fontSize: 11,
+                        fontWeight: 500,
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        textDecoration: 'none',
+                        boxShadow: 'rgba(50,50,52,0.4) 4px 4px 0 0',
+                      }}
+                    >
+                      Take this engagement →
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ marginTop: 16 }}>
+                  <Link
+                    href="/dashboard"
+                    style={{
+                      background: ACCENT_TEXT,
+                      color: '#FFFFFF',
+                      borderRadius: 999,
+                      padding: '12px 22px',
+                      fontFamily: 'var(--font-room-mono)',
+                      fontSize: 11,
+                      fontWeight: 500,
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      textDecoration: 'none',
+                      boxShadow: 'rgba(50,50,52,0.4) 4px 4px 0 0',
+                    }}
+                  >
+                    Take the next engagement →
+                  </Link>
+                </div>
+              )}
+            </section>
           </>
         )}
       </div>

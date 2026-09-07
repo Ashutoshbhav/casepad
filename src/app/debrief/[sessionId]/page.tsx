@@ -13,6 +13,7 @@ import { getSkillProfile } from '@/lib/skills/apply';
 import { getFirmView } from '@/lib/firm/apply';
 import { SkillProfileCard } from '@/components/skill-profile-card';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
+import { assignEngagement } from '@/server-actions/assign-engagement';
 import type { Track } from '@/lib/tracks';
 import { roomFontVars } from '@/components/room/fonts';
 import { SketchyUnderline, SketchyProgressBar, SketchyLine } from '@/components/room/sketchy';
@@ -113,6 +114,16 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
           return null;
         }
       })()
+    : null;
+
+  // The Firm's own pick (PRD v3.1 Stage 3.3): rank sets the difficulty, the
+  // Twin sets the focus. Preferred over the daily assignment when available;
+  // both degrade to null independently.
+  const nextEngagement = user
+    ? await assignEngagement(user.id, preferredTrack ?? null).catch((e) => {
+        console.warn('[debrief] engagement assign failed:', e);
+        return null;
+      })
     : null;
 
   // Walkthrough is generated CLIENT-SIDE via /api/walkthrough so a 60-95s LLM
@@ -524,94 +535,139 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
           </section>
         )}
 
-        {/* TOMORROW */}
-        <section style={{ marginTop: 80 }}>
-          <div
-            style={{
-              background: '#FFFFFF',
-              boxShadow: 'inset 0 0 0 1px #e8e4dd',
-              padding: 'clamp(24px, 4vw, 40px)',
-              maxWidth: 520,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: 'rgba(50,50,52,0.62)',
-                paddingBottom: 10,
-                borderBottom: `1px solid ${HAIR}`,
-                marginBottom: 18,
-              }}
-            >
-              {tomorrowAssignment ? 'Next case' : 'Tomorrow'}
-            </div>
-            <h3
-              style={{
-                fontFamily: 'var(--font-room-serif)',
-                fontWeight: 400,
-                fontStyle: 'italic',
-                fontSize: 'clamp(26px, 3.4vw, 34px)',
-                lineHeight: 1.05,
-                letterSpacing: '-0.02em',
-                margin: '0 0 14px',
-              }}
-            >
-              {tomorrowAssignment ? tomorrowAssignment.caseTitle : 'Pick what calls you.'}
-            </h3>
-            {tomorrowAssignment && (
+        {/* NEXT ENGAGEMENT — the Firm's pick (rank × Twin) if available, else
+            the daily assignment, else a free pick. */}
+        {(() => {
+          const eyebrowText = nextEngagement
+            ? 'Next engagement'
+            : tomorrowAssignment
+              ? 'Next case'
+              : 'Tomorrow';
+          const title = nextEngagement
+            ? nextEngagement.caseTitle
+            : tomorrowAssignment
+              ? tomorrowAssignment.caseTitle
+              : 'Pick what calls you.';
+          const meta = nextEngagement
+            ? `${nextEngagement.caseType.replace(/_/g, ' ')} · ${nextEngagement.caseDifficulty}${nextEngagement.generated ? ' · generated' : ''}`
+            : tomorrowAssignment
+              ? `${tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈ ${estimatedMinutes(tomorrowAssignment.caseDifficulty)} min`
+              : null;
+          const body = nextEngagement
+            ? nextEngagement.brief.rationale
+            : tomorrowAssignment
+              ? pickTransitionLine(tomorrowAssignment.caseType)
+              : 'Wander the library tomorrow.';
+          const focus =
+            nextEngagement && nextEngagement.brief.focusSkillNames.length > 0
+              ? nextEngagement.brief.focusSkillNames.join(' · ')
+              : null;
+          const href = nextEngagement
+            ? `/solve/${nextEngagement.caseId}`
+            : '/dashboard';
+          const cta = nextEngagement || tomorrowAssignment ? 'Begin →' : 'Set anticipation →';
+          const accented = !!nextEngagement && nextEngagement.brief.twinDriven;
+          return (
+            <section style={{ marginTop: 80 }}>
               <div
                 style={{
-                  fontSize: 10,
-                  letterSpacing: '0.16em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(50,50,52,0.62)',
-                  marginBottom: 14,
+                  background: '#FFFFFF',
+                  boxShadow: `inset 0 0 0 1px ${accented ? ACCENT_TEXT : '#e8e4dd'}`,
+                  padding: 'clamp(24px, 4vw, 40px)',
+                  maxWidth: 520,
                 }}
               >
-                {tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈ {estimatedMinutes(tomorrowAssignment.caseDifficulty)} min
+                <div
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(50,50,52,0.62)',
+                    paddingBottom: 10,
+                    borderBottom: `1px solid ${HAIR}`,
+                    marginBottom: 18,
+                  }}
+                >
+                  {eyebrowText}
+                </div>
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-room-serif)',
+                    fontWeight: 400,
+                    fontStyle: 'italic',
+                    fontSize: 'clamp(26px, 3.4vw, 34px)',
+                    lineHeight: 1.05,
+                    letterSpacing: '-0.02em',
+                    margin: '0 0 14px',
+                  }}
+                >
+                  {title}
+                </h3>
+                {meta && (
+                  <div
+                    style={{
+                      fontSize: 10,
+                      letterSpacing: '0.16em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(50,50,52,0.62)',
+                      marginBottom: 14,
+                    }}
+                  >
+                    {meta}
+                  </div>
+                )}
+                <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(50,50,52,0.72)', margin: '0 0 16px', maxWidth: '46ch' }}>
+                  {body}
+                </p>
+                {focus && (
+                  <p
+                    style={{
+                      fontSize: 10,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: ACCENT_TEXT,
+                      margin: '0 0 20px',
+                    }}
+                  >
+                    Focus: {focus}
+                  </p>
+                )}
+                <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Link
+                    href={href}
+                    style={{
+                      background: ACCENT_TEXT,
+                      color: '#FFFFFF',
+                      borderRadius: 999,
+                      padding: '11px 20px',
+                      boxShadow: 'rgba(50,50,52,0.4) 4px 4px 0 0',
+                      fontSize: 11,
+                      fontWeight: 500,
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {cta}
+                  </Link>
+                  <Link
+                    href="/cases"
+                    className="room-link"
+                    style={{
+                      fontSize: 10,
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(50,50,52,0.62)',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Or keep going now
+                  </Link>
+                </div>
               </div>
-            )}
-            <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(50,50,52,0.72)', margin: '0 0 20px', maxWidth: '44ch' }}>
-              {tomorrowAssignment
-                ? pickTransitionLine(tomorrowAssignment.caseType)
-                : 'Wander the library tomorrow.'}
-            </p>
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-              <Link
-                href="/dashboard"
-                style={{
-                  background: ACCENT_TEXT,
-                  color: '#FFFFFF',
-                  borderRadius: 999,
-                  padding: '11px 20px',
-                  boxShadow: 'rgba(50,50,52,0.4) 4px 4px 0 0',
-                  fontSize: 11,
-                  fontWeight: 500,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  textDecoration: 'none',
-                }}
-              >
-                {tomorrowAssignment ? 'Begin →' : 'Set anticipation →'}
-              </Link>
-              <Link
-                href="/cases"
-                className="room-link"
-                style={{
-                  fontSize: 10,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(50,50,52,0.62)',
-                  textDecoration: 'underline',
-                }}
-              >
-                Or keep going now
-              </Link>
-            </div>
-          </div>
-        </section>
+            </section>
+          );
+        })()}
 
         <div style={{ marginTop: 64 }}>
           <SessionFeedbackForm sessionId={sessionId} />
