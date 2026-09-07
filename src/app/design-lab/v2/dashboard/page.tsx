@@ -6,14 +6,14 @@
 
 import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
-import { Masthead, SectionEyebrow, Marquee } from '../_components/masthead';
+import { Masthead, SectionEyebrow, Marquee } from '@/components/room/masthead';
 import {
   SketchyCircle,
   SketchyConnector,
   SketchyUnderline,
   SketchyCornerTick,
   SketchyLine,
-} from '../_components/sketchy';
+} from '@/components/room/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],

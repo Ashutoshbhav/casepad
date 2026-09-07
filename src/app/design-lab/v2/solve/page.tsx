@@ -7,8 +7,8 @@
 
 import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
-import { Masthead, SectionEyebrow } from '../_components/masthead';
-import { DecisionTreeOverlay } from '../_components/decision-tree-overlay';
+import { Masthead, SectionEyebrow } from '@/components/room/masthead';
+import { DecisionTreeOverlay } from '@/components/room/decision-tree-overlay';
 import {
   SketchyCircle,
   SketchyConnector,
@@ -17,7 +17,7 @@ import {
   SketchyArrow,
   SketchyBracket,
   SketchyLine,
-} from '../_components/sketchy';
+} from '@/components/room/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],

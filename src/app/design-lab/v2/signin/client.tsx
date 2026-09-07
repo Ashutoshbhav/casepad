@@ -13,7 +13,7 @@
 
 import { useState } from 'react';
 import { PhotoCarousel, PHOTO_COUNT } from '../_components/photo-carousel';
-import { DecisionTreeOverlay } from '../_components/decision-tree-overlay';
+import { DecisionTreeOverlay } from '@/components/room/decision-tree-overlay';
 
 export function SigninCarouselClient() {
   const [activePhoto, setActivePhoto] = useState(0);

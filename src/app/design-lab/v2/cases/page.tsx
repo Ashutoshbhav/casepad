@@ -7,8 +7,8 @@
 
 import { IBM_Plex_Mono, Montserrat } from 'next/font/google';
 import { requireAdminOrFallback } from '../../_lib/admin-gate';
-import { Masthead, SectionEyebrow, Marquee } from '../_components/masthead';
-import { SketchyCornerTick, SketchyUnderline } from '../_components/sketchy';
+import { Masthead, SectionEyebrow, Marquee } from '@/components/room/masthead';
+import { SketchyCornerTick, SketchyUnderline } from '@/components/room/sketchy';
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
