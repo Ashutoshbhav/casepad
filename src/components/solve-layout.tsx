@@ -8,12 +8,13 @@ import { SubmitForScoringButton } from './submit-for-scoring-button';
 import { InterviewClock } from './interview-clock';
 import { XpTicker } from './xp-ticker';
 import { roomFontVars } from '@/components/room/fonts';
+import { A11yOptions } from '@/components/room/a11y-options';
 
 // v2 "room" palette — transcript-as-document.
 const INK = 'rgb(50,50,52)';
 const CREAM = '#F5F0E8';
 const HAIR = 'rgba(0,0,0,0.16)';
-const ACCENT = '#f54e00';
+const ACCENT = '#f54e00'; // decorative rules only (not used as text)
 
 // Solve-page main layout — header + body.
 //
@@ -58,7 +59,7 @@ function ProblemStatementBanner({
         onClick={() => setManualOpen(!open)}
         className="flex items-center gap-2 w-full text-left"
         aria-expanded={open}
-        style={{ fontFamily: 'var(--font-room-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(50,50,52,0.55)' }}
+        style={{ fontFamily: 'var(--font-room-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(50,50,52,0.62)' }}
       >
         <span>Case prompt</span>
         <span className="flex-1 truncate">{open ? '— hide' : '— tap to expand'}</span>
@@ -189,6 +190,7 @@ export function SolveLayout({
 
       {/* HEADER — transcript-as-document masthead. */}
       <header
+        data-room
         data-tour="solve-header"
         className={`${roomFontVars} px-5 sm:px-8 py-3.5 flex items-start justify-between gap-3`}
         style={{
@@ -207,7 +209,7 @@ export function SolveLayout({
               fontSize: 10,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: 'rgba(50,50,52,0.55)',
+              color: 'rgba(50,50,52,0.62)',
               marginBottom: 4,
             }}
           >
@@ -248,7 +250,7 @@ export function SolveLayout({
       {/* PROBLEM STATEMENT — expanded by default, auto-collapses after the
           first user turn, always one tap from re-expanding. */}
       {problemStatement && (
-        <div className={roomFontVars} style={{ position: 'relative', zIndex: 2 }}>
+        <div data-room className={roomFontVars} style={{ position: 'relative', zIndex: 2 }}>
           <ProblemStatementBanner
             text={problemStatement}
             autoCollapsedAfterFirstTurn={messageCount >= 2}
@@ -256,11 +258,16 @@ export function SolveLayout({
         </div>
       )}
 
+      <div data-room className={roomFontVars} style={{ position: 'relative', zIndex: 2, background: CREAM }}>
+        <A11yOptions />
+      </div>
+
       {/* BODY — transcript + issue tree. Desktop: side by side. Mobile: the
           transcript takes the room, the issue tree is a collapsible strip
           below it, OPEN by default (Ash: visible from the start on both).
           The tree is mounted ONCE and repositioned by CSS. */}
       <div
+        data-room
         className={`${roomFontVars} flex-1 flex flex-col md:flex-row min-h-0`}
         style={{ position: 'relative', zIndex: 1, color: INK }}
       >
@@ -283,7 +290,7 @@ export function SolveLayout({
               fontSize: 10,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: 'rgba(50,50,52,0.6)',
+              color: 'rgba(50,50,52,0.62)',
               background: 'rgba(255,255,255,0.35)',
             }}
           >

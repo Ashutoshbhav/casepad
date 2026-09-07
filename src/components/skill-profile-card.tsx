@@ -10,7 +10,7 @@ import { SKILL_GROUPS, type SkillGroup } from '@/lib/skills/taxonomy';
 import type { SkillProfile, SkillProfileEntry } from '@/lib/skills/apply';
 
 const INK = 'rgb(50,50,52)';
-const MUTE = 'rgba(50,50,52,0.6)';
+const MUTE = 'rgba(50,50,52,0.62)';
 const HAIR = 'rgba(0,0,0,0.18)';
 const ACCENT = '#f54e00';
 
@@ -44,7 +44,7 @@ function Row({ e }: { e: SkillProfileEntry }) {
           {e.provisional ? ' · early read' : ''}
         </span>
       </div>
-      <div style={{ marginTop: 5, height: 4, background: 'rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+      <div aria-hidden="true" style={{ marginTop: 5, height: 4, background: 'rgba(0,0,0,0.08)', overflow: 'hidden' }}>
         <div
           style={{
             width: `${pct}%`,
@@ -130,7 +130,7 @@ function GroupSummary({ profile }: { profile: SkillProfile }) {
               <span style={{ fontFamily: 'var(--font-room-mono, ui-monospace, monospace)', fontSize: 13, color: INK, width: 180, flexShrink: 0 }}>
                 {SKILL_GROUPS[g]}
               </span>
-              <div style={{ flex: 1, height: 4, background: 'rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+              <div aria-hidden="true" style={{ flex: 1, height: 4, background: 'rgba(0,0,0,0.08)', overflow: 'hidden' }}>
                 <div style={{ width: `${pct}%`, height: '100%', background: ACCENT }} />
               </div>
               <span style={{ fontFamily: 'var(--font-room-mono, ui-monospace, monospace)', fontSize: 11, color: MUTE, whiteSpace: 'nowrap' }}>

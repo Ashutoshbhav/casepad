@@ -57,12 +57,14 @@ function TypingIndicator() {
 import { FIRST_TURN_SUGGESTIONS } from '@/lib/canned-templates';
 import { turnPressure } from '@/lib/interview/clock';
 import { roomFontVars } from '@/components/room/fonts';
+import { useA11yFlag } from '@/components/room/a11y-options';
 
 // v2 "room" transcript palette.
 const R_INK = 'rgb(50,50,52)';
-const R_MUTE = 'rgba(50,50,52,0.55)';
+const R_MUTE = 'rgba(50,50,52,0.62)'; // >= 4.5:1 on the cream ground (WCAG AA)
 const R_HAIR = 'rgba(0,0,0,0.16)';
-const R_ACCENT = '#f54e00';
+const R_ACCENT = '#f54e00'; // decorative rules / left-borders only
+const R_ACCENT_TEXT = '#c23f00'; // >= 4.5:1 as text on cream, and white on it
 const R_MONO = 'var(--font-room-mono, ui-monospace, monospace)';
 const R_DISPLAY = 'var(--font-room-display, ui-sans-serif, sans-serif)';
 const rEyebrow: React.CSSProperties = {
@@ -99,12 +101,9 @@ function TurnPressureNote({ turnStartedAt }: { turnStartedAt: number }) {
     <span
       role="status"
       style={{
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--font-room-mono, ui-monospace, monospace)',
         fontSize: 11,
-        color:
-          level === 'pushing'
-            ? 'var(--color-signal-warning, #b7791f)'
-            : 'var(--color-text-muted)',
+        color: level === 'pushing' ? '#b7791f' : 'rgba(50,50,52,0.62)',
       }}
     >
       {level === 'pushing'
@@ -157,6 +156,9 @@ export function ChatPanel({
   const inputRef = useRef<HTMLInputElement>(null);
   const lastOrbRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  // WCAG opt-in: when on, keep the whole transcript readable (no scroll-away
+  // fade). Also implied by reduced-motion — the fade is a motion affordance.
+  const assistiveTranscript = useA11yFlag('transcript');
 
   // Bulletproofing (2026-06-03): abort + stall-timeout so a stalled stream can
   // never hang the UI, plus a per-logical-turn id so an explicit retry / network
@@ -473,7 +475,7 @@ export function ChatPanel({
     role === 'interviewer' && i === initialFirstInterviewerIdx && i < initial.length;
 
   return (
-    <div className={`${roomFontVars} flex flex-col h-full`} style={{ background: '#F5F0E8', color: R_INK }}>
+    <div data-room className={`${roomFontVars} flex flex-col h-full`} style={{ background: '#F5F0E8', color: R_INK }}>
       {disperse && (
         <DisperseParticles
           key={disperse.key}
@@ -484,13 +486,14 @@ export function ChatPanel({
         />
       )}
       <div
-        className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10 space-y-6"
+        className="flex-1 overflow-y-auto px-5 py-8 sm:px-10 sm:py-10 space-y-6"
         style={
-          messages.length > 4
+          messages.length > 4 && !assistiveTranscript && !reduced
             ? {
                 // Scroll-away transcript (PRD v3.1): older turns fade out at
                 // the top — you can't re-read the whole case in a real
                 // interview. Non-destructive: content stays, still scrollable.
+                // Off for the assistive-transcript opt-in and reduced-motion.
                 WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, #000 56px)',
                 maskImage: 'linear-gradient(to bottom, transparent 0, #000 56px)',
               }
@@ -499,7 +502,7 @@ export function ChatPanel({
       >
         {isEmpty && (
           <div style={{ background: '#FFFFFF', boxShadow: 'inset 0 0 0 1px #e8e4dd', padding: 20 }}>
-            <div style={{ ...rEyebrow, color: R_ACCENT, marginBottom: 8 }}>First turn — pick a move</div>
+            <div style={{ ...rEyebrow, color: R_ACCENT_TEXT, marginBottom: 8 }}>First turn — pick a move</div>
             <p style={{ fontFamily: R_MONO, fontSize: 12.5, lineHeight: 1.6, color: 'rgba(50,50,52,0.75)', margin: '0 0 14px' }}>
               Real case interviews start with you taking the lead. Tap one to drop a suggested opening in — then edit it to fit the case.
             </p>
@@ -654,7 +657,7 @@ export function ChatPanel({
             <button
               onClick={retryLastUserTurn}
               className="px-2.5 py-1"
-              style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', background: R_ACCENT, color: '#FFFFFF', border: 'none' }}
+              style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', background: R_ACCENT_TEXT, color: '#FFFFFF', border: 'none' }}
             >
               ↻ Retry that turn
             </button>
@@ -675,7 +678,7 @@ export function ChatPanel({
       {(timeUp || pasteBlocked || turnStartedAt !== null) && (
         <div className="px-5 pt-2 flex flex-col gap-1" aria-live="polite">
           {timeUp && (
-            <span role="status" style={{ fontFamily: R_MONO, fontSize: 11, color: R_ACCENT }}>
+            <span role="status" style={{ fontFamily: R_MONO, fontSize: 11, color: R_ACCENT_TEXT }}>
               Time&apos;s up. Give your recommendation, then submit for scoring below.
             </span>
           )}
@@ -729,7 +732,7 @@ export function ChatPanel({
             onClick={stopStreaming}
             aria-label="Stop the interviewer's reply"
             className="px-4 py-2"
-            style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', border: `1px solid ${R_HAIR}`, color: R_INK, background: '#FFFFFF' }}
+            style={{ minHeight: 40, fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', border: `1px solid ${R_HAIR}`, color: R_INK, background: '#FFFFFF' }}
           >
             Stop
           </button>
@@ -737,9 +740,9 @@ export function ChatPanel({
           <button
             onClick={send}
             disabled={!!timeUp}
-            aria-label="Send — messages are final, you cannot edit after sending"
+            aria-label="Send — messages are final, you cannot edit or unsend after this"
             className="px-4 py-2 disabled:opacity-40"
-            style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', background: R_ACCENT, color: '#FFFFFF', border: 'none' }}
+            style={{ minHeight: 40, fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', background: R_ACCENT_TEXT, color: '#FFFFFF', border: `1px solid ${R_ACCENT_TEXT}` }}
           >
             Send
           </button>

@@ -591,3 +591,28 @@ code, pre, kbd, samp {
     transform: none;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Room ("v2") surfaces — WCAG 2.2 sweep (2026-09-07).               */
+/* One visible focus indicator for every interactive element inside  */
+/* a [data-room] scope (the composer input clears its own outline;   */
+/* the buttons/links set border:none / text-decoration).            */
+/* ------------------------------------------------------------------ */
+[data-room] :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid #c23f00;
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+/* Small text links inside the room get a >= 24px hit target (2.5.8). */
+[data-room] a.room-link {
+  display: inline-block;
+  padding: 6px 2px;
+  min-height: 24px;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-room] * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

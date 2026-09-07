@@ -10,6 +10,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { clockState, DEFAULT_LIMIT_MIN, type ClockPhase } from '@/lib/interview/clock';
+import { useA11yFlag, EXTENDED_TIME_MULTIPLIER } from '@/components/room/a11y-options';
 
 const PHASE_COLOR: Record<ClockPhase, string> = {
   normal: 'var(--color-text-muted)',
@@ -41,6 +42,11 @@ export function InterviewClock({
     typeof startedAt === 'number' ? startedAt : new Date(startedAt).getTime();
   const valid = Number.isFinite(startedMs);
 
+  // WCAG 2.2 / PRD: an extended-time opt-in (a standard exam accommodation).
+  // Applied here so it also lengthens the window before onExpire fires.
+  const extendedTime = useA11yFlag('time');
+  const effectiveLimit = extendedTime ? limitMin * EXTENDED_TIME_MULTIPLIER : limitMin;
+
   const [now, setNow] = useState(() => Date.now());
   const firedRef = useRef(false);
   const lastPhaseRef = useRef<ClockPhase | null>(null);
@@ -53,7 +59,7 @@ export function InterviewClock({
 
   if (!valid) return null;
 
-  const s = clockState(startedMs, paused ? startedMs + limitMin * 60_000 - 1 : now, limitMin);
+  const s = clockState(startedMs, paused ? startedMs + effectiveLimit * 60_000 - 1 : now, effectiveLimit);
 
   if (!paused && s.phase === 'expired' && !firedRef.current) {
     firedRef.current = true;

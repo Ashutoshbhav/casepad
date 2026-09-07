@@ -20,7 +20,8 @@ import { SketchyUnderline, SketchyProgressBar, SketchyLine } from '@/components/
 const INK = 'rgb(50,50,52)';
 const CREAM = '#F5F0E8';
 const HAIR = 'rgba(0,0,0,0.18)';
-const ACCENT = '#f54e00';
+const ACCENT = "#f54e00"; // decorative only
+const ACCENT_TEXT = "#c23f00"; // AA as text / white-on-accent
 const DIM_FILL = ['#f54e00', '#5e6ad2', '#f65726', '#3d5a6c', '#a64b52'];
 
 // Hardcoded transition lines case_type → case_type. The today→tomorrow connection
@@ -222,6 +223,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
 
   return (
     <main
+      data-room
       className={roomFontVars}
       style={{
         minHeight: '100vh',
@@ -230,6 +232,19 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
         fontFamily: 'var(--font-room-mono)',
       }}
     >
+      <h1
+        style={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          overflow: 'hidden',
+          clip: 'rect(0 0 0 0)',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        Debrief — {caseRow?.title ?? 'session'}, scored {session.score ?? 0} out of 100
+      </h1>
+
       {/* EYEBROW ROW */}
       <div
         style={{
@@ -244,10 +259,10 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
           fontSize: 11,
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
-          color: 'rgba(50,50,52,0.6)',
+          color: 'rgba(50,50,52,0.62)',
         }}
       >
-        <Link href="/dashboard" style={{ color: 'rgba(50,50,52,0.6)', textDecoration: 'none' }}>
+        <Link href="/dashboard" className="room-link" style={{ color: 'rgba(50,50,52,0.62)', textDecoration: 'none' }}>
           ← Dashboard
         </Link>
         <span>
@@ -271,8 +286,8 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
             style={{
               margin: '24px 0 0',
               padding: 14,
-              border: `1px solid ${ACCENT}`,
-              color: ACCENT,
+              border: `1px solid ${ACCENT_TEXT}`,
+              color: ACCENT_TEXT,
               fontSize: 12,
               lineHeight: 1.6,
             }}
@@ -293,7 +308,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               fontSize: 11,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: 'rgba(50,50,52,0.55)',
+              color: 'rgba(50,50,52,0.62)',
               marginBottom: 'clamp(20px, 4vw, 36px)',
             }}
           >
@@ -330,7 +345,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               </span>
             )}
             {verdict === 'reject' && below3.length > 0 && (
-              <span style={{ fontSize: 11, color: 'rgba(50,50,52,0.6)' }}>
+              <span style={{ fontSize: 11, color: 'rgba(50,50,52,0.62)' }}>
                 below bar on: {below3.join(', ')}
               </span>
             )}
@@ -368,7 +383,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
                     fontSize: 11,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
-                    color: 'rgba(50,50,52,0.6)',
+                    color: 'rgba(50,50,52,0.62)',
                     marginBottom: 16,
                   }}
                 >
@@ -474,7 +489,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
                 fontSize: 11,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: 'rgba(50,50,52,0.6)',
+                color: 'rgba(50,50,52,0.62)',
                 paddingBottom: 10,
                 borderBottom: `1px solid ${HAIR}`,
                 marginBottom: 18,
@@ -501,7 +516,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
                   fontSize: 10,
                   letterSpacing: '0.16em',
                   textTransform: 'uppercase',
-                  color: 'rgba(50,50,52,0.55)',
+                  color: 'rgba(50,50,52,0.62)',
                   marginBottom: 14,
                 }}
               >
@@ -517,7 +532,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               <Link
                 href="/dashboard"
                 style={{
-                  background: ACCENT,
+                  background: ACCENT_TEXT,
                   color: '#FFFFFF',
                   borderRadius: 999,
                   padding: '11px 20px',
@@ -533,11 +548,12 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               </Link>
               <Link
                 href="/cases"
+                className="room-link"
                 style={{
                   fontSize: 10,
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  color: 'rgba(50,50,52,0.55)',
+                  color: 'rgba(50,50,52,0.62)',
                   textDecoration: 'underline',
                 }}
               >
@@ -565,7 +581,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
         fontSize: 11,
         letterSpacing: '0.22em',
         textTransform: 'uppercase',
-        color: 'rgba(50,50,52,0.6)',
+        color: 'rgba(50,50,52,0.62)',
       }}
     >
       {children}
