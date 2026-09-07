@@ -6,6 +6,7 @@ import { staticEvaluatorBreakdown } from './static-fallbacks';
 import type { Track } from '../tracks';
 import { logFailure } from '../observability/log-failure';
 import { traceAndApplySkills } from '../skills/apply';
+import { bumpEngagement } from '../firm/apply';
 import { validateScore, extractCandidateMathSignals, candidateTurnCount } from '../eval/score-validator';
 import { extractEstimationState, estimationSignals } from '../case-state/estimation-state';
 import { inferCaseType, type CaseType } from './walkthrough';
@@ -174,6 +175,11 @@ export async function evaluateSession(
     case_id: session.case_id ?? null,
     transcript: session.transcript,
   });
+
+  // "The Firm" (PRD v3.1 Stage 3): count this engagement, auto-promote if the
+  // criteria are met. Same fire-and-forget contract as the twin — best-effort,
+  // never throws, never blocks, runs once per session (idempotency guard above).
+  void bumpEngagement(supabase, session.user_id);
 
   return { ok: true, status: 200, body: validated };
 }
