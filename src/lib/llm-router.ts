@@ -27,19 +27,23 @@ import {
 //   2. Groq — openai/gpt-oss-120b. Free tier has a ~1K req/DAY + token/day cap
 //      that exhausts under heavy use, so the layers below are not theoretical.
 //      gpt-oss-120b emits hidden reasoning tokens -> reasoning_effort:'low' +
-//      a max_tokens floor (same as Cerebras).
-//   3. Cerebras — gpt-oss-120b, a SEPARATE free-tier quota again.
-//   4. Groq (2nd model) — qwen/qwen3.8-27b. Plain instruct model on the SAME
+//      a max_tokens floor.
+//   3. Groq (2nd model) — qwen/qwen3.8-27b. Plain instruct model on the SAME
 //      key/quota as layer 2; MODEL-diversity insurance so one model
 //      deprecation (exactly 2026-09-07) can't blank a layer. NOT
 //      provider-diversity.
-//   5. OpenRouter — emergency fallback, only if OPENROUTER_API_KEY is set.
-//      Pointed at qwen/qwen-2.5-72b-instruct: a genuinely independent account
-//      AND a different model family from the gpt-oss/Gemini above it.
+//   4. OpenRouter — only if OPENROUTER_API_KEY is set. qwen/qwen-2.5-72b-
+//      instruct: a genuinely independent account AND a different model family
+//      from the gpt-oss/Gemini above it.
+//   5. Cerebras — gpt-oss-120b. WAS a separate free-tier quota; as of
+//      2026-09-07 its key is out of quota (HTTP 402), so it's demoted to LAST
+//      and effectively inert until billing is added. Left in as a zero-cost
+//      deep fallback that reactivates on its own.
 //   AUX tier (issue-tree / cheatsheet / critic / opener / walkthrough /
-//   evaluate-session): leads with Cerebras and keeps Gemini LAST — those
-//   calls are ~3x primary volume, and burning Gemini's ~1K/day cap on them
-//   would starve the live turn it's meant to serve.
+//   evaluate-session): leads with Groq, keeps Gemini second-to-last and
+//   Cerebras last — those calls are ~3x primary volume, so they stay off
+//   Gemini's ~1K/day cap (which the live turn needs) unless everything above
+//   is down.
 //
 // 2026-09-07 INCIDENT — DEAD MODEL IDs: Groq deprecated its whole Llama line
 // (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`) and NVIDIA NIM started
@@ -210,11 +214,17 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
         name: 'cerebras',
         url: 'https://api.cerebras.ai/v1/chat/completions',
         key: process.env.CEREBRAS_API_KEY,
-        // 2026-07-24: Cerebras removed every Llama model (llama3.1-70b now
-        // 404s — verified against their /v1/models). gpt-oss-120b is their
-        // strongest live model; reasoning_effort low + a max_tokens floor
-        // keep it behaving like a plain chat model (verified: clean content,
-        // ~700ms). Still live as of 2026-09-07.
+        // 2026-07-24: Cerebras removed every Llama model; gpt-oss-120b is
+        // their strongest live model (reasoning_effort low + max_tokens floor
+        // to keep it a plain chat model).
+        // 2026-09-07: the free-tier quota on this key is EXHAUSTED — every
+        // call now returns HTTP 402 "Payment required ... Visit your billing
+        // tab" (caught by /api/admin/canary on its first prod run). Kept in
+        // the chain but DEMOTED TO LAST in both tiers (see `ordered` below) so
+        // it no longer costs a failed first-attempt on every aux call — the
+        // circuit breaker trips it after 3 x 402 and skips it thereafter. If
+        // Ash adds Cerebras billing it silently becomes a live deep fallback
+        // again; until then it's effectively inert.
         model: 'gpt-oss-120b',
         supports_json_streaming: true,
         extraBody: { reasoning_effort: 'low' },
@@ -271,10 +281,13 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
   // `local` first when present (dev only — null in prod). Then per PRD v3.1:
   // Gemini leads PRIMARY; on AUX Gemini sits LAST (aux is ~3x primary volume,
   // must not eat Gemini's ~1K/day cap).
+  // Cerebras is LAST in both tiers as of 2026-09-07 — its key is out of quota
+  // (HTTP 402). It stays in the chain as a zero-cost deep fallback that
+  // reactivates automatically if billing is added.
   const ordered =
     tier === 'aux'
-      ? [local, cerebras, groq, groqAlt, openrouter, gemini]
-      : [local, gemini, groq, cerebras, groqAlt, openrouter];
+      ? [local, groq, groqAlt, openrouter, gemini, cerebras]
+      : [local, gemini, groq, groqAlt, openrouter, cerebras];
   return ordered.filter((p): p is Provider => p !== null);
 }
 
