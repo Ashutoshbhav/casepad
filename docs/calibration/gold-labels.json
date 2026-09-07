@@ -176,5 +176,128 @@
       "structured_verbalization": 0.3,
       "incorporating_new_info": 0.3
     }
+  },
+  {
+    "sessionId": "bee4417f-9715-4d13-862a-20a7c2fcb516",
+    "_case": "InvestCo (profitability, 4t, strong)",
+    "labels": {
+      "clarifying_questions": 0.75,
+      "mece_decomposition": 0.75,
+      "tailored_structure": 0.7,
+      "driver_based_thinking": 0.7,
+      "prioritization": 0.6,
+      "arithmetic_accuracy": 0.6,
+      "structured_verbalization": 0.7,
+      "signposting": 0.6,
+      "commercial_instinct": 0.55
+    }
+  },
+  {
+    "sessionId": "dfd1142f-9d29-4509-a599-575ef980bb68",
+    "_case": "India Gate footfall (estimation, 5t)",
+    "labels": {
+      "clarifying_questions": 0.45,
+      "estimation_setup": 0.3,
+      "assumption_transparency": 0.3,
+      "structured_verbalization": 0.3
+    }
+  },
+  {
+    "sessionId": "24704e84-fee7-4147-ac43-bb472a827b08",
+    "_case": "Netflix view duration (profitability, 5t, weak)",
+    "labels": {
+      "active_listening": 0.1,
+      "hypothesis_first": 0.1,
+      "clarifying_questions": 0.3,
+      "structured_verbalization": 0.1
+    }
+  },
+  {
+    "sessionId": "c001f93a-8c60-488c-8fc8-689ee436bda1",
+    "_case": "Netflix view duration (profitability, 5t)",
+    "labels": {
+      "clarifying_questions": 0.45,
+      "assumption_transparency": 0.4,
+      "hypothesis_first": 0.2
+    }
+  },
+  {
+    "sessionId": "544057c2-b6b3-4753-9008-9d0d7e89f037",
+    "_case": "Instagram uploads (estimation, 5t, weak)",
+    "labels": {
+      "clarifying_questions": 0.35,
+      "estimation_setup": 0.1,
+      "active_listening": 0.2,
+      "assumption_transparency": 0.1
+    }
+  },
+  {
+    "sessionId": "6548b288-97a5-46ec-8c23-6790a5561c56",
+    "_case": "Netflix view duration (profitability, 7t, recovered)",
+    "labels": {
+      "mece_decomposition": 0.5,
+      "hypothesis_first": 0.35,
+      "structured_verbalization": 0.4,
+      "tailored_structure": 0.35,
+      "poise_under_pressure": 0.3,
+      "root_cause_isolation": 0.35
+    }
+  },
+  {
+    "sessionId": "60dec25b-7e03-42a9-992b-8eeee4e8b6b9",
+    "_case": "InvestCo (profitability, 9t)",
+    "labels": {
+      "clarifying_questions": 0.4,
+      "customer_orientation": 0.45,
+      "assumption_transparency": 0.15,
+      "hypothesis_first": 0.2,
+      "structured_verbalization": 0.3,
+      "mece_decomposition": 0.25
+    }
+  },
+  {
+    "sessionId": "1d750467-5705-4f41-bc49-b524b211da5d",
+    "_case": "DigiBooks (gtm, 10t)",
+    "labels": {
+      "clarifying_questions": 0.65,
+      "assumption_transparency": 0.55,
+      "estimation_setup": 0.35,
+      "creativity": 0.4,
+      "customer_orientation": 0.4,
+      "structured_verbalization": 0.4,
+      "hypothesis_first": 0.3,
+      "tailored_structure": 0.3
+    }
+  },
+  {
+    "sessionId": "a44c6a02-4508-41a3-a51c-6215448cad37",
+    "_case": "Rubber Plant (profitability, 7t, non-engaged)",
+    "labels": {
+      "active_listening": 0.05,
+      "hypothesis_first": 0.05,
+      "structured_verbalization": 0.05,
+      "mece_decomposition": 0.1
+    }
+  },
+  {
+    "sessionId": "1c91ee13-a5d7-464f-95f4-f1bfb0d064a7",
+    "_case": "Back Bay Battery acquisition (profitability, 7t, fragments)",
+    "labels": {
+      "clarifying_questions": 0.4,
+      "structured_verbalization": 0.15,
+      "signposting": 0.2
+    }
+  },
+  {
+    "sessionId": "e159f47d-5d75-4ce9-840c-7b95fb40c2a3",
+    "_case": "Netflix view duration (profitability, 11t, struggling)",
+    "labels": {
+      "active_listening": 0.1,
+      "clarifying_questions": 0.25,
+      "hypothesis_first": 0.1,
+      "assumption_transparency": 0.1,
+      "structured_verbalization": 0.1,
+      "poise_under_pressure": 0.2
+    }
   }
 ]
