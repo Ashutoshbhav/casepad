@@ -8,6 +8,7 @@ import { AshMark } from './ash-mark';
 import { useAsteriskScene, useAsteriskPaused } from '@/hooks/use-asterisk-scene';
 import { EASE, DURATION, INSTANT } from '@/lib/motion-tokens';
 import { SubmitForScoringButton } from './submit-for-scoring-button';
+import { InterviewClock } from './interview-clock';
 import { XpTicker } from './xp-ticker';
 
 // Solve-page main layout — header + body.
@@ -114,6 +115,7 @@ export function SolveLayout({
   caseDifficulty,
   caseSource,
   problemStatement,
+  startedAt,
   endSessionAction,
   initialMessages,
   initialCs,
@@ -124,12 +126,16 @@ export function SolveLayout({
   caseDifficulty: string;
   caseSource: string | null;
   problemStatement?: string;
+  startedAt?: string | null;
   endSessionAction: () => Promise<void> | void;
   initialMessages: any;
   initialCs: any;
   ended?: boolean;
 }) {
   const reduced = useReducedMotion();
+  // Text-realism (PRD v3.1): a visible 25-min clock. At 0:00 we soft-lock the
+  // composer and push the submit CTA — we never silently submit for the user.
+  const [timeUp, setTimeUp] = useState(false);
   const [mobileTab, setMobileTab] = useState<Tab>('chat');
   const [treeRefresh, setTreeRefresh] = useState(0);
   const [is3DEligible, setIs3DEligible] = useState(false);
@@ -196,6 +202,7 @@ export function SolveLayout({
           onMessagesChange={setMessageCount}
           onMessagesArrayChange={setMessagesArr}
           endSessionAction={endSessionAction}
+          timeUp={timeUp}
           ended={ended}
         />
       );
@@ -283,6 +290,13 @@ export function SolveLayout({
               persistence. Only the LLM-graded /api/evaluate score is the
               source of truth at submit. This is the gamified "your turn
               registered" feedback to fix cohort signal "AI feels boring". */}
+          {startedAt && (
+            <InterviewClock
+              startedAt={startedAt}
+              onExpire={() => setTimeUp(true)}
+              paused={!!ended}
+            />
+          )}
           <XpTicker messages={messagesArr} />
           <SubmitForScoringButton
             sessionId={sessionId}
@@ -378,6 +392,7 @@ export function SolveLayout({
             onMessagesChange={setMessageCount}
             onMessagesArrayChange={setMessagesArr}
             endSessionAction={endSessionAction}
+            timeUp={timeUp}
             ended={ended}
           />
         </div>

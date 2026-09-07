@@ -88,6 +88,7 @@ export default async function SolvePage({
         caseDifficulty={caseRow.difficulty}
         caseSource={(caseRow as any).source ?? null}
         problemStatement={caseRow.problem_statement || ''}
+        startedAt={(session as any).started_at ?? null}
         endSessionAction={endSession.bind(null, sessionId)}
         initialMessages={initialMessages as any}
         initialCs={initialCs as any}

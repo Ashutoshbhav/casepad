@@ -55,6 +55,7 @@ function TypingIndicator() {
 // detects verbatim copy-pastes of these templates and nudges the candidate
 // for original thinking; both ends MUST read from the same source.
 import { FIRST_TURN_SUGGESTIONS } from '@/lib/canned-templates';
+import { turnPressure } from '@/lib/interview/clock';
 
 // §7.1 Trust UX — interviewer turns may carry optional `citations` from the
 // playbook RAG retriever. Field is OPTIONAL and additive: legacy transcripts
@@ -66,6 +67,37 @@ type Msg = {
   citations?: Citation[];
 };
 
+// Text-realism: the "they're waiting" note under the composer. Escalates at
+// 45s / 90s of the candidate sitting on their turn. Pressure only — it never
+// sends or blocks. Owns its own 1s tick so ChatPanel doesn't re-render every
+// second while it's the candidate's turn.
+function TurnPressureNote({ turnStartedAt }: { turnStartedAt: number }) {
+  const [, force] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => force((n) => n + 1), 1000);
+    return () => clearInterval(id);
+  }, [turnStartedAt]);
+  const level = turnPressure(turnStartedAt, Date.now());
+  if (level === 'none') return null;
+  return (
+    <span
+      role="status"
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 11,
+        color:
+          level === 'pushing'
+            ? 'var(--color-signal-warning, #b7791f)'
+            : 'var(--color-text-muted)',
+      }}
+    >
+      {level === 'pushing'
+        ? "The interviewer is waiting — send what you have and keep moving."
+        : 'The interviewer is waiting on you.'}
+    </span>
+  );
+}
+
 export function ChatPanel({
   sessionId,
   initial,
@@ -75,6 +107,7 @@ export function ChatPanel({
   onStreamingChange,
   endSessionAction,
   ended,
+  timeUp,
 }: {
   sessionId: string;
   initial: Msg[];
@@ -92,9 +125,17 @@ export function ChatPanel({
   // existing endSession server action without going up to /solve.
   endSessionAction?: () => Promise<void> | void;
   ended?: boolean;
+  // Text-realism (PRD v3.1): the 25-min clock hit 0:00. Soft-lock the
+  // composer and push the submit CTA — never auto-submit for the user.
+  timeUp?: boolean;
 }) {
   const [messages, setMessages] = useState<Msg[]>(initial);
   const [input, setInput] = useState('');
+  // Text-realism: no pasting a pre-written answer into a live interview.
+  const [pasteBlocked, setPasteBlocked] = useState(false);
+  // When it becomes the candidate's turn, start a soft "they're waiting"
+  // timer — the text analogue of a spoken-ramble interrupt. Pressure only.
+  const [turnStartedAt, setTurnStartedAt] = useState<number | null>(null);
   const [streaming, setStreaming] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -142,6 +183,18 @@ export function ChatPanel({
       block: 'end',
     });
   }, [messages, streaming]);
+
+  // Turn-pressure clock: runs only while it's the candidate's turn (an
+  // interviewer message is last, nothing streaming, session live). Reset the
+  // moment they send or the interviewer speaks again.
+  useEffect(() => {
+    const last = messages[messages.length - 1];
+    if (!streaming && last?.role === 'interviewer' && !ended && !timeUp) {
+      setTurnStartedAt((t) => t ?? Date.now());
+    } else {
+      setTurnStartedAt(null);
+    }
+  }, [messages, streaming, ended, timeUp]);
 
   // Notify parent of message count for progress-bar mapping.
   useEffect(() => { onMessagesChange?.(messages.length); }, [messages.length, onMessagesChange]);
@@ -414,7 +467,20 @@ export function ChatPanel({
           toY={disperse.toY}
         />
       )}
-      <div className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10 space-y-6">
+      <div
+        className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10 space-y-6"
+        style={
+          messages.length > 4
+            ? {
+                // Scroll-away transcript (PRD v3.1): older turns fade out at
+                // the top — you can't re-read the whole case in a real
+                // interview. Non-destructive: content stays, still scrollable.
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, #000 56px)',
+                maskImage: 'linear-gradient(to bottom, transparent 0, #000 56px)',
+              }
+            : undefined
+        }
+      >
         {isEmpty && (
           <div
             className="rounded-md p-4"
@@ -632,13 +698,38 @@ export function ChatPanel({
           messageCount={messages.length}
         />
       )}
+      {(timeUp || pasteBlocked || turnStartedAt !== null) && (
+        <div className="px-4 pt-2 flex flex-col gap-1">
+          {timeUp && (
+            <span
+              role="status"
+              style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-signal-danger, #c0392b)' }}
+            >
+              Time&apos;s up. Give your recommendation, then submit for scoring below.
+            </span>
+          )}
+          {pasteBlocked && !timeUp && (
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-muted)' }}>
+              Paste is off — type your answer, like a real interview.
+            </span>
+          )}
+          {!timeUp && turnStartedAt !== null && (
+            <TurnPressureNote turnStartedAt={turnStartedAt} />
+          )}
+        </div>
+      )}
       <div className="px-4 pb-4 pt-2 flex gap-2">
         <input
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && send()}
-          placeholder="Ask the interviewer…"
+          onPaste={(e) => {
+            e.preventDefault();
+            setPasteBlocked(true);
+            window.setTimeout(() => setPasteBlocked(false), 4000);
+          }}
+          placeholder={timeUp ? 'Time is up — submit for scoring' : 'Ask the interviewer…'}
           className="flex-1 rounded-md px-3 py-2 text-sm focus:outline-none"
           style={{
             background: 'var(--color-bg-sunken)',
@@ -647,11 +738,11 @@ export function ChatPanel({
             borderColor: 'var(--color-border)',
             color: 'var(--color-text-primary)',
           }}
-          disabled={streaming}
+          disabled={streaming || !!timeUp}
         />
         <MicButton
           sessionId={sessionId}
-          disabled={streaming}
+          disabled={streaming || !!timeUp}
           onTranscript={(text) => {
             // Don't auto-send. Drop into the input so the user can fix any
             // misheard term (Whisper Indian-English WER is non-zero — "DCF"
@@ -673,6 +764,7 @@ export function ChatPanel({
         ) : (
           <button
             onClick={send}
+            disabled={!!timeUp}
             className="ghost-btn ghost-btn--accent px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
           >
             Send
