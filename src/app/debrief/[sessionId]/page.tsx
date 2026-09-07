@@ -11,6 +11,8 @@ import { IdealWalkthroughLoader } from '@/components/ideal-walkthrough-loader';
 import { WALKTHROUGH_GENERATOR_VERSION } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
+import { getSkillProfile } from '@/lib/skills/apply';
+import { SkillProfileCard } from '@/components/skill-profile-card';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
 import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
@@ -190,6 +192,18 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   }
   const walkthroughFallback = (cachedWalkthrough as any)?.fallback_used === true;
 
+  // The Twin (PRD v3.1 Stage 1). Best-effort read; degrades to null (card
+  // renders nothing). skill_state populates as the knowledge-tracing pass runs
+  // after each session, so early on this is empty and the card says so.
+  let skillProfile = null;
+  if (user?.id) {
+    try {
+      skillProfile = await getSkillProfile(supabase, user.id);
+    } catch (e) {
+      console.warn('[debrief] skill profile fetch failed:', e);
+    }
+  }
+
   return (
     <main
       className="min-h-screen"
@@ -325,6 +339,8 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
           </div>
         </div>
       </section>
+
+      <SkillProfileCard profile={skillProfile} />
 
       {/* The stale casebook ideal_structure box (often mislabeled, e.g. "Porter's
           5 Forces" on a profit case) is gone — the walkthrough's correct,
