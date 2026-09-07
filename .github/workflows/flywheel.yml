@@ -1,0 +1,193 @@
+name: flywheel
+
+# PRD v3.1 Stage 4 — the self-improvement flywheel's scheduled half.
+#
+# Once a month it runs the two review tools and FILES what they find for a
+# human. Nothing here changes the corpus, a difficulty label, or a prompt —
+# both tools are review-only by design, and "never auto-deploy prompts" holds.
+#
+#   * case-drift.ts  (always, cheap, deterministic) — where a case's empirical
+#     Elo band has diverged from its corpus easy/medium/hard label. Opens a
+#     GitHub issue when any case with enough plays disagrees.
+#
+#   * optimize-tracer-prompt.ts  (opt-in via workflow_dispatch) — GEPA-style
+#     proposal for sharper per-skill tracer wording. Costs LLM tokens and
+#     needs the router secrets in CI, and the score is still single-run noisy
+#     (see docs/calibration/RESULTS-2026-09-07.md — it needs the 2-3-run
+#     averaging fix before its proposals are trustworthy). So it only runs
+#     when a human asks for it, and its output is an artifact + issue, never
+#     a commit.
+#
+# Repo secrets needed for the drift job:
+#   NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+# Extra secrets for the opt-in optimizer job:
+#   GROQ_API_KEY, GEMINI_API_KEY, OPENROUTER_API_KEY  (+ optional model overrides)
+
+on:
+  schedule:
+    - cron: '0 6 1 * *' # 06:00 UTC on the 1st of every month
+  workflow_dispatch:
+    inputs:
+      min_plays:
+        description: 'Minimum plays before a case counts as calibrated'
+        required: false
+        default: '5'
+      run_optimizer:
+        description: 'Also run the GEPA tracer-prompt optimizer (costs tokens)'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: flywheel
+  cancel-in-progress: false
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run case-drift
+        id: drift
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          MIN_PLAYS: ${{ github.event.inputs.min_plays || '5' }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NEXT_PUBLIC_SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "::error::Supabase secrets not set (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)"
+            exit 1
+          fi
+          mkdir -p flywheel-out
+          report="flywheel-out/case-drift-$(date -u +%Y-%m-%d).txt"
+          npx tsx scripts/qa/case-drift.ts --min-plays "$MIN_PLAYS" | tee "$report"
+          echo "report=$report" >> "$GITHUB_OUTPUT"
+          # "N/M cases where the empirical band disagrees with the label."
+          n="$(grep -oE '^[0-9]+/[0-9]+ cases where' "$report" | grep -oE '^[0-9]+' || echo 0)"
+          echo "disagree=$n" >> "$GITHUB_OUTPUT"
+          {
+            echo "## case-drift ($(date -u +%Y-%m-%d))"
+            echo ""
+            echo '```'
+            cat "$report"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload drift report
+        uses: actions/upload-artifact@v4
+        with:
+          name: flywheel-case-drift
+          path: flywheel-out/
+          retention-days: 90
+
+      - name: File an issue when a label disagrees
+        if: steps.drift.outputs.disagree != '0' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          N: ${{ steps.drift.outputs.disagree }}
+          REPORT: ${{ steps.drift.outputs.report }}
+        run: |
+          set -euo pipefail
+          title="Flywheel $(date -u +%Y-%m-%d): ${N} case(s) drifted from label"
+          body="$(mktemp)"
+          {
+            echo "Monthly Stage-4 flywheel run. **Review only** — no labels or prompts are changed automatically."
+            echo ""
+            echo "\`${N}\` case(s) with enough plays now sit in a different difficulty band than their corpus label."
+            echo "A \`*\` marks each disagreement below. Changing a label is a human content call:"
+            echo "edit the case in the corpus if you agree, or leave it if the sample is still thin."
+            echo ""
+            echo '```'
+            cat "$REPORT"
+            echo '```'
+            echo ""
+            echo "_Full report in the run's \`flywheel-case-drift\` artifact._"
+          } > "$body"
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "$title" --body-file "$body" \
+            --label flywheel || {
+              echo "::warning::could not create issue (is the 'flywheel' label present?); printing body"
+              cat "$body"
+            }
+
+  optimizer:
+    needs: drift
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_optimizer == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run optimize-tracer-prompt
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ secrets.OPENROUTER_MODEL }}
+        run: |
+          set -euo pipefail
+          npx tsx scripts/qa/optimize-tracer-prompt.ts \
+            --gold docs/calibration/gold-labels.json --n 3 | tee optimizer.log
+          {
+            echo "## tracer-prompt optimizer ($(date -u +%Y-%m-%d))"
+            echo ""
+            echo '```'
+            tail -n 40 optimizer.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload proposals
+        uses: actions/upload-artifact@v4
+        with:
+          name: flywheel-tracer-proposals
+          path: |
+            docs/calibration/proposals/
+            optimizer.log
+          retention-days: 90
+
+      - name: File a proposal issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          body="$(mktemp)"
+          {
+            echo "GEPA tracer-prompt optimizer produced proposal(s). **Do not apply blindly.**"
+            echo ""
+            echo "The score is single-run noisy on the current gold set. Before promoting any"
+            echo "proposal: re-run \`calibrate-tracer.ts\` independently and require the gain to"
+            echo "survive that confirmation run (see docs/calibration/RESULTS-2026-09-07.md)."
+            echo ""
+            echo '```'
+            tail -n 40 optimizer.log
+            echo '```'
+            echo ""
+            echo "_Proposal files in the \`flywheel-tracer-proposals\` artifact._"
+          } > "$body"
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Flywheel $(date -u +%Y-%m-%d): tracer-prompt proposal for review" \
+            --body-file "$body" --label flywheel || cat "$body"
