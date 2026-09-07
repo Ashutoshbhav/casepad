@@ -6,7 +6,14 @@
 import { NextRequest } from 'next/server';
 import { streamChat } from '@/lib/llm-router';
 import { buildInterviewerMessages, type BuildInterviewerOpts } from '@/lib/groq/interviewer';
-import { inferStage, stageDirective } from '@/lib/interview/stage-machine';
+import {
+  inferStage,
+  stageDirective,
+  inferInterviewFormat,
+  formatDirective,
+  assessStuck,
+  hintDirective,
+} from '@/lib/interview/stage-machine';
 import {
   buildBehavioralInterviewerMessages,
   type BuildBehavioralInterviewerOpts,
@@ -186,7 +193,7 @@ export async function POST(req: NextRequest) {
   if (!isCaseless) {
     const { data: caseRowData, error: cErr } = await supabase
       .from('cases')
-      .select('title, problem_statement, interviewer_notes, case_type')
+      .select('title, problem_statement, interviewer_notes, case_type, source')
       .eq('id', session.case_id)
       .single();
     if (cErr || !caseRowData) return new Response('case not found', { status: 404 });
@@ -371,11 +378,57 @@ export async function POST(req: NextRequest) {
         rawCaseType && rawCaseType !== 'unknown'
           ? rawCaseType
           : inferCaseType(caseRow.title, (caseRow as any).problem_statement || '');
-      const ctx = { track, caseType, isEstimation: caseType === 'estimation' };
+
+      // Wall-clock elapsed since the interview started, from the first stored
+      // turn's timestamp (every turn is stamped on persist — see newUserTurn
+      // below and start-session.ts). Gates the drive-to-close on TIME not turn
+      // count: a voice interview racks up turns ~3x faster than text, so the
+      // turn-only close was demanding a recommendation ~5 min in. Fail-open:
+      // any parse failure leaves elapsedMin undefined and the stage machine
+      // falls back to its turn-count rule.
+      const CASE_LIMIT_MIN = 25;
+      let elapsedMin: number | undefined;
+      try {
+        const firstTs = (transcriptIn as { timestamp?: string }[]).find(
+          (t) => t && typeof t.timestamp === 'string' && t.timestamp
+        )?.timestamp;
+        if (firstTs) {
+          const ms = Date.now() - Date.parse(firstTs);
+          if (isFinite(ms) && ms >= 0) elapsedMin = ms / 60_000;
+        }
+      } catch {
+        elapsedMin = undefined;
+      }
+
+      // Interviewer-led (McKinsey-family source) vs candidate-led (everything
+      // else). Candidate-led = the candidate drives, interviewer is reactive —
+      // the "let me lead and structure" feel that was missing. Fail-safe to
+      // candidate_led.
+      const format = inferInterviewFormat((caseRow as any).source);
+
+      const ctx = {
+        track,
+        caseType,
+        isEstimation: caseType === 'estimation',
+        elapsedMin,
+        limitMin: CASE_LIMIT_MIN,
+        format,
+      };
       const { stage } = inferStage(withUser as any, ctx);
+
+      // Hint ladder: how many recent candidate turns show no forward progress →
+      // rung 1 (nudge) → 2 (directional) → 3 (structural, interviewer-led only).
+      const { level: hintLevel } = assessStuck(withUser as any);
+
       interviewerOpts = {
         persona: personaForTrack(track),
         stageDirective: stageDirective(stage, ctx),
+        formatBlock: formatDirective(format),
+        hintDirective: hintDirective(hintLevel, format),
+        elapsedNote:
+          typeof elapsedMin === 'number'
+            ? `You are ~${Math.round(elapsedMin)} minute${Math.round(elapsedMin) === 1 ? '' : 's'} into a ~${CASE_LIMIT_MIN}-minute case. Pace to this clock, not to how many turns have passed. Only force a synthesis/recommendation once the case is genuinely in its final stretch.`
+            : undefined,
       };
       const estState = extractEstimationState(withUser as any, {
         caseType,

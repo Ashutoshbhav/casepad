@@ -1,5 +1,14 @@
 # CasePad — Session State Snapshot
 
+> ## 🛠️ INTERVIEW REALISM PASS — 2026-09-08 (not committed)
+> Ash tested the live product and reported the voice interview "hurries the user, won't let them ask clarifying questions or structure, demands the final answer 5 minutes in." Root cause: the stage machine (`src/lib/interview/stage-machine.ts`) drove phase from transcript content + candidate *turn count* with **no clock** — `CLOSE_TURN=9` is ~20 min in text but ~5 min in voice. Fixed, plus three structural gaps from `docs/research/interview-mechanics.md` (a reference Ash supplied):
+> - **Pacing + clock.** `StageContext` gained `elapsedMin`/`limitMin`; `route.ts` computes elapsed from the first stored turn's timestamp (fail-open). Forced close now fires at `elapsedMin ≥ limitMin*0.8` (analysis is ~65% of a real case; synthesis the last ~5%) with an 18-turn runaway backstop. `scoping` holds while the candidate is still clarifying (`CLARIFY_RE`) until ~15% of the case elapsed. `interviewer.ts` pacing prose rewritten to the real timing skeleton + a `== CLOCK ==` note ("~7 minutes into a ~25-minute case").
+> - **Candidate-led vs interviewer-led** (`InterviewFormat`, `inferInterviewFormat(source)`): McKinsey-family source → interviewer-led; everything else + unknown → **candidate-led** (majority; the "let the candidate drive" feel that was missing). `formatDirective()` injects a `== FORMAT ==` block; candidate-led gets a longer scoping leash + one sharpening question instead of rescue-by-redirect.
+> - **Brainstorm phase**: new `brainstorm` Stage between quant and synthesis — one creativity beat ("what else could explain this?") mid-late, auto-falls back to analysis once the interviewer runs it (`BRAINSTORM_ASKED_RE`).
+> - **Hint ladder** (`assessStuck` + `hintDirective`): counts consecutive no-progress candidate turns → rung 1 nudge / 2 directional / 3 structural. Candidate-led caps at rung 2; interviewer-led reaches rung 3 (last resort so the case completes). Rendered last in the prompt.
+> - **Voice room reskin** — `live-interview-session.tsx` moved off the animated 3D blob + anime BlobFace onto the v2 room aesthetic (cream, IBM Plex Mono transcript-as-document, AshMark orb, #f54e00 accent, sticky masthead, collapsible prompt, issue-tree side column). All voice machinery kept (TTS ladder, LiveMicInput barge-in, phase machine, STT fallback, caption, stall abort). Deleted zero-ref `live-interview-scene.tsx` + `blob-face.tsx`.
+> tsc + 394 unit tests + `next build` all green. Nothing committed — batch is on the `main` working tree.
+
 > ## ✅ NEW ROUTE (PRD v3.1 STAGES 1–4) COMPLETE — FINAL PUNCH LIST — 2026-09-07 (session 2)
 > Stages 0–4 + the design pass + Firm 3.3 + the flywheel scheduler are all shipped, on `main`, deployed, prod green. Latest: `e984fbf`. What's genuinely left — all optional or Ash-owned, nothing half-built:
 >

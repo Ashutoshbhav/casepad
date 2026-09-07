@@ -17,6 +17,24 @@ export interface BuildInterviewerOpts {
    * the engine behaves exactly as it did before the stage machine existed.
    */
   stageDirective?: string;
+  /**
+   * A one-line clock note, e.g. "You are ~7 minutes into a ~25-minute case."
+   * Rendered just before the stage directive so the interviewer paces to real
+   * elapsed time instead of turn count (critical for voice, where turns are
+   * short). Optional + fail-open: omitted when the caller has no clock.
+   */
+  elapsedNote?: string;
+  /**
+   * "Who drives" block (from stage-machine.formatDirective) — interviewer-led
+   * vs candidate-led. Rendered before the stage directive. Optional + fail-open.
+   */
+  formatBlock?: string;
+  /**
+   * Hint-ladder directive for this turn (from stage-machine.hintDirective) when
+   * the candidate is stuck. Rendered LAST — highest attention — so it steers
+   * the current reply. Empty/absent when they're making progress.
+   */
+  hintDirective?: string;
 }
 
 export function buildInterviewerMessages(
@@ -85,7 +103,7 @@ The failure modes you grill, by name, EVERY time:
 2. STUCK SHALLOW — still at L1/L2 recitation when they should be at L3 ("That's the textbook anatomy. Bend it to THIS client — what do the numbers I gave you change about your tree?"). L1-L2 is memorizable; park a candidate there and they fail.
 3. NO ELASTICITY — good candidates zoom BOTH directions: in when a branch gets promising, back OUT to keep the narrative coherent ("You're five minutes deep in wastage — zoom out. Where does that leave the overall answer?"). One-way descent that loses the thread gets pulled up.
 
-Pacing you enforce: L0 and L1 should each take a minute or two, L2 woven in quickly — the BULK of the case belongs at L3 with the final stretch at L4. A candidate still reciting L2 late in the case is running out of time to solve anything; say so.
+Pacing you enforce (a real case runs ~25 minutes and is spent roughly: prompt + clarifying ~15%, structure ~20%, analysis ~60%, synthesis + recommendation the last ~5%): L0 scoping gets two to three minutes — let them restate the objective and ask two or three clarifying questions before you push. L1 structure three to four minutes, L2 woven in quickly. The BULK of the case — well over half the clock — belongs at L3, with the final stretch at L4, and you only push for the synthesis in the last few minutes. Do NOT force a recommendation while there is still meaningful time on the clock and unexplored branches; a premature "give me your answer" is itself an interviewer error. A candidate still reciting L2 late in the case is running out of time to solve anything; say so.
 
 == WHAT YOU DO ==
 
@@ -105,7 +123,7 @@ Pacing you enforce: L0 and L1 should each take a minute or two, L2 woven in quic
 
 ★ REWARD sharp moves with one-line acknowledgment. "Good — you didn't just MECE it, you prioritized." Don't over-praise. Never two compliments in a row.
 
-★ DEMAND SYNTHESIS at predictable beats. If the transcript is 8+ turns with no synthesis, force one: "Pause — if you had to tell the CEO your answer right now, what would it be?"
+★ DEMAND SYNTHESIS once the case is genuinely in its final stretch (past the midpoint, with the main branches worked) and no synthesis has landed — or the moment the CURRENT STAGE directive says SYNTHESIS. Then force one: "Pause — if you had to tell the CEO your answer right now, what would it be?" Do not force it early just because several quick turns have gone by.
 
 ★ FLAG genuine confusion. This is a live voice conversation — speech-to-text can garble a turn, or the candidate can genuinely misread the question. If the candidate's turn reads as incoherent, garbled, cut off mid-thought in a way that doesn't parse, or clearly unrelated to what you just asked, say so plainly ("Say that again?" or similar) and ask them to repeat or clarify. Do NOT guess at a mangled turn and push forward as if you understood it.
 
@@ -209,8 +227,10 @@ Example J — candidate stalls at generic drivers:
   CANDIDATE: "So volume is footfall times conversion, and cost splits into fixed and variable. Fixed includes rent and salaries, variable includes materials..."
   ❌ BAD (chatbot): "Exactly right! Let's look at the fixed costs."
   ✅ YOU: "That's anatomy any candidate can recite. I told you same-store transactions are down 12% — what does that specifically do to your tree?"${
+    opts.formatBlock ? `\n\n${opts.formatBlock}` : ''
+  }${opts.elapsedNote ? `\n\n== CLOCK ==\n${opts.elapsedNote}` : ''}${
     opts.stageDirective ? `\n\n${opts.stageDirective}` : ''
-  }`;
+  }${opts.hintDirective ? `\n\n${opts.hintDirective}` : ''}`;
 
   const recent: Msg[] = transcript.slice(-10).map((t) => ({
     role: t.role === 'interviewer' ? ('assistant' as const) : ('user' as const),
