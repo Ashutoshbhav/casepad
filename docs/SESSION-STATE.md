@@ -1,5 +1,10 @@
 # CasePad — Session State Snapshot
 
+> ## 🏛️ PRD v3.1 STAGE 3 — "THE FIRM" v0 — 2026-09-07 (session 2, cont.)
+> Persistent consulting career-sim wrapper. **3.1 backend** (`8ede890`): `src/lib/firm/{levels,progression,apply}.ts` — 6-rung ladder (Analyst→Partner), per-level promotion criteria (engagements at level + rolling avg score + micro-skills at Solid+/Strong bands), `computeFirmState()` (pure, 7 tests). `0023_firm_profile.sql` applied via `supabase db push` (history reconciled — migrations work the normal way now). `bumpEngagement()` fires fire-and-forget from `evaluate-session.ts` alongside the twin: +1 engagement, **auto-promote when eligible**, fortress-safe. **3.2 UI** (`03ebaca`): `/firm` career page (v2 room aesthetic — rank as display title, promotion-review card with per-criterion hand-drawn progress bars, the full ladder with "you are here") + a compact firm strip on `/debrief` + "The Firm" in the homepage nav. tsc + 351 tests + build green.
+> **Not done (3.3, optional):** firm-aware engagement assignment — harder / weakness-targeted engagements as you rank up (ties Stage 3 → Stage 2 generator + Stage 1 twin). v0 loop works without it.
+> **Stage 4 — self-improvement flywheel (GEPA prompt optimisation + IRT/Elo difficulty calibration): NOT STARTED.** Last one.
+
 > ## 🎨 DESIGN PASS (before Stage 3) — foundation + debrief done — 2026-09-07 (session 2, cont.)
 > Ash: "do the design pass before stage 3" + "issue tree visible from the start, mobile + desktop". Direction = **promote the `/design-lab/v2` aesthetic to production** (it's what the PRD's "restrained room + expressive debrief" describes): transcript-as-document, cream ground / ink / IBM Plex Mono + Montserrat display + Fraunces-300 numerals, rough.js "sketchy" hand-drawn instrumentation (fixed seed, aria-hidden), one warm accent `#f54e00`.
 > - **A — foundation** (`d5e4e16`): moved the v2 primitives (`sketchy.tsx`, `decision-tree-overlay.tsx`, `masthead.tsx`) from `src/app/design-lab/v2/_components/` to **`src/components/room/`**; repointed the 6 design-lab pages. `src/components/room/fonts.ts` = shared Plex Mono / Montserrat / Fraunces (`roomFontVars`).
