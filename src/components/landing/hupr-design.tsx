@@ -463,7 +463,7 @@ function Header({
           <div className="w-7/12 lg:w-9/12 lg:flex items-center">
             <div className="w-10/12 xl:w-6/12 lg:flex items-center lg:gap-3">
               <a
-                href="/design-lab/hupr"
+                href="/"
                 className="hupr-anim-btn p-5"
                 style={{
                   fontFamily: 'var(--font-hupr-display)',
@@ -617,12 +617,6 @@ function Header({
             rel="noopener noreferrer"
           >
             LinkedIn
-          </a>
-          <a
-            href="/design-lab"
-            style={{ color: '#323234', textDecoration: 'none' }}
-          >
-            ↩ Design Lab
           </a>
         </div>
       </aside>
@@ -1411,12 +1405,6 @@ function Footer() {
           }}
         >
           <span>© CasePad — built 2026.</span>
-          <a
-            href="/design-lab"
-            style={{ color: '#323234', textDecoration: 'underline' }}
-          >
-            ↩ Design Lab
-          </a>
         </div>
       </div>
     </footer>
