@@ -1,0 +1,12 @@
+[
+  {
+    "_comment": "Template. Replace with real entries. One object per graded session. `labels` = human quality score 0..1 for each micro-skill the case actually exercised (skill ids from src/lib/skills/taxonomy.ts). Score against docs/superpowers/specs/2026-09-07-skill-tracer-rubric.md. Delete this comment object.",
+    "sessionId": "00000000-0000-0000-0000-000000000000",
+    "labels": {
+      "mece_decomposition": 0.75,
+      "hypothesis_first": 0.4,
+      "sanity_checking": 0.2,
+      "recommendation_clarity": 0.8
+    }
+  }
+]
