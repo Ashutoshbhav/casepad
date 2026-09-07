@@ -56,6 +56,22 @@ function TypingIndicator() {
 // for original thinking; both ends MUST read from the same source.
 import { FIRST_TURN_SUGGESTIONS } from '@/lib/canned-templates';
 import { turnPressure } from '@/lib/interview/clock';
+import { roomFontVars } from '@/components/room/fonts';
+
+// v2 "room" transcript palette.
+const R_INK = 'rgb(50,50,52)';
+const R_MUTE = 'rgba(50,50,52,0.55)';
+const R_HAIR = 'rgba(0,0,0,0.16)';
+const R_ACCENT = '#f54e00';
+const R_MONO = 'var(--font-room-mono, ui-monospace, monospace)';
+const R_DISPLAY = 'var(--font-room-display, ui-sans-serif, sans-serif)';
+const rEyebrow: React.CSSProperties = {
+  fontFamily: R_MONO,
+  fontSize: 10,
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  color: R_MUTE,
+};
 
 // §7.1 Trust UX — interviewer turns may carry optional `citations` from the
 // playbook RAG retriever. Field is OPTIONAL and additive: legacy transcripts
@@ -457,7 +473,7 @@ export function ChatPanel({
     role === 'interviewer' && i === initialFirstInterviewerIdx && i < initial.length;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={`${roomFontVars} flex flex-col h-full`} style={{ background: '#F5F0E8', color: R_INK }}>
       {disperse && (
         <DisperseParticles
           key={disperse.key}
@@ -482,69 +498,39 @@ export function ChatPanel({
         }
       >
         {isEmpty && (
-          <div
-            className="rounded-md p-4"
-            style={{
-              background: 'var(--color-bg-elevated)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'var(--color-border)',
-            }}
-          >
-            <div
-              className="font-mono text-[11px] uppercase tracking-[0.16em] mb-2"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              First turn — pick a move
-            </div>
-            <p
-              className="text-xs leading-relaxed mb-3"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              Real case interviews start with you taking the lead. Click any of these to drop a suggested opening into the chat — then edit it to fit the case before sending.
+          <div style={{ background: '#FFFFFF', boxShadow: 'inset 0 0 0 1px #e8e4dd', padding: 20 }}>
+            <div style={{ ...rEyebrow, color: R_ACCENT, marginBottom: 8 }}>First turn — pick a move</div>
+            <p style={{ fontFamily: R_MONO, fontSize: 12.5, lineHeight: 1.6, color: 'rgba(50,50,52,0.75)', margin: '0 0 14px' }}>
+              Real case interviews start with you taking the lead. Tap one to drop a suggested opening in — then edit it to fit the case.
             </p>
             <div className="flex flex-col gap-1.5">
               {FIRST_TURN_SUGGESTIONS.map((s, i) => (
                 <button
                   key={i}
                   onClick={() => setInput(s.text)}
-                  className="text-xs text-left px-3 py-2 rounded-md transition-colors"
-                  style={{
-                    background: 'var(--color-bg-sunken)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-primary)',
-                  }}
+                  className="text-left px-3 py-2"
+                  style={{ fontFamily: R_MONO, fontSize: 12.5, background: '#F5F0E8', border: `1px solid ${R_HAIR}`, color: R_INK }}
                 >
                   {s.label}
                 </button>
               ))}
             </div>
-            <div
-              className="text-[10px] mt-3 italic"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              Tip: the prompt is intentionally short, like a real interview. Your job is to ask for data and build structure as you go. Tree + cheat sheet auto-fill from your chat.
+            <div style={{ fontFamily: R_MONO, fontSize: 10, fontStyle: 'italic', color: R_MUTE, marginTop: 12 }}>
+              The prompt is short on purpose. Ask for data, build structure as you go. The tree fills from your chat.
             </div>
           </div>
         )}
         {messages.map((m, i) => {
           const isUser = m.role === 'user';
           if (isUser) {
-            // User message — Geist sans, slightly muted bg block.
+            // Candidate turn — a document line, not a bubble. Accent left rule,
+            // "YOU" eyebrow, Plex Mono body.
             return (
-              <div
-                key={i}
-                className="rounded-md px-4 py-3 text-sm leading-relaxed font-body"
-                style={{
-                  background: 'var(--color-bg-elevated)',
-                  color: 'var(--color-text-primary)',
-                }}
-              >
-                {m.content || (
-                  <span style={{ color: 'var(--color-text-muted)' }}>…</span>
-                )}
+              <div key={i} style={{ borderLeft: `2px solid ${R_ACCENT}`, paddingLeft: 16 }}>
+                <div style={{ ...rEyebrow, marginBottom: 4 }}>You</div>
+                <div style={{ fontFamily: R_MONO, fontSize: 14, lineHeight: 1.62, color: R_INK, whiteSpace: 'pre-wrap' }}>
+                  {m.content || <span style={{ color: R_MUTE }}>…</span>}
+                </div>
               </div>
             );
           }
@@ -587,30 +573,27 @@ export function ChatPanel({
                 <div className="flex flex-col gap-1">
                   <div
                     style={{
-                      fontFamily: 'var(--font-headline)',
+                      fontFamily: R_DISPLAY,
                       fontWeight: 700,
-                      fontSize: 19,
+                      fontSize: 20,
                       letterSpacing: '-0.01em',
-                      color: 'var(--color-text-primary)',
+                      color: R_INK,
                       lineHeight: 1,
                     }}
                   >
                     Ash
                   </div>
-                  <div
-                    className="font-mono text-[11px] uppercase tracking-[0.14em]"
-                    style={{ color: 'var(--color-text-muted)' }}
-                  >
+                  <div style={{ ...rEyebrow, letterSpacing: '0.14em' }}>
                     Engagement Manager · Bain &amp; Company
                   </div>
                 </div>
                 <div
-                  className="leading-[1.5] max-w-[60ch]"
+                  className="max-w-[62ch]"
                   style={{
-                    fontFamily: 'var(--font-accent)',
-                    fontSize: 17,
-                    color: 'var(--color-text-primary)',
-                    fontWeight: 500,
+                    fontFamily: R_MONO,
+                    fontSize: 15.5,
+                    lineHeight: 1.62,
+                    color: R_INK,
                   }}
                 >
                   {m.content ? (
@@ -635,14 +618,15 @@ export function ChatPanel({
             <div key={i} className="flex items-start gap-3">
               <div
                 ref={isLastInterviewer ? lastOrbRef : undefined}
-                className="mt-[-2px] flex-shrink-0"
+                className="mt-[1px] flex-shrink-0"
               >
-                <AshMark size={18} state={orbState} />
+                <AshMark size={16} state={orbState} />
               </div>
-              <div
-                className="flex-1 min-w-0 py-1 leading-[1.62]"
-                style={{ color: 'var(--color-text-primary)', fontFamily: 'var(--font-accent)', fontSize: 16 }}
-              >
+              <div className="flex-1 min-w-0">
+                <div style={{ ...rEyebrow, marginBottom: 3 }}>Ash</div>
+                <div
+                  style={{ color: R_INK, fontFamily: R_MONO, fontSize: 14, lineHeight: 1.62 }}
+                >
                 {m.content ? (
                   shouldTypewriter(i, m.role) ? (
                     <TypewriterMessage text={m.content} />
@@ -657,30 +641,20 @@ export function ChatPanel({
                 {m.citations && m.citations.length > 0 && (
                   <CitationsRow citations={m.citations} />
                 )}
+                </div>
               </div>
             </div>
           );
         })}
         {hasHangingUserTurn && (
-          <div
-            className="rounded-md p-3 text-xs"
-            style={{
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'var(--color-accent)',
-              color: 'var(--color-accent-bright)',
-            }}
-          >
-            <div className="mb-1.5">
-              The interviewer didn&apos;t reply to your last message — the previous turn was interrupted (tab close or network blip).
+          <div style={{ border: `1px solid ${R_ACCENT}`, padding: 12, fontFamily: R_MONO, fontSize: 12, color: R_INK }}>
+            <div style={{ marginBottom: 8 }}>
+              The interviewer didn&apos;t reply to your last message — the turn was interrupted (tab close or network blip).
             </div>
             <button
               onClick={retryLastUserTurn}
-              className="text-xs px-2.5 py-1 rounded-md transition-opacity hover:opacity-90"
-              style={{
-                background: 'var(--color-accent)',
-                color: 'var(--color-accent-fg)',
-              }}
+              className="px-2.5 py-1"
+              style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', background: R_ACCENT, color: '#FFFFFF', border: 'none' }}
             >
               ↻ Retry that turn
             </button>
@@ -699,17 +673,14 @@ export function ChatPanel({
         />
       )}
       {(timeUp || pasteBlocked || turnStartedAt !== null) && (
-        <div className="px-4 pt-2 flex flex-col gap-1">
+        <div className="px-5 pt-2 flex flex-col gap-1" aria-live="polite">
           {timeUp && (
-            <span
-              role="status"
-              style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-signal-danger, #c0392b)' }}
-            >
+            <span role="status" style={{ fontFamily: R_MONO, fontSize: 11, color: R_ACCENT }}>
               Time&apos;s up. Give your recommendation, then submit for scoring below.
             </span>
           )}
           {pasteBlocked && !timeUp && (
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-muted)' }}>
+            <span style={{ fontFamily: R_MONO, fontSize: 11, color: R_MUTE }}>
               Paste is off — type your answer, like a real interview.
             </span>
           )}
@@ -718,7 +689,7 @@ export function ChatPanel({
           )}
         </div>
       )}
-      <div className="px-4 pb-4 pt-2 flex gap-2">
+      <div className="px-5 pb-5 pt-2 flex gap-2" style={{ borderTop: `1px solid ${R_HAIR}` }}>
         <input
           ref={inputRef}
           value={input}
@@ -729,14 +700,14 @@ export function ChatPanel({
             setPasteBlocked(true);
             window.setTimeout(() => setPasteBlocked(false), 4000);
           }}
-          placeholder={timeUp ? 'Time is up — submit for scoring' : 'Ask the interviewer…'}
-          className="flex-1 rounded-md px-3 py-2 text-sm focus:outline-none"
+          placeholder={timeUp ? 'Time is up — submit for scoring' : 'Your response…'}
+          className="flex-1 px-3 py-2 focus:outline-none"
           style={{
-            background: 'var(--color-bg-sunken)',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderColor: 'var(--color-border)',
-            color: 'var(--color-text-primary)',
+            fontFamily: R_MONO,
+            fontSize: 14,
+            background: '#FFFFFF',
+            border: `1px solid ${R_HAIR}`,
+            color: R_INK,
           }}
           disabled={streaming || !!timeUp}
         />
@@ -757,7 +728,8 @@ export function ChatPanel({
           <button
             onClick={stopStreaming}
             aria-label="Stop the interviewer's reply"
-            className="ghost-btn px-4 py-2 rounded-md text-sm font-medium"
+            className="px-4 py-2"
+            style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', border: `1px solid ${R_HAIR}`, color: R_INK, background: '#FFFFFF' }}
           >
             Stop
           </button>
@@ -765,7 +737,9 @@ export function ChatPanel({
           <button
             onClick={send}
             disabled={!!timeUp}
-            className="ghost-btn ghost-btn--accent px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+            aria-label="Send — messages are final, you cannot edit after sending"
+            className="px-4 py-2 disabled:opacity-40"
+            style={{ fontFamily: R_MONO, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', background: R_ACCENT, color: '#FFFFFF', border: 'none' }}
           >
             Send
           </button>
