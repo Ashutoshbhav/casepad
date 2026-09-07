@@ -28,6 +28,10 @@ export interface GeneratedCaseDraft {
   exhibits: { title: string; kind: string; data: unknown; caption?: string }[];
   /** entities the model deliberately invented (so fact-check knows they're ok) */
   fictionalEntities: string[];
+  /** every quantitative figure in the case, with where it came from. Forces the
+   *  model to account for each number; a number in the case with no entry here
+   *  is a red flag for the fact-check + reviewer. */
+  numberSources: { value: string; source: string }[];
 }
 
 export interface FactCheckClaim {
@@ -63,11 +67,18 @@ export function buildGenerateMessages(input: {
 
 TARGET SKILL: ${skillLine}
 
-GROUNDING RULES (hard):
-- Every quantitative figure and every named real-world company / market / product in your case must be EITHER (a) taken from or directly derivable from the seed case and its dossier, OR (b) a clearly invented company/brand you also list in "fictionalEntities". Never state a specific real-world number about a real company that is not in the grounding material.
-- Prefer invented companies in a real, grounded market ("MobiKwik-style wallet" is fine as market context; a made-up "PayZen" as the client is better than naming a real firm's real revenue).
+GROUNDING RULES (hard — a violation gets the case rejected):
+- Every NUMBER that appears anywhere in your case (problemStatement, interviewerNotes, idealStructure notes, exhibits) must be ONE of:
+    (a) copied verbatim from the SEED or DOSSIER,
+    (b) arithmetic derived from (a) — and the derivation must be reconstructable from other numbers in your case,
+    (c) a round illustrative figure that belongs to an INVENTED entity you listed in "fictionalEntities" (e.g. invented client's own sales), clearly not a real-world statistic.
+  Nothing else. In particular: do NOT state a market size, TAM, market share, category growth rate, penetration rate, or any aggregate industry statistic unless that exact figure is in the SEED or DOSSIER. If you need market context and don't have the number, describe it qualitatively ("a large, fast-growing category") — never attach a number to it.
+- Every named real-world company / product / place must appear in the SEED or DOSSIER. Otherwise invent the entity and list it in "fictionalEntities". Prefer an invented client in a real, grounded market.
+- List EVERY number in your case in "numberSources" with where it came from ("seed", "dossier", "derived: 6.25M x $1.50", or "illustrative: invented client's projected sales"). If you cannot fill a source for a number, remove that number.
 - The case must be SOLVABLE and internally consistent: the numbers add up, the interviewer notes answer the questions a candidate would actually ask, the ideal structure fits.
 - Difficulty: match or slightly exceed the seed.
+
+SELF-CHECK before you answer: re-read your whole case. For each number, can you point to its "numberSources" entry, and is that entry (a), (b), or (c) above? If not, delete the number or make it qualitative. For each named real-world entity, is it in the SEED/DOSSIER or your fictionalEntities list? If not, rename it to an invented one.
 
 OUTPUT — strict JSON, no prose outside it:
 {
@@ -79,7 +90,8 @@ OUTPUT — strict JSON, no prose outside it:
   "interviewerNotes": [ { "trigger_keywords": ["short noun phrase", "..."], "reveal_text": "the answer if the candidate asks" } ],
   "idealStructure": { "root": "...", "branches": [ { "label": "...", "note": "why a top candidate digs here", "children": [ ... ] } ] },
   "exhibits": [ { "title": "...", "kind": "table | chart | text", "data": <inline data>, "caption": "..." } ],
-  "fictionalEntities": ["names you invented"]
+  "fictionalEntities": ["names you invented"],
+  "numberSources": [ { "value": "$150M", "source": "seed" }, { "value": "60%", "source": "derived: 12/20" } ]
 }
 interviewerNotes: 4-8 entries, 3-6 keywords each. exhibits: 0-2, only if they add signal for the target skill.`;
 
@@ -144,6 +156,19 @@ export function parseGeneratedCase(raw: string): GeneratedCaseDraft | null {
         .slice(0, 3)
     : [];
 
+  const numberSources = Array.isArray(o.numberSources)
+    ? (o.numberSources as unknown[])
+        .map((n) => {
+          if (!n || typeof n !== 'object') return null;
+          const nn = n as Record<string, unknown>;
+          const value = typeof nn.value === 'string' ? nn.value : String(nn.value ?? '');
+          const source = typeof nn.source === 'string' ? nn.source : '';
+          if (!value || !source) return null;
+          return { value: value.slice(0, 60), source: source.slice(0, 200) };
+        })
+        .filter((n): n is { value: string; source: string } => n !== null)
+    : [];
+
   return {
     title,
     industry: typeof o.industry === 'string' ? o.industry : 'other',
@@ -154,6 +179,7 @@ export function parseGeneratedCase(raw: string): GeneratedCaseDraft | null {
     idealStructure: o.idealStructure ?? {},
     exhibits,
     fictionalEntities: asStringArray(o.fictionalEntities),
+    numberSources,
   };
 }
 
@@ -184,6 +210,9 @@ OUTPUT strict JSON, no prose outside it:
   "claims": [ { "text": "the exact claim", "kind": "quant" | "entity", "grounded": "source" | "fictional" | "ungrounded", "note": "why" } ] }`;
 
   const user = `DECLARED INVENTED ENTITIES: ${JSON.stringify(input.draft.fictionalEntities)}
+
+AUTHOR'S NUMBER-SOURCE CLAIMS (verify these are true; a number in the case that is missing here, or whose claimed source is wrong, is "ungrounded"):
+${JSON.stringify(input.draft.numberSources)}
 
 SOURCE MATERIAL (the only real-world facts this case may assert):
 ${input.groundingText.slice(0, 7000)}

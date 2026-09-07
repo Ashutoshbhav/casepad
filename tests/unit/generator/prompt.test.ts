@@ -22,6 +22,11 @@ const validDraftJson = JSON.stringify({
   idealStructure: { root: 'Profit = Rev - Cost', branches: [{ label: 'Cost', note: 'cashback led' }] },
   exhibits: [{ title: 'Cost split', kind: 'table', data: [['cashback', 60]], caption: 'FY24' }],
   fictionalEntities: ['PayZen'],
+  numberSources: [
+    { value: '0.8%', source: 'seed' },
+    { value: '30%', source: 'seed' },
+    { value: '60', source: 'illustrative: invented client cost split' },
+  ],
 });
 
 describe('buildGenerateMessages', () => {
@@ -49,6 +54,17 @@ describe('parseGeneratedCase', () => {
     expect(d.interviewerNotes).toHaveLength(2);
     expect(d.exhibits).toHaveLength(1);
     expect(d.fictionalEntities).toEqual(['PayZen']);
+    expect(d.numberSources).toHaveLength(3);
+    expect(d.numberSources[0]).toEqual({ value: '0.8%', source: 'seed' });
+  });
+
+  it('tolerates a missing / malformed numberSources', () => {
+    const d = parseGeneratedCase(JSON.stringify({ title: 't', problemStatement: 'p' }))!;
+    expect(d.numberSources).toEqual([]);
+    const d2 = parseGeneratedCase(
+      JSON.stringify({ title: 't', problemStatement: 'p', numberSources: [{ value: '5%' }, 'junk', { source: 'seed' }] }),
+    )!;
+    expect(d2.numberSources).toEqual([]);
   });
 
   it('strips fences and recovers embedded json', () => {

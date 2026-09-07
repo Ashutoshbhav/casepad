@@ -146,6 +146,7 @@ export async function generateAndStage(
         dossier ? `dossier:${seed.id}` : 'dossier:none',
       ],
       fictional_entities: draft.fictionalEntities,
+      number_sources: draft.numberSources,
       generated_at: now,
     },
     factcheck: {
