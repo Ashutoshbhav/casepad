@@ -10,6 +10,7 @@ import { WALKTHROUGH_GENERATOR_VERSION } from '@/lib/groq/walkthrough';
 import { SessionFeedbackForm } from '@/components/session-feedback-form';
 import { DebriefFeedbackModal } from '@/components/debrief-feedback-modal';
 import { getSkillProfile } from '@/lib/skills/apply';
+import { getFirmView } from '@/lib/firm/apply';
 import { SkillProfileCard } from '@/components/skill-profile-card';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
@@ -203,11 +204,17 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
   // renders nothing). skill_state populates as the knowledge-tracing pass runs
   // after each session, so early on this is empty and the card says so.
   let skillProfile = null;
+  let firm = null;
   if (user?.id) {
     try {
       skillProfile = await getSkillProfile(supabase, user.id);
     } catch (e) {
       console.warn('[debrief] skill profile fetch failed:', e);
+    }
+    try {
+      firm = await getFirmView(supabase, user.id);
+    } catch (e) {
+      console.warn('[debrief] firm view fetch failed:', e);
     }
   }
 
@@ -271,6 +278,49 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
       </div>
 
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px 96px' }}>
+        {firm && (
+          <Link
+            href="/firm"
+            className="room-link"
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 12,
+              flexWrap: 'wrap',
+              marginTop: 24,
+              padding: '12px 16px',
+              background: '#FFFFFF',
+              boxShadow: 'inset 0 0 0 1px #e8e4dd',
+              textDecoration: 'none',
+              color: INK,
+            }}
+          >
+            <span style={{ fontFamily: 'var(--font-room-mono)', fontSize: 12 }}>
+              <strong style={{ fontWeight: 600 }}>{firm.title}</strong>
+              <span style={{ color: 'rgba(50,50,52,0.62)' }}>
+                {' '}
+                · {firm.engagementsTotal} engagement{firm.engagementsTotal === 1 ? '' : 's'}
+                {firm.atTop
+                  ? ' · top of the firm'
+                  : firm.promoEligible
+                    ? ` · cleared for ${firm.nextTitle} review`
+                    : ` · ${Math.max(0, (firm.criteria.find((c) => c.key === 'engagements')?.target ?? 0) - firm.engagementsAtLevel)} more to ${firm.nextTitle} review`}
+              </span>
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-room-mono)',
+                fontSize: 10,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                color: '#c23f00',
+              }}
+            >
+              Your record →
+            </span>
+          </Link>
+        )}
         <div style={{ marginTop: 28 }}>
           <CompletionBanner
             xpEarned={xpEarned}
