@@ -300,8 +300,37 @@ async function readWithTimeout<T>(
 // visible in Vercel runtime logs without a tracing backend. `grep '[llm-router]'`
 // gives per-turn provider attribution + fallback depth (idx>0 = a fallthrough
 // happened). Kept to info level and one line — not a hot-path cost.
-function logServed(fn: 'stream' | 'complete', tier: string, name: string, idx: number, attempts: number) {
-  console.info(`[llm-router] ${fn} tier=${tier} served_by=${name} idx=${idx} attempts=${attempts}`);
+export interface ServedInfo {
+  provider: string;
+  /** 0 = the tier's first-choice provider served; >0 = that many providers were skipped/failed first. */
+  idx: number;
+  attempts: number;
+}
+
+function logServed(fn: 'stream' | 'complete', tier: string, info: ServedInfo) {
+  console.info(
+    `[llm-router] ${fn} tier=${tier} served_by=${info.provider} idx=${info.idx} attempts=${info.attempts}`,
+  );
+}
+
+// Called once per successful call: logs the attribution line AND hands the
+// same info to opts.onServed. The callback is caller-supplied (canary), so it
+// is wrapped — a throwing callback must never turn a good LLM reply into a
+// failed request.
+function fireServed(
+  opts: ChatOpts,
+  fn: 'stream' | 'complete',
+  p: Provider,
+  idx: number,
+  attempts: number,
+) {
+  const info: ServedInfo = { provider: p.name, idx, attempts };
+  logServed(fn, opts.tier ?? 'primary', info);
+  try {
+    opts.onServed?.(info);
+  } catch {
+    /* never break the hot path on a bad callback */
+  }
 }
 
 interface ChatOpts {
@@ -318,6 +347,12 @@ interface ChatOpts {
    * when a separately-quota'd, comparably-fast provider is sitting right there.
    */
   tier?: 'primary' | 'aux';
+  /**
+   * Called exactly once, on success, with which provider actually served and
+   * how deep in the chain it was. Used by /api/admin/canary to alarm when the
+   * first-choice provider stops serving. Never throws into the hot path.
+   */
+  onServed?: (info: ServedInfo) => void;
 }
 
 // Streaming chat — returns an async iterator of content deltas.
@@ -398,7 +433,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
           const payload = line.slice(5).trim();
           if (payload === '[DONE]') {
             providerCircuits.set(p.name, circuitOnSuccess());
-            logServed('stream', opts.tier ?? 'primary', p.name, idx, attempts);
+            fireServed(opts, 'stream', p, idx, attempts);
             return;
           }
           try {
@@ -414,7 +449,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
         }
       }
       providerCircuits.set(p.name, circuitOnSuccess());
-      logServed('stream', opts.tier ?? 'primary', p.name, idx, attempts);
+      fireServed(opts, 'stream', p, idx, attempts);
       return; // successful stream end
     } catch (e) {
       // Once content has been yielded to the caller, failing over would
@@ -487,7 +522,7 @@ export async function completeChat(opts: ChatOpts): Promise<string> {
       const content = data?.choices?.[0]?.message?.content;
       if (typeof content === 'string' && content.trim()) {
         providerCircuits.set(p.name, circuitOnSuccess());
-        logServed('complete', opts.tier ?? 'primary', p.name, idx, attempts);
+        fireServed(opts, 'complete', p, idx, attempts);
         return content;
       }
       // Empty content is a FAILURE, not a success — reasoning models can

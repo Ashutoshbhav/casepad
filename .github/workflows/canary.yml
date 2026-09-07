@@ -1,0 +1,74 @@
+name: canary
+
+# Synthetic canary for the LLM router (PRD v3.1 Stage-0).
+#
+# Every prior LLM outage was silent: the router kept returning 200s while
+# quietly degrading down its fallback chain or serving canned static
+# fallbacks, and a human only noticed by running a check by hand. This is the
+# external scheduler + loud alarm for that.
+#
+# Every 15 min it hits /api/admin/canary, which runs one tiny real completion
+# per tier (primary + aux) and asserts each was served by its FIRST-CHOICE
+# provider and echoed a fresh token (not a static fallback). The endpoint
+# returns:
+#   200                every tier first-choice           -> job passes
+#   200 + degraded     one fallthrough (idx 1)           -> job passes, ::warning::
+#   503 + alarm        idx >= 2 / a tier failed / canned -> job FAILS -> GitHub
+#                                                           emails the owner
+#
+# Needs one repo secret: SMOKE_CHECK_TOKEN (same value as the Vercel env var).
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canary
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe /api/admin/canary
+        env:
+          TOKEN: ${{ secrets.SMOKE_CHECK_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TOKEN:-}" ]; then
+            echo "::error::SMOKE_CHECK_TOKEN repo secret is not set"
+            exit 1
+          fi
+          url="https://casepad.vercel.app/api/admin/canary"
+          body="$(mktemp)"
+          code="$(curl -sS -m 45 --retry 2 --retry-delay 15 --retry-all-errors \
+                   -H "Authorization: Bearer $TOKEN" \
+                   -o "$body" -w '%{http_code}' "$url" || echo 000)"
+          echo "HTTP $code"
+          cat "$body"; echo
+
+          summary="$(jq -r '.summary // "no summary"' "$body" 2>/dev/null || echo "unparseable body")"
+          echo "summary: $summary"
+
+          case "$code" in
+            200)
+              if [ "$(jq -r '.degraded // false' "$body" 2>/dev/null)" = "true" ]; then
+                echo "::warning::router degraded (one provider fell through): $summary"
+              else
+                echo "router healthy: $summary"
+              fi
+              ;;
+            503)
+              echo "::error::router ALARM: $summary"
+              exit 1
+              ;;
+            *)
+              echo "::error::canary endpoint returned HTTP $code (expected 200): $(cat "$body")"
+              exit 1
+              ;;
+          esac
