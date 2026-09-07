@@ -14,6 +14,10 @@ import {
 // (full fallback-chain outage), 2026-09-07 (model-ID incident, see below), and
 // re-pointed to a Gemini-primary chain the same day per PRD v3.1:
 //   PRIMARY tier (the live interviewer turn the candidate is waiting on):
+//   0. local — DEV ONLY. Present only when LLM_BASE_URL is set (never on
+//      Vercel), points at an OpenAI-compatible server on-box (Ollama, e.g.
+//      qwen2.5:14b). First in line so `npm run dev` spends zero hosted quota;
+//      falls through to the cloud chain if the local server is down.
 //   1. Gemini 2.5 Flash-Lite — Google's free tier, its OWN quota (independent
 //      of Groq/Cerebras), ~1K requests/DAY. PRD v3.1's designated primary:
 //      cheapest capable model, thinking OFF by default so no hidden-reasoning
@@ -30,6 +34,8 @@ import {
 //      deprecation (exactly 2026-09-07) can't blank a layer. NOT
 //      provider-diversity.
 //   5. OpenRouter — emergency fallback, only if OPENROUTER_API_KEY is set.
+//      Pointed at qwen/qwen-2.5-72b-instruct: a genuinely independent account
+//      AND a different model family from the gpt-oss/Gemini above it.
 //   AUX tier (issue-tree / cheatsheet / critic / opener / walkthrough /
 //   evaluate-session): leads with Cerebras and keeps Gemini LAST — those
 //   calls are ~3x primary volume, and burning Gemini's ~1K/day cap on them
@@ -115,6 +121,13 @@ interface Provider {
   // reasoning tokens BEFORE content, so a small caller budget can produce
   // an empty reply. The floor guarantees content survives.
   minMaxTokens?: number;
+  // Per-provider timeout overrides. Only set for the local dev provider,
+  // where a cold Ollama model load + CPU/consumer-GPU inference legitimately
+  // takes far longer than the hosted-provider budgets below. Everything else
+  // uses the module defaults.
+  connectTimeoutMs?: number;
+  chunkTimeoutMs?: number;
+  completeTimeoutMs?: number;
 }
 
 // Time-boxes. CONNECT covers request → response headers (where NVIDIA's
@@ -125,6 +138,33 @@ const CHUNK_TIMEOUT_MS = 15_000;
 const COMPLETE_TIMEOUT_MS = 30_000;
 
 function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
+  // LOCAL dev provider — only present when LLM_BASE_URL is set, which it never
+  // is on Vercel (verified: not in prod env), so this is null in production and
+  // the chain is unchanged there. Locally, pointing LLM_BASE_URL at an
+  // OpenAI-compatible server (Ollama: http://localhost:11434/v1) runs every
+  // interviewer turn on-box for zero hosted-API quota during `npm run dev`.
+  // Put FIRST in both chains; if the local server is down the request just
+  // falls through to Gemini/Groq like any other provider failure. Timeouts are
+  // widened generously — a cold `qwen2.5:14b` load can take 30s+ before first
+  // token on consumer hardware. Same env var + model knob the ingest scripts
+  // and src/lib/groq/client.ts already use.
+  const localBase = process.env.LLM_BASE_URL;
+  const local: Provider | null = localBase
+    ? {
+        name: 'local',
+        url: `${localBase.replace(/\/+$/, '')}/chat/completions`,
+        key:
+          localBase.includes('localhost') || localBase.includes('127.0.0.1')
+            ? 'ollama' // Ollama ignores the bearer; just needs a non-empty string
+            : process.env.LLM_API_KEY || process.env.NVIDIA_API_KEY || 'local',
+        model: process.env.LLM_LOCAL_MODEL || 'qwen2.5:14b',
+        supports_json_streaming: true,
+        connectTimeoutMs: 120_000,
+        chunkTimeoutMs: 120_000,
+        completeTimeoutMs: 180_000,
+      }
+    : null;
+
   // Gemini 2.5 Flash-Lite via Google's OpenAI-compatible shim. PRD v3.1's
   // designated PRIMARY: its own free-tier quota (independent of Groq/Cerebras),
   // and 2.5 Flash-Lite runs with thinking OFF by default, so — unlike the
@@ -205,10 +245,16 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
         name: 'openrouter',
         url: 'https://openrouter.ai/api/v1/chat/completions',
         key: process.env.OPENROUTER_API_KEY,
-        // Unconfigured (no OPENROUTER_API_KEY). Kept ready as the only path to
-        // a 3rd independent quota. gpt-oss-120b is broadly available on
-        // OpenRouter; verify the exact slug when a key is added.
-        model: 'openai/gpt-oss-120b',
+        // The genuinely-independent 3rd quota (own account, own billing).
+        // 2026-09-07: pointed at `qwen/qwen-2.5-72b-instruct` on purpose —
+        // it's a plain instruct model (verified live: clean "OK", no hidden
+        // reasoning, so no extraBody/minMaxTokens needed) AND it's a
+        // different model family from the gpt-oss everywhere else / Gemini,
+        // so a bad gpt-oss weekend can't take out this layer too. Free-tier
+        // key: works, but daily-rate-limited — correct for a 4th-in-line
+        // emergency fallback. (`openai/gpt-oss-120b` also works here but
+        // returns empty on small budgets without the reasoning handling.)
+        model: process.env.OPENROUTER_MODEL || 'qwen/qwen-2.5-72b-instruct',
         supports_json_streaming: true,
       }
     : null;
@@ -222,10 +268,13 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
   // model). On AUX it sits LAST — aux calls are ~3x primary volume and must not
   // eat Gemini's ~1K/day cap. When GEMINI_API_KEY is unset, `gemini` is null
   // and both chains are exactly the pre-Gemini order.
+  // `local` first when present (dev only — null in prod). Then per PRD v3.1:
+  // Gemini leads PRIMARY; on AUX Gemini sits LAST (aux is ~3x primary volume,
+  // must not eat Gemini's ~1K/day cap).
   const ordered =
     tier === 'aux'
-      ? [cerebras, groq, groqAlt, openrouter, gemini]
-      : [gemini, groq, cerebras, groqAlt, openrouter];
+      ? [local, cerebras, groq, groqAlt, openrouter, gemini]
+      : [local, gemini, groq, cerebras, groqAlt, openrouter];
   return ordered.filter((p): p is Provider => p !== null);
 }
 
@@ -304,7 +353,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
       // Connection time-box — covers the request → headers window, which is
       // exactly where NVIDIA was observed hanging for 30s+.
       const connectCtrl = new AbortController();
-      const connectTimer = setTimeout(() => connectCtrl.abort(), CONNECT_TIMEOUT_MS);
+      const connectTimer = setTimeout(() => connectCtrl.abort(), p.connectTimeoutMs ?? CONNECT_TIMEOUT_MS);
       let r: Response;
       try {
         r = await fetch(p.url, {
@@ -338,7 +387,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
       let buffer = '';
       yieldedThisAttempt = false;
       while (true) {
-        const { value, done } = await readWithTimeout(reader.read(), CHUNK_TIMEOUT_MS, p.name);
+        const { value, done } = await readWithTimeout(reader.read(), p.chunkTimeoutMs ?? CHUNK_TIMEOUT_MS, p.name);
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
@@ -409,7 +458,7 @@ export async function completeChat(opts: ChatOpts): Promise<string> {
       if (opts.json) body.response_format = { type: 'json_object' };
 
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), COMPLETE_TIMEOUT_MS);
+      const timer = setTimeout(() => ctrl.abort(), p.completeTimeoutMs ?? COMPLETE_TIMEOUT_MS);
       let r: Response;
       try {
         r = await fetch(p.url, {
