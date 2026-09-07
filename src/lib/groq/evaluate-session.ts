@@ -5,6 +5,7 @@ import { buildTrackEvaluatorMessages } from './track-evaluator';
 import { staticEvaluatorBreakdown } from './static-fallbacks';
 import type { Track } from '../tracks';
 import { logFailure } from '../observability/log-failure';
+import { traceAndApplySkills } from '../skills/apply';
 import { validateScore, extractCandidateMathSignals, candidateTurnCount } from '../eval/score-validator';
 import { extractEstimationState, estimationSignals } from '../case-state/estimation-state';
 import { inferCaseType, type CaseType } from './walkthrough';
@@ -161,6 +162,18 @@ export async function evaluateSession(
     // persistence failed — retry-able"; endSession will surface this to the user.
     return { ok: false, status: 503, body: { error: 'persistence failed', breakdown: validated, fallback_used: usedFallback } };
   }
+
+  // PRD v3.1 Stage 1 — update the per-skill learner model from this transcript.
+  // Fire-and-forget and fully self-contained: it never throws here (swallows to
+  // logFailure), never blocks the response, and runs only on this first
+  // successful evaluation (the idempotency guard above returns early on
+  // re-evaluation). The score and debrief do not depend on it.
+  void traceAndApplySkills(supabase, {
+    id: sessionId,
+    user_id: session.user_id,
+    case_id: session.case_id ?? null,
+    transcript: session.transcript,
+  });
 
   return { ok: true, status: 200, body: validated };
 }
