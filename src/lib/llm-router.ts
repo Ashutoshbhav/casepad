@@ -247,6 +247,14 @@ async function readWithTimeout<T>(
   }
 }
 
+// Structured one-liner so "which provider actually served this turn" is
+// visible in Vercel runtime logs without a tracing backend. `grep '[llm-router]'`
+// gives per-turn provider attribution + fallback depth (idx>0 = a fallthrough
+// happened). Kept to info level and one line — not a hot-path cost.
+function logServed(fn: 'stream' | 'complete', tier: string, name: string, idx: number, attempts: number) {
+  console.info(`[llm-router] ${fn} tier=${tier} served_by=${name} idx=${idx} attempts=${attempts}`);
+}
+
 interface ChatOpts {
   messages: Msg[];
   max_tokens?: number;
@@ -272,11 +280,15 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
   let lastErr: any = null;
   let yieldedThisAttempt = false;
   const bypassCircuits = allCircuitsOpen(list, Date.now());
+  let idx = -1;
+  let attempts = 0;
   for (const p of list) {
+    idx++;
     if (!bypassCircuits && circuitIsOpen(circuitFor(p.name), Date.now())) {
       lastErr = new Error(`${p.name}: circuit open (recent repeated failures)`);
       continue; // skip outright — no point paying this provider's timeout again
     }
+    attempts++;
     try {
       const baseMax = opts.max_tokens ?? 300;
       const body: any = {
@@ -337,6 +349,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
           const payload = line.slice(5).trim();
           if (payload === '[DONE]') {
             providerCircuits.set(p.name, circuitOnSuccess());
+            logServed('stream', opts.tier ?? 'primary', p.name, idx, attempts);
             return;
           }
           try {
@@ -352,6 +365,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
         }
       }
       providerCircuits.set(p.name, circuitOnSuccess());
+      logServed('stream', opts.tier ?? 'primary', p.name, idx, attempts);
       return; // successful stream end
     } catch (e) {
       // Once content has been yielded to the caller, failing over would
@@ -373,11 +387,15 @@ export async function completeChat(opts: ChatOpts): Promise<string> {
   const list = providers(opts.tier);
   let lastErr: any = null;
   const bypassCircuits = allCircuitsOpen(list, Date.now());
+  let idx = -1;
+  let attempts = 0;
   for (const p of list) {
+    idx++;
     if (!bypassCircuits && circuitIsOpen(circuitFor(p.name), Date.now())) {
       lastErr = new Error(`${p.name}: circuit open (recent repeated failures)`);
       continue;
     }
+    attempts++;
     try {
       const baseMax = opts.max_tokens ?? 800;
       const body: any = {
@@ -420,6 +438,7 @@ export async function completeChat(opts: ChatOpts): Promise<string> {
       const content = data?.choices?.[0]?.message?.content;
       if (typeof content === 'string' && content.trim()) {
         providerCircuits.set(p.name, circuitOnSuccess());
+        logServed('complete', opts.tier ?? 'primary', p.name, idx, attempts);
         return content;
       }
       // Empty content is a FAILURE, not a success — reasoning models can
