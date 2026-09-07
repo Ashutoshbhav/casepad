@@ -27,6 +27,7 @@ import { InlineSubmitCTA } from './inline-submit-cta';
 import { AshMark } from './ash-mark';
 import { roomFontVars } from '@/components/room/fonts';
 import { A11yOptions } from '@/components/room/a11y-options';
+import { nextSentenceBoundary } from '@/lib/interview/sentence-stream';
 
 type Msg = { role: 'user' | 'interviewer'; content: string };
 type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
@@ -37,6 +38,11 @@ type Phase = 'interviewer_speaking' | 'processing' | 'candidate_turn';
 // turn costs the candidate their whole answer; 45s leaves the server 15s of
 // real headroom while still failing before Vercel's own timeout.
 const STALL_MS = 45_000;
+
+// Smallest chunk we'll fire a TTS call for — short fragments ("Hmm.", "Try
+// again.") are merged forward so audio units stay natural and we don't spam
+// the voice endpoint.
+const MIN_CHUNK_CHARS = 24;
 
 // v2 "room" palette — transcript-as-document.
 const INK = 'rgb(50,50,52)';
@@ -139,6 +145,9 @@ export function LiveInterviewSession({
   // Cache of the browser's installed voices. getVoices() returns [] until the
   // async 'voiceschanged' event fires on most browsers.
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  // Handle to the currently-running streaming speaker (one per interviewer
+  // turn) so interrupt()/unmount can stop it mid-sentence.
+  const speakerRef = useRef<{ cancel: () => void } | null>(null);
 
   // Auto-scroll the transcript to the latest turn.
   useEffect(() => {
@@ -166,53 +175,164 @@ export function LiveInterviewSession({
     return [...pool].sort((a, b) => score(b) - score(a))[0] ?? null;
   };
 
-  // Voice-out ladder: Google TTS (server, best voice, needs a key) → browser
-  // speechSynthesis (no key, no cost) → silent text (last resort). Returns
-  // true if browser speech actually started.
-  const speakInBrowser = (text: string): boolean => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return false;
-    try {
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      const voice = pickBestVoice();
-      if (voice) utter.voice = voice;
-      utter.rate = 1;
-      utter.onend = () => setPhase('candidate_turn');
-      utter.onerror = () => setPhase('candidate_turn');
-      window.speechSynthesis.speak(utter);
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  // Speak ONE chunk via the browser's speechSynthesis. Resolves when the
+  // utterance ends (or errors / isn't available). No phase side-effects — the
+  // speaker loop owns those. This is both the per-chunk fallback when the
+  // server voice fails and the whole path when no server voice is configured.
+  const speakChunkInBrowser = (text: string): Promise<void> =>
+    new Promise((resolve) => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) return resolve();
+      try {
+        const utter = new SpeechSynthesisUtterance(text);
+        const voice = pickBestVoice();
+        if (voice) utter.voice = voice;
+        utter.rate = 1;
+        utter.onend = () => resolve();
+        utter.onerror = () => resolve();
+        window.speechSynthesis.speak(utter);
+      } catch {
+        resolve();
+      }
+    });
 
-  // Callers set phase to 'interviewer_speaking' BEFORE invoking this — this
-  // function only sets phase again once the async work resolves.
-  const playInterviewerTurn = async (text: string) => {
+  // Synthesize ONE chunk via the server voice. Returns a ready (not-yet-played)
+  // <audio>, or null when the server voice is unconfigured (501) / failed /
+  // aborted — the caller then falls back to browser speech for that chunk.
+  // Never throws.
+  const synthChunk = async (text: string, signal: AbortSignal): Promise<HTMLAudioElement | null> => {
     try {
       const res = await fetch('/api/voice/speak', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),
+        signal,
       });
-      if (!res.ok) {
-        if (!speakInBrowser(text)) setPhase('candidate_turn');
-        return;
-      }
+      if (!res.ok) return null;
       const { audioBase64, mimeType } = (await res.json()) as { audioBase64: string; mimeType: string };
-      const audio = new Audio(`data:${mimeType};base64,${audioBase64}`);
-      audioRef.current = audio;
-      audio.onended = () => setPhase('candidate_turn');
-      audio.onerror = () => {
-        if (!speakInBrowser(text)) setPhase('candidate_turn');
-      };
-      await audio.play().catch(() => {
-        if (!speakInBrowser(text)) setPhase('candidate_turn');
-      });
-    } catch (err) {
-      console.warn('[live-interview] server TTS unavailable, trying browser voice', err);
-      if (!speakInBrowser(text)) setPhase('candidate_turn');
+      return new Audio(`data:${mimeType};base64,${audioBase64}`);
+    } catch {
+      return null;
     }
+  };
+
+  // Start a STREAMING speaker for one interviewer turn. Feed it text as it
+  // arrives (pushText), call finish() when the source is complete. It carves
+  // the text into ~sentence chunks, synthesizes each (server voice → browser
+  // speech fallback), and plays them in order while prefetching the next — so
+  // audio starts one sentence into generation, not one whole turn in. On
+  // drain it resolves the phase to 'candidate_turn'. cancel() stops everything
+  // mid-sentence (barge-in / navigation).
+  const startSpeaker = () => {
+    const ac = new AbortController();
+    let cancelled = false;
+    let consumed = 0; // chars of the source already carved into chunks
+    let mergeBuf = ''; // short trailing sentences waiting to reach MIN_CHUNK_CHARS
+    let done = false;
+    const queue: string[] = [];
+    let notify: (() => void) | null = null;
+    const wake = () => {
+      const n = notify;
+      notify = null;
+      n?.();
+    };
+
+    const carve = (full: string, flushAll: boolean) => {
+      while (true) {
+        const b = nextSentenceBoundary(full, consumed);
+        if (b < 0 || b <= consumed) break;
+        const seg = full.slice(consumed, b).trim();
+        consumed = b;
+        if (seg) mergeBuf = mergeBuf ? `${mergeBuf} ${seg}` : seg;
+        if (mergeBuf.length >= MIN_CHUNK_CHARS) {
+          queue.push(mergeBuf);
+          mergeBuf = '';
+        }
+      }
+      if (flushAll) {
+        const tail = full.slice(consumed).trim();
+        consumed = full.length;
+        if (tail) mergeBuf = mergeBuf ? `${mergeBuf} ${tail}` : tail;
+        if (mergeBuf) {
+          queue.push(mergeBuf);
+          mergeBuf = '';
+        }
+      }
+      wake();
+    };
+
+    const handle = {
+      pushText: (full: string) => {
+        if (!cancelled) carve(full, false);
+      },
+      finish: (full: string) => {
+        if (cancelled) return;
+        carve(full, true);
+        done = true;
+        wake();
+      },
+      cancel: () => {
+        if (cancelled) return;
+        cancelled = true;
+        done = true;
+        try {
+          ac.abort();
+        } catch {
+          /* noop */
+        }
+        audioRef.current?.pause();
+        if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+        wake();
+      },
+    };
+    speakerRef.current = handle;
+
+    void (async () => {
+      let prefetch: Promise<HTMLAudioElement | null> | null = null;
+      let prefetchText = '';
+      let startedSpeaking = false;
+      while (!cancelled) {
+        if (queue.length === 0) {
+          if (done) break;
+          await new Promise<void>((r) => {
+            notify = r;
+          });
+          continue;
+        }
+        const text = queue.shift() as string;
+        if (!startedSpeaking) {
+          startedSpeaking = true;
+          setPhase('interviewer_speaking');
+        }
+        let audio: HTMLAudioElement | null;
+        if (prefetch && prefetchText === text) {
+          audio = await prefetch.catch(() => null);
+        } else {
+          audio = await synthChunk(text, ac.signal).catch(() => null);
+        }
+        prefetch = null;
+        prefetchText = '';
+        if (cancelled) break;
+        // Prefetch the NEXT chunk's audio while this one plays.
+        if (queue.length > 0) {
+          prefetchText = queue[0];
+          prefetch = synthChunk(prefetchText, ac.signal);
+        }
+        if (audio) {
+          audioRef.current = audio;
+          await new Promise<void>((resolve) => {
+            audio!.onended = () => resolve();
+            audio!.onerror = () => resolve();
+            audio!.play().catch(() => resolve());
+          });
+        } else {
+          await speakChunkInBrowser(text);
+        }
+      }
+      if (speakerRef.current === handle) speakerRef.current = null;
+      if (!cancelled) setPhase('candidate_turn');
+    })();
+
+    return handle;
   };
 
   // Play the opener (already seeded server-side) on first mount. Deferred via
@@ -223,7 +343,10 @@ export function LiveInterviewSession({
     startedOpenerRef.current = true;
     const last = initialMessages[initialMessages.length - 1];
     if (last && last.role === 'interviewer') {
-      queueMicrotask(() => void playInterviewerTurn(last.content));
+      queueMicrotask(() => {
+        const sp = startSpeaker();
+        sp.finish(last.content);
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -231,6 +354,7 @@ export function LiveInterviewSession({
   // Stop any audio if the user navigates away mid-sentence.
   useEffect(() => {
     return () => {
+      speakerRef.current?.cancel();
       audioRef.current?.pause();
       if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.cancel();
@@ -251,6 +375,7 @@ export function LiveInterviewSession({
   }, []);
 
   const interrupt = () => {
+    speakerRef.current?.cancel();
     audioRef.current?.pause();
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -272,7 +397,14 @@ export function LiveInterviewSession({
         : `${Date.now()}-${Math.random()}`;
 
     const controller = new AbortController();
-    const stallTimer = setTimeout(() => controller.abort(), STALL_MS);
+    let stallTimer = setTimeout(() => controller.abort(), STALL_MS);
+    let speaker: ReturnType<typeof startSpeaker> | null = null;
+    let acc = '';
+
+    const dropEmptyPlaceholder = () =>
+      setMessages((m) =>
+        m.length && m[m.length - 1].role === 'interviewer' && !m[m.length - 1].content ? m.slice(0, -1) : m
+      );
 
     try {
       const res = await fetch('/api/chat', {
@@ -281,30 +413,65 @@ export function LiveInterviewSession({
         body: JSON.stringify({ sessionId, userTurn: text, clientTurnId, lowConfidence: Boolean(lowConfidence) }),
         signal: controller.signal,
       });
-      clearTimeout(stallTimer);
 
-      if (!res.ok) {
+      if (!res.ok || !res.body) {
+        clearTimeout(stallTimer);
         const data = await res.json().catch(() => ({}) as Record<string, unknown>);
         setNotice((data?.message as string) || 'Something went wrong — try again in a moment.');
         setPhase('candidate_turn');
         return;
       }
 
-      const interviewerText = (await res.text()).trim();
-      if (!interviewerText) {
+      // Stream the interviewer reply and speak it sentence-by-sentence as it
+      // arrives — first audio lands one sentence into generation, not after
+      // the whole turn. The transcript updates live from the same buffer.
+      speaker = startSpeaker();
+      setMessages((m) => [...m, { role: 'interviewer', content: '' }]);
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          clearTimeout(stallTimer);
+          stallTimer = setTimeout(() => controller.abort(), STALL_MS);
+          acc += decoder.decode(value, { stream: true });
+          const snapshot = acc;
+          setMessages((m) => {
+            const copy = [...m];
+            copy[copy.length - 1] = { role: 'interviewer', content: snapshot };
+            return copy;
+          });
+          speaker.pushText(acc);
+        }
+      } finally {
+        clearTimeout(stallTimer);
+      }
+
+      acc = acc.trim();
+      if (!acc) {
+        speaker.cancel();
+        dropEmptyPlaceholder();
         setNotice('No response — try again.');
         setPhase('candidate_turn');
         return;
       }
-      setMessages((m) => [...m, { role: 'interviewer', content: interviewerText }]);
-      setPhase('interviewer_speaking');
-      void playInterviewerTurn(interviewerText);
+      speaker.finish(acc);
       if (hasCase) setTreeRefresh((n) => n + 1);
     } catch (err) {
       clearTimeout(stallTimer);
       console.error('[live-interview] chat call failed', err);
-      setNotice('That took too long — try again.');
-      setPhase('candidate_turn');
+      const got = acc.trim();
+      if (speaker && got.length >= 12) {
+        // Real text already streamed — read out what we got, no error banner.
+        speaker.finish(got);
+        if (hasCase) setTreeRefresh((n) => n + 1);
+      } else {
+        speaker?.cancel();
+        dropEmptyPlaceholder();
+        setNotice('That took too long — try again.');
+        setPhase('candidate_turn');
+      }
     }
   };
 
