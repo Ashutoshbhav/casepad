@@ -11,18 +11,29 @@ import {
 // streaming, returns SSE-compatible parsed deltas.
 //
 // Order tuned for chat (latency + token-budget). Re-verified live 2026-07-24
-// (full fallback-chain outage) and again 2026-09-07 (see the model-ID note
-// below):
-//   1. Groq  — openai/gpt-oss-120b. Free tier has a 100K tokens/DAY cap that
-//      exhausts by evening under heavy use, so the layers below are not
-//      theoretical. gpt-oss-120b emits hidden reasoning tokens, so it needs
-//      reasoning_effort:'low' + a max_tokens floor (same as Cerebras below).
-//   2. Cerebras — gpt-oss-120b, a SEPARATE free-tier quota from Groq's.
-//   3. Groq (2nd model) — qwen/qwen3.8-27b. A plain instruct model on the same
-//      key/quota as layer 1; here as MODEL-diversity insurance so a single
-//      model deprecation (exactly what happened on 2026-09-07) can't blank a
-//      layer again. NOT provider-diversity — see the gap note below.
-//   4. OpenRouter — emergency fallback, only if OPENROUTER_API_KEY is set.
+// (full fallback-chain outage), 2026-09-07 (model-ID incident, see below), and
+// re-pointed to a Gemini-primary chain the same day per PRD v3.1:
+//   PRIMARY tier (the live interviewer turn the candidate is waiting on):
+//   1. Gemini 2.5 Flash-Lite — Google's free tier, its OWN quota (independent
+//      of Groq/Cerebras), ~1K requests/DAY. PRD v3.1's designated primary:
+//      cheapest capable model, thinking OFF by default so no hidden-reasoning
+//      handling needed. Only in the chain when GEMINI_API_KEY (or
+//      GOOGLE_API_KEY) is set; absent it, the chain is exactly the pre-Gemini
+//      one below with zero change.
+//   2. Groq — openai/gpt-oss-120b. Free tier has a ~1K req/DAY + token/day cap
+//      that exhausts under heavy use, so the layers below are not theoretical.
+//      gpt-oss-120b emits hidden reasoning tokens -> reasoning_effort:'low' +
+//      a max_tokens floor (same as Cerebras).
+//   3. Cerebras — gpt-oss-120b, a SEPARATE free-tier quota again.
+//   4. Groq (2nd model) — qwen/qwen3.8-27b. Plain instruct model on the SAME
+//      key/quota as layer 2; MODEL-diversity insurance so one model
+//      deprecation (exactly 2026-09-07) can't blank a layer. NOT
+//      provider-diversity.
+//   5. OpenRouter — emergency fallback, only if OPENROUTER_API_KEY is set.
+//   AUX tier (issue-tree / cheatsheet / critic / opener / walkthrough /
+//   evaluate-session): leads with Cerebras and keeps Gemini LAST — those
+//   calls are ~3x primary volume, and burning Gemini's ~1K/day cap on them
+//   would starve the live turn it's meant to serve.
 //
 // 2026-09-07 INCIDENT — DEAD MODEL IDs: Groq deprecated its whole Llama line
 // (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`) and NVIDIA NIM started
@@ -55,9 +66,10 @@ import {
 // critic, opener, walkthrough, evaluate-session — leaving Groq's budget to
 // last longer for the live turn the candidate is actually waiting on.
 //
-// Configure via env: GROQ_API_KEY, CEREBRAS_API_KEY, NVIDIA_API_KEY,
-// OPENROUTER_API_KEY. Any subset works; route picks whatever's present.
-// Each provider speaks OpenAI-compatible /v1/chat/completions.
+// Configure via env: GEMINI_API_KEY (or GOOGLE_API_KEY), GROQ_API_KEY,
+// CEREBRAS_API_KEY, OPENROUTER_API_KEY. Any subset works; route picks whatever
+// is present. Each provider speaks OpenAI-compatible /v1/chat/completions
+// (Gemini via its generativelanguage.googleapis.com/v1beta/openai/ shim).
 //
 // CIRCUIT BREAKER (added 2026-09-05, see provider-circuit-breaker.ts): the
 // fallback above already survives a single bad request, but on its own it
@@ -113,6 +125,22 @@ const CHUNK_TIMEOUT_MS = 15_000;
 const COMPLETE_TIMEOUT_MS = 30_000;
 
 function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
+  // Gemini 2.5 Flash-Lite via Google's OpenAI-compatible shim. PRD v3.1's
+  // designated PRIMARY: its own free-tier quota (independent of Groq/Cerebras),
+  // and 2.5 Flash-Lite runs with thinking OFF by default, so — unlike the
+  // gpt-oss entries — it needs no reasoning_effort / max_tokens-floor handling
+  // and streams plain content. GOOGLE_API_KEY accepted as an alias since that
+  // is the name the google-genai SDKs default to.
+  const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  const gemini: Provider | null = geminiKey
+    ? {
+        name: 'gemini',
+        url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+        key: geminiKey,
+        model: process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite',
+        supports_json_streaming: true,
+      }
+    : null;
   const groq: Provider | null = process.env.GROQ_API_KEY
     ? {
         name: 'groq',
@@ -183,8 +211,14 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
   // nothing by not touching Groq at all in the common case. Groq still sits
   // right behind it as a real fallback, not removed — just no longer first
   // in line for calls that don't need to be.
+  // PRD v3.1: Gemini leads the PRIMARY chain (its own quota, cheapest capable
+  // model). On AUX it sits LAST — aux calls are ~3x primary volume and must not
+  // eat Gemini's ~1K/day cap. When GEMINI_API_KEY is unset, `gemini` is null
+  // and both chains are exactly the pre-Gemini order.
   const ordered =
-    tier === 'aux' ? [cerebras, groq, groqAlt, openrouter] : [groq, cerebras, groqAlt, openrouter];
+    tier === 'aux'
+      ? [cerebras, groq, groqAlt, openrouter, gemini]
+      : [gemini, groq, cerebras, groqAlt, openrouter];
   return ordered.filter((p): p is Provider => p !== null);
 }
 
@@ -212,11 +246,12 @@ interface ChatOpts {
   temperature?: number;
   json?: boolean;
   /**
-   * 'primary' (default) = Groq first — the live interviewer turn the
-   * candidate is waiting on. 'aux' = Cerebras first — issue-tree,
-   * cheatsheet, critic, opener, walkthrough, evaluate-session: real work,
-   * but not worth spending shared Groq daily-quota headroom on when a
-   * separately-quota'd, comparably-fast provider is sitting right there.
+   * 'primary' (default) = Gemini 2.5 Flash-Lite first (Groq, then Cerebras
+   * behind it) — the live interviewer turn the candidate is waiting on.
+   * 'aux' = Cerebras first, Gemini last — issue-tree, cheatsheet, critic,
+   * opener, walkthrough, evaluate-session: real work, ~3x the primary call
+   * volume, so kept off Gemini's ~1K/day cap and Groq's shared daily quota
+   * when a separately-quota'd, comparably-fast provider is sitting right there.
    */
   tier?: 'primary' | 'aux';
 }
