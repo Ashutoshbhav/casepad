@@ -38,13 +38,24 @@ export function buildTracingMessages(input: {
   transcript: TranscriptTurn[];
   caseTitle?: string | null;
   caseType?: string | null;
+  /** Stage-4 GEPA optimizer only: try alternative wordings without touching
+   *  the taxonomy. `observableOverrides` swaps a skill's "observable" line;
+   *  `extraRules` appends bullet(s) to the Rules block. Unused in production. */
+  opts?: {
+    observableOverrides?: Record<string, string>;
+    extraRules?: string;
+  };
 }): { role: 'system' | 'user'; content: string }[] {
+  const overrides = input.opts?.observableOverrides ?? {};
+  const catalog = Object.keys(overrides).length
+    ? SKILLS.map((s) => `- ${s.id}: ${s.name} — ${overrides[s.id] ?? s.observable}`).join('\n')
+    : CATALOG;
   const system = `You are an assessor doing knowledge tracing on a completed consulting case interview.
 
 You are given the full transcript. For EACH micro-skill below that the candidate had a genuine opportunity to demonstrate during this case, output one observation. Do NOT invent observations for skills the case never called for — skip them entirely.
 
 MICRO-SKILLS:
-${CATALOG}
+${catalog}
 
 For each skill that came up, judge:
 - demonstrated: true if the candidate got a real chance to show it (almost always true if you are listing it)
@@ -57,7 +68,7 @@ Rules:
 - Base every judgement ONLY on the candidate's own turns, not the interviewer's.
 - Be calibrated: most real candidates are uneven. Reserve quality >= 0.85 for genuinely strong, sustained execution and quality <= 0.15 for clear failures.
 - Output STRICT JSON: {"observations": [{"skillId": "...", "demonstrated": true, "quality": 0.0, "difficulty": 0.0, "confidence": 0.0, "evidence": "..."}]}
-- skillId MUST be one of the ids above, verbatim. No other keys. No prose outside the JSON.`;
+- skillId MUST be one of the ids above, verbatim. No other keys. No prose outside the JSON.${input.opts?.extraRules ? `\n${input.opts.extraRules}` : ''}`;
 
   const convo = input.transcript
     .map((t) => `${t.role.toUpperCase()}: ${t.content}`)

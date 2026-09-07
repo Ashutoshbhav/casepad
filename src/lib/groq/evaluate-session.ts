@@ -7,6 +7,7 @@ import type { Track } from '../tracks';
 import { logFailure } from '../observability/log-failure';
 import { traceAndApplySkills } from '../skills/apply';
 import { bumpEngagement } from '../firm/apply';
+import { calibrateCaseFromSession } from '../calibration/apply';
 import { validateScore, extractCandidateMathSignals, candidateTurnCount } from '../eval/score-validator';
 import { extractEstimationState, estimationSignals } from '../case-state/estimation-state';
 import { inferCaseType, type CaseType } from './walkthrough';
@@ -180,6 +181,14 @@ export async function evaluateSession(
   // criteria are met. Same fire-and-forget contract as the twin — best-effort,
   // never throws, never blocks, runs once per session (idempotency guard above).
   void bumpEngagement(supabase, session.user_id);
+
+  // Stage 4 flywheel: nudge this case's empirical difficulty rating. Side
+  // table only — never touches the corpus or the shown label.
+  void calibrateCaseFromSession(supabase, {
+    caseId: session.case_id ?? null,
+    userId: session.user_id,
+    score: (validated.total as number) ?? null,
+  });
 
   return { ok: true, status: 200, body: validated };
 }
