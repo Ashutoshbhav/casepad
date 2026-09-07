@@ -52,8 +52,8 @@ export const SKILLS: readonly Skill[] = [
 
   // ---- Quantitative ----
   { id: 'estimation_setup', group: 'quantitative', name: 'Estimation setup', observable: 'Sets up an estimate with a clear equation and sensible segmentation before plugging in numbers.' },
-  { id: 'assumption_transparency', group: 'quantitative', name: 'Assumption transparency', observable: 'States assumptions out loud and flags which ones the answer most depends on.' },
-  { id: 'arithmetic_accuracy', group: 'quantitative', name: 'Arithmetic accuracy', observable: 'The actual calculations performed are correct.' },
+  { id: 'assumption_transparency', group: 'quantitative', name: 'Assumption transparency', observable: 'States assumptions out loud AND flags which ones the answer most depends on. Score partial (~0.4-0.5) when assumptions are stated but not prioritised; low only when the candidate assumes numbers silently or refuses to assume when asked.' },
+  { id: 'arithmetic_accuracy', group: 'quantitative', name: 'Arithmetic accuracy', observable: 'The calculations are sound. Give partial credit (~0.4-0.6) for math that is directionally right with an isolated slip; reserve <=0.2 only for pervasively broken arithmetic or a load-bearing error left uncorrected.' },
   { id: 'sanity_checking', group: 'quantitative', name: 'Sanity-checking', observable: 'Checks whether a computed number is plausible against an order-of-magnitude expectation or a known benchmark.' },
   { id: 'sensitivity_awareness', group: 'quantitative', name: 'Sensitivity awareness', observable: 'Identifies which input the answer is most sensitive to, or how the answer changes if a key assumption moves.' },
   { id: 'unit_discipline', group: 'quantitative', name: 'Unit discipline', observable: 'Keeps units, currencies, and timeframes consistent throughout (per year vs per month, one store vs the chain).' },
