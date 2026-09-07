@@ -242,6 +242,7 @@ export default async function FirmPage() {
                   </h3>
                   <p style={{ ...eyebrow, marginTop: 12, letterSpacing: '0.14em' }}>
                     {engagement.caseType.replace(/_/g, ' ')} · {engagement.caseDifficulty}
+                    {engagement.difficultyCalibrated ? ' · calibrated' : ''}
                     {engagement.generated ? ' · generated' : ''}
                   </p>
                   <p

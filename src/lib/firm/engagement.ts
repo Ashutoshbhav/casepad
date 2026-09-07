@@ -14,6 +14,7 @@
 
 import { levelAt } from './levels';
 import { SKILL_GROUPS, type SkillGroup } from '@/lib/skills/taxonomy';
+import { bandFor } from '@/lib/calibration/case-elo';
 import type { CaseDifficulty, CaseTypeEnum } from '@/lib/types/domain';
 
 export interface SkillProfileLike {
@@ -76,6 +77,37 @@ const CASE_TYPES_BY_GROUP: Record<SkillGroup, CaseTypeEnum[]> = {
   business_judgment: ['market_entry', 'pricing', 'gtm'],
   communication: [],
 };
+
+// --- Stage 4 coupling: empirical difficulty ------------------------------
+
+/** Plays needed before the calibrated (Elo) band is trusted over the corpus
+ *  label. Below this the case's own easy/medium/hard label stands. */
+export const MIN_CONFIDENT_PLAYS = 8;
+
+export interface CaseCalib {
+  rating: number;
+  plays: number;
+}
+
+/** The difficulty to *match on*: the calibrated band once the case has been
+ *  played enough for the Elo rating to mean something, otherwise the corpus
+ *  label. Calibrated bands are only easy | medium | hard — a corpus "expert"
+ *  label survives until calibration overrules it. */
+export function effectiveDifficulty(
+  label: CaseDifficulty,
+  calib: CaseCalib | undefined,
+): CaseDifficulty {
+  if (!calib || calib.plays < MIN_CONFIDENT_PLAYS) return label;
+  return bandFor(calib.rating);
+}
+
+/** Where on the rating scale a candidate at this rank should be pulled toward:
+ *  their own implied rating plus a per-rank stretch, so a Partner lands at the
+ *  hard end of a band and an Analyst at the gentle end. Used only as a
+ *  within-bucket tiebreak. */
+export function rankTargetRating(candidateRating: number, rankIndex: number): number {
+  return candidateRating + rankIndex * 40; // +0 Analyst .. +200 Partner
+}
 
 /** Mean conservative estimate for a group, over its *rated* skills only.
  *  Returns null when the group has no observations yet. */

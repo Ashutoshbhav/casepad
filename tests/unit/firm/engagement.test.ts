@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { buildEngagementBrief, type SkillProfileLike } from '@/lib/firm/engagement';
+import {
+  buildEngagementBrief,
+  effectiveDifficulty,
+  rankTargetRating,
+  MIN_CONFIDENT_PLAYS,
+  type SkillProfileLike,
+} from '@/lib/firm/engagement';
 import type { SkillGroup } from '@/lib/skills/taxonomy';
 
 // Helper: build a minimal profile where every named group's skills sit at a
@@ -92,6 +98,37 @@ describe('buildEngagementBrief — group → case_type mapping', () => {
     expect(b.caseTypePrefs).toEqual([]);
     expect(b.twinDriven).toBe(true);
     expect(b.rationale.toLowerCase()).toContain('run the room');
+  });
+});
+
+describe('effectiveDifficulty — calibrated band overrules the label once trusted', () => {
+  it('no calibration row → the corpus label stands', () => {
+    expect(effectiveDifficulty('hard', undefined)).toBe('hard');
+    expect(effectiveDifficulty('expert', undefined)).toBe('expert');
+  });
+
+  it('too few plays → label still stands', () => {
+    expect(effectiveDifficulty('easy', { rating: 1750, plays: MIN_CONFIDENT_PLAYS - 1 })).toBe('easy');
+  });
+
+  it('enough plays → the Elo band wins', () => {
+    // rating 1750 → bandFor → 'hard' even though the label says 'easy'
+    expect(effectiveDifficulty('easy', { rating: 1750, plays: MIN_CONFIDENT_PLAYS })).toBe('hard');
+    // a rated-hard case that everyone aces drops to 'easy'
+    expect(effectiveDifficulty('hard', { rating: 1350, plays: 20 })).toBe('easy');
+  });
+});
+
+describe('rankTargetRating — higher rank aims harder', () => {
+  it('Analyst aims at their own level, Partner well above', () => {
+    expect(rankTargetRating(1500, 0)).toBe(1500);
+    expect(rankTargetRating(1500, 5)).toBe(1700);
+  });
+  it('is monotonic in rank', () => {
+    const at = (i: number) => rankTargetRating(1400, i);
+    expect(at(0)).toBeLessThan(at(1));
+    expect(at(1)).toBeLessThan(at(3));
+    expect(at(3)).toBeLessThan(at(5));
   });
 });
 

@@ -549,7 +549,7 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
               ? tomorrowAssignment.caseTitle
               : 'Pick what calls you.';
           const meta = nextEngagement
-            ? `${nextEngagement.caseType.replace(/_/g, ' ')} · ${nextEngagement.caseDifficulty}${nextEngagement.generated ? ' · generated' : ''}`
+            ? `${nextEngagement.caseType.replace(/_/g, ' ')} · ${nextEngagement.caseDifficulty}${nextEngagement.difficultyCalibrated ? ' · calibrated' : ''}${nextEngagement.generated ? ' · generated' : ''}`
             : tomorrowAssignment
               ? `${tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈ ${estimatedMinutes(tomorrowAssignment.caseDifficulty)} min`
               : null;
