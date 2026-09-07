@@ -1,12 +1,180 @@
 [
   {
-    "_comment": "Template. Replace with real entries. One object per graded session. `labels` = human quality score 0..1 for each micro-skill the case actually exercised (skill ids from src/lib/skills/taxonomy.ts). Score against docs/superpowers/specs/2026-09-07-skill-tracer-rubric.md. Delete this comment object.",
-    "sessionId": "00000000-0000-0000-0000-000000000000",
+    "sessionId": "49977c89-4f55-4073-a7ed-79efa1854c72",
+    "_case": "Estimate the Total Working Population in India (estimation)",
     "labels": {
-      "mece_decomposition": 0.75,
-      "hypothesis_first": 0.4,
+      "estimation_setup": 0.55,
+      "assumption_transparency": 0.45,
+      "arithmetic_accuracy": 0.4,
       "sanity_checking": 0.2,
-      "recommendation_clarity": 0.8
+      "unit_discipline": 0.4,
+      "structured_verbalization": 0.3,
+      "signposting": 0.25,
+      "poise_under_pressure": 0.2,
+      "prioritization": 0.35,
+      "executive_summary": 0.2
+    }
+  },
+  {
+    "sessionId": "bc8a6672-2169-43d5-a089-41d18565a0b8",
+    "_case": "Book on China (estimation)",
+    "labels": {
+      "estimation_setup": 0.55,
+      "assumption_transparency": 0.6,
+      "arithmetic_accuracy": 0.35,
+      "sanity_checking": 0.45,
+      "quant_to_insight": 0.4,
+      "poise_under_pressure": 0.55,
+      "commercial_instinct": 0.45,
+      "incorporating_new_info": 0.35,
+      "tradeoff_reasoning": 0.3
+    }
+  },
+  {
+    "sessionId": "4fc9287c-a588-4197-a8fc-2352fe58b5be",
+    "_case": "Retail (market_entry)",
+    "labels": {
+      "clarifying_questions": 0.4,
+      "mece_decomposition": 0.3,
+      "tailored_structure": 0.25,
+      "hypothesis_first": 0.25,
+      "creativity": 0.55,
+      "assumption_transparency": 0.4,
+      "active_listening": 0.3,
+      "structured_verbalization": 0.3,
+      "incorporating_new_info": 0.3
+    }
+  },
+  {
+    "sessionId": "cf822164-cb60-40c3-affb-cc0506ec8e35",
+    "_case": "Whisky Brand Turnaround (profitability)",
+    "labels": {
+      "mece_decomposition": 0.35,
+      "hypothesis_first": 0.3,
+      "driver_based_thinking": 0.3,
+      "root_cause_isolation": 0.35,
+      "clarifying_questions": 0.45,
+      "quantifying_impact": 0.15,
+      "structured_verbalization": 0.35,
+      "poise_under_pressure": 0.45,
+      "incorporating_new_info": 0.3
+    }
+  },
+  {
+    "sessionId": "6833bdfe-32c7-45ac-bf42-6675ff832b8a",
+    "_case": "Mobile phones in Bangalore (estimation)",
+    "labels": {
+      "estimation_setup": 0.65,
+      "assumption_transparency": 0.7,
+      "clarifying_questions": 0.6,
+      "arithmetic_accuracy": 0.5,
+      "unit_discipline": 0.55,
+      "sanity_checking": 0.4,
+      "quant_to_insight": 0.35,
+      "structured_verbalization": 0.5,
+      "driver_based_thinking": 0.5
+    }
+  },
+  {
+    "sessionId": "710e3c28-eb09-497d-ac06-9f5e9f8d340f",
+    "_case": "Airborne flights around Mumbai airport (estimation)",
+    "labels": {
+      "estimation_setup": 0.4,
+      "assumption_transparency": 0.4,
+      "arithmetic_accuracy": 0.45,
+      "sanity_checking": 0.3,
+      "clarifying_questions": 0.5,
+      "quant_to_insight": 0.3,
+      "structured_verbalization": 0.35,
+      "poise_under_pressure": 0.4
+    }
+  },
+  {
+    "sessionId": "901a7072-546c-4d9a-a93d-2910d93b7b41",
+    "_case": "Oxygen Cylinder Supply (estimation)",
+    "labels": {
+      "estimation_setup": 0.3,
+      "assumption_transparency": 0.4,
+      "structured_verbalization": 0.2,
+      "signposting": 0.15,
+      "poise_under_pressure": 0.2,
+      "prioritization": 0.2,
+      "incorporating_new_info": 0.25
+    }
+  },
+  {
+    "sessionId": "097c82e4-fd71-4935-afa9-686680d5acca",
+    "_case": "Estimating Instagram Photo Uploads (estimation)",
+    "labels": {
+      "estimation_setup": 0.05,
+      "hypothesis_first": 0.1,
+      "structured_verbalization": 0.05,
+      "assumption_transparency": 0.05,
+      "signposting": 0.05,
+      "active_listening": 0.1
+    }
+  },
+  {
+    "sessionId": "a77bc8b4-38a6-4cc6-a48a-d0fa7c06db31",
+    "_case": "DigiBooks Inc. (gtm)",
+    "labels": {
+      "clarifying_questions": 0.4,
+      "pattern_recognition": 0.35,
+      "assumption_transparency": 0.1,
+      "active_listening": 0.15,
+      "commercial_instinct": 0.35,
+      "structured_verbalization": 0.2,
+      "hypothesis_first": 0.3
+    }
+  },
+  {
+    "sessionId": "b29ba0fa-93d8-40c2-a254-ff3583fafdb0",
+    "_case": "Falling Profits of Y (profitability)",
+    "labels": {
+      "clarifying_questions": 0.55,
+      "driver_based_thinking": 0.4,
+      "root_cause_isolation": 0.4,
+      "hypothesis_first": 0.2,
+      "mece_decomposition": 0.3,
+      "structured_verbalization": 0.25
+    }
+  },
+  {
+    "sessionId": "aeba2483-8796-48d9-b9a1-f4338f17bf67",
+    "_case": "Netflix Education App (market_entry)",
+    "labels": {
+      "clarifying_questions": 0.6,
+      "assumption_transparency": 0.6,
+      "customer_orientation": 0.5,
+      "pragmatism": 0.55,
+      "hypothesis_first": 0.45,
+      "structured_verbalization": 0.35,
+      "tailored_structure": 0.3
+    }
+  },
+  {
+    "sessionId": "0a78e4e8-e52f-4847-9662-44066a7662f5",
+    "_case": "InvestCo (profitability)",
+    "labels": {
+      "driver_based_thinking": 0.35,
+      "hypothesis_first": 0.2,
+      "structured_verbalization": 0.15,
+      "mece_decomposition": 0.3,
+      "commercial_instinct": 0.4,
+      "clarifying_questions": 0.25,
+      "poise_under_pressure": 0.25
+    }
+  },
+  {
+    "sessionId": "e5768217-b82b-45aa-ae90-32ce04dd82d2",
+    "_case": "Milk Required by Each Coffee Shop in Connaught Place (estimation)",
+    "labels": {
+      "estimation_setup": 0.35,
+      "assumption_transparency": 0.4,
+      "clarifying_questions": 0.45,
+      "tailored_structure": 0.3,
+      "structured_verbalization": 0.3,
+      "incorporating_new_info": 0.3
     }
   }
 ]
