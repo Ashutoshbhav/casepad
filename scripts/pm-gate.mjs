@@ -111,8 +111,10 @@ if (!GROQ_KEY && !NVIDIA_KEY) {
 }
 
 // 4. LLM call — check the diff against the gate
+// 2026-09-07: Groq deprecated its Llama line -> qwen/qwen3.8-27b. NVIDIA NIM
+// returns HTTP 410 on the current key. See src/lib/llm-router.ts incident #6.
 const provider = GROQ_KEY
-  ? { url: 'https://api.groq.com/openai/v1/chat/completions', key: GROQ_KEY, model: 'llama-3.3-70b-versatile' }
+  ? { url: 'https://api.groq.com/openai/v1/chat/completions', key: GROQ_KEY, model: 'qwen/qwen3.8-27b' }
   : { url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: NVIDIA_KEY, model: 'meta/llama-3.3-70b-instruct' };
 
 const system = `You are a PM gate. Given a code diff, decide if the new feature passes ALL three criteria:

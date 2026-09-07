@@ -61,7 +61,10 @@ function endpoint(): { url: string; model: string; key: string } {
   const baseURL = process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1';
   const url = `${baseURL.replace(/\/+$/, '')}/chat/completions`;
   let key = '';
-  let model = process.env.LLM_LOCAL_MODEL || 'llama-3.1-8b-instant';
+  // 2026-09-07: Groq deprecated its whole Llama line. `qwen/qwen3.8-27b` is
+  // the remaining plain instruct model — clean JSON, no <think> leak. Matches
+  // scripts/ingest/extract.ts and src/lib/groq/client.ts MODEL_SMALL.
+  let model = process.env.LLM_LOCAL_MODEL || 'qwen/qwen3.8-27b';
   if (baseURL.includes('nvidia.com')) {
     key = process.env.NVIDIA_API_KEY || '';
     model = process.env.LLM_LOCAL_MODEL || 'deepseek-ai/deepseek-v4-flash';
@@ -69,11 +72,10 @@ function endpoint(): { url: string; model: string; key: string } {
     key = 'ollama-local';
   } else {
     key = process.env.GROQ_API_KEY || '';
-    // 8b-instant — free-tier RPM is much higher than 70b, and the
-    // extraction task (filling a fixed schema from a single page) is
-    // structured enough that 8b handles it. Match the rest of the
+    // Extraction (filling a fixed schema from a single page) is structured
+    // enough that the 27b model handles it fine. Match the rest of the
     // ingestion pipeline.
-    model = 'llama-3.1-8b-instant';
+    model = 'qwen/qwen3.8-27b';
   }
   return { url, model, key };
 }

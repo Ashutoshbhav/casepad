@@ -36,9 +36,12 @@ const PROVIDERS = [
   // for the whole pass is ~150K of 1M daily cap = 15%, well within budget.
   // Groq + NVIDIA are kept as failover for if Cerebras hits its rate limits.
   ...(CEREBRAS_KEY ? [{ name: 'cerebras', url: 'https://api.cerebras.ai/v1/chat/completions', key: CEREBRAS_KEY, model: 'llama3.1-8b' }] : []),
-  ...(FORCE_NVIDIA ? [] : (GROQ_KEY ? [{ name: 'groq', url: 'https://api.groq.com/openai/v1/chat/completions', key: GROQ_KEY, model: 'llama-3.3-70b-versatile' }] : [])),
+  // 2026-09-07: Groq deprecated its Llama line -> qwen/qwen3.8-27b. NVIDIA NIM
+  // returns HTTP 410 on the current key (dead until renewed). OpenRouter slug
+  // bumped to a live free model. See src/lib/llm-router.ts incident #6.
+  ...(FORCE_NVIDIA ? [] : (GROQ_KEY ? [{ name: 'groq', url: 'https://api.groq.com/openai/v1/chat/completions', key: GROQ_KEY, model: 'qwen/qwen3.8-27b' }] : [])),
   ...(NVIDIA_KEY ? [{ name: 'nvidia', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: NVIDIA_KEY, model: 'meta/llama-3.3-70b-instruct' }] : []),
-  ...(OPENROUTER_KEY ? [{ name: 'openrouter', url: 'https://openrouter.ai/api/v1/chat/completions', key: OPENROUTER_KEY, model: 'meta-llama/llama-3.3-70b-instruct:free' }] : []),
+  ...(OPENROUTER_KEY ? [{ name: 'openrouter', url: 'https://openrouter.ai/api/v1/chat/completions', key: OPENROUTER_KEY, model: 'openai/gpt-oss-120b:free' }] : []),
 ];
 console.log(`LLM providers (in order): ${PROVIDERS.map(p => p.name).join(' → ')}`);
 const CONCURRENCY = Number(process.env.BACKFILL_CONCURRENCY || 2);

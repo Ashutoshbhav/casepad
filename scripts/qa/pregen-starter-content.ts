@@ -39,6 +39,9 @@ function getProviderCfg(p: ProviderName): ProviderCfg {
       name: 'nvidia',
       url: 'https://integrate.api.nvidia.com/v1/chat/completions',
       apiKey: process.env.NVIDIA_API_KEY || '',
+      // NOTE 2026-09-07: NVIDIA NIM returns HTTP 410 for every model on the
+      // current key — this provider path is dead until the key is renewed.
+      // Model string kept current in case it comes back.
       model: 'meta/llama-3.3-70b-instruct',
     };
   }
@@ -46,7 +49,9 @@ function getProviderCfg(p: ProviderName): ProviderCfg {
     name: 'groq',
     url: 'https://api.groq.com/openai/v1/chat/completions',
     apiKey: process.env.GROQ_API_KEY || '',
-    model: 'llama-3.3-70b-versatile',
+    // 2026-09-07: Groq deprecated its Llama line. `qwen/qwen3.8-27b` is the
+    // remaining plain instruct model. See src/lib/groq/client.ts.
+    model: 'qwen/qwen3.8-27b',
   };
 }
 

@@ -38,7 +38,11 @@ function endpoint(): { url: string; model: string; key: string } {
   const baseURL = process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1';
   const url = `${baseURL.replace(/\/+$/, '')}/chat/completions`;
   let key = '';
-  let model = process.env.LLM_LOCAL_MODEL || 'llama-3.1-8b-instant';
+  // 2026-09-07: Groq deprecated its whole Llama line (`llama-3.1-8b-instant`
+  // now model_not_found). Its remaining plain instruct model is
+  // `qwen/qwen3.8-27b` — clean JSON output, no <think> leak. See
+  // src/lib/groq/client.ts MODEL_SMALL for the same swap on the app side.
+  let model = process.env.LLM_LOCAL_MODEL || 'qwen/qwen3.8-27b';
   if (baseURL.includes('nvidia.com')) {
     key = process.env.NVIDIA_API_KEY || '';
     model = process.env.LLM_LOCAL_MODEL || 'deepseek-ai/deepseek-v4-flash';
@@ -46,7 +50,7 @@ function endpoint(): { url: string; model: string; key: string } {
     key = 'ollama-local';
   } else {
     key = process.env.GROQ_API_KEY || '';
-    model = 'llama-3.1-8b-instant';
+    model = 'qwen/qwen3.8-27b';
   }
   return { url, model, key };
 }
