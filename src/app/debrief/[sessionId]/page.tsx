@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { ScoreBar } from '@/components/score-bar';
-import { ScoreReveal } from '@/components/score-reveal';
 import { TRACKS } from '@/lib/tracks';
 import { CompletionBanner } from '@/components/completion-banner';
 import { totalXp } from '@/lib/xp-heuristics';
@@ -15,7 +13,15 @@ import { getSkillProfile } from '@/lib/skills/apply';
 import { SkillProfileCard } from '@/components/skill-profile-card';
 import { assignDailyCase, estimatedMinutes } from '@/server-actions/assign-daily-case';
 import type { Track } from '@/lib/tracks';
-import { HuprObserveReveals } from '@/components/hupr/hupr-observe-reveals';
+import { roomFontVars } from '@/components/room/fonts';
+import { SketchyUnderline, SketchyProgressBar, SketchyLine } from '@/components/room/sketchy';
+
+// v2 "room" debrief palette — cream ground, ink text, one warm accent.
+const INK = 'rgb(50,50,52)';
+const CREAM = '#F5F0E8';
+const HAIR = 'rgba(0,0,0,0.18)';
+const ACCENT = '#f54e00';
+const DIM_FILL = ['#f54e00', '#5e6ad2', '#f65726', '#3d5a6c', '#a64b52'];
 
 // Hardcoded transition lines case_type → case_type. The today→tomorrow connection
 // is the editorial moment that makes the journey feel deliberate. We keep these
@@ -204,276 +210,365 @@ export default async function DebriefPage({ params }: { params: Promise<{ sessio
     }
   }
 
+  const scoreVal = session.score ?? 0;
+  const takeaway: string =
+    (typeof b?.summary === 'string' && b.summary) ||
+    (typeof b?.headline === 'string' && b.headline) ||
+    (verdict === 'strong'
+      ? 'Offer-level. You held structure where it counted.'
+      : verdict === 'reject'
+        ? 'Below the bar this round. The structure is there; the depth is not yet.'
+        : 'Solid rep. Sharper than a laundry list, not yet a partner-room answer.');
+
   return (
     <main
-      className="min-h-screen"
-      style={{ background: 'var(--color-bg-canvas)' }}
+      className={roomFontVars}
+      style={{
+        minHeight: '100vh',
+        background: CREAM,
+        color: INK,
+        fontFamily: 'var(--font-room-mono)',
+      }}
     >
-      <HuprObserveReveals />
-
-      {/* HEADER BAND — cognac. Sets debrief tone. */}
-      <section
-        className="px-6 sm:px-12 py-12"
-        style={{ background: 'var(--hupr-cognac)', color: '#FFFFFF' }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <a
-            href="/dashboard"
-            className="hupr-mono-eyebrow underline"
-            style={{ color: '#FFFFFF' }}
-          >
-            ← back to dashboard
-          </a>
-          <div className="mt-6">
-            <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>Debrief</span>
-            <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0' }} />
-          </div>
-          <h1
-            className="uppercase mt-6 mb-2"
-            style={{
-              fontFamily: 'var(--font-headline)',
-              fontWeight: 700,
-              fontSize: 'clamp(36px, 5vw, 64px)',
-              lineHeight: 1,
-              color: '#FFFFFF',
-              margin: 0,
-              maxWidth: '24ch',
-            }}
-          >
-            {caseRow?.title ?? '—'}
-          </h1>
-        </div>
-      </section>
-
-      <div className="p-6 sm:p-12 max-w-4xl mx-auto">
-      <CompletionBanner
-        xpEarned={xpEarned}
-        streakDays={streakDays}
-        totalCompleted={totalCompleted}
-        isNewRecord={isNewRecord}
-      />
-      <ScoreReveal score={session.score ?? 0} outOf={100} />
-
-      {verdict && VERDICT_META[verdict] && !usedFallback && (
-        <div className="mt-4 flex items-center gap-3 flex-wrap">
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 11,
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              padding: '4px 10px',
-              borderRadius: 3,
-              border: `1px solid ${VERDICT_META[verdict].color}`,
-              color: VERDICT_META[verdict].color,
-            }}
-          >
-            {VERDICT_META[verdict].label}
-          </span>
-          {verdict === 'reject' && below3.length > 0 && (
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-muted)' }}>
-              below the bar on: {below3.join(', ')}
-            </span>
-          )}
-        </div>
-      )}
-
-      {(usedFallback || walkthroughFallback) && (
-        <div
-          className="mb-6 p-3 mt-6"
-          style={{
-            border: '1px solid var(--color-signal-danger)',
-            background: 'var(--color-bg-sunken)',
-            color: 'var(--color-signal-danger)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 12,
-          }}
-        >
-          ⚠ {usedFallback && walkthroughFallback ? 'Scoring AND walkthrough services were temporarily down' : usedFallback ? 'The scoring service was temporarily down' : 'The walkthrough service was temporarily down'} when you ended this session — what you see below is a generic placeholder. Re-run the case to get the real score. Your transcript + tree are saved.
-        </div>
-      )}
-
-      <section className="grid md:grid-cols-2 gap-6 mb-8 mt-8">
-        <div className="space-y-3">
-          {scoreDims.map((d, i) => (
-            <ScoreBar
-              key={d.label}
-              label={d.label}
-              value={d.value}
-              max={d.max}
-              staggerIndex={i}
-              startDelay={1.2}
-            />
-          ))}
-        </div>
-        <div className="space-y-6">
-          <div>
-            <span className="hupr-mono-eyebrow">Strengths</span>
-            <hr className="hupr-hairline" />
-            <ul
-              className="mt-3 space-y-1.5"
-              style={{
-                fontFamily: 'var(--font-accent)',
-                fontSize: 15,
-                lineHeight: 1.55,
-                color: 'var(--color-text-primary)',
-              }}
-            >
-              {(b.strengths ?? []).map((s: string, i: number) => <li key={i}>· {s}</li>)}
-            </ul>
-          </div>
-          <div>
-            <span className="hupr-mono-eyebrow">Gaps</span>
-            <hr className="hupr-hairline" />
-            <ul
-              className="mt-3 space-y-1.5"
-              style={{
-                fontFamily: 'var(--font-accent)',
-                fontSize: 15,
-                lineHeight: 1.55,
-                color: 'var(--color-text-primary)',
-              }}
-            >
-              {(b.gaps ?? []).map((g: string, i: number) => <li key={i}>· {g}</li>)}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <SkillProfileCard profile={skillProfile} />
-
-      {/* The stale casebook ideal_structure box (often mislabeled, e.g. "Porter's
-          5 Forces" on a profit case) is gone — the walkthrough's correct,
-          case-type-anchored issue tree below replaces it. The walkthrough is
-          loaded/regenerated client-side so this page never blocks on the LLM.
-          Case-structural by definition (issue tree / hypothesis tree) — no
-          meaning for a caseless (behavioral/culture-fit) session, so hidden
-          when there's no case row rather than shown empty/broken. */}
-      {caseRow && (
-        <section className="p-6 mb-8" style={{ border: '1px solid var(--color-border)' }}>
-          <span className="hupr-mono-eyebrow">How a top candidate would solve this</span>
-          <hr className="hupr-hairline" />
-          <p
-            className="mt-3 mb-5"
-            style={{
-              fontFamily: 'var(--font-accent)',
-              fontSize: 14,
-              color: 'var(--color-text-muted)',
-            }}
-          >
-            Issue tree, hypothesis tree, and answer depth — the ideal walkthrough.
-          </p>
-          <IdealWalkthroughLoader
-            sessionId={sessionId}
-            initial={cachedWalkthrough}
-            initialFresh={walkthroughFresh}
-          />
-        </section>
-      )}
-
-      {/* TOMORROW — anticipation outro. Routes to /dashboard (set anticipation),
-          not /cases. The library is still reachable via the secondary link below. */}
-      <section
-        className="-mx-6 sm:-mx-12 px-6 sm:px-12 py-10 mb-8"
+      {/* EYEBROW ROW */}
+      <div
         style={{
-          background: 'var(--hupr-terra)',
-          color: '#FFFFFF',
+          maxWidth: 1180,
+          margin: '0 auto',
+          padding: '28px 24px 0',
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: 16,
+          flexWrap: 'wrap',
+          fontFamily: 'var(--font-room-mono)',
+          fontSize: 11,
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          color: 'rgba(50,50,52,0.6)',
         }}
       >
-        <span className="hupr-mono-eyebrow" style={{ color: '#FFFFFF' }}>Tomorrow’s case</span>
-        <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,0.4)', margin: '8px 0 24px' }} />
-        {tomorrowAssignment ? (
-          <>
-            <h3
-              className="uppercase mb-2"
-              style={{
-                fontFamily: 'var(--font-headline)',
-                fontWeight: 700,
-                fontSize: 'clamp(28px, 4vw, 48px)',
-                lineHeight: 1,
-                color: '#FFFFFF',
-                margin: 0,
-                maxWidth: '20ch',
-              }}
-            >
-              {tomorrowAssignment.caseTitle}
-            </h3>
-            <div
-              className="mt-3 mb-4"
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 12,
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                color: 'rgba(255,255,255,0.85)',
-              }}
-            >
-              {tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈{' '}
-              {estimatedMinutes(tomorrowAssignment.caseDifficulty)} min
-            </div>
-            <p
-              className="hupr-fade-up mb-6 max-w-prose"
-              style={{
-                fontFamily: 'var(--font-accent)',
-                fontSize: 16,
-                lineHeight: 1.55,
-                color: '#FFFFFF',
-                margin: 0,
-              }}
-            >
-              {pickTransitionLine(tomorrowAssignment.caseType)}
-            </p>
-          </>
-        ) : (
-          <p
-            className="hupr-fade-up mb-6 max-w-prose"
+        <Link href="/dashboard" style={{ color: 'rgba(50,50,52,0.6)', textDecoration: 'none' }}>
+          ← Dashboard
+        </Link>
+        <span>
+          Debrief · {caseRow?.title ?? 'Session'} · {session.transcript?.length ?? 0} turns
+        </span>
+      </div>
+
+      <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 24px 96px' }}>
+        <div style={{ marginTop: 28 }}>
+          <CompletionBanner
+            xpEarned={xpEarned}
+            streakDays={streakDays}
+            totalCompleted={totalCompleted}
+            isNewRecord={isNewRecord}
+          />
+        </div>
+
+        {(usedFallback || walkthroughFallback) && (
+          <div
+            role="status"
             style={{
-              fontFamily: 'var(--font-accent)',
-              fontSize: 16,
-              lineHeight: 1.55,
-              color: '#FFFFFF',
-              margin: 0,
+              margin: '24px 0 0',
+              padding: 14,
+              border: `1px solid ${ACCENT}`,
+              color: ACCENT,
+              fontSize: 12,
+              lineHeight: 1.6,
             }}
           >
-            Wander the library tomorrow — pick what calls you.
-          </p>
+            ⚠ {usedFallback && walkthroughFallback
+              ? 'Scoring and walkthrough services were down'
+              : usedFallback
+                ? 'The scoring service was down'
+                : 'The walkthrough service was down'}{' '}
+            when you ended this session — what you see is a placeholder. Re-run the case for a real score; your transcript and tree are saved.
+          </div>
         )}
-        <div className="flex flex-wrap items-center gap-4 mt-6">
-          <Link
-            href="/dashboard"
-            className="hupr-anim-btn"
+
+        {/* SCORE REVEAL */}
+        <section style={{ textAlign: 'center', padding: 'clamp(48px, 9vw, 104px) 0 40px' }}>
+          <p
+            style={{
+              fontSize: 11,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(50,50,52,0.55)',
+              marginBottom: 'clamp(20px, 4vw, 36px)',
+            }}
+          >
+            Your score · out of 100
+          </p>
+          <div
+            style={{
+              fontFamily: 'var(--font-room-serif)',
+              fontWeight: 300,
+              fontSize: 'clamp(120px, 30vw, 420px)',
+              lineHeight: 0.82,
+              letterSpacing: '-0.04em',
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            {scoreVal}
+          </div>
+          <div style={{ width: 'min(260px, 46vw)', margin: '6px auto 0' }}>
+            <SketchyUnderline strokeWidth={6} roughness={2.6} bowing={5} stroke={ACCENT} />
+          </div>
+          <div style={{ marginTop: 26, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+            {verdict && VERDICT_META[verdict] && !usedFallback && (
+              <span
+                style={{
+                  fontSize: 10,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.16em',
+                  padding: '5px 12px',
+                  border: `1px solid ${VERDICT_META[verdict].color}`,
+                  color: VERDICT_META[verdict].color,
+                }}
+              >
+                {VERDICT_META[verdict].label}
+              </span>
+            )}
+            {verdict === 'reject' && below3.length > 0 && (
+              <span style={{ fontSize: 11, color: 'rgba(50,50,52,0.6)' }}>
+                below bar on: {below3.join(', ')}
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontFamily: 'var(--font-room-display)',
+              fontWeight: 500,
+              fontSize: 'clamp(18px, 2.4vw, 28px)',
+              lineHeight: 1.3,
+              color: 'rgba(50,50,52,0.82)',
+              margin: '28px auto 0',
+              maxWidth: '34ch',
+            }}
+          >
+            {takeaway}
+          </p>
+        </section>
+
+        {/* BREAKDOWN */}
+        <section style={{ marginTop: 8 }}>
+          <SectionLabel>Breakdown</SectionLabel>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(auto-fit, minmax(${scoreDims.length > 3 ? 180 : 220}px, 1fr))`,
+              marginTop: 36,
+              borderTop: `1px solid ${HAIR}`,
+            }}
+          >
+            {scoreDims.map((d, i) => (
+              <div key={d.label} style={{ padding: '28px 26px', borderRight: `1px solid ${HAIR}`, borderBottom: `1px solid ${HAIR}` }}>
+                <div
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: '0.16em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(50,50,52,0.6)',
+                    marginBottom: 16,
+                  }}
+                >
+                  {d.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-room-serif)',
+                    fontWeight: 300,
+                    fontSize: 'clamp(52px, 7vw, 92px)',
+                    lineHeight: 0.95,
+                    letterSpacing: '-0.03em',
+                    fontVariantNumeric: 'tabular-nums',
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: 8,
+                  }}
+                >
+                  {Math.round(d.value)}
+                  <span style={{ fontSize: 'clamp(16px, 2vw, 26px)', color: 'rgba(50,50,52,0.4)', fontWeight: 400 }}>
+                    / {d.max}
+                  </span>
+                </div>
+                <div style={{ marginTop: 14 }}>
+                  <SketchyProgressBar
+                    pct={d.max ? (d.value / d.max) * 100 : 0}
+                    height={22}
+                    stroke={INK}
+                    fillColor={DIM_FILL[i % DIM_FILL.length]}
+                    roughness={1.5}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* STRENGTHS / GAPS */}
+        {((b.strengths ?? []).length > 0 || (b.gaps ?? []).length > 0) && (
+          <section style={{ display: 'grid', gap: 40, gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', marginTop: 56 }}>
+            {[
+              { label: 'What worked', items: (b.strengths ?? []) as string[] },
+              { label: 'What to sharpen', items: (b.gaps ?? []) as string[] },
+            ].map((col) => (
+              <div key={col.label}>
+                <SectionLabel>{col.label}</SectionLabel>
+                <SketchyLine stroke={INK} strokeWidth={1.4} roughness={1.6} style={{ margin: '10px 0 14px' }} />
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', fontSize: 14, lineHeight: 1.7 }}>
+                  {col.items.map((s, i) => (
+                    <li key={i} style={{ marginBottom: 6, display: 'flex', gap: 10 }}>
+                      <span aria-hidden style={{ color: ACCENT }}>·</span>
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </section>
+        )}
+
+        {/* THE TWIN */}
+        <div style={{ marginTop: 56 }}>
+          <SkillProfileCard profile={skillProfile} />
+        </div>
+
+        {/* WALKTHROUGH */}
+        {caseRow && (
+          <section style={{ marginTop: 72 }}>
+            <SectionLabel>Ideal walkthrough · annotated</SectionLabel>
+            <h2
+              style={{
+                fontFamily: 'var(--font-room-display)',
+                fontWeight: 700,
+                fontSize: 'clamp(32px, 5vw, 60px)',
+                lineHeight: 0.98,
+                letterSpacing: '-0.02em',
+                margin: '18px 0 28px',
+                maxWidth: '16ch',
+              }}
+            >
+              What sharper looks like.
+            </h2>
+            <IdealWalkthroughLoader
+              sessionId={sessionId}
+              initial={cachedWalkthrough}
+              initialFresh={walkthroughFresh}
+            />
+          </section>
+        )}
+
+        {/* TOMORROW */}
+        <section style={{ marginTop: 80 }}>
+          <div
             style={{
               background: '#FFFFFF',
-              color: 'var(--hupr-terra)',
-              padding: '12px 18px',
-              borderRadius: 6,
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              textDecoration: 'none',
-              display: 'inline-block',
+              boxShadow: 'inset 0 0 0 1px #e8e4dd',
+              padding: 'clamp(24px, 4vw, 40px)',
+              maxWidth: 520,
             }}
           >
-            Set anticipation →
-          </Link>
-          <Link
-            href="/cases"
-            className="hupr-mono-eyebrow underline"
-            style={{ color: '#FFFFFF' }}
-          >
-            Or keep going now →
-          </Link>
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(50,50,52,0.6)',
+                paddingBottom: 10,
+                borderBottom: `1px solid ${HAIR}`,
+                marginBottom: 18,
+              }}
+            >
+              {tomorrowAssignment ? 'Next case' : 'Tomorrow'}
+            </div>
+            <h3
+              style={{
+                fontFamily: 'var(--font-room-serif)',
+                fontWeight: 400,
+                fontStyle: 'italic',
+                fontSize: 'clamp(26px, 3.4vw, 34px)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.02em',
+                margin: '0 0 14px',
+              }}
+            >
+              {tomorrowAssignment ? tomorrowAssignment.caseTitle : 'Pick what calls you.'}
+            </h3>
+            {tomorrowAssignment && (
+              <div
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(50,50,52,0.55)',
+                  marginBottom: 14,
+                }}
+              >
+                {tomorrowAssignment.caseType.replace(/_/g, ' ')} · ≈ {estimatedMinutes(tomorrowAssignment.caseDifficulty)} min
+              </div>
+            )}
+            <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(50,50,52,0.72)', margin: '0 0 20px', maxWidth: '44ch' }}>
+              {tomorrowAssignment
+                ? pickTransitionLine(tomorrowAssignment.caseType)
+                : 'Wander the library tomorrow.'}
+            </p>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Link
+                href="/dashboard"
+                style={{
+                  background: ACCENT,
+                  color: '#FFFFFF',
+                  borderRadius: 999,
+                  padding: '11px 20px',
+                  boxShadow: 'rgba(50,50,52,0.4) 4px 4px 0 0',
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                }}
+              >
+                {tomorrowAssignment ? 'Begin →' : 'Set anticipation →'}
+              </Link>
+              <Link
+                href="/cases"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(50,50,52,0.55)',
+                  textDecoration: 'underline',
+                }}
+              >
+                Or keep going now
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <div style={{ marginTop: 64 }}>
+          <SessionFeedbackForm sessionId={sessionId} />
         </div>
-      </section>
-
-      <SessionFeedbackForm sessionId={sessionId} />
-
-      <DebriefFeedbackModal
-        sessionId={sessionId}
-        initiallyDismissed={feedbackAlreadyGiven}
-      />
       </div>
+
+      <DebriefFeedbackModal sessionId={sessionId} initiallyDismissed={feedbackAlreadyGiven} />
     </main>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        fontFamily: 'var(--font-room-mono)',
+        fontSize: 11,
+        letterSpacing: '0.22em',
+        textTransform: 'uppercase',
+        color: 'rgba(50,50,52,0.6)',
+      }}
+    >
+      {children}
+    </span>
   );
 }
