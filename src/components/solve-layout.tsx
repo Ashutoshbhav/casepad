@@ -1,15 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useState } from 'react';
 import { ChatPanel } from './chat-panel';
 import { IssueTreePanel } from './issue-tree-panel';
-import { AshMark } from './ash-mark';
 import { useAsteriskScene, useAsteriskPaused } from '@/hooks/use-asterisk-scene';
-import { EASE, DURATION, INSTANT } from '@/lib/motion-tokens';
 import { SubmitForScoringButton } from './submit-for-scoring-button';
 import { InterviewClock } from './interview-clock';
 import { XpTicker } from './xp-ticker';
+import { roomFontVars } from '@/components/room/fonts';
+
+// v2 "room" palette — transcript-as-document.
+const INK = 'rgb(50,50,52)';
+const CREAM = '#F5F0E8';
+const HAIR = 'rgba(0,0,0,0.16)';
+const ACCENT = '#f54e00';
 
 // Solve-page main layout — header + body.
 //
@@ -27,13 +31,6 @@ import { XpTicker } from './xp-ticker';
 // table continue to run in the background — the data still feeds the
 // evaluator at end-of-session — only the UI surface is gone.
 
-type Tab = 'chat' | 'tree';
-
-function difficultyDotCount(d: string): number {
-  if (d === 'easy') return 1;
-  if (d === 'medium') return 2;
-  return 3;
-}
 
 // Pinned problem statement banner — replaces the hidden <details>
 // accordion that previously lived at page bottom. Three states:
@@ -53,59 +50,28 @@ function ProblemStatementBanner({
   const open = manualOpen ?? !autoCollapsedAfterFirstTurn;
   return (
     <div
-      className="px-6 sm:px-8 py-3"
-      style={{
-        borderTop: '1px solid var(--color-border)',
-        borderBottom: '1px solid var(--color-border)',
-        background: 'var(--color-bg-sunken)',
-      }}
+      className="px-5 sm:px-8 py-3"
+      style={{ borderTop: `1px solid ${HAIR}`, borderBottom: `1px solid ${HAIR}`, background: 'rgba(255,255,255,0.4)' }}
     >
       <button
         type="button"
         onClick={() => setManualOpen(!open)}
         className="flex items-center gap-2 w-full text-left"
         aria-expanded={open}
+        style={{ fontFamily: 'var(--font-room-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(50,50,52,0.55)' }}
       >
-        <span
-          className="font-mono text-[10px] uppercase tracking-[0.18em]"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          Case prompt
-        </span>
-        <span
-          className="meta-label flex-1 truncate"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          {open ? '— hide' : '— click to expand'}
-        </span>
+        <span>Case prompt</span>
+        <span className="flex-1 truncate">{open ? '— hide' : '— tap to expand'}</span>
       </button>
       {open && (
         <p
-          className="font-body text-[14px] leading-[1.6] mt-2 max-w-[80ch]"
-          style={{ color: 'var(--color-text-secondary)' }}
+          className="mt-2"
+          style={{ fontFamily: 'var(--font-room-mono)', fontSize: 13.5, lineHeight: 1.62, color: 'rgba(50,50,52,0.8)', maxWidth: '80ch' }}
         >
           {text}
         </p>
       )}
     </div>
-  );
-}
-
-function HeaderDots({ d }: { d: string }) {
-  const fill = difficultyDotCount(d);
-  return (
-    <span className="inline-flex items-center gap-[3px] align-middle">
-      {[0, 1, 2].map((i) => (
-        <span
-          key={i}
-          className="block h-1.5 w-1.5 rounded-full"
-          style={{
-            background: i < fill ? 'var(--color-accent)' : 'transparent',
-            border: i < fill ? 'none' : '1px solid var(--color-text-muted)',
-          }}
-        />
-      ))}
-    </span>
   );
 }
 
@@ -132,13 +98,14 @@ export function SolveLayout({
   initialCs: any;
   ended?: boolean;
 }) {
-  const reduced = useReducedMotion();
   // Text-realism (PRD v3.1): a visible 25-min clock. At 0:00 we soft-lock the
   // composer and push the submit CTA — we never silently submit for the user.
   const [timeUp, setTimeUp] = useState(false);
-  const [mobileTab, setMobileTab] = useState<Tab>('chat');
   const [treeRefresh, setTreeRefresh] = useState(0);
-  const [is3DEligible, setIs3DEligible] = useState(false);
+  // Mobile: the issue tree is a collapsible strip below the transcript, OPEN by
+  // default (Ash: "issue tree visible from the start, mobile + desktop"). It's
+  // always mounted — this only toggles its height.
+  const [mobileTreeOpen, setMobileTreeOpen] = useState(true);
   const [streaming, setStreaming] = useState(false);
   // Lifted up from ChatPanel — drives toolbar submit-button disabled state.
   // Initial value mirrors the server-rendered transcript so the toolbar
@@ -175,49 +142,27 @@ export function SolveLayout({
 
   const onTurnComplete = () => setTreeRefresh((n) => n + 1);
 
-  // Eligibility mirror — for the 2D fallback only. Eligible clients let
-  // the persistent layout-level canvas paint the corner asterisk; we
-  // leave a 36px placeholder in the header to preserve alignment.
-  // Width gate removed 2026-05-04 — mobile now gets the tuned 3D scene.
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (reduced) return;
-    try {
-      const c = document.createElement('canvas');
-      const gl = c.getContext('webgl2');
-      if (gl) setIs3DEligible(true);
-    } catch {
-      // WebGL2 unsupported — stay on 2D fallback.
-    }
-  }, [reduced]);
-
-  const renderTab = (t: Tab) => {
-    if (t === 'chat') {
-      return (
-        <ChatPanel
-          sessionId={sessionId}
-          initial={initialMessages}
-          onTurnComplete={onTurnComplete}
-          onStreamingChange={setStreaming}
-          onMessagesChange={setMessageCount}
-          onMessagesArrayChange={setMessagesArr}
-          endSessionAction={endSessionAction}
-          timeUp={timeUp}
-          ended={ended}
-        />
-      );
-    }
-    // 'tree' is the only remaining non-chat tab. Cheat-sheet drawer was
-    // removed 2026-05-29 — issue tree carries the live-reasoning surface.
-    return (
-      <IssueTreePanel
-        sessionId={sessionId}
-        refreshTrigger={treeRefresh}
-        committedRootId={committedRootId}
-        onCommitRoot={setCommittedRootId}
-      />
-    );
-  };
+  const chatPanel = (
+    <ChatPanel
+      sessionId={sessionId}
+      initial={initialMessages}
+      onTurnComplete={onTurnComplete}
+      onStreamingChange={setStreaming}
+      onMessagesChange={setMessageCount}
+      onMessagesArrayChange={setMessagesArr}
+      endSessionAction={endSessionAction}
+      timeUp={timeUp}
+      ended={ended}
+    />
+  );
+  const treePanel = (
+    <IssueTreePanel
+      sessionId={sessionId}
+      refreshTrigger={treeRefresh}
+      committedRootId={committedRootId}
+      onCommitRoot={setCommittedRootId}
+    />
+  );
 
   return (
     <>
@@ -238,64 +183,55 @@ export function SolveLayout({
           // Warm interview-room wash you can actually feel: a soft pool of warm
           // light up top (the table) over a calm cream room, deepening slightly
           // at the edges. Dark text keeps full contrast on cream.
-          background:
-            'radial-gradient(120% 80% at 50% -6%, var(--hupr-cream) 0%, var(--hupr-cream) 34%, var(--hupr-sand) 140%)',
+          background: CREAM,
         }}
       />
-      {/* HEADER — minimal chrome, glyph + title + tools. */}
+
+      {/* HEADER — transcript-as-document masthead. */}
       <header
         data-tour="solve-header"
-        className="px-6 sm:px-8 py-4 flex items-center justify-between gap-3"
-        style={{ position: 'relative', zIndex: 2, background: 'color-mix(in srgb, var(--color-bg-canvas) 82%, transparent)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--color-border)' }}
+        className={`${roomFontVars} px-5 sm:px-8 py-3.5 flex items-start justify-between gap-3`}
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          background: 'rgba(245,240,232,0.9)',
+          backdropFilter: 'blur(8px)',
+          borderBottom: `1px solid ${HAIR}`,
+          color: INK,
+        }}
       >
-        <div className="min-w-0 flex items-center gap-3">
-          <div className="hidden sm:block flex-shrink-0">
-            {/* On 3D-eligible clients the persistent layout-level canvas
-                paints the asterisk into the top-left corner via the
-                'solve' preset; this 36px placeholder reserves header
-                alignment. Ineligible clients see the 2D fallback. */}
-            {is3DEligible ? (
-              <span style={{ display: 'inline-block', width: 36, height: 36 }} aria-hidden="true" />
-            ) : (
-              <AshMark size={28} state="idle" />
-            )}
+        <div className="min-w-0">
+          <div
+            style={{
+              fontFamily: 'var(--font-room-mono)',
+              fontSize: 10,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'rgba(50,50,52,0.55)',
+              marginBottom: 4,
+            }}
+          >
+            Practice room · {caseDifficulty}
+            {caseSource ? ` · ${caseSource}` : ''}
           </div>
-          <div className="min-w-0">
-            <div className="meta-label flex items-center gap-2">
-              <span>{caseDifficulty}</span>
-              <HeaderDots d={caseDifficulty} />
-              {caseSource && (
-                <>
-                  <span aria-hidden="true">·</span>
-                  <span>{caseSource}</span>
-                </>
-              )}
-            </div>
-            <h1
-              className="font-headline text-base sm:text-lg truncate"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              {caseTitle}
-            </h1>
-            {/* Calm accent rule under the case title — replaces the sketchy
-                hand-drawn underline. */}
-            <div
-              className="mt-1.5"
-              style={{ width: 56, height: 2, background: 'var(--color-accent)', borderRadius: 1 }}
-            />
-          </div>
+          <h1
+            className="truncate"
+            style={{
+              fontFamily: 'var(--font-room-display)',
+              fontWeight: 700,
+              fontSize: 'clamp(15px, 2.2vw, 20px)',
+              letterSpacing: '-0.01em',
+              lineHeight: 1.1,
+              margin: 0,
+            }}
+          >
+            {caseTitle}
+          </h1>
+          <div style={{ marginTop: 6, width: 44, height: 2, background: ACCENT }} aria-hidden="true" />
         </div>
-        <div className="flex items-center gap-2">
-          {/* Live XP ticker — pure derived state from messages array, no
-              persistence. Only the LLM-graded /api/evaluate score is the
-              source of truth at submit. This is the gamified "your turn
-              registered" feedback to fix cohort signal "AI feels boring". */}
+        <div className={`${roomFontVars} flex items-center gap-2 flex-shrink-0`}>
           {startedAt && (
-            <InterviewClock
-              startedAt={startedAt}
-              onExpire={() => setTimeUp(true)}
-              paused={!!ended}
-            />
+            <InterviewClock startedAt={startedAt} onExpire={() => setTimeUp(true)} paused={!!ended} />
           )}
           <XpTicker messages={messagesArr} />
           <SubmitForScoringButton
@@ -309,107 +245,84 @@ export function SolveLayout({
         </div>
       </header>
 
-      {/* PROBLEM STATEMENT — pinned below header. Expanded by default
-          before the candidate types (so they SEE the case prompt, instead
-          of hunting for it in a collapsed accordion at page bottom).
-          Auto-collapses to a 1-line teaser after the first user turn so
-          the chat has more room. Click to re-expand any time. The teaser
-          is ALWAYS clickable — Agent 2 #12, "the user should never have
-          to hunt for the case prompt mid-interview". */}
+      {/* PROBLEM STATEMENT — expanded by default, auto-collapses after the
+          first user turn, always one tap from re-expanding. */}
       {problemStatement && (
-        <ProblemStatementBanner
-          text={problemStatement}
-          autoCollapsedAfterFirstTurn={messageCount >= 2}
-        />
+        <div className={roomFontVars} style={{ position: 'relative', zIndex: 2 }}>
+          <ProblemStatementBanner
+            text={problemStatement}
+            autoCollapsedAfterFirstTurn={messageCount >= 2}
+          />
+        </div>
       )}
 
-      {/* Mobile tab toggle (hidden md+) — chat | tree. 'sheet' tab dropped
-          2026-05-29 along with the cheat-sheet drawer surface. */}
-      <div className="md:hidden flex">
-        {(['chat', 'tree'] as const).map((t) => {
-          const active = mobileTab === t;
-          return (
-            <button
-              key={t}
-              onClick={() => setMobileTab(t)}
-              className="flex-1 font-mono text-[11px] uppercase tracking-[0.16em] py-2.5"
-              style={{
-                color: active
-                  ? 'var(--color-accent)'
-                  : 'var(--color-text-muted)',
-                borderBottom: active
-                  ? '2px solid var(--color-accent)'
-                  : '2px solid transparent',
-              }}
-            >
-              {t}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Mobile: animated single-panel view. popLayout lets the outgoing
-          panel exit while the incoming panel mounts in parallel — no wait,
-          no stutter. Both panels are absolute-positioned so the toggle
-          never reflows the page. Transform + opacity only. */}
-      <div className="md:hidden flex-1 overflow-hidden relative">
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.div
-            key={mobileTab}
-            initial={
-              reduced
-                ? { opacity: 1 }
-                : { opacity: 0, x: 12 }
-            }
-            animate={{ opacity: 1, x: 0 }}
-            exit={
-              reduced
-                ? { opacity: 0 }
-                : { opacity: 0, x: -12 }
-            }
-            transition={
-              reduced
-                ? INSTANT
-                : { duration: DURATION.micro, ease: EASE.expo }
-            }
-            className="absolute inset-0 overflow-hidden"
-            data-tour={`solve-${mobileTab}`}
-            style={{ willChange: 'transform, opacity' }}
-          >
-            {renderTab(mobileTab)}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Desktop: 2-col, chat | tree. No card chrome around panels. */}
-      <div className="hidden md:grid flex-1 grid-cols-2 overflow-hidden">
-        <div data-tour="solve-chat" className="overflow-hidden">
-          <ChatPanel
-            sessionId={sessionId}
-            initial={initialMessages}
-            onTurnComplete={onTurnComplete}
-            onStreamingChange={setStreaming}
-            onMessagesChange={setMessageCount}
-            onMessagesArrayChange={setMessagesArr}
-            endSessionAction={endSessionAction}
-            timeUp={timeUp}
-            ended={ended}
-          />
+      {/* BODY — transcript + issue tree. Desktop: side by side. Mobile: the
+          transcript takes the room, the issue tree is a collapsible strip
+          below it, OPEN by default (Ash: visible from the start on both).
+          The tree is mounted ONCE and repositioned by CSS. */}
+      <div
+        className={`${roomFontVars} flex-1 flex flex-col md:flex-row min-h-0`}
+        style={{ position: 'relative', zIndex: 1, color: INK }}
+      >
+        <div data-tour="solve-chat" className="flex-1 min-h-0 min-w-0 overflow-hidden">
+          {chatPanel}
         </div>
+
         <div
           data-tour="solve-tree"
-          className="overflow-hidden"
-          style={{ borderLeft: '1px solid var(--color-border)' }}
+          className="solve-tree-col flex flex-col flex-shrink-0 md:flex-1 md:min-w-0 md:min-h-0"
+          style={{ borderTop: `1px solid ${HAIR}` }}
         >
-          <IssueTreePanel
-            sessionId={sessionId}
-            refreshTrigger={treeRefresh}
-            committedRootId={committedRootId}
-            onCommitRoot={setCommittedRootId}
-          />
+          <button
+            type="button"
+            className="md:hidden flex items-center justify-between w-full px-5 py-2.5"
+            onClick={() => setMobileTreeOpen((o) => !o)}
+            aria-expanded={mobileTreeOpen}
+            style={{
+              fontFamily: 'var(--font-room-mono)',
+              fontSize: 10,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'rgba(50,50,52,0.6)',
+              background: 'rgba(255,255,255,0.35)',
+            }}
+          >
+            <span>Issue tree</span>
+            <span aria-hidden="true">{mobileTreeOpen ? '▾' : '▸'}</span>
+          </button>
+          <div className="solve-tree-body" data-open={mobileTreeOpen}>
+            {treePanel}
+          </div>
         </div>
       </div>
 
+      <style jsx>{`
+        .solve-tree-col {
+          border-left: none;
+        }
+        .solve-tree-body {
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.25s ease;
+        }
+        .solve-tree-body[data-open='true'] {
+          max-height: 46vh;
+          overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+          .solve-tree-col {
+            border-left: 1px solid ${HAIR};
+            border-top: none !important;
+          }
+          .solve-tree-body,
+          .solve-tree-body[data-open] {
+            max-height: none;
+            overflow: hidden;
+            flex: 1;
+            min-height: 0;
+          }
+        }
+      `}</style>
     </>
   );
 }
