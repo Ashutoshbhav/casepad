@@ -3,7 +3,7 @@
 // instead of the signin-shaped marquee+right-card hero. That keeps the
 // home page visually distinct from /auth/signin.
 
-import { HuprDesign } from './design-lab/hupr/_components/hupr-design';
+import { HuprDesign } from '@/components/landing/hupr-design';
 import { HomeHero } from '@/components/home-hero';
 
 export default function HomePage() {

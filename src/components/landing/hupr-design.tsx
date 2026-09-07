@@ -2,7 +2,12 @@
 
 // Full HUPR replica — composition of every behavior on hupr.ca's home + about,
 // adapted to CasePad's product. All tokens forensically extracted from
-// hupr.ca's main.css (see ../page.tsx header for source URLs).
+// hupr.ca's main.css (source URLs in src/app/design-lab/hupr/page.tsx header).
+//
+// Promoted out of the design-lab sandbox 2026-09-07 — it's the live homepage
+// (src/app/page.tsx) and sign-in shell (src/app/auth/signin/page.tsx). The
+// rest of src/app/design-lab/ is now admin-gated scratch with no inbound edge
+// from production code.
 //
 // HUPR's exact design language:
 //   - Surfaces  : white canvas; #f4f4f4 sunken; #e8e8e8 borders; #323234 ink/buttons

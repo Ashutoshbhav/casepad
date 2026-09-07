@@ -26,7 +26,7 @@
 //   - anim-btn: hover swaps two text layers via translateY
 
 import { requireAdminOrFallback } from '../_lib/admin-gate';
-import { HuprDesign } from './_components/hupr-design';
+import { HuprDesign } from '@/components/landing/hupr-design';
 
 export const metadata = {
   title: 'Design Lab · HUPR replica',

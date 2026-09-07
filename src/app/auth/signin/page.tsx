@@ -14,7 +14,7 @@
 // match; redirects with ?error= on failure).
 
 import { redirect } from 'next/navigation';
-import { HuprDesign } from '@/app/design-lab/hupr/_components/hupr-design';
+import { HuprDesign } from '@/components/landing/hupr-design';
 import { getOptionalUser } from '@/lib/supabase/require-user';
 import { SignInCard } from './_components/signin-card';
 
