@@ -95,7 +95,9 @@ jobs:
           retention-days: 90
 
       - name: File an issue when a label disagrees
-        if: steps.drift.outputs.disagree != '0' || github.event_name == 'workflow_dispatch'
+        # Only when something actually drifted. A manual run that finds nothing
+        # still has its full output in the step summary + the uploaded artifact.
+        if: steps.drift.outputs.disagree != '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           N: ${{ steps.drift.outputs.disagree }}
