@@ -1,16 +1,43 @@
+import {
+  initialCircuitState,
+  isOpen as circuitIsOpen,
+  onSuccess as circuitOnSuccess,
+  onFailure as circuitOnFailure,
+  type CircuitState,
+} from './provider-circuit-breaker';
+
 // Multi-provider LLM router with rotation on 429.
 // Tries providers in order; on 429 / 5xx / timeout falls through. For chat
 // streaming, returns SSE-compatible parsed deltas.
 //
-// Order tuned for chat (latency + token-budget), re-verified live 2026-07-24
-// during a full production outage of the fallback chain:
-//   1. Groq (fast; free tier has a 100K tokens/DAY cap — exhausts by evening
-//      under heavy use, so the layers below are not theoretical)
-//   2. Cerebras (free tier, extremely fast; gpt-oss-120b — they dropped all
-//      Llama models, the old llama3.1-70b id 404s now)
-//   3. NVIDIA NIM (observed HANGING >30s on requests — kept as a late layer,
-//      survivable only because every attempt is now time-boxed)
-//   4. OpenRouter (proxies to many models) — emergency fallback
+// Order tuned for chat (latency + token-budget). Re-verified live 2026-07-24
+// (full fallback-chain outage) and again 2026-09-07 (see the model-ID note
+// below):
+//   1. Groq  — openai/gpt-oss-120b. Free tier has a 100K tokens/DAY cap that
+//      exhausts by evening under heavy use, so the layers below are not
+//      theoretical. gpt-oss-120b emits hidden reasoning tokens, so it needs
+//      reasoning_effort:'low' + a max_tokens floor (same as Cerebras below).
+//   2. Cerebras — gpt-oss-120b, a SEPARATE free-tier quota from Groq's.
+//   3. Groq (2nd model) — qwen/qwen3.8-27b. A plain instruct model on the same
+//      key/quota as layer 1; here as MODEL-diversity insurance so a single
+//      model deprecation (exactly what happened on 2026-09-07) can't blank a
+//      layer again. NOT provider-diversity — see the gap note below.
+//   4. OpenRouter — emergency fallback, only if OPENROUTER_API_KEY is set.
+//
+// 2026-09-07 INCIDENT — DEAD MODEL IDs: Groq deprecated its whole Llama line
+// (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`) and NVIDIA NIM started
+// returning HTTP 410 Gone for every model tried on this key. That left the
+// "4-layer fortress" running on Cerebras alone (layer 1 + layer 2 IDs both
+// dead, layer 4 unconfigured) — the same silent-degradation shape as the
+// blank-secrets month. Fix: Groq -> gpt-oss-120b (verified live), NVIDIA slot
+// replaced with a 2nd Groq model (qwen/qwen3.8-27b, verified live) since no
+// live NVIDIA model could be found for this key. All IDs here are verified
+// against each provider's live /v1/models + a real 1-line completion on
+// 2026-09-07. GAP: real provider-diversity is now only Groq + Cerebras — add
+// an OPENROUTER_API_KEY (or another independent provider) to restore a 3rd
+// independent quota. Offline scripts (scripts/ingest/extract*.ts,
+// scripts/qa/*, scripts/pm-gate.mjs) still reference the dead Groq IDs and
+// need the same swap.
 //
 // Every attempt is TIME-BOXED (connection + inter-chunk): a provider that
 // hangs must cost seconds, not the route's whole 60s budget. This was the
@@ -31,6 +58,34 @@
 // Configure via env: GROQ_API_KEY, CEREBRAS_API_KEY, NVIDIA_API_KEY,
 // OPENROUTER_API_KEY. Any subset works; route picks whatever's present.
 // Each provider speaks OpenAI-compatible /v1/chat/completions.
+//
+// CIRCUIT BREAKER (added 2026-09-05, see provider-circuit-breaker.ts): the
+// fallback above already survives a single bad request, but on its own it
+// re-attempts every provider from scratch on every new request — during a
+// real outage (Groq's daily quota exhausted, NVIDIA hanging on every call,
+// both from the 2026-07-24 incident referenced above) that means paying a
+// dead provider's full timeout on every single request for as long as the
+// outage lasts. `providerCircuits` remembers recent failures per provider
+// name and skips a provider outright once it's tripped, so an ongoing
+// outage costs one short burst of failures, not one per request. Lives in
+// process memory — see that file's header for what that does and doesn't
+// guarantee on a serverless deployment.
+const providerCircuits = new Map<string, CircuitState>();
+
+function circuitFor(name: string): CircuitState {
+  return providerCircuits.get(name) ?? initialCircuitState;
+}
+
+// Fail-open safety valve: if every configured provider's circuit happens to be
+// open at once (e.g. a shared blip trips all of them together), the breaker
+// must never be the thing that makes a request give up with zero attempt —
+// that would make this change actively worse than not having it, on exactly
+// the kind of full-outage case the router's fallback exists to survive. In
+// that case, ignore circuit state entirely for this call and try every
+// provider fresh, same as if the breaker didn't exist.
+function allCircuitsOpen(list: Provider[], nowMs: number): boolean {
+  return list.length > 0 && list.every((p) => circuitIsOpen(circuitFor(p.name), nowMs));
+}
 
 type Msg = { role: 'system' | 'user' | 'assistant'; content: string };
 
@@ -63,8 +118,16 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
         name: 'groq',
         url: 'https://api.groq.com/openai/v1/chat/completions',
         key: process.env.GROQ_API_KEY,
-        model: 'llama-3.3-70b-versatile',
+        // 2026-09-07: Groq deprecated its entire Llama line
+        // (`llama-3.3-70b-versatile` now model_not_found). gpt-oss-120b is the
+        // strongest model it hosts now; like the Cerebras entry it emits
+        // hidden reasoning tokens, so reasoning_effort:'low' + a max_tokens
+        // floor keep it behaving like a plain chat model (verified 2026-09-07:
+        // clean content, no <think> leak).
+        model: 'openai/gpt-oss-120b',
         supports_json_streaming: true,
+        extraBody: { reasoning_effort: 'low' },
+        minMaxTokens: 300,
       }
     : null;
   const cerebras: Provider | null = process.env.CEREBRAS_API_KEY
@@ -76,19 +139,29 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
         // 404s — verified against their /v1/models). gpt-oss-120b is their
         // strongest live model; reasoning_effort low + a max_tokens floor
         // keep it behaving like a plain chat model (verified: clean content,
-        // ~700ms).
+        // ~700ms). Still live as of 2026-09-07.
         model: 'gpt-oss-120b',
         supports_json_streaming: true,
         extraBody: { reasoning_effort: 'low' },
         minMaxTokens: 300,
       }
     : null;
-  const nvidia: Provider | null = process.env.NVIDIA_API_KEY
+  // 2026-09-07: NVIDIA NIM returns HTTP 410 Gone for every model tried on this
+  // key (meta/llama-3.3-70b-instruct, meta/llama-3.1-70b-instruct,
+  // nvidia/llama-3.1-nemotron-70b-instruct, openai/gpt-oss-120b, …) — the
+  // integrate.api access looks fully deprecated for this account, not just one
+  // model. No live NVIDIA model could be found, so this slot now holds a 2nd
+  // Groq model (qwen/qwen3.8-27b, a plain instruct model — verified live) as
+  // model-deprecation insurance. It shares Groq's key/quota, so it is NOT a
+  // substitute for a 3rd independent provider (add OPENROUTER_API_KEY to
+  // restore that). Re-check NVIDIA later: if it comes back, point `url` at
+  // integrate.api and set a verified model here.
+  const groqAlt: Provider | null = process.env.GROQ_API_KEY
     ? {
-        name: 'nvidia',
-        url: 'https://integrate.api.nvidia.com/v1/chat/completions',
-        key: process.env.NVIDIA_API_KEY,
-        model: 'meta/llama-3.3-70b-instruct',
+        name: 'groq-qwen',
+        url: 'https://api.groq.com/openai/v1/chat/completions',
+        key: process.env.GROQ_API_KEY,
+        model: 'qwen/qwen3.8-27b',
         supports_json_streaming: true,
       }
     : null;
@@ -97,7 +170,10 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
         name: 'openrouter',
         url: 'https://openrouter.ai/api/v1/chat/completions',
         key: process.env.OPENROUTER_API_KEY,
-        model: 'meta-llama/llama-3.3-70b-instruct:free',
+        // Unconfigured (no OPENROUTER_API_KEY). Kept ready as the only path to
+        // a 3rd independent quota. gpt-oss-120b is broadly available on
+        // OpenRouter; verify the exact slug when a key is added.
+        model: 'openai/gpt-oss-120b',
         supports_json_streaming: true,
       }
     : null;
@@ -108,7 +184,7 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
   // right behind it as a real fallback, not removed — just no longer first
   // in line for calls that don't need to be.
   const ordered =
-    tier === 'aux' ? [cerebras, groq, nvidia, openrouter] : [groq, cerebras, nvidia, openrouter];
+    tier === 'aux' ? [cerebras, groq, groqAlt, openrouter] : [groq, cerebras, groqAlt, openrouter];
   return ordered.filter((p): p is Provider => p !== null);
 }
 
@@ -153,7 +229,12 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
 
   let lastErr: any = null;
   let yieldedThisAttempt = false;
+  const bypassCircuits = allCircuitsOpen(list, Date.now());
   for (const p of list) {
+    if (!bypassCircuits && circuitIsOpen(circuitFor(p.name), Date.now())) {
+      lastErr = new Error(`${p.name}: circuit open (recent repeated failures)`);
+      continue; // skip outright — no point paying this provider's timeout again
+    }
     try {
       const baseMax = opts.max_tokens ?? 300;
       const body: any = {
@@ -188,6 +269,7 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
 
       if (r.status === 429 || (r.status >= 500 && r.status < 600)) {
         lastErr = new Error(`${p.name} ${r.status}`);
+        providerCircuits.set(p.name, circuitOnFailure(circuitFor(p.name), Date.now()));
         continue; // try next provider
       }
       if (!r.ok) {
@@ -211,7 +293,10 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
           const line = ln.trim();
           if (!line.startsWith('data:')) continue;
           const payload = line.slice(5).trim();
-          if (payload === '[DONE]') return;
+          if (payload === '[DONE]') {
+            providerCircuits.set(p.name, circuitOnSuccess());
+            return;
+          }
           try {
             const json = JSON.parse(payload);
             const delta = json?.choices?.[0]?.delta?.content;
@@ -224,12 +309,14 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
           }
         }
       }
+      providerCircuits.set(p.name, circuitOnSuccess());
       return; // successful stream end
     } catch (e) {
       // Once content has been yielded to the caller, failing over would
       // append a SECOND provider's full reply after the first's partial one
       // — a corrupted turn. Surface the failure instead; the route's own
       // retry/fallback machinery owns partial-turn recovery.
+      providerCircuits.set(p.name, circuitOnFailure(circuitFor(p.name), Date.now()));
       if (yieldedThisAttempt) throw e;
       lastErr = e;
       continue;
@@ -243,7 +330,12 @@ export async function* streamChat(opts: ChatOpts): AsyncGenerator<string, void, 
 export async function completeChat(opts: ChatOpts): Promise<string> {
   const list = providers(opts.tier);
   let lastErr: any = null;
+  const bypassCircuits = allCircuitsOpen(list, Date.now());
   for (const p of list) {
+    if (!bypassCircuits && circuitIsOpen(circuitFor(p.name), Date.now())) {
+      lastErr = new Error(`${p.name}: circuit open (recent repeated failures)`);
+      continue;
+    }
     try {
       const baseMax = opts.max_tokens ?? 800;
       const body: any = {
@@ -275,6 +367,7 @@ export async function completeChat(opts: ChatOpts): Promise<string> {
       }
       if (r.status === 429 || (r.status >= 500 && r.status < 600)) {
         lastErr = new Error(`${p.name} ${r.status}`);
+        providerCircuits.set(p.name, circuitOnFailure(circuitFor(p.name), Date.now()));
         continue;
       }
       if (!r.ok) {
@@ -283,13 +376,18 @@ export async function completeChat(opts: ChatOpts): Promise<string> {
       }
       const data = await r.json() as any;
       const content = data?.choices?.[0]?.message?.content;
-      if (typeof content === 'string' && content.trim()) return content;
+      if (typeof content === 'string' && content.trim()) {
+        providerCircuits.set(p.name, circuitOnSuccess());
+        return content;
+      }
       // Empty content is a FAILURE, not a success — reasoning models can
       // burn the whole budget on hidden reasoning and return nothing;
       // silently returning '' used to propagate a blank turn downstream.
       lastErr = new Error(`${p.name}: empty completion content`);
+      providerCircuits.set(p.name, circuitOnFailure(circuitFor(p.name), Date.now()));
       continue;
     } catch (e) {
+      providerCircuits.set(p.name, circuitOnFailure(circuitFor(p.name), Date.now()));
       lastErr = e;
       continue;
     }

@@ -43,5 +43,16 @@ export const groq: Groq = new Proxy({} as Groq, {
 const isLocal = !!process.env.LLM_BASE_URL;
 const localModel = process.env.LLM_LOCAL_MODEL || 'llama3.1:8b';
 
-export const MODEL_LARGE = isLocal ? localModel : 'llama-3.3-70b-versatile';
-export const MODEL_SMALL = isLocal ? localModel : 'llama-3.1-8b-instant';
+// 2026-09-07: Groq deprecated its entire Llama line — `llama-3.3-70b-versatile`
+// and `llama-3.1-8b-instant` both return model_not_found now (verified against
+// GET /openai/v1/models). Its only remaining PLAIN instruct model (no hidden
+// reasoning tokens, so it's a drop-in for raw `groq.chat.completions.create`
+// call sites that don't pass `reasoning_effort`) is `qwen/qwen3.8-27b` —
+// verified live, returns clean content with no <think> leak. The gpt-oss-*
+// models Groq now hosts DO emit hidden reasoning and would need the
+// reasoning_effort + max_tokens-floor handling the router applies; not safe as
+// a bare const here. LARGE and SMALL therefore converge for now (Groq no
+// longer offers a fast 8B tier). `llm-router.ts` uses gpt-oss-120b for the
+// primary interviewer turn where it can apply that handling.
+export const MODEL_LARGE = isLocal ? localModel : 'qwen/qwen3.8-27b';
+export const MODEL_SMALL = isLocal ? localModel : 'qwen/qwen3.8-27b';
