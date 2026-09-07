@@ -1,5 +1,11 @@
 # CasePad — Session State Snapshot
 
+> ## 🟣 PRD v3.1 STAGE 1 — LEARNER MODEL ("the Twin") FOUNDATION BUILT — 2026-09-07 (session 2, cont.)
+> Ash green-lit Stages 1–4 with one guardrail: **the case library stays and keeps growing** (twin becomes the differentiator; the 1,165+ real cases are not retired; the Stage-2 generator will *append* grounded cases). Full spec: `docs/superpowers/specs/2026-09-07-learner-model-stage1.md`.
+> **Built (`6111de2`, on `main`, tsc + 315 tests + `next build` all green):** `src/lib/skills/` — `taxonomy.ts` (40 consulting micro-skills / 6 groups, each an observable behaviour), `glicko2.ts` (pure Glicko-2, verified against Glickman's published worked example), `knowledge-tracing.ts` (LLMKT prompt + defensive parser), `apply.ts` (`traceAndApplySkills()` fire-and-forget after score write + `getSkillProfile()` read side). `supabase/migrations/0021_skill_model.sql` = `skill_obs` (append-only evidence) + `skill_state` (Glicko rating per user/skill), RLS user-owns-own. Hooked into `evaluate-session.ts` — best-effort, never throws/blocks the NSM, runs once per session.
+> **INERT until:** (1) migration 0021 applied — needs `supabase login` (CLI installed) or a manual paste; until then the upsert errors → caught → no-op. (2) A UI — `getSkillProfile` returns `{entries, byGroup, weakest, strongest, provisional}` but nothing renders it yet (next slice: a `/debrief` skills section + read path). (3) Calibration — tracer quality/difficulty judgements unvalidated; PRD wants QWK ≥0.6 before the numbers gate anything, needs a gold set.
+> **Not started:** Stage 2 generator (needs the "real cases only" → "verified-data-grounded only" reframe signed off explicitly), Stage 3 "The Firm", Stage 4 self-improvement flywheel, text-realism mechanics (independent, can land any time).
+
 > ## 🟢 PRD v3.1 STAGE-0 — COMPLETE (one item left for Ash) — 2026-09-07 (session 2, cont.)
 > "Stop the bleeding" list is done. All on `main`, deployed, verified in prod (`/api/admin/canary` → `primary=gemini(idx0) aux=groq(idx0) ok`, `/api/admin/smoke-check` 200).
 > - **Monitoring gap closed.** `CRON_SECRET` added to Vercel prod env — the daily `/api/admin/smoke-check` cron (in `vercel.json`) had been 401ing since 2026-08-17 and now self-authenticates.
