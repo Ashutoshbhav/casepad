@@ -137,7 +137,14 @@ function providers(tier: 'primary' | 'aux' = 'primary'): Provider[] {
         name: 'gemini',
         url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
         key: geminiKey,
-        model: process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite',
+        // gemini-2.5-flash-lite is retired ("no longer available to new
+        // users"); gemini-3.5-flash-lite is the current lite tier — verified
+        // live 2026-09-07: clean content, thinking minimal (the non-lite
+        // gemini-3.5-flash burned a 30-tok budget on hidden reasoning and
+        // returned empty, so the lite model specifically is the safe pick
+        // here — no reasoning_effort/max_tokens-floor handling needed).
+        // Override with GEMINI_MODEL if Google moves the tier again.
+        model: process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite',
         supports_json_streaming: true,
       }
     : null;
