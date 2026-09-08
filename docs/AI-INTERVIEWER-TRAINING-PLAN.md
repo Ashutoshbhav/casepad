@@ -1,5 +1,11 @@
 # CasePad — AI Interviewer Training Plan
 
+> **Note (2026-09-08):** §2.1 "Why fine-tuning is off the table" is **superseded**
+> by `docs/SELF-LEARNING-ROADMAP.md` — Ash has asked for model training. Fine-tuning
+> is now Phase 2+ (after retrieval + memory + a frozen-eval gate), not forbidden.
+> The rest of this document (the trust model, the prompt/RAG layers, the playbook
+> corpus) stands.
+>
 > "How do we make a candidate trust the AI to judge their case-solving like a real Bain EM?"
 > Compiled 2026-05-08. Companion to `docs/playbook/*.md` (the research base — 1000+ MBB-interviewer findings).
 >
